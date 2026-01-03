@@ -1,0 +1,96 @@
+/* Component Styles */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--card);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0;
+    z-index: 1000;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 12px;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    font-size: 11px;
+    position: relative;
+}
+
+.nav-item.active {
+    color: var(--primary);
+}
+
+.nav-item ion-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+
+.badge {
+    position: absolute;
+    top: 4px;
+    right: 8px;
+    background-color: var(--error);
+    color: white;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.numpad-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 80px);
+    gap: 15px;
+    justify-content: center;
+    margin: 20px auto;
+}
+
+.numpad-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+    background-color: var(--surface);
+    border: none;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.numpad-btn:hover {
+    transform: scale(1.05);
+}
+
+.numpad-btn:active {
+    transform: scale(0.95);
+}
+
+.pin-display {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.pin-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--text-secondary);
+    transition: all 0.2s;
+}
+
+.pin-dot.filled {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}

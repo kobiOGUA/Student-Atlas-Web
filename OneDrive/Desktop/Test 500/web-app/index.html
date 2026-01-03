@@ -1,0 +1,3753 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Atlas</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <!-- CryptoJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --card-bg: #2a2a2a;
+            --text-color: #ffffff;
+            --text-secondary: #999999;
+            --primary-color: #667eea;
+            --border-color: #444444;
+            --nav-bg: #1a1a1a;
+            --modal-bg: #1a1a1a;
+        }
+
+        /* Themes */
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --card-bg: #2a2a2a;
+            --text-color: #ffffff;
+            --text-secondary: #999999;
+            --primary-color: #667eea;
+            --border-color: #444444;
+            --nav-bg: #1a1a1a;
+            --modal-bg: #1a1a1a;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f5f5f5;
+            --card-bg: #ffffff;
+            --text-color: #000000;
+            --text-secondary: #666666;
+            --primary-color: #667eea;
+            --border-color: #dddddd;
+            --nav-bg: #ffffff;
+            --modal-bg: #ffffff;
+        }
+
+        [data-theme="blue"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-secondary: #94a3b8;
+            --primary-color: #3b82f6;
+            --border-color: #334155;
+            --nav-bg: #0f172a;
+            --modal-bg: #1e293b;
+        }
+
+        [data-theme="lightPink"] {
+            --bg-color: #fff0f5;
+            --card-bg: #ffffff;
+            --text-color: #4a4a4a;
+            --text-secondary: #888888;
+            --primary-color: #ff69b4;
+            --border-color: #ffc0cb;
+            --nav-bg: #ffffff;
+            --modal-bg: #ffffff;
+        }
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .screen {
+            padding: 20px;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            margin: -20px -20px 20px -20px;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            margin: 24px 0 12px 0;
+            color: var(--text-color);
+        }
+
+        .semester-card {
+            background: var(--card-bg);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .course-card {
+            background: var(--card-bg);
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .course-card:hover {
+            background: var(--border-color);
+            /* Slightly lighter/darker on hover */
+        }
+
+        .modal-content {
+            background: var(--modal-bg);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            color: var(--text-color);
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 16px;
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: var(--card-bg);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--nav-bg);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .nav-item ion-icon {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        /* ... keep other styles ... */
+
+        /* Re-add missing styles that might be lost in replacement if not careful */
+        .fab {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            z-index: 100;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
+            margin: -24px -24px 20px -24px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .ca-score-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .ca-score-input {
+            width: 80px;
+            text-align: right;
+            margin: 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+        }
+
+        .toast.error {
+            background: #dc3545;
+        }
+
+        .toast.success {
+            background: #28a745;
+        }
+
+        .badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .badge.pending {
+            background: #00d4ff;
+        }
+
+        .badge.current {
+            background: var(--primary-color);
+        }
+
+        .badge.past {
+            background: #666;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: 2px;
+            right: 14px;
+            background: #FF3B30;
+            color: white;
+            border-radius: 10px;
+            min-width: 16px;
+            height: 16px;
+            font-size: 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            z-index: 1001;
+        }
+
+        /* Add other missing classes */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .day-section {
+            margin-bottom: 24px;
+        }
+
+        .day-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+        }
+
+        .schedule-card,
+        .task-card {
+            background: var(--card-bg);
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .course-code {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .course-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .time-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 60px;
+        }
+
+        .time-text {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .time-line {
+            width: 2px;
+            flex: 1;
+            background: #444;
+            margin: 4px 0;
+            min-height: 20px;
+        }
+
+        .details-container {
+            flex: 1;
+        }
+
+        .venue-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 6px;
+        }
+
+        .venue-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .checkbox {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .task-title {
+            font-size: 16px;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .task-date {
+            color: var(--text-secondary);
+        }
+
+        .delete-task-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .empty-container {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 16px;
+        }
+    </style>
+    <script>
+        // Load theme immediately
+        const savedTheme = localStorage.getItem('kobi_atlas_theme') || 'default';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- Dashboard Screen -->
+        <div id="dashboard-screen" class="screen">
+            <div class="header">
+                <h2 style="margin: 0;">Student Atlas</h2>
+                <p style="margin: 5px 0 0 0; opacity: 0.9;">Academic Overview</p>
+            </div>
+
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Current CGPA</div>
+                    <div class="stat-value" id="cgpa-value">--</div>
+                </div>
+            </div>
+
+            <div id="current-semester"></div>
+            <div id="pending-semesters"></div>
+            <div id="past-semesters"></div>
+
+            <button class="fab" onclick="showAddSemesterModal()">+</button>
+        </div>
+
+        <!-- Semester Detail Screen -->
+        <div id="semester-detail-screen" class="screen hidden">
+            <div class="header">
+                <button onclick="backToDashboard()"
+                    style="background:none;border:none;color:white;font-size:24px;cursor:pointer;">←</button>
+                <h2 id="semester-detail-title" style="margin: 10px 0 0 0;"></h2>
+                <p id="semester-detail-gpa" style="margin: 5px 0 0 0; opacity: 0.9;"></p>
+            </div>
+
+            <div id="courses-list"></div>
+
+            <button class="btn btn-primary" onclick="showAddCourseModal()" style="margin-top: 20px;">+ Add
+                Course</button>
+            <button class="btn btn-danger" onclick="deleteSemester()" style="margin-top: 10px;">Delete
+                Semester</button>
+        </div>
+
+        <!-- Course Detail Screen -->
+        <div id="course-detail-screen" class="screen hidden">
+            <div class="header">
+                <button onclick="backToSemester()"
+                    style="background:none;border:none;color:white;font-size:24px;cursor:pointer;">←</button>
+                <h2 id="course-detail-title" style="margin: 10px 0 0 0;"></h2>
+                <p id="course-detail-code" style="margin: 5px 0 0 0; opacity: 0.9;"></p>
+            </div>
+
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchTab('info')">Info</button>
+                <button class="tab-btn" onclick="switchTab('resources')">Resources</button>
+            </div>
+
+            <div id="course-info-tab">
+                <h3 style="margin-bottom: 16px;">CA Scores</h3>
+                <div class="ca-score-row">
+                    <span>Mid Semester:</span>
+                    <input type="number" id="ca-mid" class="ca-score-input" min="0" max="15"
+                        onchange="updateCAScores()">
+                </div>
+                <div class="ca-score-row">
+                    <span>Assignment:</span>
+                    <input type="number" id="ca-assignment" class="ca-score-input" min="0" max="10"
+                        onchange="updateCAScores()">
+                </div>
+                <div class="ca-score-row">
+                    <span>Quiz:</span>
+                    <input type="number" id="ca-quiz" class="ca-score-input" min="0" max="10"
+                        onchange="updateCAScores()">
+                </div>
+                <div class="ca-score-row">
+                    <span>Attendance:</span>
+                    <input type="number" id="ca-attendance" class="ca-score-input" min="0" max="5"
+                        onchange="updateCAScores()">
+                </div>
+                <div class="ca-score-row" style="border-bottom: 2px solid #667eea;">
+                    <span><strong>Total CA:</strong></span>
+                    <span id="total-ca" style="font-weight: bold; color: #667eea;">0/40</span>
+                </div>
+
+                <h3 style="margin: 24px 0 16px 0;">Exam Target</h3>
+                <div class="ca-score-row">
+                    <span>Target Grade:</span>
+                    <select id="target-grade" onchange="updateExamTarget()" style="width: 100px; margin: 0;">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                </div>
+                <div class="ca-score-row">
+                    <span>Required Exam Score:</span>
+                    <span id="required-exam" style="font-weight: bold; color: #667eea;">--/60</span>
+                </div>
+                <div class="ca-score-row">
+                    <span>Certainty:</span>
+                    <span id="certainty" style="font-weight: bold;">--</span>
+                </div>
+
+                <h3 style="margin: 24px 0 16px 0;">Course Info</h3>
+                <div class="ca-score-row">
+                    <span>Unit Hours:</span>
+                    <span id="course-units">--</span>
+                </div>
+                <div class="ca-score-row">
+                    <span>Difficulty:</span>
+                    <span id="course-difficulty" class="difficulty-stars">★★★☆☆</span>
+                </div>
+
+                <button class="btn btn-primary" onclick="saveCourseChanges()" style="margin-top: 24px;">Save
+                    Changes</button>
+                <button class="btn btn-danger" onclick="deleteCourse()">Delete Course</button>
+            </div>
+
+            <div id="course-resources-tab" class="hidden">
+                <p style="text-align: center; color: #999; padding: 40px;">Resources feature coming soon</p>
+            </div>
+        </div>
+
+        <!-- Planner Screen -->
+        <div id="planner-screen" class="screen hidden">
+            <div class="header">
+                <h2 style="margin: 0;">Planner</h2>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tab-buttons" style="margin-bottom: 20px;">
+                <button class="tab-btn active" id="schedule-tab-btn"
+                    onclick="switchPlannerTab('schedule')">Schedule</button>
+                <button class="tab-btn" id="tasks-tab-btn" onclick="switchPlannerTab('tasks')">Tasks</button>
+            </div>
+
+            <!-- Schedule Tab -->
+            <div id="schedule-tab">
+                <div id="schedule-content"></div>
+                <button class="fab" onclick="showAddScheduleModal()">+</button>
+            </div>
+
+            <!-- Tasks Tab -->
+            <div id="tasks-tab" class="hidden">
+                <div id="tasks-content"></div>
+                <button class="fab" onclick="showAddTaskModal()">+</button>
+            </div>
+        </div>
+
+        <!-- GPA View Screen -->
+        <div id="gpa-screen" class="screen hidden">
+            <div class="header">
+                <h2 style="margin: 0;">GPA Overview</h2>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tab-buttons" style="margin-bottom: 20px;">
+                <button class="tab-btn active" id="gpa-current-tab" onclick="switchGPATab('current')">Current
+                    (Real)</button>
+                <button class="tab-btn" id="gpa-predicted-tab" onclick="switchGPATab('predicted')">Predicted</button>
+            </div>
+
+            <!-- Degree Classification -->
+            <div id="classification-card" class="stat-card"
+                style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+                <ion-icon id="classification-icon" name="star" style="font-size: 36px; color: #FFD700;"></ion-icon>
+                <div style="flex: 1;">
+                    <div style="font-size: 12px; color: #999; margin-bottom: 4px;">Current Standing</div>
+                    <div id="classification-label" style="font-size: 18px; font-weight: bold; color: #FFD700;">
+                        First
+                        Class</div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 20px;">
+                <div class="stat-card">
+                    <ion-icon name="school" style="font-size: 32px; color: #667eea; margin-bottom: 8px;"></ion-icon>
+                    <div class="stat-value" id="gpa-main-value">--</div>
+                    <div class="stat-label" id="gpa-main-label">Cumulative GPA</div>
+                </div>
+                <div class="stat-card">
+                    <ion-icon name="book" style="font-size: 32px; color: #667eea; margin-bottom: 8px;"></ion-icon>
+                    <div class="stat-value" id="gpa-credits">--</div>
+                    <div class="stat-label">Total Credits</div>
+                </div>
+                <div class="stat-card">
+                    <ion-icon name="calendar" style="font-size: 32px; color: #667eea; margin-bottom: 8px;"></ion-icon>
+                    <div class="stat-value" id="gpa-semesters">--</div>
+                    <div class="stat-label">Semesters</div>
+                </div>
+                <div class="stat-card">
+                    <ion-icon id="trend-icon" name="remove"
+                        style="font-size: 32px; color: #999; margin-bottom: 8px;"></ion-icon>
+                    <div class="stat-value" id="trend-value">→</div>
+                    <div class="stat-label">Trend</div>
+                </div>
+            </div>
+
+            <!-- GPA Chart -->
+            <div class="stat-card" style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 16px;">GPA Trend</h3>
+                <div id="gpa-chart"
+                    style="display: flex; align-items: flex-end; justify-content: center; gap: 8px; height: 150px; overflow-x: auto;">
+                </div>
+            </div>
+
+            <!-- Insights -->
+            <div class="stat-card" style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 16px;">Insights</h3>
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                    <ion-icon name="trophy" style="font-size: 20px; color: #FFD700;"></ion-icon>
+                    <span id="best-semester">Best Semester: --</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <ion-icon name="alert-circle" style="font-size: 20px; color: #FF9800;"></ion-icon>
+                    <span id="worst-semester">Lowest Semester: --</span>
+                </div>
+            </div>
+
+            <!-- Grade Distribution -->
+            <div id="grade-distribution" class="stat-card" style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 16px;">Grade Distribution (Graded Courses)</h3>
+                <div id="distribution-content"></div>
+            </div>
+
+            <!-- Semester Breakdown -->
+            <div class="stat-card" style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 16px;">Semester Breakdown</h3>
+                <div id="semester-breakdown"></div>
+            </div>
+        </div>
+
+        <!-- Community Screen -->
+        <div id="community-screen" class="screen hidden">
+            <div class="header">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <h2 style="margin: 0;">Community</h2>
+                    <div style="display: flex; gap: 16px; align-items: center;">
+                        <button onclick="showUserSearch()" style="background: none; border: none; cursor: pointer;">
+                            <ion-icon name="search-outline" style="font-size: 24px; color: white;"></ion-icon>
+                        </button>
+                        <button onclick="showCreatePostModal()"
+                            style="background: none; border: none; cursor: pointer;">
+                            <ion-icon name="add-outline" style="font-size: 24px; color: white;"></ion-icon>
+                        </button>
+                        <button onclick="showNotifications()"
+                            style="background: none; border: none; cursor: pointer; position: relative;">
+                            <ion-icon name="notifications-outline" style="font-size: 24px; color: white;"></ion-icon>
+                            <span id="notification-badge" class="hidden"
+                                style="position: absolute; top: -4px; right: -4px; background: #FF3B30; color: white; border-radius: 10px; min-width: 18px; height: 18px; font-size: 10px; font-weight: bold; display: flex; align-items: center; justify-content: center; padding: 0 4px;">0</span>
+                        </button>
+                        <button onclick="showProfileSettings()"
+                            style="background: none; border: none; cursor: pointer;">
+                            <ion-icon name="person-circle-outline" style="font-size: 24px; color: white;"></ion-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-buttons" style="margin-bottom: 20px;">
+                <button class="tab-btn active" id="comm-feed-tab" onclick="switchCommunityTab('feed')">Feed</button>
+                <button class="tab-btn" id="comm-messages-tab" onclick="switchCommunityTab('messages')">
+                    Messages
+                    <span id="inner-message-badge" class="badge current hidden"
+                        style="margin-left: 8px; font-size: 10px; padding: 2px 6px;">0</span>
+                </button>
+            </div>
+
+            <div id="community-feed-container">
+                <div id="posts-feed"></div>
+            </div>
+
+            <div id="community-messages-container" class="hidden">
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                    <button class="btn btn-primary" onclick="showUserSearch()"
+                        style="width: auto; padding: 8px 16px; font-size: 14px;">
+                        <ion-icon name="create-outline" style="margin-right: 5px;"></ion-icon> New Message
+                    </button>
+                </div>
+                <div id="conversations-list"></div>
+            </div>
+        </div>
+
+        <!-- Create Post Modal -->
+        <div id="create-post-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin: 0;">Create Post</h2>
+                </div>
+
+                <label>What's on your mind?</label>
+                <textarea id="post-content" placeholder="Share something with the community..." rows="4"></textarea>
+
+                <label>Image (Optional)</label>
+                <input type="file" id="post-image" accept="image/*"
+                    onchange="handleImageUpload(this, 'post-image-preview')">
+                <img id="post-image-preview"
+                    style="display: none; width: 100%; max-height: 200px; object-fit: contain; margin-top: 10px; border-radius: 8px;">
+
+                <label>Link (Optional)</label>
+                <input type="text" id="post-link" placeholder="https://...">
+
+                <button class="btn btn-primary" onclick="createPost()">Post</button>
+                <button class="btn btn-secondary" onclick="closeModal('create-post-modal')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Post Detail Modal -->
+        <div id="post-detail-modal" class="modal">
+            <div class="modal-content" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h2 style="margin: 0;">Post</h2>
+                    <button onclick="closeModal('post-detail-modal')"
+                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
+                </div>
+
+                <!-- Post Content -->
+                <div id="post-detail-content"></div>
+
+                <!-- Reply Input -->
+                <div style="margin: 20px 0; padding: 16px; background: #2a2a2a; border-radius: 8px;">
+                    <textarea id="reply-input" placeholder="Write a reply..." rows="3"
+                        style="margin-bottom: 12px;"></textarea>
+                    <button class="btn btn-primary" onclick="createReply()">Reply</button>
+                </div>
+
+                <!-- Replies Section -->
+                <div>
+                    <h3 style="margin-bottom: 16px;">Replies (<span id="replies-count">0</span>)</h3>
+                    <div id="replies-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Search Modal -->
+        <div id="user-search-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin: 0;">Search Users</h2>
+                    <button onclick="closeModal('user-search-modal')"
+                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
+                </div>
+
+                <input type="text" id="user-search-input" placeholder="Search by username or email..."
+                    style="margin-bottom: 20px;" oninput="searchUsers()">
+
+                <div id="users-list"></div>
+            </div>
+        </div>
+
+        <!-- User Profile Modal -->
+        <div id="user-profile-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin: 0;">Profile</h2>
+                    <button onclick="closeModal('user-profile-modal')"
+                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
+                </div>
+
+                <div id="user-profile-content"></div>
+            </div>
+        </div>
+
+        <!-- Notifications Modal -->
+        <div id="notifications-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin: 0;">Notifications</h2>
+                    <button onclick="closeModal('notifications-modal')"
+                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
+                </div>
+
+                <div id="notifications-list"></div>
+            </div>
+        </div>
+
+        <!-- Chat Modal -->
+        <div id="chat-modal" class="modal">
+            <div class="modal-content" style="max-height: 80vh; display: flex; flex-direction: column;">
+                <div class="modal-header">
+                    <h2 style="margin: 0;" id="chat-username">Chat</h2>
+                    <button onclick="closeModal('chat-modal')"
+                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
+                </div>
+
+                <div id="messages-list" style="flex: 1; overflow-y: auto; margin: 20px 0; max-height: 400px;">
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="message-input" placeholder="Type a message..." style="flex: 1;"
+                        onkeypress="if(event.key==='Enter') sendMessage()">
+                    <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Settings Modal -->
+        <div id="profile-settings-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin: 0;">Edit Profile</h2>
+                    <button onclick="closeModal('profile-settings-modal')"
+                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
+                </div>
+
+                <label>Profile Picture</label>
+                <input type="file" id="profile-picture-input" accept="image/*"
+                    onchange="handleImageUpload(this, 'profile-picture-preview')">
+                <img id="profile-picture-preview"
+                    style="display: none; width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin: 10px 0;">
+
+                <label>Username</label>
+                <input type="text" id="profile-username" placeholder="Username">
+
+                <label>Bio</label>
+                <textarea id="profile-bio" placeholder="Tell us about yourself..." rows="3"></textarea>
+
+                <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
+                <button class="btn btn-secondary" onclick="closeModal('profile-settings-modal')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin: 0;">Settings</h2>
+                    <button onclick="closeModal('settings-modal')"
+                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
+                </div>
+
+                <div style="margin-bottom: 24px;">
+                    <h3 style="margin: 0 0 12px 0; color: #999; font-size: 14px; text-transform: uppercase;">
+                        Account
+                    </h3>
+                    <button class="btn btn-primary"
+                        style="width: 100%; margin-bottom: 10px; justify-content: flex-start;"
+                        onclick="closeModal('settings-modal'); document.getElementById('profile-settings-modal').classList.add('show');">
+                        <ion-icon name="person-outline" style="margin-right: 8px;"></ion-icon>
+                        Edit Profile
+                    </button>
+                    <button class="btn btn-primary"
+                        style="width: 100%; margin-bottom: 10px; justify-content: flex-start;"
+                        onclick="showChangePIN()">
+                        <ion-icon name="key-outline" style="margin-right: 8px;"></ion-icon>
+                        Change PIN
+                    </button>
+                </div>
+
+                <div style="margin-bottom: 24px;">
+                    <h3 style="margin: 0 0 12px 0; color: #999; font-size: 14px; text-transform: uppercase;">
+                        About</h3>
+                    <div style="padding: 16px; background: #2a2a2a; border-radius: 8px;">
+                        <h4 style="margin: 0 0 8px 0; color: white;">Kobi's Student Atlas</h4>
+                        <p style="margin: 4px 0; color: #999; font-size: 14px;">Version 1.0.0</p>
+                        <p style="margin: 4px 0; color: #999; font-size: 14px;">By Kobi Oguadinma</p>
+                        <p style="margin: 4px 0; color: #999; font-size: 14px;">Babcock University</p>
+                        <p style="margin: 12px 0 0 0; color: #ccc; font-size: 13px; line-height: 1.5;">An
+                            academic
+                            companion for tracking courses, calculating GPA, and predicting grades.</p>
+                        <p
+                            style="margin: 12px 0 0 0; color: #ccc; font-size: 13px; line-height: 1.5; font-style: italic;">
+                            Student Atlas was an individual project by Kobi Oguadinma, a second-year Software
+                            Engineering student at Babcock University. He frequently calculated his predicted
+                            grades
+                            manually and wanted a mobile app to automate this process.</p>
+                        <p style="margin: 12px 0 0 0; color: #ff9800; font-size: 12px; font-style: italic;">
+                            Currently
+                            supports Babcock University grading system. Other systems will be available in
+                            future
+                            updates.</p>
+                    </div>
+                </div>
+
+                <button class="btn" style="width: 100%; background: #dc3545; color: white;" onclick="logout()">
+                    <ion-icon name="log-out-outline" style="margin-right: 8px;"></ion-icon>
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Change PIN Modal -->
+        <div id="change-pin-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin: 0;">Change PIN</h2>
+                    <button onclick="closeModal('change-pin-modal')"
+                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
+                </div>
+
+                <label>Current PIN</label>
+                <input type="password" id="current-pin" placeholder="Enter current PIN" maxlength="4" pattern="[0-9]*"
+                    inputmode="numeric">
+
+                <label>New PIN</label>
+                <input type="password" id="new-pin" placeholder="Enter new PIN (4 digits)" maxlength="4"
+                    pattern="[0-9]*" inputmode="numeric">
+
+                <label>Confirm New PIN</label>
+                <input type="password" id="confirm-pin" placeholder="Confirm new PIN" maxlength="4" pattern="[0-9]*"
+                    inputmode="numeric">
+
+                <button class="btn btn-primary" onclick="changePIN()">Change PIN</button>
+                <button class="btn btn-secondary" onclick="closeModal('change-pin-modal')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Add Schedule Modal -->
+        <div id="add-schedule-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin: 0;">Add Schedule</h2>
+                </div>
+
+                <label>Select Course</label>
+                <select id="schedule-course-select">
+                    <option value="">Select a course...</option>
+                </select>
+
+                <label>Day</label>
+                <select id="schedule-day">
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                </select>
+
+                <label>Start Time</label>
+                <input type="time" id="schedule-start-time" value="08:00">
+
+                <label>End Time</label>
+                <input type="time" id="schedule-end-time" value="09:00">
+
+                <label>Venue (Optional)</label>
+                <input type="text" id="schedule-venue" placeholder="e.g., LT1, Lab 3">
+
+                <button class="btn btn-primary" onclick="saveSchedule()">Save Schedule</button>
+                <button class="btn btn-secondary" onclick="closeModal('add-schedule-modal')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Add Task Modal -->
+        <div id="add-task-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin: 0;">Add Task</h2>
+                </div>
+
+                <label>Task Title</label>
+                <input type="text" id="task-title" placeholder="e.g., Complete Assignment 1">
+
+                <label>Course (Optional)</label>
+                <select id="task-course-select">
+                    <option value="">None</option>
+                </select>
+
+                <label>Type</label>
+                <select id="task-type">
+                    <option value="assignment">Assignment</option>
+                    <option value="exam">Exam</option>
+                    <option value="study">Study</option>
+                    <option value="other">Other</option>
+                </select>
+
+                <label>Due Date</label>
+                <input type="date" id="task-due-date">
+
+                <label>Description (Optional)</label>
+                <textarea id="task-description" placeholder="Add details..." rows="3"></textarea>
+
+                <button class="btn btn-primary" onclick="addTask()">Add Task</button>
+                <button class="btn btn-secondary" onclick="closeModal('add-task-modal')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Add Semester Modal -->
+        <div id="add-semester-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin: 0;">Add Semester</h2>
+                </div>
+
+                <label>Entry Method</label>
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchEntryMethod('manual')">Manual Course
+                        Entry</button>
+                    <button class="tab-btn" onclick="switchEntryMethod('quick')">Quick Add (GPA)</button>
+                </div>
+
+                <div id="manual-entry">
+                    <label>Semester Name</label>
+                    <input type="text" id="semester-name" placeholder="e.g., 200 Level 1st Semester">
+
+                    <label>Semester Type</label>
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" id="type-current"
+                            onclick="selectType('current')">Current</button>
+                        <button class="tab-btn" id="type-pending" onclick="selectType('pending')">Pending</button>
+                        <button class="tab-btn" id="type-past" onclick="selectType('past')">Past</button>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="createSemester()">Create Semester</button>
+                </div>
+
+                <div id="quick-entry" class="hidden">
+                    <label>Semester Name</label>
+                    <input type="text" id="quick-semester-name" placeholder="e.g., 100 Level 1st Semester">
+
+                    <label>GPA</label>
+                    <input type="number" id="quick-gpa" placeholder="e.g., 4.55" step="0.01" min="0" max="5">
+
+                    <label>Total Units</label>
+                    <input type="number" id="quick-units" placeholder="e.g., 24" min="0">
+
+                    <button class="btn btn-primary" onclick="createQuickSemester()">Create Semester</button>
+                </div>
+
+                <button class="btn btn-secondary" onclick="closeModal('add-semester-modal')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Add Course Modal -->
+        <div id="add-course-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin: 0;">Add Course</h2>
+                </div>
+
+                <label>Course Title</label>
+                <input type="text" id="course-title" placeholder="e.g., Discrete Structures">
+
+                <label>Course Code</label>
+                <input type="text" id="course-code" placeholder="e.g., CSC203">
+
+                <label>Unit Hours</label>
+                <input type="number" id="course-unit-hours" placeholder="e.g., 2" min="1" max="6">
+
+                <label>Target Grade</label>
+                <select id="course-target-grade">
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                </select>
+
+                <label>Difficulty (1-5)</label>
+                <select id="course-difficulty-select">
+                    <option value="1">1 - Very Easy</option>
+                    <option value="2">2 - Easy</option>
+                    <option value="3" selected>3 - Medium</option>
+                    <option value="4">4 - Hard</option>
+                    <option value="5">5 - Very Hard</option>
+                </select>
+
+                <button class="btn btn-primary" onclick="addCourse()">Add Course</button>
+                <button class="btn btn-secondary" onclick="closeModal('add-course-modal')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-item active" onclick="showScreen('dashboard')">
+                <ion-icon name="home"></ion-icon>
+                <span style="font-size: 11px;">Home</span>
+            </button>
+            <button class="nav-item" onclick="showScreen('planner')">
+                <ion-icon name="calendar"></ion-icon>
+                <span style="font-size: 11px;">Planner</span>
+            </button>
+            <button class="nav-item" onclick="showScreen('gpa')">
+                <ion-icon name="stats-chart"></ion-icon>
+                <span style="font-size: 11px;">GPA</span>
+            </button>
+            <button class="nav-item" onclick="showScreen('community')" style="position: relative;">
+                <ion-icon name="people"></ion-icon>
+                <span style="font-size: 11px;">Community</span>
+                <span id="nav-community-badge" class="nav-badge hidden">0</span>
+            </button>
+            <button class="nav-item" onclick="window.location.href='settings.html'">
+                <ion-icon name="settings"></ion-icon>
+                <span style="font-size: 11px;">Settings</span>
+            </button>
+        </div>
+
+    </div>
+
+    <div id="toast-container"></div>
+
+    <!-- Firebase & App Logic -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+        import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+        import { getFirestore, collection, query, where, getDocs, doc, setDoc, addDoc, updateDoc, getDoc, deleteDoc, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBKA2julrxpRhXTdU_8l5pSH73ERAjKtO4",
+            authDomain: "kobi-s-student-atlas.firebaseapp.com",
+            projectId: "kobi-s-student-atlas",
+            storageBucket: "kobi-s-student-atlas.firebasestorage.app",
+            messagingSenderId: "955486974004",
+            appId: "1:955486974004:web:be7d825c279d2e263c5a61"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Global state
+        let currentSemester = null;
+        let currentCourse = null;
+        let selectedSemesterType = 'current';
+        let entryMethod = 'manual';
+
+        // Badge counting logic (Real-time)
+        let notifUnsubscribe = null;
+        let msgUnsubscribe = null;
+        let friendReqUnsubscribe = null;
+
+        window.startRealtimeListeners = function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            if (!uid) return;
+
+            // Stop existing listeners if any
+            if (notifUnsubscribe) notifUnsubscribe();
+            if (msgUnsubscribe) msgUnsubscribe();
+            if (friendReqUnsubscribe) friendReqUnsubscribe();
+
+            try {
+                // Notifications Listener
+                const notifRef = collection(db, 'notifications');
+                const notifQuery = query(notifRef, where('userId', '==', uid), where('read', '==', false));
+                notifUnsubscribe = onSnapshot(notifQuery, (snapshot) => {
+                    const notifCount = snapshot.size;
+                    updateBadgeCounts(notifCount, null, null);
+                });
+
+                // Pending Friend Requests Listener
+                const friendReqRef = collection(db, 'friendRequests');
+                const friendReqQuery = query(friendReqRef, where('toUserId', '==', uid), where('status', '==', 'pending'));
+                friendReqUnsubscribe = onSnapshot(friendReqQuery, (snapshot) => {
+                    const friendReqCount = snapshot.size;
+                    updateBadgeCounts(null, friendReqCount, null);
+                });
+
+                // Messages Listener
+                const msgRef = collection(db, 'messages');
+                const msgQuery = query(msgRef, where('receiverId', '==', uid), where('read', '==', false));
+                msgUnsubscribe = onSnapshot(msgQuery, (snapshot) => {
+                    const msgCount = snapshot.size;
+                    updateBadgeCounts(null, null, msgCount);
+                });
+
+            } catch (error) {
+                console.error('Error starting listeners:', error);
+            }
+        };
+
+        let currentNotifCount = 0;
+        let currentFriendReqCount = 0;
+        let currentMsgCount = 0;
+
+        function updateBadgeCounts(notifCount, friendReqCount, msgCount) {
+            if (notifCount !== null) currentNotifCount = notifCount;
+            if (friendReqCount !== null) currentFriendReqCount = friendReqCount;
+            if (msgCount !== null) currentMsgCount = msgCount;
+
+            // Community badge sums everything (notifs + requests + messages)
+            const totalCommunityCount = currentNotifCount + currentFriendReqCount + currentMsgCount;
+
+            updateBadge('nav-community-badge', totalCommunityCount);
+            updateBadge('inner-message-badge', currentMsgCount);
+            updateBadge('notification-badge', currentNotifCount + currentFriendReqCount);
+        }
+
+        window.loadUnreadCounts = function () {
+            // Wrapper for backward compatibility if called elsewhere
+            // Real-time listeners handle updates automatically
+            startRealtimeListeners();
+        };
+
+        function updateBadge(elementId, count) {
+            const badge = document.getElementById(elementId);
+            if (badge) {
+                badge.textContent = count > 99 ? '99+' : count;
+                badge.classList.toggle('hidden', count === 0);
+            }
+        }
+
+        // Initialize immediately if user exists
+        if (localStorage.getItem('kobi_atlas_uid')) {
+            startRealtimeListeners();
+        }
+
+        // Utility functions
+        function showLoading(show) {
+            // Loading removed for better UX
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function gradeToPoint(grade) {
+            const points = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, 'F': 0 };
+            return points[grade] || 0;
+        }
+
+        function calculateSemesterGPA(courses) {
+            if (!courses || courses.length === 0) return 0;
+            let totalPoints = 0;
+            let totalUnits = 0;
+
+            courses.forEach(course => {
+                const grade = course.grade || course.predictedGrade || course.targetGrade;
+                if (grade) {
+                    const points = gradeToPoint(grade);
+                    const units = course.unitHours || 0;
+                    totalPoints += points * units;
+                    totalUnits += units;
+                }
+            });
+
+            return totalUnits === 0 ? 0 : (totalPoints / totalUnits).toFixed(2);
+        }
+
+        function calculateRequiredExam(caTotal, targetGrade) {
+            const targets = { 'A': 70, 'B': 60, 'C': 50 };
+            const required = (targets[targetGrade] || 70) - caTotal;
+            return Math.max(0, Math.min(60, required));
+        }
+
+        function getCertainty(required) {
+            if (required <= 30) return 'High';
+            if (required <= 45) return 'Medium';
+            return 'Low';
+        }
+
+        function getDifficultyStars(difficulty) {
+            const filled = '★'.repeat(difficulty);
+            const empty = '☆'.repeat(5 - difficulty);
+            return filled + empty;
+        }
+
+        // Dashboard functions
+        async function loadDashboard() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            if (!uid) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            showLoading(true);
+
+            try {
+                // Ensure anonymous authentication for Firestore access
+                if (!auth.currentUser) {
+                    await signInAnonymously(auth);
+                }
+
+                const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+
+                const semesters = [];
+                snapshot.forEach(doc => {
+                    semesters.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Separate by type
+                const pending = semesters.filter(s => s.type === 'pending');
+                const current = semesters.filter(s => s.type === 'current');
+                const past = semesters.filter(s => s.type === 'past');
+
+                const currentSemester = current[0];
+                const hasPredicted = currentSemester || pending.length > 0;
+
+                // Calculate CGPAs
+                let totalPoints = 0;
+                let totalUnits = 0;
+                let predictedPoints = 0;
+                let predictedUnits = 0;
+
+                semesters.forEach(sem => {
+                    if (sem.type === 'past' && sem.gpa && sem.totalUnits) {
+                        totalPoints += sem.gpa * sem.totalUnits;
+                        totalUnits += sem.totalUnits;
+                        predictedPoints += sem.gpa * sem.totalUnits;
+                        predictedUnits += sem.totalUnits;
+                    } else if (sem.courses) {
+                        const semGPA = parseFloat(calculateSemesterGPA(sem.courses));
+                        const semUnits = sem.courses.reduce((sum, c) => sum + (c.unitHours || 0), 0);
+
+                        if (sem.type === 'past') {
+                            totalPoints += semGPA * semUnits;
+                            totalUnits += semUnits;
+                        }
+
+                        predictedPoints += semGPA * semUnits;
+                        predictedUnits += semUnits;
+                    }
+                });
+
+                const cgpa = totalUnits > 0 ? (totalPoints / totalUnits).toFixed(2) : '0.00';
+                const predictedCGPA = predictedUnits > 0 ? (predictedPoints / predictedUnits).toFixed(2) : '0.00';
+
+                // Display stats - FIXED: Only show predicted if current/pending exists
+                const statsGrid = document.getElementById('stats-grid');
+                statsGrid.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-label">Current CGPA</div>
+                        <div class="stat-value">${cgpa}</div>
+                    </div>
+                    ${hasPredicted ? `
+                        <div class="stat-card">
+                            <div class="stat-label">Predicted CGPA</div>
+                            <div class="stat-value">${predictedCGPA}</div>
+                        </div>
+                    ` : ''}
+                `;
+
+                // Display semesters by type (Current first as requested)
+                displaySemesterSection('current-semester', 'Current Semester', current, 'current');
+                displaySemesterSection('pending-semesters', 'Pending Semesters', pending, 'pending');
+                displaySemesterSection('past-semesters', 'Past Semesters', past, 'past');
+
+            } catch (error) {
+                console.error('Load dashboard error:', error);
+                showToast('Error loading dashboard', 'error');
+            }
+
+            loadUnreadCounts();
+            showLoading(false);
+        }
+
+        function displaySemesterSection(containerId, title, semesters, type) {
+            const container = document.getElementById(containerId);
+
+            if (semesters.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const html = `
+                <div class="section-title">${title}</div>
+                ${semesters.map(sem => {
+                const gpa = sem.gpa || calculateSemesterGPA(sem.courses || []);
+                const courseCount = sem.courses?.length || 0;
+                return `
+                        <div class="semester-card ${type}" onclick="viewSemester('${sem.id}')">
+                            <span class="badge ${type}">${type.toUpperCase()}</span>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: bold; font-size: 16px;">${sem.name}</div>
+                                    <div style="font-size: 14px; color: #999; margin-top: 4px;">${courseCount} courses</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 20px; font-weight: bold; color: #667eea;">
+                                        ${type === 'pending' || type === 'current' ? 'Predicted' : 'GPA'}: ${parseFloat(gpa).toFixed(2)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            }).join('')}
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Semester detail functions
+        window.viewSemester = async function (semesterId) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                const semDoc = await getDoc(doc(db, 'users', uid, 'semesters', semesterId));
+                if (!semDoc.exists()) {
+                    showToast('Semester not found', 'error');
+                    return;
+                }
+
+                currentSemester = { id: semDoc.id, ...semDoc.data() };
+
+                document.getElementById('semester-detail-title').textContent = currentSemester.name;
+                const gpa = currentSemester.gpa || calculateSemesterGPA(currentSemester.courses || []);
+                document.getElementById('semester-detail-gpa').textContent = `GPA: ${parseFloat(gpa).toFixed(2)}`;
+
+                const courses = currentSemester.courses || [];
+                const coursesHTML = courses.length > 0 ? courses.map((course, index) => {
+                    const grade = course.grade || course.predictedGrade || course.targetGrade || '--';
+                    const stars = getDifficultyStars(course.difficulty || 3);
+                    return `
+                        <div class="course-card" onclick="viewCourse(${index})">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="flex: 1;">
+                                    <div style="font-weight: bold;">${course.name}</div>
+                                    <div style="font-size: 12px; color: #999;">${course.code}</div>
+                                    <div style="font-size: 12px; color: #999; margin-top: 4px;">
+                                        ${course.unitHours} units • Target: ${course.targetGrade} • Grade: ${grade}
+                                    </div>
+                                    <div class="difficulty-stars" style="margin-top: 4px;">${stars}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('') : '<p style="text-align: center; color: #999; padding: 40px;">No courses yet</p>';
+
+                document.getElementById('courses-list').innerHTML = coursesHTML;
+
+                showScreen('semester-detail');
+            } catch (error) {
+                console.error('View semester error:', error);
+                showToast('Error loading semester', 'error');
+            }
+
+            showLoading(false);
+        };
+
+        // Course detail functions
+        window.viewCourse = function (courseIndex) {
+            currentCourse = { ...currentSemester.courses[courseIndex], index: courseIndex };
+
+            document.getElementById('course-detail-title').textContent = currentCourse.name;
+            document.getElementById('course-detail-code').textContent = currentCourse.code;
+
+            // Load CA scores
+            const ca = currentCourse.caScores || {};
+            document.getElementById('ca-mid').value = ca.midSemester || 0;
+            document.getElementById('ca-assignment').value = ca.assignment || 0;
+            document.getElementById('ca-quiz').value = ca.quiz || 0;
+            document.getElementById('ca-attendance').value = ca.attendance || 0;
+
+            document.getElementById('target-grade').value = currentCourse.targetGrade || 'A';
+            document.getElementById('course-units').textContent = currentCourse.unitHours || 0;
+            document.getElementById('course-difficulty').textContent = getDifficultyStars(currentCourse.difficulty || 3);
+
+            updateCAScores();
+            showScreen('course-detail');
+        };
+
+        window.updateCAScores = function () {
+            const mid = parseInt(document.getElementById('ca-mid').value) || 0;
+            const assignment = parseInt(document.getElementById('ca-assignment').value) || 0;
+            const quiz = parseInt(document.getElementById('ca-quiz').value) || 0;
+            const attendance = parseInt(document.getElementById('ca-attendance').value) || 0;
+
+            const total = mid + assignment + quiz + attendance;
+            document.getElementById('total-ca').textContent = `${total}/40`;
+
+            updateExamTarget();
+        };
+
+        window.updateExamTarget = function () {
+            const targetGrade = document.getElementById('target-grade').value;
+            const totalCA = parseInt(document.getElementById('total-ca').textContent.split('/')[0]) || 0;
+
+            const required = calculateRequiredExam(totalCA, targetGrade);
+            const certainty = getCertainty(required);
+
+            document.getElementById('required-exam').textContent = `${required.toFixed(0)}/60`;
+            document.getElementById('certainty').textContent = certainty;
+            document.getElementById('certainty').style.color =
+                certainty === 'High' ? '#28a745' : certainty === 'Medium' ? '#ffc107' : '#dc3545';
+        };
+
+        window.saveCourseChanges = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                const caScores = {
+                    midSemester: parseInt(document.getElementById('ca-mid').value) || 0,
+                    assignment: parseInt(document.getElementById('ca-assignment').value) || 0,
+                    quiz: parseInt(document.getElementById('ca-quiz').value) || 0,
+                    attendance: parseInt(document.getElementById('ca-attendance').value) || 0
+                };
+
+                const targetGrade = document.getElementById('target-grade').value;
+
+                // Update course in semester
+                currentSemester.courses[currentCourse.index].caScores = caScores;
+                currentSemester.courses[currentCourse.index].targetGrade = targetGrade;
+
+                // Calculate predicted grade based on CA + target
+                const totalCA = Object.values(caScores).reduce((a, b) => a + b, 0);
+                const requiredExam = calculateRequiredExam(totalCA, targetGrade);
+                const predictedTotal = totalCA + Math.min(requiredExam, 60);
+
+                let predictedGrade = 'F';
+                if (predictedTotal >= 70) predictedGrade = 'A';
+                else if (predictedTotal >= 60) predictedGrade = 'B';
+                else if (predictedTotal >= 50) predictedGrade = 'C';
+                else if (predictedTotal >= 45) predictedGrade = 'D';
+                else if (predictedTotal >= 40) predictedGrade = 'E';
+
+                currentSemester.courses[currentCourse.index].predictedGrade = predictedGrade;
+
+                await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                    courses: currentSemester.courses
+                });
+
+                showToast('Course updated successfully', 'success');
+                backToSemester();
+            } catch (error) {
+                console.error('Save course error:', error);
+                showToast('Error saving course', 'error');
+            }
+
+            showLoading(false);
+        };
+
+        window.deleteCourse = async function () {
+            if (!confirm('Delete this course?')) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                currentSemester.courses.splice(currentCourse.index, 1);
+
+                await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                    courses: currentSemester.courses
+                });
+
+                showToast('Course deleted', 'success');
+                backToSemester();
+            } catch (error) {
+                console.error('Delete course error:', error);
+                showToast('Error deleting course', 'error');
+            }
+
+            showLoading(false);
+        };
+
+        // Modal functions
+        window.showAddSemesterModal = function () {
+            document.getElementById('add-semester-modal').classList.add('show');
+        };
+
+        window.showAddCourseModal = function () {
+            document.getElementById('add-course-modal').classList.add('show');
+        };
+
+        window.closeModal = function (modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        };
+
+        window.switchEntryMethod = function (method) {
+            entryMethod = method;
+            document.getElementById('manual-entry').classList.toggle('hidden', method !== 'manual');
+            document.getElementById('quick-entry').classList.toggle('hidden', method !== 'quick');
+
+            // Update tab buttons
+            document.querySelectorAll('#add-semester-modal .tab-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', (i === 0 && method === 'manual') || (i === 1 && method === 'quick'));
+            });
+        };
+
+        window.selectType = function (type) {
+            selectedSemesterType = type;
+            ['current', 'pending', 'past'].forEach(t => {
+                document.getElementById(`type-${t}`).classList.toggle('active', t === type);
+            });
+        };
+
+        window.createSemester = async function () {
+            const name = document.getElementById('semester-name').value.trim();
+            if (!name) {
+                showToast('Please enter semester name', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                // FIXED: Validation - only one current semester allowed
+                if (selectedSemesterType === 'current') {
+                    const semRef = collection(db, 'users', uid, 'semesters');
+                    const snapshot = await getDocs(semRef);
+                    const hasCurrent = snapshot.docs.some(doc => doc.data().type === 'current');
+
+                    if (hasCurrent) {
+                        showToast('A current semester already exists!', 'error');
+                        showLoading(false);
+                        return;
+                    }
+                }
+
+                const semRef = doc(collection(db, 'users', uid, 'semesters'));
+                await setDoc(semRef, {
+                    id: semRef.id,
+                    name,
+                    type: selectedSemesterType,
+                    courses: [],
+                    timestamp: Date.now()
+                });
+
+                showToast('Semester created!', 'success');
+                closeModal('add-semester-modal');
+                document.getElementById('semester-name').value = '';
+                loadDashboard();
+            } catch (error) {
+                console.error('Create semester error:', error);
+                showToast('Error creating semester', 'error');
+            }
+
+            showLoading(false);
+        };
+
+        window.createQuickSemester = async function () {
+            const name = document.getElementById('quick-semester-name').value.trim();
+            const gpa = parseFloat(document.getElementById('quick-gpa').value);
+            const units = parseInt(document.getElementById('quick-units').value);
+
+            if (!name || !gpa || !units) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+
+            if (gpa < 0 || gpa > 5) {
+                showToast('GPA must be between 0 and 5', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                const semRef = doc(collection(db, 'users', uid, 'semesters'));
+                // FIXED: Quick add always creates 'past' type
+                await setDoc(semRef, {
+                    id: semRef.id,
+                    name,
+                    type: 'past',
+                    gpa,
+                    totalUnits: units,
+                    courses: [],
+                    timestamp: Date.now()
+                });
+
+                showToast('Semester created!', 'success');
+                closeModal('add-semester-modal');
+                document.getElementById('quick-semester-name').value = '';
+                document.getElementById('quick-gpa').value = '';
+                document.getElementById('quick-units').value = '';
+                loadDashboard();
+            } catch (error) {
+                console.error('Create quick semester error:', error);
+                showToast('Error creating semester', 'error');
+            }
+
+            showLoading(false);
+        };
+
+        window.addCourse = async function () {
+            const name = document.getElementById('course-title').value.trim();
+            const code = document.getElementById('course-code').value.trim();
+            const unitHours = parseInt(document.getElementById('course-unit-hours').value);
+            const targetGrade = document.getElementById('course-target-grade').value;
+            const difficulty = parseInt(document.getElementById('course-difficulty-select').value);
+
+            if (!name || !code || !unitHours) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                // FIXED: Match Android data structure exactly
+                const newCourse = {
+                    id: `course_${Date.now()}`,
+                    name,  // NOT title
+                    code,
+                    unitHours,  // NOT units
+                    targetGrade,
+                    difficulty,
+                    caScores: {
+                        midSemester: 0,
+                        assignment: 0,
+                        quiz: 0,
+                        attendance: 0
+                    },
+                    predictedGrade: targetGrade,
+                    schedule: null,
+                    examDate: null
+                };
+
+                currentSemester.courses = currentSemester.courses || [];
+                currentSemester.courses.push(newCourse);
+
+                await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                    courses: currentSemester.courses
+                });
+
+                showToast('Course added!', 'success');
+                closeModal('add-course-modal');
+                document.getElementById('course-title').value = '';
+                document.getElementById('course-code').value = '';
+                document.getElementById('course-unit-hours').value = '';
+                viewSemester(currentSemester.id);
+            } catch (error) {
+                console.error('Add course error:', error);
+                showToast('Error adding course', 'error');
+            }
+
+            showLoading(false);
+        };
+
+        window.deleteSemester = async function () {
+            if (!confirm('Delete this semester and all its courses?')) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                await deleteDoc(doc(db, 'users', uid, 'semesters', currentSemester.id));
+                showToast('Semester deleted', 'success');
+                backToDashboard();
+            } catch (error) {
+                console.error('Delete semester error:', error);
+                showToast('Error deleting semester', 'error');
+            }
+
+            showLoading(false);
+        };
+
+        // Navigation
+        // Navigation
+        window.switchCommunityTab = function (tab) {
+            document.getElementById('community-feed-container').classList.toggle('hidden', tab !== 'feed');
+            document.getElementById('community-messages-container').classList.toggle('hidden', tab !== 'messages');
+
+            document.getElementById('comm-feed-tab').classList.toggle('active', tab === 'feed');
+            document.getElementById('comm-messages-tab').classList.toggle('active', tab === 'messages');
+
+            if (tab === 'messages') {
+                loadConversations();
+            }
+        };
+
+        window.showScreen = function (screenName) {
+            if (screenName === 'messages') {
+                showScreen('community');
+                switchCommunityTab('messages');
+                return;
+            }
+
+            ['dashboard-screen', 'semester-detail-screen', 'course-detail-screen', 'planner-screen', 'gpa-screen', 'community-screen'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            document.getElementById(`${screenName}-screen`).classList.remove('hidden');
+
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Map screen names to nav items
+            const navMap = {
+                'dashboard': 0,
+                'planner': 1,
+                'gpa': 2,
+                'community': 3
+            };
+
+            if (navMap[screenName] !== undefined) {
+                document.querySelectorAll('.nav-item')[navMap[screenName]].classList.add('active');
+            }
+
+            if (screenName === 'dashboard') {
+                loadDashboard();
+            } else if (screenName === 'planner') {
+                loadSchedule();
+            } else if (screenName === 'gpa') {
+                loadGPAView();
+            } else if (screenName === 'community') {
+                loadCommunityFeed();
+                // Default to feed usually, but if we just switched to messages via recursion, verify.
+                // Actually, if we just call loadCommunityFeed, it's fine.
+                // switchCommunityTab('feed'); // Optional: Force feed tab on main nav click? 
+                // Let's decide to NOT force feed tab so state persists if user switches back and forth within session
+                // But if 'messages' was requested, it was handled above.
+                if (!document.getElementById('community-messages-container').classList.contains('hidden')) {
+                    loadConversations();
+                }
+            }
+        };
+
+        window.backToDashboard = function () {
+            showScreen('dashboard');
+        };
+
+        window.backToSemester = function () {
+            viewSemester(currentSemester.id);
+        };
+
+        window.switchTab = function (tab) {
+            document.getElementById('course-info-tab').classList.toggle('hidden', tab !== 'info');
+            document.getElementById('course-resources-tab').classList.toggle('hidden', tab !== 'resources');
+
+            // Update tab buttons
+            document.querySelectorAll('#course-detail-screen .tab-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', (i === 0 && tab === 'info') || (i === 1 && tab === 'resources'));
+            });
+        };
+
+        window.showSettings = function () {
+            if (confirm('Logout?')) {
+                localStorage.clear();
+                location.reload();
+            }
+        };
+
+        // COMMUNITY FUNCTIONS
+        let allPosts = [];
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now.getTime() - date.getTime();
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        async function loadCommunityFeed() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const postsRef = collection(db, 'posts');
+                const q = query(postsRef, orderBy('timestamp', 'desc'));
+                const snapshot = await getDocs(q);
+
+                allPosts = [];
+                for (const docSnap of snapshot.docs) {
+                    const postData = { id: docSnap.id, ...docSnap.data() };
+
+                    // Check if post is deleted
+                    if (postData.deleted) continue;
+
+                    // Check if author still exists
+                    const authorDoc = await getDoc(doc(db, 'users', postData.authorId));
+                    if (!authorDoc.exists()) continue; // Skip posts by deleted users
+
+                    allPosts.push(postData);
+                }
+
+                const feedHTML = allPosts.length > 0 ? allPosts.map(post => {
+                    const isLiked = post.likes?.includes(uid) || false;
+                    const isAuthor = post.authorId === uid;
+                    const likeCount = post.likes?.length || 0;
+                    const replyCount = post.replies?.length || 0;
+
+                    return `
+                        <div class="stat-card" style="margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                                <div style="display: flex; gap: 12px; align-items: center; flex: 1;">
+                                    <div style="cursor: pointer;" onclick="viewUserProfile('${post.authorId}')">
+                                        ${post.profilePicture ?
+                            `<img src="${post.profilePicture}" style="width: 40px; height: 40px; border-radius: 20px; object-fit: cover;">` :
+                            `<div style="width: 40px; height: 40px; border-radius: 20px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${post.username?.[0]?.toUpperCase() || 'U'}</div>`
+                        }
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px;" onclick="viewUserProfile('${post.authorId}')">
+                                            ${post.username || 'Anonymous'}
+                                            ${isAuthor ? '<span style="background: rgba(102, 126, 234, 0.1); color: var(--primary-color); font-size: 10px; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--primary-color);">Owner</span>' : ''}
+                                        </div>
+                                        <div style="font-size: 12px; color: #999;">${formatTime(post.timestamp)}</div>
+                                    </div>
+                                </div>
+                                ${isAuthor ? `
+                                    <button onclick="deletePost('${post.id}')" style="background: none; border: none; cursor: pointer; padding: 4px;">
+                                        <ion-icon name="trash-outline" style="font-size: 20px; color: #dc3545;"></ion-icon>
+                                    </button>
+                                ` : ''}
+                            </div>
+                            
+                            ${post.contentText ? `<p style="margin-bottom: 12px;">${post.contentText}</p>` : ''}
+                            
+                            ${post.contentImage ? `
+                                <img src="${post.contentImage}" style="width: 100%; border-radius: 8px; margin-bottom: 12px; height: auto; object-fit: contain; background: rgba(0,0,0,0.05);">
+                            ` : ''}
+                            
+                            ${post.contentLink ? `
+                                <a href="${post.contentLink}" target="_blank" style="color: #667eea; text-decoration: none; display: block; margin-bottom: 12px;">
+                                    🔗 ${post.contentLink}
+                                </a>
+                            ` : ''}
+                            
+                            <div style="display: flex; gap: 16px; padding-top: 12px; border-top: 1px solid #333;">
+                                <button onclick="toggleLike('${post.id}', ${isLiked})" style="background: ${isLiked ? 'rgba(220, 53, 69, 0.1)' : 'none'}; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 6px;">
+                                    <ion-icon name="${isLiked ? 'heart' : 'heart-outline'}" style="font-size: 20px; color: ${isLiked ? '#dc3545' : '#999'};"></ion-icon>
+                                    <span style="color: ${isLiked ? '#dc3545' : '#999'};">${likeCount}</span>
+                                </button>
+                                <button onclick="openPostDetail('${post.id}')" style="background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 6px;">
+                                    <ion-icon name="chatbubble-outline" style="font-size: 20px; color: #999;"></ion-icon>
+                                    <span style="color: #999;">${replyCount}</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('') : '<div class="empty-container"><p class="empty-text">No posts yet. Be the first to share something!</p></div>';
+
+                document.getElementById('posts-feed').innerHTML = feedHTML;
+
+            } catch (error) {
+                console.error('Load community feed error:', error);
+                showToast('Error loading posts', 'error');
+                document.getElementById('posts-feed').innerHTML = '<div class="empty-container"><p class="empty-text">Error loading posts. Please try again.</p></div>';
+            }
+        }
+
+        window.showCreatePostModal = function () {
+            document.getElementById('create-post-modal').classList.add('show');
+        };
+
+        // Image upload handler
+        let uploadedImageBase64 = null;
+
+        window.handleImageUpload = function (input, previewId) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    uploadedImageBase64 = e.target.result;
+                    const preview = document.getElementById(previewId);
+                    preview.src = uploadedImageBase64;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        window.createPost = async function () {
+            const content = document.getElementById('post-content').value.trim();
+            const link = document.getElementById('post-link').value.trim();
+
+            if (!content && !uploadedImageBase64 && !link) {
+                showToast('Please add some content to your post', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+
+            try {
+                // Get user data
+                const userDoc = await getDoc(doc(db, 'users', uid));
+                const userData = userDoc.data() || {};
+
+                const postRef = doc(collection(db, 'posts'));
+                await setDoc(postRef, {
+                    id: postRef.id,
+                    authorId: uid,
+                    username: userData.username || userData.displayName || 'Anonymous',
+                    profilePicture: userData.profilePicture || null,
+                    contentText: content || null,
+                    contentImage: uploadedImageBase64 || null,
+                    contentLink: link || null,
+                    timestamp: Date.now(),
+                    likes: [],
+                    replies: []
+                });
+
+                showToast('Post created!', 'success');
+                closeModal('create-post-modal');
+                document.getElementById('post-content').value = '';
+                document.getElementById('post-image').value = '';
+                document.getElementById('post-link').value = '';
+                document.getElementById('post-image-preview').style.display = 'none';
+                uploadedImageBase64 = null;
+                loadCommunityFeed();
+
+            } catch (error) {
+                console.error('Create post error:', error);
+                showToast('Error creating post', 'error');
+            }
+        };
+
+        window.toggleLike = async function (postId, isLiked) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const postRef = doc(db, 'posts', postId);
+                const postDoc = await getDoc(postRef);
+                const postData = postDoc.data();
+
+                let likes = postData.likes || [];
+
+                if (isLiked) {
+                    likes = likes.filter(id => id !== uid);
+                } else {
+                    likes.push(uid);
+                }
+
+                await updateDoc(postRef, { likes });
+                loadCommunityFeed();
+
+            } catch (error) {
+                console.error('Toggle like error:', error);
+                showToast('Error updating like', 'error');
+            }
+        };
+
+        window.deletePost = async function (postId) {
+            if (!confirm('Delete this post?')) return;
+
+            try {
+                await deleteDoc(doc(db, 'posts', postId));
+                showToast('Post deleted', 'success');
+                loadCommunityFeed();
+            } catch (error) {
+                console.error('Delete post error:', error);
+                showToast('Error deleting post', 'error');
+            }
+        };
+
+        // POST DETAIL FUNCTIONS
+        let currentPost = null;
+        let currentReplies = [];
+
+        window.openPostDetail = async function (postId) {
+            try {
+                // Get post
+                const postDoc = await getDoc(doc(db, 'posts', postId));
+                if (!postDoc.exists()) {
+                    showToast('Post not found', 'error');
+                    return;
+                }
+
+                currentPost = { id: postDoc.id, ...postDoc.data() };
+
+                // Get replies - use where only, then sort in JS to avoid composite index
+                const repliesRef = collection(db, 'replies');
+                const q = query(repliesRef, where('postId', '==', postId));
+                const snapshot = await getDocs(q);
+
+                currentReplies = [];
+                snapshot.forEach(doc => {
+                    currentReplies.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort by timestamp in JavaScript
+                currentReplies.sort((a, b) => a.timestamp - b.timestamp);
+
+                // Render post detail
+                const uid = localStorage.getItem('kobi_atlas_uid');
+                const isLiked = currentPost.likes?.includes(uid) || false;
+                const isAuthor = currentPost.authorId === uid;
+                const likeCount = currentPost.likes?.length || 0;
+
+                const postHTML = `
+                    <div style="padding: 16px; background: #2a2a2a; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                            <div style="display: flex; gap: 12px; align-items: center; flex: 1;">
+                                ${currentPost.profilePicture ?
+                        `<img src="${currentPost.profilePicture}" style="width: 40px; height: 40px; border-radius: 20px; object-fit: cover;">` :
+                        `<div style="width: 40px; height: 40px; border-radius: 20px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${currentPost.username?.[0]?.toUpperCase() || 'U'}</div>`
+                    }
+                                <div>
+                                    <div style="font-weight: bold;">${currentPost.username || 'Anonymous'}</div>
+                                    <div style="font-size: 12px; color: #999;">${formatTime(currentPost.timestamp)}</div>
+                                </div>
+                            </div>
+                            ${isAuthor ? `
+                                <button onclick="deletePostFromDetail('${currentPost.id}')" style="background: none; border: none; cursor: pointer; padding: 4px;">
+                                    <ion-icon name="trash-outline" style="font-size: 20px; color: #dc3545;"></ion-icon>
+                                </button>
+                            ` : ''}
+                        </div>
+                        
+                        ${currentPost.contentText ? `<p style="margin-bottom: 12px;">${currentPost.contentText}</p>` : ''}
+                        
+                        ${currentPost.contentImage ? `
+                            <img src="${currentPost.contentImage}" style="width: 100%; border-radius: 8px; margin-bottom: 12px; max-height: 400px; object-fit: cover;">
+                        ` : ''}
+                        
+                        <div style="display: flex; gap: 16px; padding-top: 12px; border-top: 1px solid #333;">
+                            <button onclick="toggleLikeInDetail('${currentPost.id}', ${isLiked})" style="background: ${isLiked ? 'rgba(220, 53, 69, 0.1)' : 'none'}; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 6px;">
+                                <ion-icon name="${isLiked ? 'heart' : 'heart-outline'}" style="font-size: 20px; color: ${isLiked ? '#dc3545' : '#999'};"></ion-icon>
+                                <span style="color: ${isLiked ? '#dc3545' : '#999'};">${likeCount}</span>
+                            </button>
+                            <div style="display: flex; align-items: center; gap: 6px; padding: 8px 12px;">
+                                <ion-icon name="chatbubble-outline" style="font-size: 20px; color: #999;"></ion-icon>
+                                <span style="color: #999;">${currentReplies.length}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('post-detail-content').innerHTML = postHTML;
+                document.getElementById('replies-count').textContent = currentReplies.length;
+
+                // Render replies
+                renderReplies();
+
+                // Show modal
+                document.getElementById('post-detail-modal').classList.add('show');
+
+            } catch (error) {
+                console.error('Open post detail error:', error);
+                showToast('Error loading post', 'error');
+            }
+        };
+
+        function renderReplies() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            const repliesHTML = currentReplies.length > 0 ? currentReplies.map(reply => {
+                const isLiked = reply.likes?.includes(uid) || false;
+                const isAuthor = reply.authorId === uid;
+                const likeCount = reply.likes?.length || 0;
+
+                return `
+                    <div style="padding: 12px; background: #2a2a2a; border-radius: 8px; margin-bottom: 10px;">
+                        <div style="display: flex; gap: 12px; margin-bottom: 8px;">
+                            ${reply.profilePicture ?
+                        `<img src="${reply.profilePicture}" style="width: 32px; height: 32px; border-radius: 16px; object-fit: cover;">` :
+                        `<div style="width: 32px; height: 32px; border-radius: 16px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px;">${reply.username?.[0]?.toUpperCase() || 'U'}</div>`
+                    }
+                            <div style="flex: 1;">
+                                <div style="font-weight: bold; font-size: 14px;">${reply.username || 'Anonymous'}</div>
+                                <div style="font-size: 11px; color: #999;">${formatTime(reply.timestamp)}</div>
+                            </div>
+                            ${isAuthor ? `
+                                <button onclick="deleteReply('${reply.id}')" style="background: none; border: none; cursor: pointer; padding: 4px;">
+                                    <ion-icon name="trash-outline" style="font-size: 16px; color: #dc3545;"></ion-icon>
+                                </button>
+                            ` : ''}
+                        </div>
+                        
+                        <p style="font-size: 14px; margin-bottom: 8px;">${reply.contentText}</p>
+                        
+                        ${reply.contentImage ? `
+                            <img src="${reply.contentImage}" style="width: 100%; border-radius: 8px; margin-bottom: 8px; max-height: 200px; object-fit: cover;">
+                        ` : ''}
+                        
+                        <button onclick="toggleReplyLike('${reply.id}', ${isLiked})" style="background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 4px;">
+                            <ion-icon name="${isLiked ? 'heart' : 'heart-outline'}" style="font-size: 16px; color: ${isLiked ? '#dc3545' : '#999'};"></ion-icon>
+                            <span style="color: ${isLiked ? '#dc3545' : '#999'}; font-size: 13px;">${likeCount}</span>
+                        </button>
+                    </div>
+                `;
+            }).join('') : '<p style="text-align: center; color: #999; padding: 20px;">No replies yet. Be the first to reply!</p>';
+
+            document.getElementById('replies-list').innerHTML = repliesHTML;
+        }
+
+        window.createReply = async function () {
+            const content = document.getElementById('reply-input').value.trim();
+
+            if (!content) {
+                showToast('Please enter a reply', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                // Get user data
+                const userDoc = await getDoc(doc(db, 'users', uid));
+                const userData = userDoc.data() || {};
+
+                const replyRef = doc(collection(db, 'replies'));
+                await setDoc(replyRef, {
+                    id: replyRef.id,
+                    postId: currentPost.id,
+                    authorId: uid,
+                    username: userData.username || userData.displayName || 'Anonymous',
+                    profilePicture: userData.profilePicture || null,
+                    contentText: content,
+                    contentImage: null,
+                    timestamp: Date.now(),
+                    likes: []
+                });
+
+                // Update post replies array
+                const postRef = doc(db, 'posts', currentPost.id);
+                const postDoc = await getDoc(postRef);
+                const postData = postDoc.data();
+                const replies = postData.replies || [];
+                replies.push(replyRef.id);
+                await updateDoc(postRef, { replies });
+
+                showToast('Reply added!', 'success');
+                document.getElementById('reply-input').value = '';
+
+                // Reload post detail
+                openPostDetail(currentPost.id);
+
+            } catch (error) {
+                console.error('Create reply error:', error);
+                showToast('Error creating reply', 'error');
+            }
+        };
+
+        window.toggleLikeInDetail = async function (postId, isLiked) {
+            await toggleLike(postId, isLiked);
+            openPostDetail(postId);
+        };
+
+        window.toggleReplyLike = async function (replyId, isLiked) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const replyRef = doc(db, 'replies', replyId);
+                const replyDoc = await getDoc(replyRef);
+                const replyData = replyDoc.data();
+
+                let likes = replyData.likes || [];
+
+                if (isLiked) {
+                    likes = likes.filter(id => id !== uid);
+                } else {
+                    likes.push(uid);
+                }
+
+                await updateDoc(replyRef, { likes });
+                openPostDetail(currentPost.id);
+
+            } catch (error) {
+                console.error('Toggle reply like error:', error);
+                showToast('Error updating like', 'error');
+            }
+        };
+
+        window.deleteReply = async function (replyId) {
+            if (!confirm('Delete this reply?')) return;
+
+            try {
+                // Delete reply document
+                await deleteDoc(doc(db, 'replies', replyId));
+
+                // Update post replies array
+                const postRef = doc(db, 'posts', currentPost.id);
+                const postDoc = await getDoc(postRef);
+                const postData = postDoc.data();
+                const replies = (postData.replies || []).filter(id => id !== replyId);
+                await updateDoc(postRef, { replies });
+
+                showToast('Reply deleted', 'success');
+                openPostDetail(currentPost.id);
+            } catch (error) {
+                console.error('Delete reply error:', error);
+                showToast('Error deleting reply', 'error');
+            }
+        };
+
+        window.deletePostFromDetail = async function (postId) {
+            if (!confirm('Delete this post?')) return;
+
+            try {
+                await deleteDoc(doc(db, 'posts', postId));
+                showToast('Post deleted', 'success');
+                closeModal('post-detail-modal');
+                loadCommunityFeed();
+            } catch (error) {
+                console.error('Delete post error:', error);
+                showToast('Error deleting post', 'error');
+            }
+        };
+
+        // GPA VIEW FUNCTIONS
+        let currentGPATab = 'current';
+
+        window.switchGPATab = function (tab) {
+            currentGPATab = tab;
+            document.getElementById('gpa-current-tab').classList.toggle('active', tab === 'current');
+            document.getElementById('gpa-predicted-tab').classList.toggle('active', tab === 'predicted');
+            loadGPAView();
+        };
+
+        function getDegreeClassification(gpa) {
+            if (gpa >= 4.50) return { label: 'First Class', color: '#FFD700', icon: 'star' };
+            if (gpa >= 3.50) return { label: 'Second Class (Upper Division)', color: '#4CAF50', icon: 'checkmark-circle' };
+            if (gpa >= 2.40) return { label: 'Second Class (Lower Division)', color: '#FF9800', icon: 'remove-circle' };
+            if (gpa >= 1.50) return { label: 'Third Class', color: '#9E9E9E', icon: 'ellipse' };
+            return { label: 'Fail', color: '#F44336', icon: 'alert-circle' };
+        }
+
+        async function loadGPAView() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+
+                const semesters = [];
+                snapshot.forEach(doc => {
+                    semesters.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort by timestamp
+                semesters.sort((a, b) => a.timestamp - b.timestamp);
+
+                // Get relevant semesters based on tab
+                const relevantSemesters = currentGPATab === 'current'
+                    ? semesters.filter(s => s.type === 'past')
+                    : semesters;
+
+                // Calculate aggregate stats
+                let totalPoints = 0;
+                let totalUnits = 0;
+
+                relevantSemesters.forEach(sem => {
+                    if (sem.type === 'past' && sem.gpa && sem.totalUnits) {
+                        totalPoints += sem.gpa * sem.totalUnits;
+                        totalUnits += sem.totalUnits;
+                    } else if (sem.courses) {
+                        const semGPA = parseFloat(calculateSemesterGPA(sem.courses));
+                        const semUnits = sem.courses.reduce((sum, c) => sum + (c.unitHours || 0), 0);
+                        totalPoints += semGPA * semUnits;
+                        totalUnits += semUnits;
+                    }
+                });
+
+                const gpa = totalUnits > 0 ? (totalPoints / totalUnits).toFixed(2) : '0.00';
+                const classification = getDegreeClassification(parseFloat(gpa));
+
+                // Update classification
+                document.getElementById('classification-icon').setAttribute('name', classification.icon);
+                document.getElementById('classification-icon').style.color = classification.color;
+                document.getElementById('classification-label').textContent = classification.label;
+                document.getElementById('classification-label').style.color = classification.color;
+
+                // Update stats
+                document.getElementById('gpa-main-value').textContent = gpa;
+                document.getElementById('gpa-main-label').textContent = currentGPATab === 'current' ? 'Cumulative GPA' : 'Predicted GPA';
+                document.getElementById('gpa-credits').textContent = totalUnits;
+                document.getElementById('gpa-semesters').textContent = relevantSemesters.length;
+
+                // Calculate trend
+                if (relevantSemesters.length >= 2) {
+                    const lastGPA = parseFloat(calculateSemesterGPA(relevantSemesters[relevantSemesters.length - 1].courses || []));
+                    const prevGPA = parseFloat(calculateSemesterGPA(relevantSemesters[relevantSemesters.length - 2].courses || []));
+                    const diff = lastGPA - prevGPA;
+
+                    const trendIcon = document.getElementById('trend-icon');
+                    const trendValue = document.getElementById('trend-value');
+
+                    if (diff > 0.1) {
+                        trendIcon.setAttribute('name', 'trending-up');
+                        trendIcon.style.color = '#4CAF50';
+                        trendValue.textContent = '↑';
+                    } else if (diff < -0.1) {
+                        trendIcon.setAttribute('name', 'trending-down');
+                        trendIcon.style.color = '#F44336';
+                        trendValue.textContent = '↓';
+                    } else {
+                        trendIcon.setAttribute('name', 'remove');
+                        trendIcon.style.color = '#999';
+                        trendValue.textContent = '→';
+                    }
+                }
+
+                // Render GPA Chart
+                const chartHTML = relevantSemesters.map(sem => {
+                    const semGPA = sem.gpa || parseFloat(calculateSemesterGPA(sem.courses || []));
+                    const height = (semGPA / 5.0) * 150;
+                    const color = sem.type === 'past' ? '#667eea' : '#00d4ff';
+                    return `
+                        <div style="display: flex; flex-direction: column; align-items: center; min-width: 50px;">
+                            <div style="width: 40px; background: ${color}; height: ${height}px; border-radius: 4px 4px 0 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 4px;">
+                                <span style="font-size: 10px; color: white; font-weight: bold;">${semGPA.toFixed(2)}</span>
+                            </div>
+                            <span style="font-size: 10px; color: #999; margin-top: 4px;">${sem.name.split(' ')[0]}</span>
+                        </div>
+                    `;
+                }).join('');
+                document.getElementById('gpa-chart').innerHTML = chartHTML;
+
+                // Find best and worst semesters
+                if (relevantSemesters.length > 0) {
+                    const semestersWithGPA = relevantSemesters.map(s => ({
+                        ...s,
+                        gpa: s.gpa || parseFloat(calculateSemesterGPA(s.courses || []))
+                    }));
+
+                    const best = semestersWithGPA.reduce((max, s) => s.gpa > max.gpa ? s : max);
+                    const worst = semestersWithGPA.reduce((min, s) => s.gpa < min.gpa ? s : min);
+
+                    document.getElementById('best-semester').innerHTML = `Best Semester: <strong>${best.name}</strong> (${best.gpa.toFixed(2)})`;
+                    document.getElementById('worst-semester').innerHTML = `Lowest Semester: <strong>${worst.name}</strong> (${worst.gpa.toFixed(2)})`;
+                }
+
+                // Grade Distribution (only for past semesters with grades)
+                const distribution = {};
+                semesters.filter(s => s.type === 'past').forEach(sem => {
+                    sem.courses?.forEach(course => {
+                        const grade = course.grade || course.predictedGrade;
+                        if (grade) {
+                            distribution[grade] = (distribution[grade] || 0) + 1;
+                        }
+                    });
+                });
+
+                const total = Object.values(distribution).reduce((a, b) => a + b, 0);
+                if (total > 0) {
+                    const distHTML = ['A', 'B', 'C', 'D', 'E', 'F'].map(grade => {
+                        const count = distribution[grade] || 0;
+                        if (count === 0) return '';
+                        const percentage = (count / total) * 100;
+                        return `
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                <span style="width: 20px; font-weight: bold;">${grade}</span>
+                                <div style="flex: 1; background: #333; height: 20px; border-radius: 4px; overflow: hidden;">
+                                    <div style="width: ${percentage}%; background: #667eea; height: 100%;"></div>
+                                </div>
+                                <span style="width: 30px; text-align: right; font-size: 12px; color: #999;">${count}</span>
+                            </div>
+                        `;
+                    }).join('');
+                    document.getElementById('distribution-content').innerHTML = distHTML;
+                    document.getElementById('grade-distribution').style.display = 'block';
+                } else {
+                    document.getElementById('grade-distribution').style.display = 'none';
+                }
+
+                // Semester Breakdown
+                const breakdownHTML = relevantSemesters.map(sem => {
+                    const semGPA = sem.gpa || parseFloat(calculateSemesterGPA(sem.courses || []));
+                    const credits = sem.totalUnits || sem.courses?.reduce((sum, c) => sum + (c.unitHours || 0), 0) || 0;
+                    const courseCount = sem.courses?.length || 0;
+                    return `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #333; cursor: pointer;" onclick="viewSemester('${sem.id}')">
+                            <div>
+                                <div style="font-weight: bold;">${sem.name}</div>
+                                <div style="font-size: 12px; color: #999; margin-top: 4px;">${courseCount} courses • ${credits} credits</div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 20px; font-weight: bold; color: #667eea;">${semGPA.toFixed(2)}</span>
+                                <ion-icon name="chevron-forward" style="color: #999;"></ion-icon>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                document.getElementById('semester-breakdown').innerHTML = breakdownHTML || '<p style="text-align: center; color: #999; padding: 20px;">No semesters yet</p>';
+
+            } catch (error) {
+                console.error('Load GPA view error:', error);
+                showToast('Error loading GPA data', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // PLANNER FUNCTIONS
+        let currentPlannerTab = 'schedule';
+        let allTasks = [];
+        const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+        window.switchPlannerTab = function (tab) {
+            currentPlannerTab = tab;
+            document.getElementById('schedule-tab').classList.toggle('hidden', tab !== 'schedule');
+            document.getElementById('tasks-tab').classList.toggle('hidden', tab !== 'tasks');
+            document.getElementById('schedule-tab-btn').classList.toggle('active', tab === 'schedule');
+            document.getElementById('tasks-tab-btn').classList.toggle('active', tab === 'tasks');
+
+            if (tab === 'schedule') {
+                loadSchedule();
+            } else {
+                loadTasks();
+            }
+        };
+
+        async function loadSchedule() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+
+                const semesters = [];
+                snapshot.forEach(doc => {
+                    semesters.push({ id: doc.id, ...doc.data() });
+                });
+
+                const currentSemester = semesters.find(s => s.type === 'current');
+                const courses = currentSemester?.courses || [];
+
+                const scheduleContent = document.getElementById('schedule-content');
+
+                if (courses.length === 0) {
+                    scheduleContent.innerHTML = `
+                        <div class="empty-container">
+                            <ion-icon name="calendar-outline" size="large" style="font-size: 64px; color: #666;"></ion-icon>
+                            <p class="empty-text">No current semester found or no courses added.</p>
+                        </div>
+                    `;
+                    showLoading(false);
+                    return;
+                }
+
+                const coursesWithSchedule = courses.filter(c => c.schedule);
+
+                if (coursesWithSchedule.length === 0) {
+                    scheduleContent.innerHTML = `
+                        <div class="empty-container">
+                            <ion-icon name="calendar-outline" size="large" style="font-size: 64px; color: #666;"></ion-icon>
+                            <p class="empty-text">No schedule details added yet.<br>Tap + to add class times.</p>
+                        </div>
+                    `;
+                    showLoading(false);
+                    return;
+                }
+
+                // Group by day
+                let html = '';
+                DAYS.forEach(day => {
+                    const dayCourses = courses
+                        .filter(c => c.schedule?.day === day)
+                        .sort((a, b) => (a.schedule?.startTime || '').localeCompare(b.schedule?.startTime || ''));
+
+                    if (dayCourses.length > 0) {
+                        html += `
+                            <div class="day-section">
+                                <div class="day-title">${day}</div>
+                                ${dayCourses.map(course => `
+                                    <div class="schedule-card">
+                                        <div class="time-container">
+                                            <div class="time-text">${course.schedule.startTime}</div>
+                                            <div class="time-line"></div>
+                                            <div class="time-text" style="color: #999;">${course.schedule.endTime}</div>
+                                        </div>
+                                        <div class="details-container">
+                                            <div class="course-code">${course.code}</div>
+                                            <div class="course-name">${course.name}</div>
+                                            ${course.schedule.venue ? `
+                                                <div class="venue-container">
+                                                    <ion-icon name="location-outline" style="font-size: 14px; color: #999;"></ion-icon>
+                                                    <span class="venue-text">${course.schedule.venue}</span>
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+                });
+
+                scheduleContent.innerHTML = html;
+
+            } catch (error) {
+                console.error('Load schedule error:', error);
+                showToast('Error loading schedule', 'error');
+                document.getElementById('schedule-content').innerHTML = `
+                    <div class="empty-container">
+                        <p class="empty-text">Error loading schedule. Please try again.</p>
+                    </div>
+                `;
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function loadTasks() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                const tasksRef = collection(db, 'users', uid, 'tasks');
+                const snapshot = await getDocs(tasksRef);
+
+                allTasks = [];
+                snapshot.forEach(doc => {
+                    allTasks.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort by due date
+                allTasks.sort((a, b) => a.dueDate - b.dueDate);
+
+                const tasksContent = document.getElementById('tasks-content');
+
+                if (allTasks.length === 0) {
+                    tasksContent.innerHTML = `
+                        <div class="empty-container">
+                            <ion-icon name="checkbox-outline" size="large" style="font-size: 64px; color: #666;"></ion-icon>
+                            <p class="empty-text">No tasks yet. Tap + to add one!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const html = allTasks.map(task => `
+                    <div class="task-card">
+                        <button class="checkbox" onclick="toggleTask('${task.id}', ${task.isCompleted})">
+                            <ion-icon 
+                                name="${task.isCompleted ? 'checkmark-circle' : 'ellipse-outline'}" 
+                                style="font-size: 24px; color: ${task.isCompleted ? '#667eea' : '#999'};">
+                            </ion-icon>
+                        </button>
+                        <div class="task-content">
+                            <div class="task-title" style="${task.isCompleted ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${task.title}</div>
+                            <div class="task-meta">
+                                ${task.courseName ? `<span class="task-course">${task.courseName} • </span>` : ''}
+                                <span class="task-date">Due: ${new Date(task.dueDate).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                        <button class="delete-task-button" onclick="deleteTaskItem('${task.id}')">
+                            <ion-icon name="trash-outline" style="font-size: 20px; color: #dc3545;"></ion-icon>
+                        </button>
+                    </div>
+                `).join('');
+
+                tasksContent.innerHTML = html;
+
+            } catch (error) {
+                console.error('Load tasks error:', error);
+                showToast('Error loading tasks', 'error');
+                document.getElementById('tasks-content').innerHTML = `
+                    <div class="empty-container">
+                        <p class="empty-text">Error loading tasks. Please try again.</p>
+                    </div>
+                `;
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        window.showAddScheduleModal = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+
+                const semesters = [];
+                snapshot.forEach(doc => {
+                    semesters.push({ id: doc.id, ...doc.data() });
+                });
+
+                const currentSemester = semesters.find(s => s.type === 'current');
+                const courses = currentSemester?.courses || [];
+
+                if (courses.length === 0) {
+                    showToast('No courses found. Add courses first!', 'error');
+                    return;
+                }
+
+                const select = document.getElementById('schedule-course-select');
+                select.innerHTML = '<option value="">Select a course...</option>' +
+                    courses.map(c => `<option value="${c.id}">${c.code} - ${c.name}</option>`).join('');
+
+                document.getElementById('add-schedule-modal').classList.add('show');
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Error loading courses', 'error');
+            }
+        };
+
+        window.saveSchedule = async function () {
+            const courseId = document.getElementById('schedule-course-select').value;
+            const day = document.getElementById('schedule-day').value;
+            const startTime = document.getElementById('schedule-start-time').value;
+            const endTime = document.getElementById('schedule-end-time').value;
+            const venue = document.getElementById('schedule-venue').value;
+
+            if (!courseId) {
+                showToast('Please select a course', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+
+                let currentSemester = null;
+                snapshot.forEach(doc => {
+                    const data = { id: doc.id, ...doc.data() };
+                    if (data.type === 'current') {
+                        currentSemester = data;
+                    }
+                });
+
+                if (!currentSemester) {
+                    showToast('No current semester found', 'error');
+                    showLoading(false);
+                    return;
+                }
+
+                const courseIndex = currentSemester.courses.findIndex(c => c.id === courseId);
+                if (courseIndex === -1) {
+                    showToast('Course not found', 'error');
+                    showLoading(false);
+                    return;
+                }
+
+                currentSemester.courses[courseIndex].schedule = {
+                    day,
+                    startTime,
+                    endTime,
+                    venue: venue || undefined
+                };
+
+                await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                    courses: currentSemester.courses
+                });
+
+                showToast('Schedule added!', 'success');
+                closeModal('add-schedule-modal');
+                loadSchedule();
+
+            } catch (error) {
+                console.error('Save schedule error:', error);
+                showToast('Error saving schedule', 'error');
+            }
+
+            showLoading(false);
+        };
+
+        window.showAddTaskModal = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+
+                const semesters = [];
+                snapshot.forEach(doc => {
+                    semesters.push({ id: doc.id, ...doc.data() });
+                });
+
+                const currentSemester = semesters.find(s => s.type === 'current');
+                const courses = currentSemester?.courses || [];
+
+                const select = document.getElementById('task-course-select');
+                select.innerHTML = '<option value="">None</option>' +
+                    courses.map(c => `<option value="${c.id}">${c.code} - ${c.name}</option>`).join('');
+
+                // Set default due date to tomorrow
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                document.getElementById('task-due-date').value = tomorrow.toISOString().split('T')[0];
+
+                document.getElementById('add-task-modal').classList.add('show');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        window.addTask = async function () {
+            const title = document.getElementById('task-title').value.trim();
+            const courseId = document.getElementById('task-course-select').value;
+            const type = document.getElementById('task-type').value;
+            const dueDate = document.getElementById('task-due-date').value;
+            const description = document.getElementById('task-description').value.trim();
+
+            if (!title || !dueDate) {
+                showToast('Please enter title and due date', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                // Get course name if selected
+                let courseName = undefined;
+                if (courseId) {
+                    const semRef = collection(db, 'users', uid, 'semesters');
+                    const snapshot = await getDocs(semRef);
+
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        if (data.type === 'current') {
+                            const course = data.courses?.find(c => c.id === courseId);
+                            if (course) {
+                                courseName = course.name;
+                            }
+                        }
+                    });
+                }
+
+                const taskRef = doc(collection(db, 'users', uid, 'tasks'));
+                await setDoc(taskRef, {
+                    id: taskRef.id,
+                    userId: uid,
+                    title,
+                    courseId: courseId || undefined,
+                    courseName,
+                    type,
+                    dueDate: new Date(dueDate).getTime(),
+                    description: description || undefined,
+                    isCompleted: false,
+                    createdAt: Date.now()
+                });
+
+                showToast('Task added!', 'success');
+                closeModal('add-task-modal');
+                document.getElementById('task-title').value = '';
+                document.getElementById('task-description').value = '';
+                loadTasks();
+
+            } catch (error) {
+                console.error('Add task error:', error);
+                showToast('Error adding task', 'error');
+            }
+
+            showLoading(false);
+        };
+
+        window.toggleTask = async function (taskId, currentStatus) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                await updateDoc(doc(db, 'users', uid, 'tasks', taskId), {
+                    isCompleted: !currentStatus
+                });
+
+                loadTasks();
+            } catch (error) {
+                console.error('Toggle task error:', error);
+                showToast('Error updating task', 'error');
+            }
+        };
+
+        window.deleteTaskItem = async function (taskId) {
+            if (!confirm('Delete this task?')) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                await deleteDoc(doc(db, 'users', uid, 'tasks', taskId));
+                showToast('Task deleted', 'success');
+                loadTasks();
+            } catch (error) {
+                console.error('Delete task error:', error);
+                showToast('Error deleting task', 'error');
+            }
+
+            showLoading(false);
+        };
+
+
+        // USER SEARCH & PROFILE FUNCTIONS
+        let allUsers = [];
+        let currentViewingUser = null;
+        let currentChatUser = null;
+
+        window.showUserSearch = async function () {
+            document.getElementById('user-search-modal').classList.add('show');
+            await loadAllUsers();
+        };
+
+        async function loadAllUsers() {
+            try {
+                const usersRef = collection(db, 'users');
+                const snapshot = await getDocs(usersRef);
+
+                allUsers = [];
+                snapshot.forEach(doc => {
+                    allUsers.push({ id: doc.id, ...doc.data() });
+                });
+
+                renderUsers(allUsers);
+            } catch (error) {
+                console.error('Load users error:', error);
+                showToast('Error loading users', 'error');
+            }
+        }
+
+        window.searchUsers = function () {
+            const searchTerm = document.getElementById('user-search-input').value.toLowerCase();
+            const filtered = allUsers.filter(u =>
+                u.username?.toLowerCase().includes(searchTerm) ||
+                u.email?.toLowerCase().includes(searchTerm)
+            );
+            renderUsers(filtered);
+        };
+
+        function renderUsers(users) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const html = users.length > 0 ? users.map(user => {
+                if (user.id === uid) return ''; // Don't show current user
+
+                const isOnline = user.lastActive && (Date.now() - user.lastActive < 300000); // 5 min
+
+                return `
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #2a2a2a; border-radius: 8px; margin-bottom: 10px; cursor: pointer;" onclick="viewUserProfile('${user.id}')">
+                        <div style="position: relative;">
+                            ${user.profilePicture ?
+                        `<img src="${user.profilePicture}" style="width: 50px; height: 50px; border-radius: 25px; object-fit: cover;">` :
+                        `<div style="width: 50px; height: 50px; border-radius: 25px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 20px;">${user.username?.[0]?.toUpperCase() || 'U'}</div>`
+                    }
+                            ${isOnline ? '<div style="position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; background: #4CAF50; border: 2px solid #1a1a1a; border-radius: 50%;"></div>' : ''}
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: bold;">${user.username || 'Anonymous'}</div>
+                            <div style="font-size: 12px; color: #999;">${user.email || ''}</div>
+                        </div>
+                        <ion-icon name="chevron-forward" style="color: #999;"></ion-icon>
+                    </div>
+                `;
+            }).join('') : '<p style="text-align: center; color: #999; padding: 20px;">No users found</p>';
+
+            document.getElementById('users-list').innerHTML = html;
+        }
+
+        window.viewUserProfile = async function (userId) {
+            try {
+                const userDoc = await getDoc(doc(db, 'users', userId));
+                if (!userDoc.exists()) {
+                    showToast('User not found', 'error');
+                    return;
+                }
+
+                currentViewingUser = { id: userDoc.id, ...userDoc.data() };
+                const uid = localStorage.getItem('kobi_atlas_uid');
+                const isOwnProfile = userId === uid;
+
+                // Check friend status
+                const friendsRef = collection(db, 'friends');
+                const q1 = query(friendsRef, where('userId', '==', uid), where('friendId', '==', userId));
+                const q2 = query(friendsRef, where('userId', '==', userId), where('friendId', '==', uid));
+                const [snap1, snap2] = await Promise.all([getDocs(q1), getDocs(q2)]);
+
+                const isFriend = !snap1.empty || !snap2.empty;
+
+                // Check pending request
+                const requestsRef = collection(db, 'friendRequests');
+                const q3 = query(requestsRef, where('fromUserId', '==', uid), where('toUserId', '==', userId), where('status', '==', 'pending'));
+                const snap3 = await getDocs(q3);
+                const hasPendingRequest = !snap3.empty;
+
+                // Get user's posts
+                const postsRef = collection(db, 'posts');
+                const postsQuery = query(postsRef, where('authorId', '==', userId), orderBy('timestamp', 'desc'));
+                const postsSnap = await getDocs(postsQuery);
+                const userPosts = [];
+                postsSnap.forEach(doc => userPosts.push({ id: doc.id, ...doc.data() }));
+
+                const joinDate = currentViewingUser.createdAt ? new Date(currentViewingUser.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Unknown';
+                const lastSeen = currentViewingUser.lastActive ? formatTime(currentViewingUser.lastActive) : 'Never';
+                const isOnline = currentViewingUser.lastActive && (Date.now() - currentViewingUser.lastActive < 300000);
+                const friendCount = currentViewingUser.friends?.length || 0;
+
+                const html = `
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        ${currentViewingUser.profilePicture ?
+                        `<img src="${currentViewingUser.profilePicture}" style="width: 100px; height: 100px; border-radius: 50px; object-fit: cover; margin-bottom: 10px;">` :
+                        `<div style="width: 100px; height: 100px; border-radius: 50px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 40px; margin: 0 auto 10px;">${currentViewingUser.username?.[0]?.toUpperCase() || 'U'}</div>`
+                    }
+                        <h2 style="margin: 10px 0;">${currentViewingUser.username || 'Anonymous'}</h2>
+                        <p style="color: #999;">${currentViewingUser.email || ''}</p>
+                    </div>
+                    
+                    <!-- Stats Grid -->
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
+                        <div style="text-align: center; padding: 12px; background: #2a2a2a; border-radius: 8px;">
+                            <div style="font-size: 20px; font-weight: bold;">${userPosts.length}</div>
+                            <div style="font-size: 12px; color: #999;">Posts</div>
+                        </div>
+                        <div style="text-align: center; padding: 12px; background: #2a2a2a; border-radius: 8px;">
+                            <div style="font-size: 20px; font-weight: bold;">${friendCount}</div>
+                            <div style="font-size: 12px; color: #999;">Friends</div>
+                        </div>
+                        <div style="text-align: center; padding: 12px; background: #2a2a2a; border-radius: 8px;">
+                            <div style="font-size: 14px; font-weight: bold; color: ${isOnline ? '#4CAF50' : '#999'};">${lastSeen}</div>
+                            <div style="font-size: 12px; color: #999;">Last Seen</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    ${!isOwnProfile ? `
+                        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                            ${isFriend ? `
+                                <button class="btn btn-primary" style="flex: 1;" onclick="openChat('${userId}')">
+                                    <ion-icon name="chatbubble" style="margin-right: 6px;"></ion-icon>
+                                    Message
+                                </button>
+                                <button class="btn btn-secondary" onclick="unfriend('${userId}')">Unfriend</button>
+                            ` : hasPendingRequest ? `
+                                <button class="btn btn-secondary" style="flex: 1;" disabled>Request Sent</button>
+                            ` : `
+                                <button class="btn btn-primary" style="flex: 1;" onclick="sendFriendRequest('${userId}')">
+                                    <ion-icon name="person-add" style="margin-right: 6px;"></ion-icon>
+                                    Add Friend
+                                </button>
+                            `}
+                        </div>
+                    ` : ''}
+                    
+                    <!-- About Me -->
+                    ${currentViewingUser.bio || currentViewingUser.aboutMe ? `
+                        <div style="padding: 16px; background: #2a2a2a; border-radius: 8px; margin-bottom: 16px;">
+                            <h3 style="margin: 0 0 10px 0;">About Me</h3>
+                            <p style="margin: 0; color: #ccc; line-height: 1.5;">${currentViewingUser.bio || currentViewingUser.aboutMe}</p>
+                        </div>
+                    ` : ''}
+                    
+                    <!-- Information -->
+                    <div style="padding: 16px; background: #2a2a2a; border-radius: 8px; margin-bottom: 16px;">
+                        <h3 style="margin: 0 0 12px 0;">Information</h3>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                            <ion-icon name="mail-outline" style="color: #999;"></ion-icon>
+                            <span style="color: #999;">${currentViewingUser.email || 'No email'}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <ion-icon name="calendar-outline" style="color: #999;"></ion-icon>
+                            <span style="color: #999;">Joined ${joinDate}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Posts -->
+                    <div style="padding: 16px; background: #2a2a2a; border-radius: 8px;">
+                        <h3 style="margin: 0 0 12px 0;">Recent Posts (${userPosts.length})</h3>
+                        ${userPosts.length > 0 ? userPosts.slice(0, 5).map(post => `
+                            <div style="padding: 12px; background: #1a1a1a; border-radius: 8px; margin-bottom: 8px; cursor: pointer;" onclick="closeModal('user-profile-modal'); openPostDetail('${post.id}')">
+                                <p style="margin: 0 0 8px 0; line-height: 1.4;">${(post.contentText || 'No text').substring(0, 100)}${(post.contentText || '').length > 100 ? '...' : ''}</p>
+                                <div style="display: flex; gap: 16px; font-size: 12px; color: #999;">
+                                    <span><ion-icon name="heart"></ion-icon> ${post.likes?.length || 0}</span>
+                                    <span><ion-icon name="chatbubble"></ion-icon> ${post.replies?.length || 0}</span>
+                                    <span>${formatTime(post.timestamp)}</span>
+                                </div>
+                            </div>
+                        `).join('') : '<p style="text-align: center; color: #999; padding: 20px;">No posts yet</p>'}
+                    </div>
+                `;
+
+                document.getElementById('user-profile-content').innerHTML = html;
+                closeModal('user-search-modal');
+                document.getElementById('user-profile-modal').classList.add('show');
+
+            } catch (error) {
+                console.error('View profile error:', error);
+                showToast('Error loading profile', 'error');
+            }
+        };
+
+        window.sendFriendRequest = async function (toUserId) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const userDoc = await getDoc(doc(db, 'users', uid));
+                const userData = userDoc.data() || {};
+
+                const requestRef = doc(collection(db, 'friendRequests'));
+                await setDoc(requestRef, {
+                    id: requestRef.id,
+                    fromUserId: uid,
+                    toUserId: toUserId,
+                    fromUsername: userData.username || userData.displayName || 'Anonymous',
+                    fromProfilePicture: userData.profilePicture || null,
+                    status: 'pending',
+                    timestamp: Date.now()
+                });
+
+                showToast('Friend request sent!', 'success');
+                viewUserProfile(toUserId); // Refresh profile
+            } catch (error) {
+                console.error('Send friend request error:', error);
+                showToast('Error sending request', 'error');
+            }
+        };
+
+        window.unfriend = async function (friendId) {
+            if (!confirm('Remove this friend?')) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const friendsRef = collection(db, 'friends');
+                const q1 = query(friendsRef, where('userId', '==', uid), where('friendId', '==', friendId));
+                const q2 = query(friendsRef, where('userId', '==', friendId), where('friendId', '==', uid));
+
+                const [snap1, snap2] = await Promise.all([getDocs(q1), getDocs(q2)]);
+
+                const deletePromises = [];
+                snap1.forEach(doc => deletePromises.push(deleteDoc(doc.ref)));
+                snap2.forEach(doc => deletePromises.push(deleteDoc(doc.ref)));
+
+                await Promise.all(deletePromises);
+
+                showToast('Friend removed', 'success');
+                viewUserProfile(friendId); // Refresh profile
+            } catch (error) {
+                console.error('Unfriend error:', error);
+                showToast('Error removing friend', 'error');
+            }
+        };
+
+        // NOTIFICATIONS FUNCTIONS
+        window.showNotifications = async function () {
+            document.getElementById('notifications-modal').classList.add('show');
+            await loadNotifications();
+        };
+
+        async function loadNotifications() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                // Get generic notifications
+                const notifRef = collection(db, 'notifications');
+                const notifQuery = query(notifRef, where('userId', '==', uid), where('read', '==', false));
+                const notifSnapshot = await getDocs(notifQuery);
+
+                const genericNotifications = [];
+                for (const docSnap of notifSnapshot.docs) {
+                    const data = docSnap.data();
+                    genericNotifications.push({
+                        id: docSnap.id,
+                        type: data.type || 'generic',
+                        fromUserId: data.fromUserId,
+                        timestamp: data.timestamp || Date.now(),
+                        message: data.message || 'New notification',
+                        referenceId: data.referenceId // postId, replyId etc.
+                    });
+                }
+
+                // Get friend requests
+                const requestsRef = collection(db, 'friendRequests');
+                const q = query(requestsRef, where('toUserId', '==', uid), where('status', '==', 'pending'));
+                const snapshot = await getDocs(q);
+
+                const friendRequests = [];
+                for (const docSnap of snapshot.docs) {
+                    const data = docSnap.data();
+
+                    // Fetch the actual user data to avoid "undefined"
+                    const userDoc = await getDoc(doc(db, 'users', data.fromUserId));
+                    if (!userDoc.exists()) continue;
+
+                    const userData = userDoc.data();
+                    friendRequests.push({
+                        id: docSnap.id,
+                        type: 'friend_request',
+                        fromUserId: data.fromUserId,
+                        fromUsername: userData.username || userData.displayName || 'Anonymous',
+                        fromProfilePicture: userData.profilePicture || null,
+                        timestamp: data.timestamp
+                    });
+                }
+
+                // Merge and sort
+                const notifications = [...friendRequests, ...genericNotifications];
+                notifications.sort((a, b) => b.timestamp - a.timestamp);
+
+                const html = notifications.length > 0 ? notifications.map(notif => {
+                    if (notif.type === 'friend_request') {
+                        return `
+                            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #2a2a2a; border-radius: 8px; margin-bottom: 10px;">
+                                <div style="cursor: pointer;" onclick="viewUserProfile('${notif.fromUserId}')">
+                                    ${notif.fromProfilePicture ?
+                                `<img src="${notif.fromProfilePicture}" style="width: 40px; height: 40px; border-radius: 20px; object-fit: cover;">` :
+                                `<div style="width: 40px; height: 40px; border-radius: 20px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${notif.fromUsername?.[0]?.toUpperCase() || 'U'}</div>`
+                            }
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: bold; cursor: pointer;" onclick="viewUserProfile('${notif.fromUserId}')">${notif.fromUsername}</div>
+                                    <div style="font-size: 12px; color: #999;">sent you a friend request</div>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="acceptFriendRequest('${notif.id}', '${notif.fromUserId}')">Accept</button>
+                                    <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="rejectFriendRequest('${notif.id}')">Reject</button>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        // Generic notification
+                        return `
+                            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #2a2a2a; border-radius: 8px; margin-bottom: 10px;">
+                                <div style="flex: 1;">
+                                    <div style="font-size: 14px;">${notif.message}</div>
+                                    <div style="font-size: 10px; color: #999; margin-top: 4px;">${formatTime(notif.timestamp)}</div>
+                                </div>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 10px;" onclick="markNotificationRead('${notif.id}')">Dismiss</button>
+                            </div>
+                        `;
+                    }
+                }).join('') : '<p style="text-align: center; color: #999; padding: 20px;">No notifications</p>';
+
+                document.getElementById('notifications-list').innerHTML = html;
+
+                // Update badge
+                const badge = document.getElementById('notification-badge');
+                if (notifications.length > 0) {
+                    badge.textContent = notifications.length;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+
+            } catch (error) {
+                console.error('Load notifications error:', error);
+                showToast('Error loading notifications', 'error');
+            }
+        }
+
+        window.markNotificationRead = async function (notifId) {
+            try {
+                await updateDoc(doc(db, 'notifications', notifId), { read: true });
+                loadNotifications(); // Reload list
+                loadUnreadCounts(); // Update badges
+            } catch (error) {
+                console.error('Error marking read:', error);
+            }
+        };
+
+        window.acceptFriendRequest = async function (requestId, fromUserId) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                // Create friend relationship (both ways)
+                const friend1Ref = doc(collection(db, 'friends'));
+                await setDoc(friend1Ref, {
+                    userId: uid,
+                    friendId: fromUserId,
+                    timestamp: Date.now()
+                });
+
+                const friend2Ref = doc(collection(db, 'friends'));
+                await setDoc(friend2Ref, {
+                    userId: fromUserId,
+                    friendId: uid,
+                    timestamp: Date.now()
+                });
+
+                // Update request status
+                await updateDoc(doc(db, 'friendRequests', requestId), {
+                    status: 'accepted'
+                });
+
+                showToast('Friend request accepted!', 'success');
+                loadNotifications();
+            } catch (error) {
+                console.error('Accept request error:', error);
+                showToast('Error accepting request', 'error');
+            }
+        };
+
+        window.rejectFriendRequest = async function (requestId) {
+            try {
+                await updateDoc(doc(db, 'friendRequests', requestId), {
+                    status: 'rejected'
+                });
+
+                showToast('Friend request rejected', 'success');
+                loadNotifications();
+            } catch (error) {
+                console.error('Reject request error:', error);
+                showToast('Error rejecting request', 'error');
+            }
+        };
+
+        // MESSAGES FUNCTIONS
+        window.showMessages = async function () {
+            document.getElementById('messages-modal').classList.add('show');
+            await loadConversations();
+        };
+
+        async function loadConversations() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const messagesRef = collection(db, 'messages');
+
+                // Get all messages where user is sender or receiver (NO FRIENDS REQUIREMENT!)
+                const q1 = query(messagesRef, where('senderId', '==', uid));
+                const q2 = query(messagesRef, where('receiverId', '==', uid));
+
+                const [snapshot1, snapshot2] = await Promise.all([getDocs(q1), getDocs(q2)]);
+
+                // Collect all unique user IDs and messages by user
+                const userIds = new Set();
+                const messagesByUser = new Map();
+
+                snapshot1.forEach(doc => {
+                    const data = doc.data();
+                    if (data.deleted) return; // Skip deleted
+
+                    userIds.add(data.receiverId);
+                    if (!messagesByUser.has(data.receiverId)) {
+                        messagesByUser.set(data.receiverId, []);
+                    }
+                    messagesByUser.get(data.receiverId).push(data);
+                });
+
+                snapshot2.forEach(doc => {
+                    const data = doc.data();
+                    if (data.deleted) return; // Skip deleted
+
+                    userIds.add(data.senderId);
+                    if (!messagesByUser.has(data.senderId)) {
+                        messagesByUser.set(data.senderId, []);
+                    }
+                    messagesByUser.get(data.senderId).push(data);
+                });
+
+                // Fetch user details and create conversations
+                const conversations = [];
+
+                for (const userId of userIds) {
+                    const userDoc = await getDoc(doc(db, 'users', userId));
+                    if (!userDoc.exists()) continue; // Skip deleted users
+
+                    const userData = userDoc.data();
+                    const userMessages = messagesByUser.get(userId) || [];
+
+                    // Sort by timestamp descending
+                    userMessages.sort((a, b) => b.timestamp - a.timestamp);
+
+                    const lastMsg = userMessages[0];
+                    const unread = userMessages.filter(msg => msg.receiverId === uid && !msg.read).length;
+
+                    conversations.push({
+                        friendId: userId,
+                        username: userData.username || 'Anonymous',
+                        profilePicture: userData.profilePicture,
+                        lastMessage: lastMsg?.text || 'No messages yet',
+                        timestamp: lastMsg?.timestamp || 0,
+                        unreadCount: unread,
+                        isOnline: userData.lastActive && (Date.now() - userData.lastActive < 300000)
+                    });
+                }
+
+                console.log('Loaded conversations:', conversations.length);
+                conversations.sort((a, b) => b.timestamp - a.timestamp);
+
+                const html = conversations.length > 0 ? conversations.map(conv => `
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #2a2a2a; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border-bottom: 1px solid rgba(0,0,0,0.1);" onclick="openChat('${conv.friendId}')">
+                        <div style="position: relative;">
+                            ${conv.profilePicture ?
+                        `<img src="${conv.profilePicture}" style="width: 50px; height: 50px; border-radius: 25px; object-fit: cover;">` :
+                        `<div style="width: 50px; height: 50px; border-radius: 25px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 20px;">${conv.username?.[0]?.toUpperCase() || 'U'}</div>`
+                    }
+                            ${conv.isOnline ? '<div style="position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; border-radius: 7px; background: #4CAF50; border: 2px solid #1a1a1a;"></div>' : ''}
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <div style="font-weight: 600; font-size: 16px;">${conv.username}</div>
+                                <div style="font-size: 12px; color: #999;">${conv.timestamp ? formatTime(conv.timestamp) : ''}</div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="font-size: 14px; color: ${conv.unreadCount > 0 ? '#fff' : '#999'}; ${conv.unreadCount > 0 ? 'font-weight: 600;' : ''} flex: 1;">${conv.lastMessage.substring(0, 50)}${conv.lastMessage.length > 50 ? '...' : ''}</div>
+                                ${conv.unreadCount > 0 ? `
+                                    <div style="min-width: 20px; height: 20px; border-radius: 10px; background: #667eea; display: flex; align-items: center; justify-content: center; padding: 0 6px; margin-left: 8px;">
+                                        <span style="color: white; font-size: 11px; font-weight: bold;">${conv.unreadCount}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('') : `
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <ion-icon name="chatbubbles-outline" style="font-size: 64px; color: #666;"></ion-icon>
+                        <p style="font-size: 20px; font-weight: 600; margin: 16px 0 8px 0;">No messages yet</p>
+                        <p style="font-size: 14px; color: #999; margin-bottom: 24px;">Start a conversation by searching for users</p>
+                        <button class="btn btn-primary" onclick="showUserSearch()">Find Users</button>
+                    </div>
+                `;
+
+                document.getElementById('conversations-list').innerHTML = html;
+
+            } catch (error) {
+                console.error('Load conversations error:', error);
+                showToast('Error loading conversations', 'error');
+            }
+        }
+
+        window.openChat = async function (friendId) {
+            try {
+                const friendDoc = await getDoc(doc(db, 'users', friendId));
+                const friendData = friendDoc.data() || {};
+
+                currentChatUser = { id: friendId, ...friendData };
+
+                document.getElementById('chat-username').textContent = friendData.username || 'Chat';
+
+                closeModal('user-profile-modal');
+                closeModal('messages-modal');
+                document.getElementById('chat-modal').classList.add('show');
+
+                await loadMessages(friendId);
+            } catch (error) {
+                console.error('Open chat error:', error);
+                showToast('Error opening chat', 'error');
+            }
+        };
+
+        async function loadMessages(friendId) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const messagesRef = collection(db, 'messages');
+                const q1 = query(messagesRef, where('senderId', '==', uid), where('receiverId', '==', friendId));
+                const q2 = query(messagesRef, where('senderId', '==', friendId), where('receiverId', '==', uid));
+
+                const [snap1, snap2] = await Promise.all([getDocs(q1), getDocs(q2)]);
+
+                const messages = [];
+                snap1.forEach(doc => {
+                    const data = doc.data();
+                    if (!data.deleted) {
+                        messages.push({ id: doc.id, ...data });
+                    }
+                });
+                snap2.forEach(doc => {
+                    const data = doc.data();
+                    if (!data.deleted) {
+                        messages.push({ id: doc.id, ...data });
+                    }
+                });
+
+                messages.sort((a, b) => a.timestamp - b.timestamp);
+
+                const html = messages.length > 0 ? messages.map(msg => {
+                    const isMine = msg.senderId === uid;
+                    return `
+                        <div style="display: flex; justify-content: ${isMine ? 'flex-end' : 'flex-start'}; margin-bottom: 10px;">
+                            <div style="max-width: 70%; padding: 10px 14px; background: ${isMine ? '#667eea' : '#2a2a2a'}; border-radius: 12px; ${isMine ? 'border-bottom-right-radius: 4px;' : 'border-bottom-left-radius: 4px;'}">
+                                <div>${msg.text}</div>
+                                <div style="font-size: 10px; color: ${isMine ? 'rgba(255,255,255,0.7)' : '#999'}; margin-top: 4px;">${formatTime(msg.timestamp)}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('') : '<p style="text-align: center; color: #999; padding: 20px;">No messages yet. Say hi!</p>';
+
+                document.getElementById('messages-list').innerHTML = html;
+                document.getElementById('messages-list').scrollTop = document.getElementById('messages-list').scrollHeight;
+
+            } catch (error) {
+                console.error('Load messages error:', error);
+            }
+        }
+
+        window.sendMessage = async function () {
+            const text = document.getElementById('message-input').value.trim();
+            if (!text || !currentChatUser) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const messagesRef = collection(db, 'messages');
+                await addDoc(messagesRef, {
+                    senderId: uid,
+                    receiverId: currentChatUser.id,
+                    text: text,
+                    timestamp: Date.now(),
+                    read: false
+                });
+
+                document.getElementById('message-input').value = '';
+                await loadMessages(currentChatUser.id);
+
+            } catch (error) {
+                console.error('Send message error:', error);
+                showToast('Error sending message', 'error');
+            }
+        };
+
+        // PROFILE SETTINGS FUNCTIONS
+        window.showProfileSettings = function () {
+            document.getElementById('settings-modal').classList.add('show');
+        };
+
+        window.showEditProfile = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const userDoc = await getDoc(doc(db, 'users', uid));
+                const userData = userDoc.data() || {};
+
+                document.getElementById('profile-username').value = userData.username || '';
+                document.getElementById('profile-bio').value = userData.bio || '';
+
+                if (userData.profilePicture) {
+                    document.getElementById('profile-picture-preview').src = userData.profilePicture;
+                    document.getElementById('profile-picture-preview').style.display = 'block';
+                    uploadedImageBase64 = userData.profilePicture;
+                }
+
+                document.getElementById('profile-settings-modal').classList.add('show');
+            } catch (error) {
+                console.error('Load profile settings error:', error);
+                showToast('Error loading profile', 'error');
+            }
+        };
+
+        window.saveProfile = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const username = document.getElementById('profile-username').value.trim();
+            const bio = document.getElementById('profile-bio').value.trim();
+
+            if (!username) {
+                showToast('Username is required', 'error');
+                return;
+            }
+
+            try {
+                const userRef = doc(db, 'users', uid);
+                await updateDoc(userRef, {
+                    username: username,
+                    bio: bio,
+                    profilePicture: uploadedImageBase64 || null,
+                    lastActive: Date.now()
+                });
+
+                showToast('Profile updated!', 'success');
+                closeModal('profile-settings-modal');
+                uploadedImageBase64 = null;
+
+            } catch (error) {
+                console.error('Save profile error:', error);
+                showToast('Error saving profile', 'error');
+            }
+        };
+
+        // LOGOUT FUNCTION
+        window.logout = function () {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('kobi_atlas_uid');
+                localStorage.removeItem('kobi_atlas_pin');
+                window.location.reload();
+            }
+        };
+
+        // CHANGE PIN FUNCTIONS
+        window.showChangePIN = function () {
+            closeModal('settings-modal');
+            document.getElementById('change-pin-modal').classList.add('show');
+            // Clear inputs
+            document.getElementById('current-pin').value = '';
+            document.getElementById('new-pin').value = '';
+            document.getElementById('confirm-pin').value = '';
+        };
+
+        window.changePIN = function () {
+            const currentPin = document.getElementById('current-pin').value;
+            const newPin = document.getElementById('new-pin').value;
+            const confirmPin = document.getElementById('confirm-pin').value;
+
+            // Validation
+            if (!currentPin || !newPin || !confirmPin) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+
+            if (newPin.length !== 4 || !/^\d{4}$/.test(newPin)) {
+                showToast('PIN must be 4 digits', 'error');
+                return;
+            }
+
+            if (newPin !== confirmPin) {
+                showToast('New PINs do not match', 'error');
+                return;
+            }
+
+            // Check current PIN
+            const storedPin = localStorage.getItem('kobi_atlas_pin');
+            if (storedPin && storedPin !== currentPin) {
+                showToast('Current PIN is incorrect', 'error');
+                return;
+            }
+
+            // Save new PIN
+            localStorage.setItem('kobi_atlas_pin', newPin);
+            showToast('PIN changed successfully!', 'success');
+            closeModal('change-pin-modal');
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const email = localStorage.getItem('kobi_atlas_email');
+
+            if (uid && email) {
+                // User is logged in, load dashboard
+                loadDashboard();
+            } else {
+                // Not logged in, redirect to login page
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+
+</html>

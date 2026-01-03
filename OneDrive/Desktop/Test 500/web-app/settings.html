@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Student Atlas</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --card-bg: #2a2a2a;
+            --text-color: #ffffff;
+            --text-secondary: #999999;
+            --primary-color: #667eea;
+            --border-color: #444444;
+        }
+
+        /* Themes */
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --card-bg: #2a2a2a;
+            --text-color: #ffffff;
+            --text-secondary: #999999;
+            --primary-color: #667eea;
+            --border-color: #444444;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f5f5f5;
+            --card-bg: #ffffff;
+            --text-color: #000000;
+            --text-secondary: #666666;
+            --primary-color: #667eea;
+            --border-color: #dddddd;
+        }
+
+        [data-theme="blue"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-secondary: #94a3b8;
+            --primary-color: #3b82f6;
+            --border-color: #334155;
+        }
+
+        [data-theme="lightPink"] {
+            --bg-color: #fff0f5;
+            --card-bg: #ffffff;
+            --text-color: #4a4a4a;
+            --text-secondary: #888888;
+            --primary-color: #ff69b4;
+            --border-color: #ffc0cb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            padding: 20px;
+            padding-top: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .content {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .button {
+            width: 100%;
+            padding: 16px;
+            background: var(--card-bg);
+            border: none;
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .button:hover {
+            background: var(--border-color);
+        }
+
+        .button ion-icon {
+            margin-right: 12px;
+            font-size: 20px;
+        }
+
+        .theme-option {
+            padding: 16px;
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .theme-option:hover {
+            background: var(--border-color);
+        }
+
+        .theme-option.active {
+            border-color: var(--primary-color);
+        }
+
+        .theme-text {
+            font-size: 16px;
+            color: var(--text-color);
+        }
+
+        .checkmark {
+            color: var(--primary-color);
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .app-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .info-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin: 4px 0;
+        }
+
+        .description {
+            color: #ccc;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-top: 12px;
+        }
+
+
+        .story {
+            color: #ccc;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-top: 12px;
+            font-style: italic;
+        }
+
+        .note {
+            color: #ff9800;
+            font-size: 12px;
+            font-style: italic;
+            margin-top: 12px;
+        }
+
+        .logout-button {
+            width: 100%;
+            padding: 16px;
+            background: #dc3545;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .logout-button:hover {
+            background: #c82333;
+        }
+
+        .logout-button ion-icon {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <button class="back-button" onclick="goBack()">
+            <ion-icon name="arrow-back"></ion-icon>
+        </button>
+        <div class="header-title">Settings</div>
+        <div style="width: 24px;"></div>
+    </div>
+
+    <div class="content">
+        <!-- Account Section -->
+        <div class="section">
+            <div class="section-title">Account</div>
+
+            <button class="button" onclick="window.location.href='edit-profile.html'">
+                <ion-icon name="person-outline"></ion-icon>
+                Edit Profile
+            </button>
+
+            <button class="button" onclick="showChangePIN()">
+                <ion-icon name="key-outline"></ion-icon>
+                Change PIN
+            </button>
+        </div>
+
+        <!-- Theme Section -->
+        <div class="section">
+            <div class="section-title">Theme</div>
+
+            <div class="theme-option active" onclick="setTheme('default')">
+                <span class="theme-text">Default</span>
+                <span class="checkmark">✓</span>
+            </div>
+
+            <div class="theme-option" onclick="setTheme('dark')">
+                <span class="theme-text">Dark</span>
+                <span class="checkmark" style="display: none;">✓</span>
+            </div>
+
+            <div class="theme-option" onclick="setTheme('blue')">
+                <span class="theme-text">Blue</span>
+                <span class="checkmark" style="display: none;">✓</span>
+            </div>
+
+            <div class="theme-option" onclick="setTheme('lightPink')">
+                <span class="theme-text">Light Pink</span>
+                <span class="checkmark" style="display: none;">✓</span>
+            </div>
+
+            <div class="theme-option" onclick="setTheme('light')">
+                <span class="theme-text">Light</span>
+                <span class="checkmark" style="display: none;">✓</span>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="section">
+            <div class="section-title">About</div>
+
+            <div class="info-card">
+                <div class="app-name">Student Atlas</div>
+                <div class="info-text">Version 1.0.0</div>
+                <div class="info-text">By Kobi Oguadinma</div>
+                <div class="info-text">Babcock University</div>
+                <div class="description">
+                    An academic companion for tracking courses, calculating GPA, and predicting grades.
+                </div>
+                <div class="story">
+                    Student Atlas was an individual project by Kobi Oguadinma, a second-year Software Engineering
+                    student at Babcock University. He frequently calculated his predicted grades manually and wanted a
+                    mobile app to automate this process.
+                </div>
+                <div class="note">
+                    Currently supports Babcock University grading system. Other systems will be available in future
+                    updates.
+                </div>
+            </div>
+        </div>
+
+        <!-- Logout Button -->
+        <button class="logout-button" onclick="logout()">
+            <ion-icon name="log-out-outline"></ion-icon>
+            Logout
+        </button>
+    </div>
+
+    <script>
+        // Initialize
+        const savedTheme = localStorage.getItem('kobi_atlas_theme') || 'default';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // Mark active theme
+        document.querySelectorAll('.theme-option').forEach(opt => {
+            const isActive = opt.querySelector('.theme-text').textContent.toLowerCase().includes(savedTheme) ||
+                (savedTheme === 'default' && opt.querySelector('.theme-text').textContent === 'Default') ||
+                (savedTheme === 'lightPink' && opt.querySelector('.theme-text').textContent === 'Light Pink');
+
+            if (isActive) {
+                opt.classList.add('active');
+                opt.querySelector('.checkmark').style.display = 'block';
+            } else {
+                opt.classList.remove('active');
+                opt.querySelector('.checkmark').style.display = 'none';
+            }
+        });
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        function setTheme(themeName) {
+            // Remove active class from all
+            document.querySelectorAll('.theme-option').forEach(opt => {
+                opt.classList.remove('active');
+                opt.querySelector('.checkmark').style.display = 'none';
+            });
+
+            // Add active to selected
+            event.target.closest('.theme-option').classList.add('active');
+            event.target.closest('.theme-option').querySelector('.checkmark').style.display = 'block';
+
+            // Save to localStorage
+            localStorage.setItem('kobi_atlas_theme', themeName);
+            document.documentElement.setAttribute('data-theme', themeName);
+        }
+
+        function showChangePIN() {
+            alert('Change PIN functionality - redirecting to index.html with modal');
+            window.location.href = 'index.html#change-pin';
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('kobi_atlas_uid');
+                localStorage.removeItem('kobi_atlas_email');
+                localStorage.removeItem('kobi_atlas_pin');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Load saved theme on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('kobi_atlas_theme') || 'default';
+
+            document.querySelectorAll('.theme-option').forEach(opt => {
+                opt.classList.remove('active');
+                opt.querySelector('.checkmark').style.display = 'none';
+            });
+
+            const themeOptions = document.querySelectorAll('.theme-option');
+            const themes = ['default', 'dark', 'blue', 'lightPink', 'light'];
+            const index = themes.indexOf(savedTheme);
+
+            if (index >= 0 && themeOptions[index]) {
+                themeOptions[index].classList.add('active');
+                themeOptions[index].querySelector('.checkmark').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>
