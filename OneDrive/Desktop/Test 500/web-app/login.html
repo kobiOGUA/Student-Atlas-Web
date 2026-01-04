@@ -265,6 +265,8 @@
                 <div class="subtitle" id="pin-subtitle">Enter your 4-digit PIN</div>
             </div>
 
+            <div id="pin-error" class="error hidden"></div>
+
             <div class="pin-container">
                 <div class="pin-display">
                     <div class="pin-dot"></div>
@@ -329,10 +331,16 @@
         }
 
         function showError(msg) {
-            const errorDiv = document.getElementById('error');
-            errorDiv.textContent = msg;
-            errorDiv.classList.remove('hidden');
-            setTimeout(() => errorDiv.classList.add('hidden'), 3000);
+            // Check which screen is active
+            const pinScreen = document.getElementById('pin-screen');
+            const isPinVisible = !pinScreen.classList.contains('hidden');
+
+            const errorDiv = document.getElementById(isPinVisible ? 'pin-error' : 'error');
+            if (errorDiv) {
+                errorDiv.textContent = msg;
+                errorDiv.classList.remove('hidden');
+                setTimeout(() => errorDiv.classList.add('hidden'), 3000);
+            }
         }
 
         // Screen navigation
@@ -366,7 +374,7 @@
             }
         };
 
-        window.handleEmailContinue = function () {
+        window.handleEmailContinue = async function () {
             const email = document.getElementById('email').value.trim();
             const username = document.getElementById('username').value.trim();
 
@@ -383,6 +391,30 @@
             if (isRegisterMode && !username) {
                 showError('Please enter a username');
                 return;
+            }
+
+            // Check if user exists before proceeding to PIN screen (Login Mode only)
+            if (!isRegisterMode) {
+                showLoading(true);
+                try {
+                    if (!auth.currentUser) await signInAnonymously(auth);
+
+                    const authRef = collection(db, 'auth');
+                    const q = query(authRef, where('email', '==', email.toLowerCase()));
+                    const snapshot = await getDocs(q);
+
+                    showLoading(false);
+
+                    if (snapshot.empty) {
+                        showError('User not found. Please sign up.');
+                        return;
+                    }
+                } catch (error) {
+                    showLoading(false);
+                    console.error('User check error:', error);
+                    showError('Error checking user: ' + error.message);
+                    return;
+                }
             }
 
             currentEmail = email;
