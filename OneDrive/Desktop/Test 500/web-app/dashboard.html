@@ -1618,6 +1618,12 @@
                 return;
             }
 
+            // Check for Grading System (First Time User)
+            if (!localStorage.getItem('kobi_atlas_grading_system')) {
+                window.location.href = 'grading-system.html?firstTime=true';
+                return;
+            }
+
             const excludeCurrentGPA = localStorage.getItem('excludeCurrentGPA') === 'true';
 
             showLoading(true);

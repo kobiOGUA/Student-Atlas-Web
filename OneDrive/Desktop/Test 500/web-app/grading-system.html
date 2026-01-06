@@ -289,6 +289,7 @@
 
     <script>
         let currentSystem = 'babcock';
+        let isFirstTime = false;
 
         // Load Theme
         const savedTheme = localStorage.getItem('kobi_atlas_theme') || 'default';
@@ -296,6 +297,16 @@
 
         // Load Saved System
         document.addEventListener('DOMContentLoaded', () => {
+            // Check for First Time Setup
+            const urlParams = new URLSearchParams(window.location.search);
+            isFirstTime = urlParams.get('firstTime') === 'true';
+
+            if (isFirstTime) {
+                document.querySelector('.back-button').style.display = 'none';
+                document.querySelector('.header-title').textContent = 'Welcome Setup';
+                document.querySelector('.save-btn').textContent = 'Save & Continue';
+            }
+
             const saved = localStorage.getItem('kobi_atlas_grading_system');
             if (saved) {
                 const parsed = JSON.parse(saved);
@@ -315,10 +326,14 @@
                     document.getElementById('f-min').value = parsed.config.F.min;
                     document.getElementById('f-point').value = parsed.config.F.point;
                 }
+            } else if (!isFirstTime) {
+                // Default to Babcock if not saved and not first time
+                selectSystem('babcock');
             }
         });
 
         function goBack() {
+            if (isFirstTime) return; // Prevent going back if forced setup
             window.location.href = 'settings.html';
         }
 
@@ -366,8 +381,14 @@
             };
 
             localStorage.setItem('kobi_atlas_grading_system', JSON.stringify(settings));
-            alert('Grading system updated!');
-            goBack();
+
+            if (isFirstTime) {
+                // Determine user first name for a nice welcome toast
+                window.location.href = 'dashboard.html';
+            } else {
+                alert('Grading system updated!');
+                goBack();
+            }
         }
     </script>
 </body>
