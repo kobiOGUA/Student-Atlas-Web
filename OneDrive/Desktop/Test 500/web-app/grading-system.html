@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grading System - Kobi's Atlas</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --card-bg: #2a2a2a;
+            --text-color: #ffffff;
+            --text-secondary: #999999;
+            --primary-color: #667eea;
+            --border-color: #444444;
+        }
+
+        /* Themes */
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --card-bg: #2a2a2a;
+            --text-color: #ffffff;
+            --text-secondary: #999999;
+            --primary-color: #667eea;
+            --border-color: #444444;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f5f5f5;
+            --card-bg: #ffffff;
+            --text-color: #000000;
+            --text-secondary: #666666;
+            --primary-color: #667eea;
+            --border-color: #dddddd;
+        }
+
+        [data-theme="blue"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-secondary: #94a3b8;
+            --primary-color: #3b82f6;
+            --border-color: #334155;
+        }
+
+        [data-theme="lightPink"] {
+            --bg-color: #fff0f5;
+            --card-bg: #ffffff;
+            --text-color: #4a4a4a;
+            --text-secondary: #888888;
+            --primary-color: #ff69b4;
+            --border-color: #ffc0cb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            padding: 20px;
+            padding-top: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .content {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .option-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .option-card:hover {
+            border-color: var(--border-color);
+        }
+
+        .option-card.active {
+            border-color: var(--primary-color);
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .option-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .option-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .checkmark {
+            color: var(--primary-color);
+            font-size: 20px;
+            display: none;
+        }
+
+        .option-card.active .checkmark {
+            display: block;
+        }
+
+        .option-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .custom-form {
+            display: none;
+            margin-top: 20px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .grade-label {
+            width: 30px;
+            font-weight: bold;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <button class="back-button" onclick="goBack()">
+            <ion-icon name="arrow-back"></ion-icon>
+        </button>
+        <div class="header-title">Grading System</div>
+        <div style="width: 24px;"></div>
+    </div>
+
+    <div class="content">
+        <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14px;">
+            Select the grading system used by your university. This affects how your GPA is calculated.
+        </p>
+
+        <!-- Babcock System -->
+        <div class="option-card active" onclick="selectSystem('babcock')">
+            <div class="option-header">
+                <span class="option-title">Babcock University</span>
+                <ion-icon name="checkmark-circle" class="checkmark"></ion-icon>
+            </div>
+            <div class="option-desc">5.0 Scale | A = 80-100 (5pt) | B = 60-79 (4pt)</div>
+        </div>
+
+        <!-- General Nigerian System -->
+        <div class="option-card" onclick="selectSystem('nigerian')">
+            <div class="option-header">
+                <span class="option-title">General Nigerian</span>
+                <ion-icon name="checkmark-circle" class="checkmark"></ion-icon>
+            </div>
+            <div class="option-desc">5.0 Scale | A = 70-100 (5pt) | B = 60-69 (4pt)</div>
+        </div>
+
+        <!-- 4.0 System -->
+        <div class="option-card" onclick="selectSystem('4point')">
+            <div class="option-header">
+                <span class="option-title">4.0 System</span>
+                <ion-icon name="checkmark-circle" class="checkmark"></ion-icon>
+            </div>
+            <div class="option-desc">4.0 Scale | A = 70-100 (4pt) | B = 60-69 (3pt)</div>
+        </div>
+
+        <!-- Custom System -->
+        <div class="option-card" onclick="selectSystem('custom')">
+            <div class="option-header">
+                <span class="option-title">Custom System</span>
+                <ion-icon name="checkmark-circle" class="checkmark"></ion-icon>
+            </div>
+            <div class="option-desc">Define your own grade ranges and point values</div>
+        </div>
+
+        <!-- Custom Form -->
+        <div id="custom-form" class="custom-form hidden">
+            <h3 style="margin-bottom: 15px;">Configure Grades</h3>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 15px;">Set the minimum score
+                required and points awarded for each grade.</p>
+
+            <div class="form-row">
+                <span class="grade-label">A</span>
+                <input type="number" id="a-min" placeholder="Min Score (e.g. 70)" value="70">
+                <input type="number" id="a-point" placeholder="Points" value="5">
+            </div>
+            <div class="form-row">
+                <span class="grade-label">B</span>
+                <input type="number" id="b-min" placeholder="Min Score (e.g. 60)" value="60">
+                <input type="number" id="b-point" placeholder="Points" value="4">
+            </div>
+            <div class="form-row">
+                <span class="grade-label">C</span>
+                <input type="number" id="c-min" placeholder="Min Score (e.g. 50)" value="50">
+                <input type="number" id="c-point" placeholder="Points" value="3">
+            </div>
+            <div class="form-row">
+                <span class="grade-label">D</span>
+                <input type="number" id="d-min" placeholder="Min Score (e.g. 45)" value="45">
+                <input type="number" id="d-point" placeholder="Points" value="2">
+            </div>
+            <div class="form-row">
+                <span class="grade-label">E</span>
+                <input type="number" id="e-min" placeholder="Min Score (e.g. 40)" value="40">
+                <input type="number" id="e-point" placeholder="Points" value="1">
+            </div>
+            <div class="form-row">
+                <span class="grade-label">F</span>
+                <input type="number" id="f-min" placeholder="Min Score (e.g. 0)" value="0">
+                <input type="number" id="f-point" placeholder="Points" value="0">
+            </div>
+        </div>
+
+        <button class="save-btn" onclick="saveSettings()">Save Changes</button>
+    </div>
+
+    <script>
+        let currentSystem = 'babcock';
+
+        // Load Theme
+        const savedTheme = localStorage.getItem('kobi_atlas_theme') || 'default';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // Load Saved System
+        document.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('kobi_atlas_grading_system');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                selectSystem(parsed.type);
+
+                if (parsed.type === 'custom' && parsed.config) {
+                    document.getElementById('a-min').value = parsed.config.A.min;
+                    document.getElementById('a-point').value = parsed.config.A.point;
+                    document.getElementById('b-min').value = parsed.config.B.min;
+                    document.getElementById('b-point').value = parsed.config.B.point;
+                    document.getElementById('c-min').value = parsed.config.C.min;
+                    document.getElementById('c-point').value = parsed.config.C.point;
+                    document.getElementById('d-min').value = parsed.config.D.min;
+                    document.getElementById('d-point').value = parsed.config.D.point;
+                    document.getElementById('e-min').value = parsed.config.E.min;
+                    document.getElementById('e-point').value = parsed.config.E.point;
+                    document.getElementById('f-min').value = parsed.config.F.min;
+                    document.getElementById('f-point').value = parsed.config.F.point;
+                }
+            }
+        });
+
+        function goBack() {
+            window.location.href = 'settings.html';
+        }
+
+        function selectSystem(system) {
+            currentSystem = system;
+
+            // UI Update
+            document.querySelectorAll('.option-card').forEach(card => card.classList.remove('active'));
+
+            // Find index manually based on structure or check title text
+            const cards = document.querySelectorAll('.option-card');
+            if (system === 'babcock') cards[0].classList.add('active');
+            if (system === 'nigerian') cards[1].classList.add('active');
+            if (system === '4point') cards[2].classList.add('active');
+            if (system === 'custom') cards[3].classList.add('active');
+
+            // Show/Hide Form
+            const form = document.getElementById('custom-form');
+            if (system === 'custom') {
+                form.classList.remove('hidden');
+                form.style.display = 'block'; // Ensure visibility
+            } else {
+                form.classList.add('hidden');
+                form.style.display = 'none';
+            }
+        }
+
+        function saveSettings() {
+            let config = null;
+
+            if (currentSystem === 'custom') {
+                config = {
+                    A: { min: parseInt(document.getElementById('a-min').value), point: parseInt(document.getElementById('a-point').value) },
+                    B: { min: parseInt(document.getElementById('b-min').value), point: parseInt(document.getElementById('b-point').value) },
+                    C: { min: parseInt(document.getElementById('c-min').value), point: parseInt(document.getElementById('c-point').value) },
+                    D: { min: parseInt(document.getElementById('d-min').value), point: parseInt(document.getElementById('d-point').value) },
+                    E: { min: parseInt(document.getElementById('e-min').value), point: parseInt(document.getElementById('e-point').value) },
+                    F: { min: parseInt(document.getElementById('f-min').value), point: parseInt(document.getElementById('f-point').value) }
+                };
+            }
+
+            const settings = {
+                type: currentSystem,
+                config: config
+            };
+
+            localStorage.setItem('kobi_atlas_grading_system', JSON.stringify(settings));
+            alert('Grading system updated!');
+            goBack();
+        }
+    </script>
+</body>
+
+</html>
