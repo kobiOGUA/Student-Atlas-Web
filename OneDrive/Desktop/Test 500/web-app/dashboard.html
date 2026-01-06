@@ -1927,11 +1927,17 @@
                     return;
                 }
 
-                container.innerHTML = resources.map(res => `
+                container.innerHTML = resources.map(res => {
+                    const isImage = /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(res.link);
+                    const actionText = isImage ? 'View Image' : 'Download';
+                    const iconName = isImage ? 'image-outline' : 'download-outline';
+                    const downloadAttr = isImage ? '' : 'download';
+
+                    return `
                     <div class="stat-card" style="margin-bottom: 12px; text-align: left;">
                         <div style="display: flex; justify-content: space-between;">
                             <div style="flex: 1;">
-                                <a href="${res.link}" target="_blank" style="text-decoration: none; color: inherit;">
+                                <a href="${res.link}" target="_blank" ${downloadAttr} style="text-decoration: none; color: inherit;">
                                     <div style="font-weight: bold; font-size: 16px; color: var(--primary-color); margin-bottom: 4px;">${res.title}</div>
                                     ${res.description ? `<div style="font-size: 14px; margin-bottom: 6px;">${res.description}</div>` : ''}
                                     <div style="font-size: 12px; color: var(--text-secondary);">
@@ -1949,12 +1955,13 @@
                                 </button>
                             </div>
                         </div>
-                        <a href="${res.link}" target="_blank" style="display: flex; align-items: center; justify-content: flex-end; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-color); text-decoration: none; color: var(--primary-color); font-weight: 600; font-size: 14px;">
-                            <span style="margin-right: 5px;">Open Link</span>
-                            <ion-icon name="open-outline"></ion-icon>
+                        <a href="${res.link}" target="_blank" ${downloadAttr} style="display: flex; align-items: center; justify-content: flex-end; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-color); text-decoration: none; color: var(--primary-color); font-weight: 600; font-size: 14px;">
+                            <span style="margin-right: 5px;">${actionText}</span>
+                            <ion-icon name="${iconName}"></ion-icon>
                         </a>
                     </div>
-                `).join('');
+                `;
+                }).join('');
 
             } catch (error) {
                 console.error('Load resources error:', error);
