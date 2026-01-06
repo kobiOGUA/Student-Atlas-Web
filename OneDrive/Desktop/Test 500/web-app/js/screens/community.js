@@ -64,8 +64,10 @@ async function renderPost(post, currentUserId) {
     return `
         <div class="post-card">
             <div class="post-header">
-                <div class="avatar" style="background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
-                    ${user?.username?.[0]?.toUpperCase() || '?'}
+                <div class="avatar" style="background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; overflow: hidden;">
+                    ${user?.profilePicture
+            ? `<img src="${user.profilePicture}" style="width: 100%; height: 100%; object-fit: cover;">`
+            : (user?.username?.[0]?.toUpperCase() || '?')}
                 </div>
                 <div style="flex: 1;">
                     <div style="font-weight: bold;">${user?.displayName || user?.username || 'Unknown User'}</div>
