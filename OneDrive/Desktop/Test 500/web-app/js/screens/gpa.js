@@ -4,6 +4,7 @@ import { calculateCGPA, calculatePredictedCGPA, calculateSemesterGPA } from '../
 import { storage } from '../utils/storage.js';
 
 let currentTab = 'current';
+let globalExcludeCurrent = false;
 
 export function renderGPAScreen() {
     return `
@@ -59,7 +60,7 @@ export function renderGPAScreen() {
             <!-- GPA Chart -->
             <div id="gpa-chart-container" class="card" style="margin-bottom: 20px;">
                 <h3 style="margin-bottom: 15px;">GPA Trend</h3>
-                <div id="gpa-chart" style="display: flex; align-items: flex-end; justify-content: space-around; height: 200px; padding-bottom: 30px; gap: 5px;">
+                <div id="gpa-chart" style="display: flex; align-items: flex-end; justify-content: space-around; height: 180px; padding-bottom: 25px; gap: 8px;">
                 </div>
             </div>
 
@@ -92,8 +93,8 @@ export async function initGPAScreen() {
         return;
     }
 
-    // Load exclude setting
-    const excludeCurrent = storage.getItem('excludeCurrentGPA') === 'true';
+    // Load exclude setting and store globally
+    globalExcludeCurrent = storage.getItem('excludeCurrentGPA') === 'true';
 
     let semesters = await fetchSemesters(userId);
 
@@ -104,7 +105,7 @@ export async function initGPAScreen() {
         return timeA - timeB;
     });
 
-    renderGPAData(semesters, excludeCurrent);
+    renderGPAData(semesters, globalExcludeCurrent);
 }
 
 function renderGPAData(semesters, excludeCurrent) {
@@ -245,7 +246,7 @@ function renderChart(semesters) {
     }
 
     const maxGPA = 5.0;
-    const chartHeight = 150;
+    const chartHeight = 155; // Match container height
 
     chartContainer.innerHTML = semesters.map(sem => {
         const gpa = sem.gpa || calculateSemesterGPA(sem.courses || []);
@@ -254,11 +255,11 @@ function renderChart(semesters) {
         const barColor = sem.type === 'past' ? 'var(--primary)' : 'var(--secondary, #999)';
 
         return `
-            <div style="flex: 1; max-width: 60px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
-                <div style="width: 60%; min-width: 20px; height: ${height}px; background: ${barColor}; border-radius: 6px 6px 0 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 4px;">
-                    <span style="color: white; font-size: 10px; font-weight: bold;">${gpa.toFixed(2)}</span>
+            <div style="flex: 1; max-width: 70px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
+                <div style="width: 70%; min-width: 25px; height: ${height}px; background: ${barColor}; border-radius: 8px 8px 0 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 6px; position: relative;">
+                    <span style="color: white; font-size: 11px; font-weight: bold;">${gpa.toFixed(2)}</span>
                 </div>
-                <span style="font-size: 10px; margin-top: 4px; color: var(--text-secondary); text-align: center; width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${sem.name.split(' ')[0]}</span>
+                <span style="font-size: 11px; margin-top: 6px; color: var(--text-secondary); text-align: center; width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${sem.name.split(' ')[0]}</span>
             </div>
         `;
     }).join('');
