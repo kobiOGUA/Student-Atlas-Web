@@ -1850,8 +1850,14 @@
 
                 currentSemester.courses[currentCourse.index].predictedGrade = predictedGrade;
 
+                // Recalculate semester GPA
+                const semesterGPA = parseFloat(calculateSemesterGPA(currentSemester.courses));
+                const totalUnits = currentSemester.courses.reduce((sum, c) => sum + (c.unitHours || 0), 0);
+
                 await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
-                    courses: currentSemester.courses
+                    courses: currentSemester.courses,
+                    gpa: semesterGPA,
+                    totalUnits: totalUnits
                 });
 
                 showToast('Course updated successfully', 'success');
@@ -1873,8 +1879,14 @@
             try {
                 currentSemester.courses.splice(currentCourse.index, 1);
 
+                // Recalculate semester GPA
+                const semesterGPA = parseFloat(calculateSemesterGPA(currentSemester.courses));
+                const totalUnits = currentSemester.courses.reduce((sum, c) => sum + (c.unitHours || 0), 0);
+
                 await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
-                    courses: currentSemester.courses
+                    courses: currentSemester.courses,
+                    gpa: semesterGPA,
+                    totalUnits: totalUnits
                 });
 
                 showToast('Course deleted', 'success');
@@ -2170,8 +2182,14 @@
                 currentSemester.courses = currentSemester.courses || [];
                 currentSemester.courses.push(newCourse);
 
+                // Recalculate semester GPA
+                const semesterGPA = parseFloat(calculateSemesterGPA(currentSemester.courses));
+                const totalUnits = currentSemester.courses.reduce((sum, c) => sum + (c.unitHours || 0), 0);
+
                 await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
-                    courses: currentSemester.courses
+                    courses: currentSemester.courses,
+                    gpa: semesterGPA,
+                    totalUnits: totalUnits
                 });
 
                 showToast('Course added!', 'success');
