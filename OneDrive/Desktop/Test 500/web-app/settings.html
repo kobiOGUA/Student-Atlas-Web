@@ -272,10 +272,7 @@
                 <span class="checkmark">✓</span>
             </div>
 
-            <div class="theme-option" onclick="setTheme('dark')">
-                <span class="theme-text">Dark</span>
-                <span class="checkmark" style="display: none;">✓</span>
-            </div>
+
 
             <div class="theme-option" onclick="setTheme('blue')">
                 <span class="theme-text">Blue</span>
@@ -383,7 +380,8 @@
 
         // Load saved theme on page load
         window.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('kobi_atlas_theme') || 'default';
+            let savedTheme = localStorage.getItem('kobi_atlas_theme') || 'default';
+            if (savedTheme === 'dark') savedTheme = 'default';
 
             document.querySelectorAll('.theme-option').forEach(opt => {
                 opt.classList.remove('active');
@@ -391,7 +389,7 @@
             });
 
             const themeOptions = document.querySelectorAll('.theme-option');
-            const themes = ['default', 'dark', 'blue', 'lightPink', 'light'];
+            const themes = ['default', 'blue', 'lightPink', 'light'];
             const index = themes.indexOf(savedTheme);
 
             if (index >= 0 && themeOptions[index]) {
