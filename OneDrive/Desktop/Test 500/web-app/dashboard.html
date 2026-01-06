@@ -3283,10 +3283,19 @@
                 // Sort by timestamp
                 semesters.sort((a, b) => a.timestamp - b.timestamp);
 
-                // Get relevant semesters based on tab
-                const relevantSemesters = currentGPATab === 'current'
-                    ? semesters.filter(s => s.type === 'past')
-                    : semesters;
+                // Get exclude setting
+                const excludeCurrent = localStorage.getItem('excludeCurrentGPA') === 'true';
+
+                // Get relevant semesters based on tab and exclude setting
+                let relevantSemesters;
+                if (currentGPATab === 'current') {
+                    relevantSemesters = semesters.filter(s => s.type === 'past');
+                } else {
+                    // Predicted tab - respect exclude toggle
+                    relevantSemesters = excludeCurrent
+                        ? semesters.filter(s => s.type !== 'current')
+                        : semesters;
+                }
 
                 // Calculate aggregate stats
                 let totalPoints = 0;
@@ -3388,15 +3397,15 @@
                     }
                 }
 
-                // Render GPA Chart
+                // Render GPA Chart (improved)
                 const chartHTML = relevantSemesters.map(sem => {
                     const semGPA = sem.gpa || parseFloat(calculateSemesterGPA(sem.courses || []));
-                    const height = (semGPA / 5.0) * 150;
+                    const height = (semGPA / 5.0) * 155; // Increased from 150 to 155
                     const color = sem.type === 'past' ? '#667eea' : '#00d4ff';
                     return `
-                        <div style="display: flex; flex-direction: column; align-items: center; min-width: 50px;">
-                            <div style="width: 40px; background: ${color}; height: ${height}px; border-radius: 4px 4px 0 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 4px;">
-                                <span style="font-size: 10px; color: white; font-weight: bold;">${semGPA.toFixed(2)}</span>
+                        <div style="display: flex; flex-direction: column; align-items: center; min-width: 60px; flex: 1; max-width: 70px;">
+                            <div style="width: 70%; min-width: 30px; background: ${color}; height: ${height}px; border-radius: 8px 8px 0 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 6px;">
+                                <span style="font-size: 11px; color: white; font-weight: bold;">${semGPA.toFixed(2)}</span>
                             </div>
                             <span style="font-size: 10px; color: #999; margin-top: 4px;">${sem.name.split(' ')[0]}</span>
                         </div>
