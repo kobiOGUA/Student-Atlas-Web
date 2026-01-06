@@ -1707,7 +1707,7 @@
                 // Inject Toggle below Current Semester
                 const toggleHTML = `
                     <div style="background: white; padding: 16px; border-radius: 12px; margin-top: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between;">
-                        <span style="font-size: 16px; color: var(--text-color); font-weight: 500;">Exclude from Predicted</span>
+                        <span style="font-size: 16px; color: #333; font-weight: 500;">Exclude from Predicted</span>
                         <label class="switch" style="position: relative; display: inline-block; width: 50px; height: 28px;">
                             <input type="checkbox" ${excludeCurrentGPA ? 'checked' : ''} onchange="toggleExcludeActive(this.checked)" style="opacity: 0; width: 0; height: 0;">
                             <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px;"></span>
@@ -3414,7 +3414,7 @@
                             <div style="width: 70%; min-width: 30px; background: ${color}; height: ${height}px; border-radius: 8px 8px 0 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 6px;">
                                 <span style="font-size: 11px; color: white; font-weight: bold;">${semGPA.toFixed(2)}</span>
                             </div>
-                            <span style="font-size: 11px; color: #666; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; text-align: center;">${sem.name.split(' ')[0]}</span>
+                            <span style="font-size: 11px; color: #666; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; text-align: center;">${sem.name.replace('Level', 'Lvl')}</span>
                         </div>
                     `;
                 }).join('');
