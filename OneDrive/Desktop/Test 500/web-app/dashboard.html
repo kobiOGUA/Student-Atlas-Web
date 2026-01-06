@@ -3880,7 +3880,8 @@
 
             try {
                 // Get course name if selected
-                let courseName = undefined;
+                // Get course name if selected
+                let courseName = null;
                 if (courseId) {
                     const semRef = collection(db, 'users', uid, 'semesters');
                     const snapshot = await getDocs(semRef);
@@ -3898,29 +3899,28 @@
 
                 const taskId = document.getElementById('task-id').value;
 
+                const taskData = {
+                    title,
+                    courseId: courseId || null,
+                    courseName: courseName || null,
+                    type,
+                    dueDate: new Date(dueDate).getTime(),
+                    description: description || null
+                };
+
                 if (taskId) {
                     // Update
-                    await updateDoc(doc(db, 'tasks', taskId), {
-                        title,
-                        courseId: courseId || undefined,
-                        courseName,
-                        type,
-                        dueDate: new Date(dueDate).getTime(),
-                        description: description || undefined
-                    });
+                    console.log('Updating task:', taskId);
+                    await updateDoc(doc(db, 'tasks', taskId), taskData);
                     showToast('Task updated!', 'success');
                 } else {
                     // Create
                     const taskRef = doc(collection(db, 'tasks'));
+                    console.log('Creating new task:', taskRef.id);
                     await setDoc(taskRef, {
                         id: taskRef.id,
                         userId: uid,
-                        title,
-                        courseId: courseId || undefined,
-                        courseName,
-                        type,
-                        dueDate: new Date(dueDate).getTime(),
-                        description: description || undefined,
+                        ...taskData,
                         isCompleted: false,
                         createdAt: Date.now()
                     });
@@ -4952,8 +4952,57 @@
                     return;
                 }
 
+                // Handle switching courses/types (Delete old reference if changed)
+                const originalId = document.getElementById('edit-schedule-id').value;
+                const originalCourseId = document.getElementById('edit-schedule-course-id').value;
+
+                if (isEdit && (originalCourseId !== courseId)) {
+                    // Course changed, delete from original location first
+                    if (originalCourseId) {
+                        // Was in a course
+                        const oldCourseIndex = currentSemester.courses.findIndex(c => c.id === originalCourseId);
+                        if (oldCourseIndex !== -1) {
+                            let oldSchedules = currentSemester.courses[oldCourseIndex].schedules || [];
+                            // Remove the schedule with originalId
+                            const updatedOldSchedules = oldSchedules.filter(s => s.id !== originalId);
+                            currentSemester.courses[oldCourseIndex].schedules = updatedOldSchedules;
+                            if (currentSemester.courses[oldCourseIndex].schedule && currentSemester.courses[oldCourseIndex].schedule.id === originalId) {
+                                currentSemester.courses[oldCourseIndex].schedule = updatedOldSchedules[0] || null;
+                            }
+                        }
+                    } else {
+                        // Was custom event
+                        let customEvents = currentSemester.customEvents || [];
+                        currentSemester.customEvents = customEvents.filter(e => e.id !== originalId);
+                    }
+                    // We don't save yet, we simply modified the local object 'currentSemester'
+                    // The save below will persist everything (since we update the whole courses/customEvents arrays)
+                    // Actually, we must ensure we save BOTH changes if we split the update calls.
+                    // Better strategy: Update the local 'currentSemester' object completely, then save once if possible,
+                    // or just rely on the existing update calls but make sure we didn't miss the cleanup.
+
+                    // Since this function does specific updateDoc calls for courses/customEvents, 
+                    // we should perform the cleanup updateDoc HERE if we want to be safe, or merge logic.
+
+                    // Let's do the cleanup update first to ensure consistency
+                    if (originalCourseId) {
+                        // Clean up old course
+                        await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                            courses: currentSemester.courses
+                        });
+                    } else {
+                        // Clean up custom events
+                        await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                            customEvents: currentSemester.customEvents || []
+                        });
+                    }
+                }
+
+
+                // PROCEED TO SAVE NEW/UPDATED ENTRY (in new location)
+
                 const newScheduleItem = {
-                    id: isEdit ? document.getElementById('edit-schedule-id').value : Date.now().toString(),
+                    id: isEdit ? originalId : Date.now().toString(),
                     title: courseId ? '' : title,
                     isRecurring,
                     day,
@@ -4962,6 +5011,7 @@
                     endTime,
                     venue: venue || null
                 };
+
 
                 // COURSE Event
                 if (courseId) {
@@ -4975,9 +5025,17 @@
 
                     let schedules = courses[idx].schedules || (courses[idx].schedule ? [courses[idx].schedule] : []) || [];
 
-                    if (isEdit) {
-                        schedules = schedules.map(s => s.id === newScheduleItem.id ? { ...newScheduleItem, id: s.id } : s);
+                    // If editing AND same course (or we just moved it here), we treat as update/add
+                    // If we moved it here, it's effectively a "new" add to this course, but keeping ID
+
+                    // Check if ID exists in this course
+                    const existingIdx = schedules.findIndex(s => s.id === newScheduleItem.id);
+
+                    if (existingIdx !== -1) {
+                        // Update existing in this course
+                        schedules[existingIdx] = newScheduleItem;
                     } else {
+                        // New to this course (Add)
                         // Check conflicts
                         if (schedules.some(s => s.day === newScheduleItem.day && s.startTime === newScheduleItem.startTime)) {
                             showToast('Time slot occupied', 'error');
@@ -4997,14 +5055,16 @@
                 // CUSTOM Event
                 else {
                     let customEvents = currentSemester.customEvents || [];
-                    if (isEdit) {
-                        customEvents = customEvents.map(e => e.id === newScheduleItem.id ? newScheduleItem : e);
+                    const existingIdx = customEvents.findIndex(e => e.id === newScheduleItem.id);
+
+                    if (existingIdx !== -1) {
+                        customEvents[existingIdx] = newScheduleItem;
                     } else {
                         customEvents.push(newScheduleItem);
                     }
 
                     await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
-                        customEvents
+                        customEvents: customEvents
                     });
                 }
 
