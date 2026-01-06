@@ -1605,6 +1605,11 @@
             return filled + empty;
         }
 
+        window.toggleExcludeActive = function (isChecked) {
+            localStorage.setItem('excludeCurrentGPA', isChecked);
+            loadDashboard();
+        }
+
         // Dashboard functions
         async function loadDashboard() {
             const uid = localStorage.getItem('kobi_atlas_uid');
@@ -1612,6 +1617,8 @@
                 window.location.href = 'index.html';
                 return;
             }
+
+            const excludeCurrentGPA = localStorage.getItem('excludeCurrentGPA') === 'true';
 
             showLoading(true);
 
@@ -1658,8 +1665,12 @@
                             totalUnits += semUnits;
                         }
 
-                        predictedPoints += semGPA * semUnits;
-                        predictedUnits += semUnits;
+                        if (sem.type === 'current' && excludeCurrentGPA) {
+                            // Exclude from predicted
+                        } else {
+                            predictedPoints += semGPA * semUnits;
+                            predictedUnits += semUnits;
+                        }
                     }
                 });
 
@@ -1668,7 +1679,17 @@
 
                 // Display stats - FIXED: Only show predicted if current/pending exists
                 const statsGrid = document.getElementById('stats-grid');
-                statsGrid.innerHTML = `
+
+                const toggleHTML = `
+                    <div style="grid-column: 1 / -1; margin-bottom: 5px; display: flex; align-items: center; justify-content: flex-end;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-color); font-size: 13px;">
+                            <input type="checkbox" ${excludeCurrentGPA ? 'checked' : ''} onchange="toggleExcludeActive(this.checked)" style="width: auto; margin: 0; cursor: pointer;">
+                            Exclude Current Sem from Predicted
+                        </label>
+                    </div>
+                `;
+
+                statsGrid.innerHTML = toggleHTML + `
                     <div class="stat-card">
                         <div class="stat-label">Current CGPA</div>
                         <div class="stat-value">${cgpa}</div>
