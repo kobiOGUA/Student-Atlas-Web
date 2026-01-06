@@ -277,10 +277,11 @@
             </div>
 
             <div style="margin-top: 30px; text-align: center; border-top: 1px solid #333; padding-top: 15px;">
-                <p style="color: #999; font-size: 13px; margin: 0 0 5px 0;">Using Android?</p>
-                <a href="https://kobisatlas.netlify.app" target="_blank"
-                    style="color: #667eea; font-size: 13px; text-decoration: none; font-weight: 600;">Download the App
-                    here</a>
+                <p style="color: #999; font-size: 13px; margin: 0 0 5px 0;">Want the mobile experience?</p>
+                <button onclick="scrollToDownloads()"
+                    style="background: none; border: none; color: #667eea; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: underline;">
+                    Get Kobi's Atlas App
+                </button>
             </div>
         </div>
     </div>
@@ -312,6 +313,92 @@
 
     <div id="loading" class="loading hidden">
         <div class="spinner"></div>
+    </div>
+
+    <!-- Download Selection Section -->
+    <div id="downloads-selection" class="screen hidden" style="background: #111;">
+        <div class="header">
+            <div class="title">Get Kobi's Atlas</div>
+            <p style="color: #999;">Select your platform</p>
+        </div>
+
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+            <div onclick="showPlatform('android')"
+                style="background: #2a2a2a; padding: 30px; border-radius: 16px; cursor: pointer; border: 2px solid transparent; width: 150px; text-align: center; transition: all 0.2s;">
+                <ion-icon name="logo-android" style="font-size: 48px; color: #3DDC84; margin-bottom: 10px;"></ion-icon>
+                <div style="font-weight: bold;">Android</div>
+            </div>
+
+            <div onclick="showPlatform('ios')"
+                style="background: #2a2a2a; padding: 30px; border-radius: 16px; cursor: pointer; border: 2px solid transparent; width: 150px; text-align: center; transition: all 0.2s;">
+                <ion-icon name="logo-apple" style="font-size: 48px; color: #fff; margin-bottom: 10px;"></ion-icon>
+                <div style="font-weight: bold;">iOS</div>
+            </div>
+        </div>
+
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+            style="margin-top: 40px; background: none; border: none; color: #666; cursor: pointer;">
+            Back to Login
+        </button>
+    </div>
+
+    <!-- Android Install Section -->
+    <div id="android-install" class="screen hidden" style="background: #000;">
+        <div class="header">
+            <ion-icon name="logo-android" style="font-size: 48px; color: #3DDC84; margin-bottom: 20px;"></ion-icon>
+            <div class="title">Android Installation</div>
+            <p class="subtitle">Download and install the APK directly.</p>
+        </div>
+
+        <div class="form-container" style="text-align: center;">
+            <p style="color: #ccc; margin-bottom: 20px; line-height: 1.5;">
+                Note: You may need to allow installation from unknown sources in your settings.
+            </p>
+
+            <button class="btn" onclick="alert('APK Upload coming soon!')" style="background: #3DDC84; color: #000;">
+                <ion-icon name="download-outline" style="margin-right: 8px; vertical-align: middle;"></ion-icon>
+                Download APK
+            </button>
+
+            <button onclick="scrollToDownloads()"
+                style="margin-top: 20px; background: none; border: none; color: #666; cursor: pointer;">
+                ← Back to Selection
+            </button>
+        </div>
+    </div>
+
+    <!-- iOS Install Section -->
+    <div id="ios-install" class="screen hidden" style="background: #000;">
+        <div class="header">
+            <ion-icon name="logo-apple" style="font-size: 48px; color: #fff; margin-bottom: 20px;"></ion-icon>
+            <div class="title">iOS Installation</div>
+            <p class="subtitle">Install directly from Safari</p>
+        </div>
+
+        <div style="max-width: 600px; width: 100%; margin: 0 auto;">
+            <video controls autoplay loop muted playsinline
+                style="width: 100%; border-radius: 12px; border: 1px solid #333; margin-bottom: 20px;">
+                <source src="iOS Tutorial.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+
+            <div style="background: #2a2a2a; padding: 20px; border-radius: 12px; text-align: left;">
+                <ol style="margin-left: 20px; line-height: 1.8; color: #ccc;">
+                    <li>Open this website in <strong>Safari</strong>.</li>
+                    <li>Tap the <strong>Share</strong> icon <ion-icon name="share-outline"
+                            style="vertical-align: middle;"></ion-icon> at the bottom.</li>
+                    <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
+                    <li>Tap <strong>Add</strong> in the top right corner.</li>
+                </ol>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button onclick="scrollToDownloads()"
+                    style="background: none; border: none; color: #666; cursor: pointer;">
+                    ← Back to Selection
+                </button>
+            </div>
+        </div>
     </div>
 
     <script type="module">
@@ -471,6 +558,33 @@
             isConfirmingPIN = false;
             updatePINDisplay();
             showEmailScreen();
+        };
+
+        window.scrollToDownloads = function () {
+            document.getElementById('downloads-selection').classList.remove('hidden');
+            document.getElementById('android-install').classList.add('hidden');
+            document.getElementById('ios-install').classList.add('hidden');
+
+            // Wait for display change to render then scroll
+            setTimeout(() => {
+                document.getElementById('downloads-selection').scrollIntoView({ behavior: 'smooth' });
+            }, 50);
+        };
+
+        window.showPlatform = function (platform) {
+            document.getElementById('downloads-selection').classList.add('hidden');
+
+            if (platform === 'android') {
+                document.getElementById('android-install').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('android-install').scrollIntoView({ behavior: 'smooth' });
+                }, 50);
+            } else {
+                document.getElementById('ios-install').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('ios-install').scrollIntoView({ behavior: 'smooth' });
+                }, 50);
+            }
         };
 
         // Numpad handlers
