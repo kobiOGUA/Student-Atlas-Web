@@ -1713,7 +1713,7 @@
                     </div>
                 `;
                 const currentContainer = document.getElementById('current-semester');
-                if (currentContainer) {
+                if (currentContainer && current.length > 0) {
                     currentContainer.insertAdjacentHTML('beforeend', toggleHTML);
                 }
 
