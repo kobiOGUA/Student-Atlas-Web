@@ -2,7 +2,7 @@
 import { renderLoginScreen, initLoginScreen } from './screens/login.js';
 import { renderDashboardScreen, initDashboardScreen } from './screens/dashboard.js';
 import { renderCommunityScreen, initCommunityScreen } from './screens/community.js';
-import { renderGPAScreen, initGPAScreen } from './screens/gpa.js';
+import { renderGPAScreen, initGPAScreen } from './screens/gpa.js?v=2';
 import { checkAuth } from './services/auth.js';
 
 const routes = {
