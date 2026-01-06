@@ -307,19 +307,60 @@
             window.location.href = 'settings.html';
         };
 
-        window.handleImageUpload = function () {
+        window.handleImageUpload = async function () {
             const file = document.getElementById('file-input').files[0];
             if (!file) return;
 
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                profilePictureBase64 = e.target.result;
-                const img = document.createElement('img');
-                img.src = profilePictureBase64;
+            console.log('BRUTE-FORCE compression starting for:', file.name, file.size);
+
+            try {
+                // BRUTE FORCE: Manual canvas compression - 400px @ 0.5 quality
+                profilePictureBase64 = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            let width = img.width;
+                            let height = img.height;
+                            const maxSize = 400;
+
+                            if (width > height) {
+                                if (width > maxSize) {
+                                    height *= maxSize / width;
+                                    width = maxSize;
+                                }
+                            } else {
+                                if (height > maxSize) {
+                                    width *= maxSize / height;
+                                    height = maxSize;
+                                }
+                            }
+
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            resolve(canvas.toDataURL('image/jpeg', 0.5));
+                        };
+                        img.onerror = () => reject(new Error('Image load failed'));
+                        img.src = e.target.result;
+                    };
+                    reader.onerror = () => reject(new Error('File read failed'));
+                    reader.readAsDataURL(file);
+                });
+
+                console.log('Compression complete, final size:', profilePictureBase64.length, 'characters');
+
+                const imgElement = document.createElement('img');
+                imgElement.src = profilePictureBase64;
                 document.getElementById('profile-picture').innerHTML = '';
-                document.getElementById('profile-picture').appendChild(img);
-            };
-            reader.readAsDataURL(file);
+                document.getElementById('profile-picture').appendChild(imgElement);
+            } catch (error) {
+                console.error('Image compression error:', error);
+                alert('Failed to process image');
+            }
         };
 
         window.saveProfile = async function () {
@@ -350,14 +391,21 @@
 
             try {
                 const userRef = doc(db, 'users', uid);
-                await setDoc(userRef, {
+                const updateData = {
                     username,
                     displayName: displayName || username,
                     bio,
                     aboutMe,
-                    profilePicture: profilePictureBase64,
                     lastActive: Date.now()
-                }, { merge: true });
+                };
+
+                // Only update profile picture if a new one was selected
+                if (profilePictureBase64) {
+                    updateData.profilePicture = profilePictureBase64;
+                }
+
+                await setDoc(userRef, updateData, { merge: true });
+
 
                 alert('Profile updated successfully!');
                 window.location.href = 'settings.html';
@@ -394,7 +442,8 @@
                     document.getElementById('about-me').value = data.aboutMe || '';
 
                     if (data.profilePicture) {
-                        profilePictureBase64 = data.profilePicture;
+                        // Show existing picture in preview, but DON'T load into profilePictureBase64
+                        // Only set profilePictureBase64 when user selects NEW image
                         const img = document.createElement('img');
                         img.src = data.profilePicture;
                         document.getElementById('profile-picture').innerHTML = '';

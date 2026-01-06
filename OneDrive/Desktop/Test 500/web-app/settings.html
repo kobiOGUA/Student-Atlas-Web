@@ -365,16 +365,19 @@
         }
 
         function showChangePIN() {
-            alert('Change PIN functionality - redirecting to index.html with modal');
-            window.location.href = 'index.html#change-pin';
+            window.location.href = 'change-pin.html';
         }
 
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
+                // Clear all app specific keys
                 localStorage.removeItem('kobi_atlas_uid');
                 localStorage.removeItem('kobi_atlas_email');
                 localStorage.removeItem('kobi_atlas_pin');
-                window.location.href = 'login.html';
+                localStorage.removeItem('kobi_atlas_theme');
+
+                // Force redirect
+                window.location.replace('login.html');
             }
         }
 

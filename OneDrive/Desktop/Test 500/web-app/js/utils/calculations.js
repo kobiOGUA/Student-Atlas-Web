@@ -17,7 +17,7 @@ export function calculateSemesterGPA(courses) {
     if (!courses || courses.length === 0) return 0;
     let totalPoints = 0;
     let totalUnits = 0;
-    
+
     courses.forEach(course => {
         const grade = course.grade || course.predictedGrade;
         if (grade) {
@@ -27,16 +27,18 @@ export function calculateSemesterGPA(courses) {
             totalUnits += units;
         }
     });
-    
+
     return totalUnits === 0 ? 0 : parseFloat((totalPoints / totalUnits).toFixed(2));
 }
 
 export function calculateCGPA(semesters) {
+    // Only past semesters for real CGPA
+    const pastSemesters = semesters.filter(s => s.type === 'past');
     let totalPoints = 0;
     let totalUnits = 0;
-    
-    semesters.forEach(sem => {
-        if (sem.type === 'past' && sem.gpa && sem.totalUnits) {
+
+    pastSemesters.forEach(sem => {
+        if (sem.gpa && sem.totalUnits) {
             totalPoints += sem.gpa * sem.totalUnits;
             totalUnits += sem.totalUnits;
         } else if (sem.courses) {
@@ -46,6 +48,26 @@ export function calculateCGPA(semesters) {
             totalUnits += semUnits;
         }
     });
-    
+
+    return totalUnits === 0 ? 0 : parseFloat((totalPoints / totalUnits).toFixed(2));
+}
+
+export function calculatePredictedCGPA(semesters) {
+    // All semesters for predicted CGPA
+    let totalPoints = 0;
+    let totalUnits = 0;
+
+    semesters.forEach(sem => {
+        if (sem.gpa && sem.totalUnits) {
+            totalPoints += sem.gpa * sem.totalUnits;
+            totalUnits += sem.totalUnits;
+        } else if (sem.courses) {
+            const semGPA = calculateSemesterGPA(sem.courses);
+            const semUnits = sem.courses.reduce((sum, c) => sum + (c.units || 0), 0);
+            totalPoints += semGPA * semUnits;
+            totalUnits += semUnits;
+        }
+    });
+
     return totalUnits === 0 ? 0 : parseFloat((totalPoints / totalUnits).toFixed(2));
 }
