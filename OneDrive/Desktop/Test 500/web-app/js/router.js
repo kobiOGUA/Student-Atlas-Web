@@ -2,6 +2,7 @@
 import { renderLoginScreen, initLoginScreen } from './screens/login.js';
 import { renderDashboardScreen, initDashboardScreen } from './screens/dashboard.js';
 import { renderCommunityScreen, initCommunityScreen } from './screens/community.js';
+import { renderGPAScreen, initGPAScreen } from './screens/gpa.js';
 import { checkAuth } from './services/auth.js';
 
 const routes = {
@@ -10,7 +11,7 @@ const routes = {
     '/dashboard': 'dashboard',
     '/community': 'community',
     '/timetable': 'dashboard', // Placeholder
-    '/gpa': 'dashboard', // Placeholder
+    '/gpa': 'gpa',
     '/messages': 'dashboard', // Placeholder
     '/settings': 'dashboard' // Placeholder
 };
@@ -61,6 +62,12 @@ async function handleRoute() {
             case 'community':
                 container.innerHTML = renderCommunityScreen();
                 await initCommunityScreen();
+                bottomNav.style.display = 'flex';
+                break;
+
+            case 'gpa':
+                container.innerHTML = renderGPAScreen();
+                await initGPAScreen();
                 bottomNav.style.display = 'flex';
                 break;
 
