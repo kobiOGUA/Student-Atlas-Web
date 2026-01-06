@@ -1636,11 +1636,10 @@
                     semesters.push({ id: doc.id, ...doc.data() });
                 });
 
-                // Sort: Latest first (Descending createdAt)
+                // Sort: Latest first (Descending timestamp/createdAt)
                 semesters.sort((a, b) => {
-                    const timeA = a.createdAt?.seconds || 0;
-                    const timeB = b.createdAt?.seconds || 0;
-                    return timeB - timeA;
+                    const getT = (s) => s.timestamp?.seconds || s.timestamp || s.createdAt?.seconds || s.createdAt || 0;
+                    return getT(b) - getT(a);
                 });
 
                 // Separate by type
