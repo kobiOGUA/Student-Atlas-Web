@@ -16,7 +16,7 @@ export function renderDashboardScreen() {
                     <div class="stat-label">Current CGPA</div>
                     <div class="stat-value" id="cgpa-value">--</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" id="predicted-stat-card">
                     <div class="stat-label">Predicted CGPA</div>
                     <div class="stat-value" id="predicted-cgpa-value">--</div>
                 </div>
@@ -24,6 +24,7 @@ export function renderDashboardScreen() {
             
             <h3>Current Semester</h3>
             <div id="current-semester-container"></div>
+            <div id="exclude-toggle-container"></div>
             
             <h3>Semester History</h3>
             <div id="semester-history-container"></div>
@@ -38,11 +39,27 @@ export async function initDashboardScreen() {
         return;
     }
 
-    const semesters = await fetchSemesters(userId);
+    let semesters = await fetchSemesters(userId);
+
+    // Sort semesters by creation date (newest first)
+    semesters.sort((a, b) => {
+        const timeA = a.timestamp || a.createdAt || 0;
+        const timeB = b.timestamp || b.createdAt || 0;
+        return timeB - timeA;
+    });
+
+    // Get exclude setting
+    const excludeCurrent = storage.getItem('excludeCurrentGPA') === 'true';
 
     // Calculate GPAs
     const cgpa = calculateCGPA(semesters);
-    const predictedCGPA = calculatePredictedCGPA(semesters);
+
+    // Calculate predicted CGPA respecting exclude setting
+    let semestersForPredicted = semesters;
+    if (excludeCurrent) {
+        semestersForPredicted = semesters.filter(s => s.type !== 'current');
+    }
+    const predictedCGPA = calculatePredictedCGPA(semestersForPredicted);
 
     document.getElementById('cgpa-value').textContent = cgpa.toFixed(2);
     document.getElementById('predicted-cgpa-value').textContent = predictedCGPA.toFixed(2);
@@ -50,6 +67,7 @@ export async function initDashboardScreen() {
     // Display current semester
     const currentSem = semesters.find(s => s.type === 'current');
     const currentContainer = document.getElementById('current-semester-container');
+    const toggleContainer = document.getElementById('exclude-toggle-container');
 
     if (currentSem) {
         currentContainer.innerHTML = `
@@ -62,6 +80,18 @@ export async function initDashboardScreen() {
                 <p style="font-weight: bold; margin-top: 8px;">Target GPA: <span style="color: var(--success);">5.00</span></p>
             </div>
         `;
+
+        // Show toggle only when current semester exists
+        toggleContainer.innerHTML = `
+            <div style="margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-color); font-size: 13px;">
+                    <input type="checkbox" id="exclude-toggle" ${excludeCurrent ? 'checked' : ''} 
+                           style="width: auto; margin: 0; cursor: pointer;"
+                           onchange="window.toggleExcludeCurrent(this.checked)">
+                    Exclude from Predicted
+                </label>
+            </div>
+        `;
     } else {
         currentContainer.innerHTML = `
             <div class="card" style="text-align: center; padding: 40px; border: 2px dashed var(--border); cursor: pointer;" onclick="alert('Add Semester feature coming soon!')">
@@ -69,9 +99,10 @@ export async function initDashboardScreen() {
                 <p class="text-secondary">Start a new semester</p>
             </div>
         `;
+        toggleContainer.innerHTML = ''; // No toggle when no current semester
     }
 
-    // Display semester history
+    // Display semester history (sorted by creation date)
     const historyContainer = document.getElementById('semester-history-container');
     const pastSemesters = semesters.filter(s => s.type !== 'current');
 
@@ -95,3 +126,9 @@ export async function initDashboardScreen() {
         `;
     }
 }
+
+// Global function for toggle
+window.toggleExcludeCurrent = function (checked) {
+    storage.setItem('excludeCurrentGPA', String(checked));
+    initDashboardScreen(); // Reload to recalculate
+};
