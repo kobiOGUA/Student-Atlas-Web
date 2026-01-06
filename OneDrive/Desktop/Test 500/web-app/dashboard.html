@@ -1602,7 +1602,7 @@
         async function loadDashboard() {
             const uid = localStorage.getItem('kobi_atlas_uid');
             if (!uid) {
-                window.location.href = 'login.html';
+                window.location.href = 'index.html';
                 return;
             }
 
@@ -5664,7 +5664,7 @@
                 loadDashboard();
             } else {
                 // Not logged in, redirect to login page
-                window.location.href = 'login.html';
+                window.location.href = 'index.html';
             }
         });
     </script>
