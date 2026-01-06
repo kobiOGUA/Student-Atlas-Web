@@ -734,22 +734,42 @@
                     <span id="total-ca" style="font-weight: bold; color: #667eea;">0/40</span>
                 </div>
 
-                <h3 style="margin: 24px 0 16px 0;">Exam Target</h3>
-                <div class="ca-score-row">
-                    <span>Target Grade:</span>
-                    <select id="target-grade" onchange="updateExamTarget()" style="width: 100px; margin: 0;">
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
+                <h3 style="margin: 24px 0 16px 0;">Grade Calculation</h3>
+
+                <div
+                    style="background: var(--card-bg); padding: 12px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border-color);">
+                    <span style="font-weight: 500;">Use CA for Grade</span>
+                    <label class="switch">
+                        <input type="checkbox" id="use-ca-toggle" onchange="toggleUseCA(this.checked)">
+                        <span class="slider round"></span>
+                        <style>
+                            input:checked+.slider {
+                                background-color: var(--primary-color);
+                            }
+                        </style>
+                    </label>
+                </div>
+
+                <div id="manual-grade-container" class="ca-score-row hidden">
+                    <span>Grade:</span>
+                    <select id="course-manual-grade" style="width: 100px; margin: 0;">
+                        <!-- Populated dynamically -->
                     </select>
                 </div>
-                <div class="ca-score-row">
-                    <span>Required Exam Score:</span>
-                    <span id="required-exam" style="font-weight: bold; color: #667eea;">--/60</span>
-                </div>
-                <div class="ca-score-row">
-                    <span>Certainty:</span>
-                    <span id="certainty" style="font-weight: bold;">--</span>
+
+                <div id="projected-grade-container" class="hidden">
+                    <div class="ca-score-row">
+                        <span>Max Possible Score:</span>
+                        <span id="max-possible-score" style="font-weight: bold;">--</span>
+                    </div>
+                    <div class="ca-score-row">
+                        <span>Projected Grade:</span>
+                        <span id="projected-grade-display"
+                            style="font-weight: bold; font-size: 18px; color: var(--primary-color);">--</span>
+                    </div>
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
+                        Based on Max Possible Score (CA + 60)
+                    </p>
                 </div>
 
                 <h3 style="margin: 24px 0 16px 0;">Course Info</h3>
@@ -757,10 +777,7 @@
                     <span>Unit Hours:</span>
                     <span id="course-units">--</span>
                 </div>
-                <div class="ca-score-row">
-                    <span>Difficulty:</span>
-                    <span id="course-difficulty" class="difficulty-stars">★★★☆☆</span>
-                </div>
+
 
                 <button class="btn btn-primary" onclick="saveCourseChanges()" style="margin-top: 24px;">Save
                     Changes</button>
@@ -1342,21 +1359,14 @@
                 <label>Unit Hours</label>
                 <input type="number" id="course-unit-hours" placeholder="e.g., 2" min="1" max="6">
 
-                <label>Target Grade</label>
+                <label>Grade</label>
                 <select id="course-target-grade">
                     <option value="A">A</option>
                     <option value="B">B</option>
                     <option value="C">C</option>
                 </select>
 
-                <label>Difficulty (1-5)</label>
-                <select id="course-difficulty-select">
-                    <option value="1">1 - Very Easy</option>
-                    <option value="2">2 - Easy</option>
-                    <option value="3" selected>3 - Medium</option>
-                    <option value="4">4 - Hard</option>
-                    <option value="5">5 - Very Hard</option>
-                </select>
+
 
                 <button class="btn btn-primary" onclick="addCourse()">Add Course</button>
                 <button class="btn btn-secondary" onclick="closeModal('add-course-modal')">Cancel</button>
@@ -1564,9 +1574,130 @@
             return OWNER_EMAILS.includes(user.email);
         }
 
+        function getGradingConfig() {
+            try {
+                const saved = localStorage.getItem('kobi_atlas_grading_system');
+                if (saved) return JSON.parse(saved);
+            } catch (e) {
+                console.error('Error parsing grading config', e);
+            }
+            return { type: 'babcock' }; // Default
+        }
+
+        function getGradeFromScore(score) {
+            const config = getGradingConfig();
+
+            if (config.type === 'babcock') {
+                if (score >= 80) return 'A';
+                if (score >= 60) return 'B';
+                if (score >= 50) return 'C';
+                if (score >= 45) return 'D';
+                if (score >= 40) return 'E';
+                return 'F';
+            }
+
+            if (config.type === 'nigerian') {
+                if (score >= 70) return 'A';
+                if (score >= 60) return 'B';
+                if (score >= 50) return 'C';
+                if (score >= 45) return 'D';
+                if (score >= 40) return 'E';
+                return 'F';
+            }
+
+            if (config.type === '4point') {
+                if (score >= 93) return 'A';
+                if (score >= 90) return 'A-';
+                if (score >= 87) return 'B+';
+                if (score >= 83) return 'B';
+                if (score >= 80) return 'B-';
+                if (score >= 77) return 'C+';
+                if (score >= 73) return 'C';
+                if (score >= 70) return 'C-';
+                if (score >= 67) return 'D+';
+                if (score >= 65) return 'D';
+                return 'F';
+            }
+
+            if (config.type === 'custom' && config.config) {
+                // Custom usually only defines A-F thresholds
+                if (score >= (config.config.A.min || 70)) return 'A';
+                if (score >= (config.config.B.min || 60)) return 'B';
+                if (score >= (config.config.C.min || 50)) return 'C';
+                if (score >= (config.config.D.min || 45)) return 'D';
+                if (score >= (config.config.E.min || 40)) return 'E';
+                return 'F';
+            }
+
+            // Fallback (Babcock)
+            if (score >= 80) return 'A';
+            if (score >= 60) return 'B';
+            if (score >= 50) return 'C';
+            if (score >= 45) return 'D';
+            if (score >= 40) return 'E';
+            return 'F';
+        }
+
         function gradeToPoint(grade) {
-            const points = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, 'F': 0 };
-            return points[grade] || 0;
+            if (!grade) return 0;
+            const config = getGradingConfig();
+            const g = grade.toString().toUpperCase();
+
+            // Standard Points Map (Default 5.0)
+            let points = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, 'F': 0 };
+
+            if (config.type === '4point') {
+                points = {
+                    'A': 4.0, 'A+': 4.0,
+                    'A-': 3.7,
+                    'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+                    'C+': 2.3, 'C': 2.0, 'C-': 1.7,
+                    'D+': 1.3, 'D': 1.0,
+                    'F': 0.0
+                };
+            } else if (config.type === 'custom' && config.config) {
+                points = {
+                    'A': parseFloat(config.config.A.point),
+                    'B': parseFloat(config.config.B.point),
+                    'C': parseFloat(config.config.C.point),
+                    'D': parseFloat(config.config.D.point),
+                    'E': parseFloat(config.config.E.point),
+                    'F': parseFloat(config.config.F.point)
+                };
+            }
+
+            if (points.hasOwnProperty(g)) return points[g];
+
+            // Handle edge maps if system is 5.0 but grade is A- (shouldn't happen if logic is consistent)
+            if (g === 'A+') return points['A'];
+
+            return 0;
+        }
+
+
+
+        function getAvailableGrades() {
+            const config = getGradingConfig();
+            if (config.type === '4point') {
+                return ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F'];
+            }
+            return ['A', 'B', 'C', 'D', 'E', 'F'];
+        }
+
+        function populateGradeDropdowns() {
+            const grades = getAvailableGrades();
+            const selects = ['course-target-grade', 'target-grade', 'course-manual-grade'];
+
+            selects.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const currentVal = el.value;
+                    el.innerHTML = grades.map(g => `<option value="${g}">${g}</option>`).join('');
+                    if (grades.includes(currentVal)) el.value = currentVal;
+                    // Default to A if empty and no match?
+                    if (!el.value) el.value = grades[0];
+                }
+            });
         }
 
         function calculateSemesterGPA(courses) {
@@ -1588,8 +1719,23 @@
         }
 
         function calculateRequiredExam(caTotal, targetGrade) {
-            const targets = { 'A': 70, 'B': 60, 'C': 50 };
-            const required = (targets[targetGrade] || 70) - caTotal;
+            const config = getGradingConfig();
+            let minScore = 70;
+
+            if (config.type === 'babcock') {
+                const map = { 'A': 80, 'B': 60, 'C': 50, 'D': 45, 'E': 40 };
+                minScore = map[targetGrade] || 70;
+            } else if (config.type === 'nigerian') {
+                const map = { 'A': 70, 'B': 60, 'C': 50, 'D': 45, 'E': 40 };
+                minScore = map[targetGrade] || 70;
+            } else if (config.type === '4point') {
+                const map = { 'A': 93, 'A-': 90, 'B+': 87, 'B': 83, 'B-': 80, 'C+': 77, 'C': 73, 'C-': 70, 'D+': 67, 'D': 65 };
+                minScore = map[targetGrade] || 93;
+            } else if (config.type === 'custom' && config.config) {
+                minScore = parseInt(config.config[targetGrade]?.min || 70);
+            }
+
+            const required = minScore - caTotal;
             return Math.max(0, Math.min(60, required));
         }
 
@@ -1617,6 +1763,9 @@
                 window.location.href = 'index.html';
                 return;
             }
+
+            populateGradeDropdowns();
+
 
             // Check for Grading System (First Time User)
             if (!localStorage.getItem('kobi_atlas_grading_system')) {
@@ -1712,14 +1861,14 @@
                 // Inject Toggle below Current Semester
                 // Inject Toggle below Current Semester
                 const toggleHTML = `
-                    <div style="background: white; padding: 16px; border-radius: 12px; margin-top: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between;">
-                        <span style="font-size: 16px; color: #333; font-weight: 500;">Exclude from Predicted</span>
+                    <div style="background: var(--card-bg); color: var(--text-color); padding: 16px; border-radius: 12px; margin-top: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between;">
+                        <span style="font-size: 16px; font-weight: 500;">Exclude from Predicted</span>
                         <label class="switch" style="position: relative; display: inline-block; width: 50px; height: 28px;">
                             <input type="checkbox" ${excludeCurrentGPA ? 'checked' : ''} onchange="toggleExcludeActive(this.checked)" style="opacity: 0; width: 0; height: 0;">
                             <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px;"></span>
                             <style>
                                 .slider.round:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-                                input:checked + .slider { background-color: #008080; }
+                                input:checked + .slider { background-color: var(--primary-color); }
                                 input:checked + .slider:before { transform: translateX(22px); }
                             </style>
                         </label>
@@ -1798,20 +1947,43 @@
                 const gpa = currentSemester.gpa || calculateSemesterGPA(currentSemester.courses || []);
                 document.getElementById('semester-detail-gpa').textContent = `GPA: ${parseFloat(gpa).toFixed(2)}`;
 
+                window.getGradeColor = function (grade) {
+                    if (!grade || grade === '--') return '#667eea';
+                    const g = grade.charAt(0).toUpperCase();
+                    if (g === 'A') return '#10B981'; // Green
+                    if (g === 'B') return '#F59E0B'; // Yellow/Amber
+                    if (g === 'C') return '#4B5563'; // Dark Gray
+                    return '#EF4444'; // Red
+                };
+
                 const courses = currentSemester.courses || [];
                 const coursesHTML = courses.length > 0 ? courses.map((course, index) => {
                     const grade = course.grade || course.predictedGrade || course.targetGrade || '--';
-                    const stars = getDifficultyStars(course.difficulty || 3);
+                    const gradeColor = getGradeColor(grade);
+
                     return `
                         <div class="course-card" onclick="viewCourse(${index})">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div style="flex: 1;">
-                                    <div style="font-weight: bold;">${course.name}</div>
-                                    <div style="font-size: 12px; color: #999;">${course.code}</div>
+                                    <div style="font-weight: bold; font-size: 16px;">${course.name}</div>
+                                    <div style="font-size: 13px; color: #666;">${course.code}</div>
                                     <div style="font-size: 12px; color: #999; margin-top: 4px;">
-                                        ${course.unitHours} units • Target: ${course.targetGrade} • Grade: ${grade}
+                                        ${course.unitHours} units
                                     </div>
-                                    <div class="difficulty-stars" style="margin-top: 4px;">${stars}</div>
+                                </div>
+                                <div style="
+                                    background: ${gradeColor}1A; 
+                                    color: ${gradeColor};
+                                    padding: 8px 16px;
+                                    border-radius: 12px;
+                                    font-weight: 700;
+                                    font-size: 18px;
+                                    min-width: 48px;
+                                    text-align: center;
+                                    margin-left: 12px;
+                                    border: 1px solid ${gradeColor}33;
+                                ">
+                                    ${grade}
                                 </div>
                             </div>
                         </div>
@@ -1830,8 +2002,37 @@
         };
 
         // Course detail functions
+        window.toggleUseCA = function (isChecked) {
+            const manualContainer = document.getElementById('manual-grade-container');
+            const projectedContainer = document.getElementById('projected-grade-container');
+
+            if (isChecked) {
+                if (manualContainer) manualContainer.classList.add('hidden');
+                if (projectedContainer) projectedContainer.classList.remove('hidden');
+            } else {
+                if (manualContainer) manualContainer.classList.remove('hidden');
+                if (projectedContainer) projectedContainer.classList.add('hidden');
+            }
+            updateCourseGradeUI();
+        };
+
+        window.updateCourseGradeUI = function () {
+            const totalCA = parseInt(document.getElementById('total-ca').textContent.split('/')[0]) || 0;
+            const useCA = document.getElementById('use-ca-toggle').checked;
+
+            if (useCA) {
+                const maxTotal = totalCA + 60;
+                const grade = getGradeFromScore(maxTotal);
+                document.getElementById('max-possible-score').textContent = `${maxTotal}/100`;
+                document.getElementById('projected-grade-display').textContent = grade;
+                document.getElementById('projected-grade-display').style.color = getGradeColor(grade);
+            }
+        };
+
         window.viewCourse = function (courseIndex) {
             currentCourse = { ...currentSemester.courses[courseIndex], index: courseIndex };
+
+            populateGradeDropdowns();
 
             document.getElementById('course-detail-title').textContent = currentCourse.name;
             document.getElementById('course-detail-code').textContent = currentCourse.code;
@@ -1843,10 +2044,23 @@
             document.getElementById('ca-quiz').value = ca.quiz || 0;
             document.getElementById('ca-attendance').value = ca.attendance || 0;
 
-            document.getElementById('target-grade').value = currentCourse.targetGrade || 'A';
-            document.getElementById('course-units').textContent = currentCourse.unitHours || 0;
-            document.getElementById('course-difficulty').textContent = getDifficultyStars(currentCourse.difficulty || 3);
+            // Logic for Use CA
+            const useCA = currentCourse.useCA !== false; // Default true
+            document.getElementById('use-ca-toggle').checked = useCA;
 
+            // Logic for Manual Grade
+            const manualSelect = document.getElementById('course-manual-grade');
+            const available = getAvailableGrades();
+            if (manualSelect.options.length === 0) populateGradeDropdowns();
+
+            // Set values
+            const currentGrade = currentCourse.grade || available[0];
+            manualSelect.value = currentGrade;
+
+            document.getElementById('course-units').textContent = currentCourse.unitHours || 0;
+
+
+            toggleUseCA(useCA);
             updateCAScores();
             showScreen('course-detail');
         };
@@ -1860,20 +2074,7 @@
             const total = mid + assignment + quiz + attendance;
             document.getElementById('total-ca').textContent = `${total}/40`;
 
-            updateExamTarget();
-        };
-
-        window.updateExamTarget = function () {
-            const targetGrade = document.getElementById('target-grade').value;
-            const totalCA = parseInt(document.getElementById('total-ca').textContent.split('/')[0]) || 0;
-
-            const required = calculateRequiredExam(totalCA, targetGrade);
-            const certainty = getCertainty(required);
-
-            document.getElementById('required-exam').textContent = `${required.toFixed(0)}/60`;
-            document.getElementById('certainty').textContent = certainty;
-            document.getElementById('certainty').style.color =
-                certainty === 'High' ? '#28a745' : certainty === 'Medium' ? '#ffc107' : '#dc3545';
+            updateCourseGradeUI();
         };
 
         window.saveCourseChanges = async function () {
@@ -1888,25 +2089,26 @@
                     attendance: parseInt(document.getElementById('ca-attendance').value) || 0
                 };
 
-                const targetGrade = document.getElementById('target-grade').value;
+                const useCA = document.getElementById('use-ca-toggle').checked;
+                const totalCA = Object.values(caScores).reduce((a, b) => a + b, 0);
+                let finalGrade = '';
+
+                if (useCA) {
+                    // Max grade logic
+                    finalGrade = getGradeFromScore(totalCA + 60);
+                } else {
+                    finalGrade = document.getElementById('course-manual-grade').value || getAvailableGrades()[0];
+                }
 
                 // Update course in semester
-                currentSemester.courses[currentCourse.index].caScores = caScores;
-                currentSemester.courses[currentCourse.index].targetGrade = targetGrade;
-
-                // Calculate predicted grade based on CA + target
-                const totalCA = Object.values(caScores).reduce((a, b) => a + b, 0);
-                const requiredExam = calculateRequiredExam(totalCA, targetGrade);
-                const predictedTotal = totalCA + Math.min(requiredExam, 60);
-
-                let predictedGrade = 'F';
-                if (predictedTotal >= 70) predictedGrade = 'A';
-                else if (predictedTotal >= 60) predictedGrade = 'B';
-                else if (predictedTotal >= 50) predictedGrade = 'C';
-                else if (predictedTotal >= 45) predictedGrade = 'D';
-                else if (predictedTotal >= 40) predictedGrade = 'E';
-
-                currentSemester.courses[currentCourse.index].predictedGrade = predictedGrade;
+                currentSemester.courses[currentCourse.index] = {
+                    ...currentSemester.courses[currentCourse.index],
+                    caScores,
+                    useCA,
+                    grade: finalGrade,
+                    predictedGrade: finalGrade, // Sync
+                    targetGrade: null
+                };
 
                 // Recalculate semester GPA
                 const semesterGPA = parseFloat(calculateSemesterGPA(currentSemester.courses));
@@ -1948,7 +2150,7 @@
                 });
 
                 showToast('Course deleted', 'success');
-                backToSemester();
+                viewSemester(currentSemester.id);
             } catch (error) {
                 console.error('Delete course error:', error);
                 showToast('Error deleting course', 'error');
@@ -2096,6 +2298,7 @@
         };
 
         window.showAddCourseModal = function () {
+            populateGradeDropdowns();
             document.getElementById('add-course-modal').classList.add('show');
         };
 
@@ -2213,8 +2416,8 @@
             const name = document.getElementById('course-title').value.trim();
             const code = document.getElementById('course-code').value.trim();
             const unitHours = parseInt(document.getElementById('course-unit-hours').value);
-            const targetGrade = document.getElementById('course-target-grade').value;
-            const difficulty = parseInt(document.getElementById('course-difficulty-select').value);
+            const initialGrade = document.getElementById('course-target-grade').value;
+
 
             if (!name || !code || !unitHours) {
                 showToast('Please fill all fields', 'error');
@@ -2225,21 +2428,25 @@
             showLoading(true);
 
             try {
-                // FIXED: Match Android data structure exactly
+                // FIXED: Match Android data structure exactly with new logic
                 const newCourse = {
                     id: `course_${Date.now()}`,
-                    name,  // NOT title
+                    name,
                     code,
-                    unitHours,  // NOT units
-                    targetGrade,
-                    difficulty,
+                    unitHours,
+                    grade: initialGrade,
+                    predictedGrade: initialGrade,
+                    useCA: false, // Default to manual grade
+                    targetGrade: null, // Deprecated
+                    useCA: false, // Default to manual grade
+                    targetGrade: null, // Deprecated
+                    // difficulty removed
                     caScores: {
                         midSemester: 0,
                         assignment: 0,
                         quiz: 0,
                         attendance: 0
                     },
-                    predictedGrade: targetGrade,
                     schedule: null,
                     examDate: null
                 };
@@ -3420,7 +3627,7 @@
                             <div style="width: 70%; min-width: 30px; background: ${color}; height: ${height}px; border-radius: 8px 8px 0 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 6px;">
                                 <span style="font-size: 11px; color: white; font-weight: bold;">${semGPA.toFixed(2)}</span>
                             </div>
-                            <span style="font-size: 11px; color: #666; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; text-align: center;">${sem.name.replace('Level', 'Lvl')}</span>
+                            <span style="font-size: 10px; color: var(--text-secondary); margin-top: 6px; line-height: 1.1; overflow: hidden; max-width: 100%; text-align: center;">${sem.name.replace('Level', 'Lvl')}</span>
                         </div>
                     `;
                 }).join('');

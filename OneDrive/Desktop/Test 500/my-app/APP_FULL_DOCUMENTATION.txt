@@ -1,0 +1,303 @@
+KOBI'S ATLAS - COMPREHENSIVE APPLICATION DOCUMENTATION
+=============================================================================
+1. APPLICATION OVERVIEW
+=============================================================================
+Name: Kobi's Atlas
+Package Name: com.kobiogua.studentatlas
+Version: 1.0.0
+Developer: Kobi Oguadinma
+Platform: Android (React Native / Expo)
+Purpose: An all-in-one academic companion for students (specifically tailored for Babcock University) to track courses, calculate GPAs, predict grades, and connect with peers.
+
+=============================================================================
+2. VISUAL IDENTITY & THEMES
+=============================================================================
+The application supports multiple color themes, dynamically switchable by the user.
+
+A. DEFAULT THEME (Purple/Teal)
+   - Primary: #6200EE (Deep Purple)
+   - Secondary: #03DAC6 (Teal)
+   - Background: #F5F5F5 (Light Grey)
+   - Surface: #FFFFFF (White)
+   - Text: #000000 (Black)
+   - Error: #B00020 (Red)
+
+B. DARK THEME
+   - Primary: #BB86FC (Light Purple)
+   - Background: #121212 (Almost Black)
+   - Surface: #1E1E1E (Dark Grey)
+   - Text: #FFFFFF (White)
+
+C. BLUE THEME
+   - Primary: #2196F3 (Blue)
+   - Background: #E3F2FD (Very Light Blue)
+
+D. LIGHT PINK THEME
+   - Primary: #E91E63 (Pink)
+   - Background: #FCE4EC (Very Light Pink)
+
+E. LIGHT THEME
+   - Primary: #9C27B0 (Purple)
+   - Background: #FAFAFA (White)
+
+Typography: System fonts (San Francisco on iOS, Roboto on Android).
+Iconography: Ionicons (via @expo/vector-icons).
+
+=============================================================================
+3. CORE FEATURES & LOGIC
+=============================================================================
+
+A. AUTHENTICATION
+   - Login: Email and Password authentication via Firebase Auth.
+   - PIN System: A 4-digit security PIN is required for quick access and sensitive actions.
+   - Session: Persistent login state managed by AuthContext.
+
+B. ACADEMIC MANAGEMENT
+   - Grading System: Babcock University 5-point scale (A=5.0, B=4.0, C=3.0, D=2.0, E=1.0, F=0).
+   - Semester Types:
+     1. Current: Active semester. Allows setting "Target Grades" and predicting outcomes.
+     2. Past: Completed semesters. Records final grades and calculates actual GPA.
+   - GPA Calculation:
+     - Semester GPA (SGPA) = Σ(Units × Grade Points) / Σ(Units)
+     - CGPA = Σ(SGPA × Semester Units) / Σ(Total Units)
+   - Grade Prediction:
+     - Uses Continuous Assessment (CA) scores (Mid-sem, Assignment, Quiz, Attendance).
+     - Calculates required Exam score to meet Target Grade.
+     - Predicts final grade based on current performance.
+
+C. SOCIAL & COMMUNITY
+   - User Profiles: Custom username, display name, bio, and profile picture.
+   - Friend System: Send/Accept/Reject friend requests.
+   - Community Feed: Global feed of user posts.
+     - Posts: Text, links, or images.
+     - Interactions: Like posts, Reply to posts (threaded comments).
+   - Direct Messaging: Real-time chat with friends.
+   - Owner Badge: Special visual indicator for the app developer (Kobi).
+
+=============================================================================
+4. SCREEN-BY-SCREEN BREAKDOWN (DETAILED)
+=============================================================================
+
+-----------------------------------------------------------------------------
+A. AUTHENTICATION STACK
+-----------------------------------------------------------------------------
+
+1. LOGIN SCREEN (LoginScreen.tsx)
+   - **Layout**:
+     - Top: App Logo/Title "Student Atlas".
+     - Center: Input fields for Email and Password.
+     - Bottom: "Login" button (Primary Color), "Forgot Password?" link.
+   - **Interactions**:
+     - Tap "Login": Validates inputs -> Authenticates with Firebase -> Navigates to Main Tabs.
+     - Error Handling: Displays alerts for "User not found" or "Wrong password".
+   - **Logic**: Checks if user has a PIN set up. If not, prompts for PIN creation.
+
+2. PIN LOGIN SCREEN (PinLoginScreen.tsx)
+   - **Layout**:
+     - Full-screen overlay or modal.
+     - Title: "Enter PIN".
+     - Center: 4-digit PIN indicator dots (filled/empty).
+     - Bottom: Numeric Keypad (1-9, 0, Delete).
+   - **Interactions**:
+     - Tap Number: Fills a dot.
+     - Complete 4 digits: Auto-submits.
+   - **Logic**: Compares input with stored PIN hash. Success -> Unlocks app. Failure -> Shake animation/Error message.
+
+-----------------------------------------------------------------------------
+B. MAIN TAB NAVIGATOR (Bottom Tabs)
+-----------------------------------------------------------------------------
+
+1. DASHBOARD SCREEN (DashboardScreen.tsx) - [HOME TAB]
+   - **Header Area** (Primary Color Background):
+     - Title: "Student Atlas" (Bold, White).
+     - Stats Row:
+       - Left: "Current CGPA" (Label), Value (e.g., "4.50").
+       - Right: "Predicted CGPA" (Label), Value (e.g., "4.75") - *Only visible if a current semester exists*.
+   - **Scrollable Content**:
+     - **Refresh Control**: Pull down to reload data.
+     - **Current Semester Section**:
+       - Title: "Current Semester".
+       - Card: Displays Name (e.g., "Fall 2024"), Course Count, Predicted GPA.
+       - *Styling*: Highlighted border (Primary Color) to distinguish from past semesters.
+     - **Past Semesters Section**:
+       - Title: "Past Semesters".
+       - List: Cards for each past semester showing Name, Course Count, Actual GPA (Green text).
+       - Empty State: "No past semesters yet" (Grey text).
+   - **Floating Action Button (FAB)**:
+     - Position: Bottom Right.
+     - Icon: Plus (+).
+     - Action: Navigates to `AddSemesterScreen`.
+   - **Interactions**:
+     - Tap Semester Card: Navigates to `SemesterDetailScreen`.
+     - Long Press Semester Card: Triggers "Delete Semester" confirmation dialog.
+
+2. GPA ANALYSIS SCREEN (GPAViewScreen.tsx) - [GPA TAB]
+   - **Header**: "Analysis".
+   - **Tab Switcher**:
+     - "Current (Real)": Shows stats based on finalized grades only.
+     - "Predicted": Shows stats including hypothetical grades from current semester.
+   - **Content**:
+     - **Degree Classification**:
+       - Large Text: e.g., "First Class" (Gold Star Icon) or "Second Class Upper".
+       - Subtext: GPA Range description.
+     - **GPA Trend Chart**:
+       - Line Chart visualization of GPA progress over time.
+       - X-Axis: Semester Names.
+       - Y-Axis: GPA (0.0 - 5.0).
+     - **Insights Card**:
+       - Text analysis: "You need a 4.5 GPA next semester to reach..."
+   - **Logic**: Real-time recalculation based on the selected tab (Real vs Predicted).
+
+3. COMMUNITY FEED SCREEN (CommunityFeedScreen.tsx) - [COMMUNITY TAB]
+   - **Header**: "Community".
+   - **Content**:
+     - List of User Posts.
+     - **Post Card Layout**:
+       - Header: User Avatar, Display Name, Username (@handle), Timestamp (e.g., "2h ago").
+       - Body: Post Text, Optional Image/Link preview.
+       - Footer:
+         - Like Button (Heart Icon) + Count.
+         - Comment Button (Bubble Icon) + Count.
+   - **Floating Action Button (FAB)**:
+     - Icon: Pencil/Create.
+     - Action: Navigates to `CreatePostScreen`.
+   - **Interactions**:
+     - Tap User Header: Navigates to `UserProfileScreen`.
+     - Tap Post Body: Navigates to `PostDetailScreen`.
+
+4. MESSAGES LIST SCREEN (MessagesListScreen.tsx) - [MESSAGES TAB]
+   - **Header**: "Messages".
+   - **Content**:
+     - List of active conversations.
+     - **Conversation Item**:
+       - Avatar.
+       - Name.
+       - Last Message Preview (truncated).
+       - Timestamp.
+       - *Unread Badge*: Red circle with count if applicable.
+   - **Interactions**:
+     - Tap Item: Navigates to `MessagingScreen` (Chat).
+
+5. SETTINGS SCREEN (SettingsScreen.tsx) - [SETTINGS TAB]
+   - **Header**: "Settings".
+   - **List Options**:
+     - **Profile**: "Edit Profile" -> `ProfileSettingsScreen`.
+     - **Appearance**: "Theme" -> Opens Theme Selector Modal.
+     - **Security**: "Change PIN" -> `ChangePINUtilityScreen`.
+     - **About**: "App Info" -> Shows version, developer credits.
+     - **Danger Zone**: "Logout" (Red Text) -> Clears session, goes to Login.
+
+-----------------------------------------------------------------------------
+C. ACADEMIC STACK SCREENS
+-----------------------------------------------------------------------------
+
+1. ADD SEMESTER SCREEN (AddSemesterScreen.tsx)
+   - **Form Fields**:
+     - "Semester Name" (TextInput).
+     - "Type" (Segmented Control/Buttons): "Current" vs "Past".
+   - **Validation**:
+     - Cannot create "Current" if one already exists.
+     - Name is required.
+   - **Action**: "Create Semester" button.
+
+2. SEMESTER DETAIL SCREEN (SemesterDetailScreen.tsx)
+   - **Header**:
+     - Title: Semester Name.
+     - Subtitle: GPA / Predicted GPA.
+   - **Content**:
+     - List of Courses.
+     - **Course Item**:
+       - Left: Course Code (e.g., "COSC 101").
+       - Center: Course Title, Units.
+       - Right: Grade (e.g., "A" or "Target: A").
+   - **Special Actions**:
+     - "Convert to Past Semester" Button (Only for Current Semesters):
+       - Triggers confirmation dialog.
+       - Logic: Removes `targetGrade`, sets `grade` = `predictedGrade`, changes type to `past`.
+   - **FAB**: Add Course (+).
+
+3. ADD COURSE SCREEN (AddCourseScreen.tsx)
+   - **Inputs**:
+     - Course Name, Course Code.
+     - Unit Hours (Numeric).
+   - **Conditional Inputs**:
+     - **If Current Semester**:
+       - Target Grade Selector (A-F).
+       - CA Score Inputs (Mid-sem /15, Assignment /10, Quiz /10, Attendance /5, Exam /60).
+       - *Note*: CA scores are optional but recommended for prediction.
+     - **If Past Semester**:
+       - Final Grade Selector (A-F).
+   - **Logic**:
+     - Auto-calculates totals.
+     - Warns if all CA scores are 0 (Confirmation Dialog).
+
+4. COURSE DETAIL SCREEN (CourseDetailScreen.tsx)
+   - **Header**: Course Code & Title.
+   - **Stats Cards**:
+     - "Target Grade" vs "Predicted Grade".
+     - "Certainty": High/Medium/Low (Calculated based on how much CA data is entered).
+   - **Breakdown**:
+     - CA Total: X / 40.
+     - Required Exam Score: Y / 60 (to reach target).
+   - **Actions**:
+     - "Edit Course" (Pencil Icon).
+     - "Delete Course" (Trash Icon).
+
+-----------------------------------------------------------------------------
+D. SOCIAL STACK SCREENS
+-----------------------------------------------------------------------------
+
+1. USER PROFILE SCREEN (UserProfileScreen.tsx)
+   - **Header**: Large Avatar, Display Name, Username, Bio.
+   - **Stats**: Friends Count, Posts Count.
+   - **Action Button**:
+     - "Add Friend" / "Requested" / "Friends" (Dynamic based on status).
+   - **Content**: List of user's recent posts.
+
+2. POST DETAIL SCREEN (PostDetailScreen.tsx)
+   - **Main Post**: Full view of the post.
+   - **Comments Section**:
+     - List of replies.
+     - **Reply Item**: Avatar, Username, Text, Timestamp.
+   - **Input Bar**: Text field to write a reply + Send button.
+
+3. MESSAGING SCREEN (MessagingScreen.tsx)
+   - **Header**: Friend's Name & Avatar.
+   - **Chat Area**:
+     - Scrollable list of message bubbles.
+     - Right aligned (Blue): My messages.
+     - Left aligned (Grey): Friend's messages.
+   - **Input Area**: Text input + Send button.
+
+-----------------------------------------------------------------------------
+E. UTILITY SCREENS
+-----------------------------------------------------------------------------
+
+1. PROFILE SETTINGS SCREEN (ProfileSettingsScreen.tsx)
+   - **Inputs**: Display Name, Username, Bio.
+   - **Avatar Picker**: Tap to select image from gallery.
+   - **Action**: "Save Changes" (with confirmation dialog).
+
+2. CHANGE PIN UTILITY (ChangePINUtilityScreen.tsx)
+   - **Steps**:
+     1. Enter Old PIN.
+     2. Enter New PIN.
+     3. Confirm New PIN.
+   - **Validation**: Old PIN must match; New PINs must match.
+
+3. NOTIFICATIONS SCREEN (NotificationsScreen.tsx)
+   - **List**:
+     - Friend Requests (Accept/Reject buttons).
+     - Activity (Likes, Comments).
+   - **Action**: "Clear All".
+
+=============================================================================
+5. TECHNICAL ARCHITECTURE
+=============================================================================
+- Framework: React Native (Expo Managed Workflow).
+- Language: TypeScript.
+- Backend: Firebase (Firestore, Auth).
+- State Management: React Context (AuthContext, ThemeContext).
+- Navigation: React Navigation (Stack + Bottom Tabs).
+- Storage: AsyncStorage (Local preferences), Firestore (Data).
+- Build System: EAS (Expo Application Services).

@@ -1,0 +1,23 @@
+Kobi's Student Atlas - Build Summary
+===================================
+
+BUILD STATUS:
+- Android build (ID: 3c8720fb-f117-4eee-a661-3150257f0528) is currently in progress
+- Platform: Android
+- Profile: preview
+- Version: 1.1.0
+- Distribution: internal
+
+NEXT STEPS:
+1. Wait for the build to complete (check status with: eas build:view 3c8720fb-f117-4eee-a661-3150257f0528)
+2. Once finished, the build will provide an Application Archive URL for the APK
+3. Download the APK from that URL
+
+PREVIOUS SUCCESSFUL BUILDS:
+- Build ID: 241a88ef-2946-45a7-aa21-a8e804359cc6 (APK available)
+- Build ID: 7e6151a1-8459-45ec-8cf3-b96037771dd4 (APK available)
+- Build ID: 61c8cf64-ab91-4144-9877-81f2ff4444d3 (APK available)
+- Build ID: 80863d89-d2ec-4582-8a98-f6e2f2bfbecb (APK available)
+
+BUILD URL:
+https://expo.dev/accounts/dailybark67/projects/kobis-student-atlas/builds/3c8720fb-f117-4eee-a661-3150257f0528

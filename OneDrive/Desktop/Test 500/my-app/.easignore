@@ -1,0 +1,6 @@
+AppData/
+node_modules/
+.expo/
+.vscode/
+*.log
+.DS_Store

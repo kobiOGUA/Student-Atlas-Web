@@ -1,0 +1,147 @@
+KOBI'S STUDENT ATLAS - COMPREHENSIVE FEATURE TESTING GUIDE
+
+=============================================================================
+1. AUTHENTICATION & SECURITY
+=============================================================================
+[ ] Registration
+    - Register with Email and Password.
+    - Create a 4-digit Security PIN during setup.
+    - Verify "Confirm PIN" matches "Enter PIN".
+
+[ ] Login
+    - Login with Email/Password.
+    - PIN-based quick login (if implemented/cached).
+    - Error handling for incorrect credentials.
+
+[ ] PIN Management
+    - Change PIN functionality (Settings -> Change PIN).
+    - Verify old PIN before setting new one.
+
+[ ] Session Management
+    - Auto-logout functionality (if applicable).
+    - Manual Logout from Settings.
+
+=============================================================================
+2. SEMESTER MANAGEMENT
+=============================================================================
+[ ] Dashboard
+    - View list of all semesters (Current vs Past).
+    - View summary CGPA (Current & Predicted).
+    - Pull-to-refresh to update data.
+
+[ ] Create Semester
+    - Create "Current" semester (Validation: Only one current semester allowed).
+    - Create "Past" semester.
+    - Validation: Semester name required.
+
+[ ] Semester Details
+    - View list of courses in a semester.
+    - View Semester GPA (SGPA).
+    - Delete Semester (Long press or button -> Confirmation Dialog).
+
+[ ] Convert Semester
+    - "Convert to Past Semester" button (Only visible for Current semesters).
+    - Confirmation dialog explains consequences (Target grades removed, Predicted becomes Final).
+    - Verify status changes from Current to Past.
+
+=============================================================================
+3. COURSE MANAGEMENT
+=============================================================================
+[ ] Add Course (Current Semester)
+    - Input: Name, Code, Unit Hours, Target Grade.
+    - Input: CA Scores (Mid-sem, Assignment, Quiz, Attendance, Exam).
+    - Validation: Unit hours must be a number.
+    - Warning: If all CA scores are 0, show confirmation dialog.
+
+[ ] Add Course (Past Semester)
+    - Input: Name, Code, Unit Hours, Final Grade.
+    - No Target Grade input.
+
+[ ] Edit Course
+    - Modify Name, Code, Units, Grades.
+    - Update CA scores.
+    - Save changes (Confirmation dialog if CA scores are 0).
+
+[ ] Course Details
+    - View Course Breakdown (CA total, Exam score required for Target).
+    - "Certainty" level indicator (High/Medium/Low based on CA).
+    - Delete Course (Confirmation dialog).
+
+=============================================================================
+4. ACADEMIC ANALYSIS (GPA VIEW)
+=============================================================================
+[ ] GPA Statistics
+    - View Current CGPA vs Predicted CGPA.
+    - View Degree Classification (e.g., First Class, Second Class Upper).
+    - Visual indicators (Stars/Checkmarks) for classification.
+
+=============================================================================
+5. COMMUNITY & SOCIAL
+=============================================================================
+[ ] Community Feed
+    - View global posts from other users.
+    - Pull-to-refresh feed.
+    - "Owner Badge" visibility on your own posts.
+
+[ ] Create Post
+    - Floating Action Button (+) to create post.
+    - Input text content.
+    - Post appears in feed immediately.
+
+[ ] Post Interactions
+    - Like/Unlike posts.
+    - View Post Details (Comments section).
+    - Add Comment to a post.
+    - Reply to comments (Threaded view).
+
+[ ] User Search
+    - Search users by username.
+    - View search results.
+
+[ ] User Profiles
+    - View other user's profile (Bio, Profile Pic).
+    - View "Owner" badge if applicable.
+    - Send Friend Request.
+    - Cancel Friend Request.
+    - Unfriend user.
+
+=============================================================================
+6. MESSAGING & NOTIFICATIONS
+=============================================================================
+[ ] Friend System
+    - Receive Friend Request notifications.
+    - Accept/Reject Friend Requests.
+
+[ ] Direct Messaging
+    - Start chat with a friend.
+    - Send/Receive text messages.
+    - Real-time updates (if online).
+    - Unread message counts on tab bar.
+
+[ ] Notifications
+    - View Notification Center.
+    - Categories: Friend Requests, Community interactions.
+    - Clear notifications.
+
+=============================================================================
+7. PROFILE & SETTINGS
+=============================================================================
+[ ] Profile Editing
+    - Change Profile Picture (Pick from gallery).
+    - Edit Username (Unique check).
+    - Edit Display Name.
+    - Edit Bio / About Me.
+    - Confirmation dialog on "Save".
+
+[ ] App Settings
+    - View App Version.
+    - Theme consistency check.
+    - Logout.
+
+=============================================================================
+8. SYSTEM & MAINTENANCE
+=============================================================================
+[ ] App Updates
+    - "Update Required" screen if app version is obsolete.
+    - "Maintenance Mode" screen if backend is down.
+    - Offline handling (basic checks).

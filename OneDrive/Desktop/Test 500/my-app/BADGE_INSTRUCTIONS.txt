@@ -1,0 +1,92 @@
+// Add this to AppNavigator.tsx inside MainTabs function
+
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '../firebase/firebaseConfig';
+import { getPendingFriendRequests } from '../services/friendService';
+import { Text, View } from 'react-native';
+
+// Inside MainTabs function, add these states:
+const { user } = useAuth();
+const [notificationCount, setNotificationCount] = useState(0);
+const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
+
+// Add this useEffect to load counts:
+useEffect(() => {
+  const loadCounts = async () => {
+    if (!user?.uid) return;
+    
+    try {
+      // Load friend request notifications
+      const friendRequests = await getPendingFriendRequests(user.uid);
+      setNotificationCount(friendRequests.length);
+
+      // Load unread messages count
+      const messagesRef = collection(db, 'messages');
+      const q = query(messagesRef, where('receiverId', '==', user.uid), where('read', '==', false));
+      const snapshot = await getDocs(q);
+      setUnreadMessagesCount(snapshot.size);
+    } catch (error) {
+      console.error('Error loading notification counts:', error);
+    }
+  };
+
+  loadCounts();
+  // Refresh every 30 seconds
+  const interval = setInterval(loadCounts, 30000);
+  return () => clearInterval(interval);
+}, [user?.uid]);
+
+// Helper function to render badge:
+const renderBadge = (count: number) => {
+  if (count === 0) return null;
+  return (
+    <View
+      style={{
+        position: 'absolute',
+        top: -4,
+        right: -8,
+        backgroundColor: '#FF3B30',
+        borderRadius: 10,
+        minWidth: 18,
+        height: 18,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 4,
+      }}
+    >
+      <Text style={{ color: '#FFFFFF', fontSize: 10, fontWeight: 'bold' }}>
+        {count > 99 ? '99+' : count}
+      </Text>
+    </View>
+  );
+};
+
+// Update Community tab icon:
+<Tab.Screen
+  name="Community"
+  component={CommunityFeedScreen}
+  options={{
+    headerShown: false,
+    tabBarIcon: ({ color, size }) => (
+      <View style={{ position: 'relative' }}>
+        <Ionicons name="people" size={size} color={color} />
+        {renderBadge(notificationCount)}
+      </View>
+    ),
+  }}
+/>
+
+// Update Messages tab icon:
+<Tab.Screen
+  name="Messages"
+  component={MessagesListScreen}
+  options={{
+    headerShown: false,
+    tabBarIcon: ({ color, size }) => (
+      <View style={{ position: 'relative' }}>
+        <Ionicons name="chatbubbles" size={size} color={color} />
+        {renderBadge(unreadMessagesCount)}
+      </View>
+    ),
+  }}
+/>

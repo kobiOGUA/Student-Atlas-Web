@@ -1,0 +1,467 @@
+/* Global Styles - Web Optimized */
+
+:root {
+    /* Default Theme */
+    --primary: #008080;
+    --background: #F5F5F5;
+    --card: #FFFFFF;
+    --text: #333333;
+    --text-secondary: #666666;
+    --border: #E0E0E0;
+    --surface: #FFFFFF;
+    --error: #D32F2F;
+    --success: #388E3C;
+    --warning: #FFA726;
+
+    /* Layout constraints */
+    --max-content-width: 600px;
+    --mobile-padding: 16px;
+    --desktop-padding: 24px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--background);
+    color: var(--text);
+}
+
+#root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Screen Container - Responsive */
+.screen-container {
+    min-height: 100vh;
+    background-color: var(--background);
+    width: 100%;
+    max-width: var(--max-content-width);
+    margin: 0 auto;
+    position: relative;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    padding: var(--mobile-padding);
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+@media (min-width: 768px) {
+    .content-wrapper {
+        padding: var(--desktop-padding);
+    }
+}
+
+/* Card Styles */
+.card {
+    background-color: var(--card);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 100%;
+}
+
+/* Image Handling - CRITICAL FIX */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.post-image,
+.content-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 12px 0;
+}
+
+.profile-image,
+.avatar-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-image-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 60px;
+    object-fit: cover;
+}
+
+/* Prevent image stretching */
+.image-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.image-container img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    max-height: 500px;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    width: 100%;
+    max-width: 400px;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-secondary {
+    background-color: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Input Styles */
+.input {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: var(--surface);
+    color: var(--text);
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* Header Styles */
+.app-header {
+    background-color: var(--primary);
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: var(--max-content-width);
+    background-color: var(--card);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0;
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 11px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    transition: color 0.2s;
+    min-width: 60px;
+}
+
+.nav-item.active {
+    color: var(--primary);
+}
+
+.nav-item:hover {
+    color: var(--primary);
+}
+
+/* Icon sizing */
+.nav-item svg,
+.nav-item ion-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+
+/* Post Card Specific */
+.post-card {
+    background-color: var(--card);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 12px;
+}
+
+.post-content {
+    margin-bottom: 12px;
+    line-height: 1.5;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.post-image-wrapper {
+    width: 100%;
+    margin: 12px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #f0f0f0;
+}
+
+.post-image-wrapper img {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: cover;
+    display: block;
+}
+
+/* Semester/Course Cards */
+.semester-card,
+.course-card {
+    background-color: var(--card);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.semester-card:hover,
+.course-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background-color: var(--card);
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    border: 3px solid var(--border);
+    border-top: 3px solid var(--primary);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Scrollable Content */
+.scrollable-content {
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 80px;
+    /* Space for bottom nav */
+    max-height: calc(100vh - 60px);
+    /* Account for header */
+}
+
+/* Text Utilities */
+.text-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.text-wrap {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Spacing Utilities */
+.mb-1 {
+    margin-bottom: 8px;
+}
+
+.mb-2 {
+    margin-bottom: 16px;
+}
+
+.mb-3 {
+    margin-bottom: 24px;
+}
+
+.mt-1 {
+    margin-top: 8px;
+}
+
+.mt-2 {
+    margin-top: 16px;
+}
+
+.mt-3 {
+    margin-top: 24px;
+}
+
+/* Flexbox Utilities */
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.gap-1 {
+    gap: 8px;
+}
+
+.gap-2 {
+    gap: 16px;
+}
+
+/* Responsive Typography */
+h1 {
+    font-size: clamp(24px, 5vw, 32px);
+}
+
+h2 {
+    font-size: clamp(20px, 4vw, 24px);
+}
+
+h3 {
+    font-size: clamp(18px, 3vw, 20px);
+}
+
+p {
+    font-size: clamp(14px, 2vw, 16px);
+}
+
+/* Desktop Optimizations */
+@media (min-width: 768px) {
+    .screen-container {
+        border-radius: 0;
+    }
+
+    .bottom-nav {
+        border-radius: 0;
+    }
+
+    .post-image-wrapper img {
+        max-height: 500px;
+    }
+}
+
+/* Prevent horizontal scroll */
+body,
+html {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+* {
+    max-width: 100%;
+}
+
+/* Fix for stretched images in flex containers */
+.flex img {
+    flex-shrink: 0;
+}
