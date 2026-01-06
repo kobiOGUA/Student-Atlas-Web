@@ -591,12 +591,19 @@
                 numpad.appendChild(btn);
             });
 
-            // Check if logged in
+            // Check if logged in or has stored email
             const uid = localStorage.getItem('kobi_atlas_uid');
+            const storedEmail = localStorage.getItem('kobi_atlas_email');
+
             if (uid) {
-                const email = localStorage.getItem('kobi_atlas_email');
-                document.getElementById('email').value = email;
-                document.getElementById('email-subtitle').textContent = 'Welcome back!';
+                // Already logged in, redirect to dashboard
+                window.location.href = 'dashboard.html';
+            } else if (storedEmail) {
+                // Has email stored, auto-show PIN screen
+                currentEmail = storedEmail;
+                document.getElementById('email-screen').classList.add('hidden');
+                document.getElementById('pin-screen').classList.remove('hidden');
+                document.getElementById('pin-subtitle').textContent = `Welcome back, ${storedEmail}`;
             }
         });
     </script>
