@@ -214,12 +214,14 @@
             border-top: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 6px 0;
+            /* Compact padding */
             padding-left: 10%;
             /* Desktop: 80% width */
             padding-right: 10%;
             z-index: 1000;
-            padding-bottom: max(8px, env(safe-area-inset-bottom));
+            padding-bottom: max(6px, env(safe-area-inset-bottom));
+            /* Dynamic safe area */
         }
 
         @media (max-width: 768px) {
@@ -254,12 +256,10 @@
             color: var(--primary-color);
         }
 
-        /* ... keep other styles ... */
-
-        /* Re-add missing styles that might be lost in replacement if not careful */
         .fab {
             position: fixed;
-            bottom: 80px;
+            bottom: calc(80px + env(safe-area-inset-bottom));
+            /* Lift above navbar + safe area */
             right: 20px;
             width: 60px;
             height: 60px;
