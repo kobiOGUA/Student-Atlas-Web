@@ -1603,6 +1603,21 @@
 
             if (screen) {
                 screen.classList.remove('hidden');
+
+                // Load data for the screen
+                switch (screenId) {
+                    case 'planner':
+                        if (window.loadSchedule) window.loadSchedule();
+                        if (window.loadTasks) window.loadTasks();
+                        break;
+                    case 'gpa':
+                        if (window.loadGPAView) window.loadGPAView();
+                        break;
+                    case 'community':
+                        if (window.loadCommunityFeed) window.loadCommunityFeed();
+                        break;
+                    // Dashboard loads on page load, no need to reload here
+                }
             } else {
                 console.warn(`Screen not found: ${screenId}`);
             }
