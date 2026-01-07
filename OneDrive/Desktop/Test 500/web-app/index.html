@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
     <!-- SEO: Search Engine Optimization -->
     <title>Kobi's Atlas</title>
@@ -54,6 +54,8 @@
             align-items: center;
             justify-content: center;
             padding: 40px 20px;
+            padding-top: max(40px, env(safe-area-inset-top) + 20px);
+            padding-bottom: max(40px, env(safe-area-inset-bottom) + 20px);
         }
 
         .hidden {

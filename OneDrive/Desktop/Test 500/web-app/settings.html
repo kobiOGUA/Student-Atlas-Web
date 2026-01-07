@@ -3,8 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Settings - Kobi's Atlas</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#667eea">
     <link rel="icon" type="image/png" href="favicon.png">
 
     <!-- Ionicons -->
@@ -79,7 +83,7 @@
         .header {
             background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
             padding: 20px;
-            padding-top: 50px;
+            padding-top: calc(env(safe-area-inset-top) + 20px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -91,13 +95,14 @@
             border: none;
             color: white;
             font-size: 16px;
-            /* Smaller text */
             cursor: pointer;
             display: flex;
             align-items: center;
             padding: 0;
             position: absolute;
             left: 20px;
+            bottom: 20px;
+            /* Align with bottom padding */
             z-index: 10;
         }
 
