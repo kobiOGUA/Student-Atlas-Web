@@ -268,7 +268,7 @@
             <div id="error" class="error hidden"></div>
 
             <input type="email" id="email" placeholder="Email" autocomplete="email">
-            <input type="text" id="username" placeholder="Username" class="hidden">
+
 
             <button class="btn" onclick="handleEmailContinue()">Continue</button>
 
@@ -355,7 +355,8 @@
                 Note: You may need to allow installation from unknown sources in your settings.
             </p>
 
-            <button class="btn" onclick="alert('APK Upload coming soon!')" style="background: #3DDC84; color: #000;">
+            <button class="btn" onclick="showToast('APK Upload coming soon!', 'info')"
+                style="background: #3DDC84; color: #000;">
                 <ion-icon name="download-outline" style="margin-right: 8px; vertical-align: middle;"></ion-icon>
                 Download APK
             </button>
@@ -366,6 +367,9 @@
             </button>
         </div>
     </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" style="position: fixed; top: 80px; right: 20px; z-index: 10000;"></div>
 
     <!-- iOS Install Section -->
     <div id="ios-install" class="screen hidden" style="background: #000;">
@@ -458,16 +462,37 @@
         }
 
         function showError(msg) {
-            // Check which screen is active
-            const pinScreen = document.getElementById('pin-screen');
-            const isPinVisible = !pinScreen.classList.contains('hidden');
+            showToast(msg, 'error');
+        }
 
-            const errorDiv = document.getElementById(isPinVisible ? 'pin-error' : 'error');
-            if (errorDiv) {
-                errorDiv.textContent = msg;
-                errorDiv.classList.remove('hidden');
-                setTimeout(() => errorDiv.classList.add('hidden'), 3000);
-            }
+        // Toast Notification System
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                color: white;
+                padding: 16px 24px;
+                border-radius: 8px;
+                margin-bottom: 10px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-size: 14px;
+                animation: slideIn 0.3s ease;
+                min-width: 250px;
+            `;
+
+            const icon = type === 'success' ? '✓' : '⚠';
+            toast.innerHTML = `<span style="font-size: 20px;">${icon}</span><span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
 
         // Screen navigation
@@ -483,18 +508,15 @@
 
         window.toggleMode = function () {
             isRegisterMode = !isRegisterMode;
-            const usernameInput = document.getElementById('username');
             const switchBtn = document.getElementById('switch-mode');
             const title = document.getElementById('email-title');
             const subtitle = document.getElementById('email-subtitle');
 
             if (isRegisterMode) {
-                usernameInput.classList.remove('hidden');
                 switchBtn.textContent = 'Already have an account? Login';
                 title.textContent = 'Create Account';
                 subtitle.textContent = 'Register a new account';
             } else {
-                usernameInput.classList.add('hidden');
                 switchBtn.textContent = "Don't have an account? Sign Up";
                 title.textContent = 'Welcome Back!';
                 subtitle.textContent = 'Login to your account';
@@ -503,8 +525,6 @@
 
         window.handleEmailContinue = async function () {
             const email = document.getElementById('email').value.trim();
-            const username = document.getElementById('username').value.trim();
-
             if (!email) {
                 showError('Please enter your email');
                 return;
@@ -515,37 +535,39 @@
                 return;
             }
 
-            if (isRegisterMode && !username) {
-                showError('Please enter a username');
-                return;
-            }
+            // Check if user exists before proceeding to PIN screen
+            showLoading(true);
+            try {
+                if (!auth.currentUser) await signInAnonymously(auth);
 
-            // Check if user exists before proceeding to PIN screen (Login Mode only)
-            if (!isRegisterMode) {
-                showLoading(true);
-                try {
-                    if (!auth.currentUser) await signInAnonymously(auth);
+                const authRef = collection(db, 'auth');
+                const q = query(authRef, where('email', '==', email.toLowerCase()));
+                const snapshot = await getDocs(q);
 
-                    const authRef = collection(db, 'auth');
-                    const q = query(authRef, where('email', '==', email.toLowerCase()));
-                    const snapshot = await getDocs(q);
+                showLoading(false);
 
-                    showLoading(false);
-
+                if (isRegisterMode) {
+                    // Register Mode: Email must NOT exist
+                    if (!snapshot.empty) {
+                        showError('This email is already registered. Please use a different email or login instead.');
+                        return;
+                    }
+                } else {
+                    // Login Mode: Email must exist
                     if (snapshot.empty) {
                         showError('User not found. Please sign up.');
                         return;
                     }
-                } catch (error) {
-                    showLoading(false);
-                    console.error('User check error:', error);
-                    showError('Error checking user: ' + error.message);
-                    return;
                 }
+            } catch (error) {
+                showLoading(false);
+                console.error('User check error:', error);
+                showError('Error checking user: ' + error.message);
+                return;
             }
 
             currentEmail = email;
-            currentUsername = username;
+            currentUsername = '';
 
             // Update PIN screen title
             const pinTitle = document.getElementById('pin-title');
@@ -692,6 +714,20 @@
             try {
                 if (!auth.currentUser) await signInAnonymously(auth);
 
+                // Check if email already exists
+                const emailQuery = query(collection(db, 'auth'), where('email', '==', currentEmail.toLowerCase()));
+                const emailSnapshot = await getDocs(emailQuery);
+
+                if (!emailSnapshot.empty) {
+                    showLoading(false);
+                    showError('This email is already registered. Please use a different email or login instead.');
+                    currentPIN = '';
+                    confirmPIN = '';
+                    isConfirmingPIN = false;
+                    updatePINDisplay();
+                    return;
+                }
+
                 const userId = `user_${Date.now()}`;
                 const salt = generateSalt();
                 const pinHash = hashPIN(currentPIN, salt);
@@ -707,8 +743,8 @@
                 await setDoc(doc(db, 'users', userId), {
                     uid: userId,
                     email: currentEmail.toLowerCase(),
-                    username: currentUsername,
-                    displayName: currentUsername,
+                    username: '',
+                    displayName: '',
                     friends: [],
                     achievements: [],
                     streak: 0,
@@ -718,6 +754,9 @@
 
                 localStorage.setItem('kobi_atlas_uid', userId);
                 localStorage.setItem('kobi_atlas_email', currentEmail);
+
+                // Mark as new signup for welcome screen
+                sessionStorage.setItem('is_new_signup', 'true');
 
                 window.location.href = 'dashboard.html';
             } catch (error) {

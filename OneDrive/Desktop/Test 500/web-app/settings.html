@@ -8,7 +8,13 @@
     <link rel="icon" type="image/png" href="favicon.png">
 
     <!-- Ionicons -->
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <!-- Ionicons (Universal) -->
+    <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <!-- Firebase Compat Scripts (File Protocol Safe) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
     <style>
         :root {
@@ -74,9 +80,14 @@
             background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
             padding: 20px;
             padding-top: 50px;
+            padding: 20px;
+            padding-top: 50px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            /* Center content */
+            position: relative;
+            /* For absolute positioning of children */
         }
 
         .back-button {
@@ -88,6 +99,10 @@
             display: flex;
             align-items: center;
             padding: 0;
+            position: absolute;
+            /* Absolute positioning */
+            left: 20px;
+            z-index: 10;
         }
 
         .header-title {
@@ -235,41 +250,205 @@
         .logout-button ion-icon {
             margin-right: 8px;
         }
+
+        .profile-picture-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-picture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #2a2a2a;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: var(--primary-color);
+            overflow: hidden;
+            border: 2px solid var(--primary-color);
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .change-photo-btn {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
     </style>
 </head>
 
 <body>
     <div class="header">
-        <button class="back-button" onclick="goBack()">
+        <button class="back-button" onclick="window.location.href='dashboard.html'"
+            style="width: auto; padding: 0 10px; gap: 5px;">
             <ion-icon name="arrow-back"></ion-icon>
+            <span>Back</span>
         </button>
         <div class="header-title">Settings</div>
         <div style="width: 24px;"></div>
     </div>
 
+    <!-- Loading Overlay -->
+    <div id="loading-overlay"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+        <div style="text-align: center; color: white;">
+            <div
+                style="border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid white; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px;">
+            </div>
+            <div>Loading settings...</div>
+        </div>
+    </div>
+    <style>
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <!-- Toast Container -->
+    <div id="toast-container" style="position: fixed; top: 80px; right: 20px; z-index: 10000;"></div>
+
     <div class="content">
-        <!-- Account Section -->
-        <div class="section">
-            <div class="section-title">Account</div>
+        <!-- Profile Section -->
+        <div class="section" id="profile-section">
+            <div class="section-title">Profile</div>
 
-            <button class="button" onclick="window.location.href='edit-profile.html'">
-                <ion-icon name="person-outline"></ion-icon>
-                Edit Profile
-            </button>
+            <!-- Profile customization fields (shown in setup mode) -->
+            <div id="profile-fields" style="display: none;">
+                <div class="profile-picture-section">
+                    <div id="profile-picture" class="profile-picture">
+                        <ion-icon name="person"></ion-icon>
+                    </div>
+                    <input type="file" id="file-input" accept="image/*" onchange="handleImageUpload()"
+                        style="display: none;">
+                    <button class="change-photo-btn" onclick="document.getElementById('file-input').click()">
+                        Change Photo
+                    </button>
+                </div>
 
-            <button class="button" onclick="showChangePIN()">
-                <ion-icon name="key-outline"></ion-icon>
-                Change PIN
-            </button>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" placeholder="Username (Alphanumeric)" maxlength="20">
+                </div>
+
+                <div class="form-group">
+                    <label>About Me</label>
+                    <textarea id="about-me" placeholder="Tell us about yourself..." rows="3"></textarea>
+                </div>
+            </div>
+
+            <!-- Navigation buttons (shown in normal mode) -->
+            <div id="profile-nav-buttons">
+                <button class="button" onclick="window.location.href='edit-profile.html'">
+                    <ion-icon name="person-outline"></ion-icon>
+                    Edit Profile
+                </button>
+
+                <button class="button" onclick="window.location.href='change-pin.html'">
+                    <ion-icon name="key-outline"></ion-icon>
+                    Change PIN
+                </button>
+            </div>
         </div>
 
         <!-- Academic Section -->
         <div class="section">
-            <div class="section-title">Academic</div>
+            <div class="section-title">Academic Configuration</div>
 
-            <button class="button" onclick="window.location.href='grading-system.html'">
-                <ion-icon name="school-outline"></ion-icon>
-                Grading System
+            <!-- Grading System -->
+            <div class="info-card" style="margin-bottom: 16px;">
+                <h3 style="margin-bottom: 12px; font-size: 16px;">Grading System</h3>
+                <select id="grading-system-select" onchange="updateGradingUI()"
+                    style="width: 100%; padding: 10px; border-radius: 8px; background: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color);">
+                    <option value="babcock">Babcock (5.0, A=80)</option>
+                    <option value="nigerian">Nigerian (5.0, A=70)</option>
+                    <option value="us">US (4.0, A=90)</option>
+                    <option value="custom">Custom</option>
+                </select>
+
+                <div id="custom-grading-container" style="display: none; margin-top: 12px;">
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">Define grades (Label,
+                        Min Score, GP)</p>
+                    <div id="custom-grades-list"></div>
+                    <button class="button" onclick="addGradeRow()"
+                        style="margin-top: 8px; font-size: 14px; padding: 8px; justify-content: center;">+ Add
+                        Grade</button>
+                </div>
+            </div>
+
+            <!-- CA System -->
+            <div class="info-card" style="margin-bottom: 16px;">
+                <h3 style="margin-bottom: 12px; font-size: 16px;">CA System</h3>
+                <select id="ca-system-select" onchange="updateCAUI()"
+                    style="width: 100%; padding: 10px; border-radius: 8px; background: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color);">
+                    <option value="babcock">Babcock</option>
+                    <option value="custom">Custom</option>
+                </select>
+
+                <div id="custom-ca-container" style="display: none; margin-top: 12px;">
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">Define CA fields
+                        (Name, Weight %)</p>
+                    <div id="custom-ca-list"></div>
+                    <button class="button" onclick="addCARow()"
+                        style="margin-top: 8px; font-size: 14px; padding: 8px; justify-content: center;">+ Add
+                        Field</button>
+                    <div style="margin-top: 12px; font-size: 14px; display: flex; justify-content: space-between;">
+                        <span>Total CA: <strong id="total-ca-display">0%</strong></span>
+                        <span>Exam: <strong id="exam-display">100%</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <button id="save-settings-btn" type="button" class="button" onclick="performSaveSettings()"
+                style="background: var(--primary-color); color: white; justify-content: center; font-weight: bold;">
+                Save Changes
             </button>
         </div>
 
@@ -325,73 +504,279 @@
         </div>
 
         <!-- Logout Button -->
-        <button class="logout-button" onclick="logout()">
-            <ion-icon name="log-out-outline"></ion-icon>
+        <!-- Logout Button (Direct Link Fallback) -->
+        <a href="index.html" class="logout-button" onclick="localStorage.clear();"
+            style="text-decoration: none; justify-content: center;">
+            <ion-icon name="log-out-outline" style="margin-right: 8px;"></ion-icon>
             Logout
-        </button>
+        </a>
     </div>
 
     <script>
-        // Initialize
+        window.onerror = function (msg, url, line) {
+            showToast('App Error: ' + msg, 'error');
+            return false;
+        };
+
+        // Toast Notification System
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                color: white;
+                padding: 16px 24px;
+                border-radius: 8px;
+                margin-bottom: 10px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-size: 14px;
+                animation: slideIn 0.3s ease;
+                min-width: 250px;
+            `;
+
+            const icon = type === 'success' ? '✓' : '⚠';
+            toast.innerHTML = `<span style="font-size: 20px;">${icon}</span><span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        // Initialize Firebase (Compat)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBKA2julrxpRhXTdU_8l5pSH73ERAjKtO4",
+            authDomain: "kobi-s-student-atlas.firebaseapp.com",
+            projectId: "kobi-s-student-atlas",
+            storageBucket: "kobi-s-student-atlas.firebasestorage.app",
+            messagingSenderId: "955486974004",
+            appId: "1:955486974004:web:be7d825c279d2e263c5a61",
+            measurementId: "G-8260ESQ6PQ"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        let profilePictureBase64 = '';
+
+        window.handleImageUpload = async function () {
+            const file = document.getElementById('file-input').files[0];
+            if (!file) return;
+
+            try {
+                // Brute force canvas compression
+                profilePictureBase64 = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            let width = img.width;
+                            let height = img.height;
+                            const maxSize = 400;
+
+                            if (width > height) {
+                                if (width > maxSize) {
+                                    height *= maxSize / width;
+                                    width = maxSize;
+                                }
+                            } else {
+                                if (height > maxSize) {
+                                    width *= maxSize / height;
+                                    height = maxSize;
+                                }
+                            }
+
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            resolve(canvas.toDataURL('image/jpeg', 0.5));
+                        };
+                        img.onerror = () => reject(new Error('Image load failed'));
+                        img.src = e.target.result;
+                    };
+                    reader.onerror = () => reject(new Error('File read failed'));
+                    reader.readAsDataURL(file);
+                });
+
+                const imgElement = document.createElement('img');
+                imgElement.src = profilePictureBase64;
+                document.getElementById('profile-picture').innerHTML = '';
+                document.getElementById('profile-picture').appendChild(imgElement);
+            } catch (error) {
+                console.error('Image compression error:', error);
+                alert('Failed to process image');
+            }
+        };
+
+        // Initialize UI
         const savedTheme = localStorage.getItem('kobi_atlas_theme') || 'default';
         document.documentElement.setAttribute('data-theme', savedTheme);
 
-        // Mark active theme
-        document.querySelectorAll('.theme-option').forEach(opt => {
-            const isActive = opt.querySelector('.theme-text').textContent.toLowerCase().includes(savedTheme) ||
-                (savedTheme === 'default' && opt.querySelector('.theme-text').textContent === 'Default') ||
-                (savedTheme === 'lightPink' && opt.querySelector('.theme-text').textContent === 'Light Pink');
+        // --- ACADEMIC SETTINGS LOGIC ---
+        let gradingSystem = { type: 'babcock', custom: [] };
+        let caSystem = { type: 'babcock', custom: [] };
 
-            if (isActive) {
-                opt.classList.add('active');
-                opt.querySelector('.checkmark').style.display = 'block';
+        const uid = localStorage.getItem('kobi_atlas_uid');
+
+        // Load Settings on Start
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Show loading overlay
+            const loadingOverlay = document.getElementById('loading-overlay');
+            if (loadingOverlay) loadingOverlay.style.display = 'flex';
+
+            // FAST EXIT: If in setup mode but already done locally, redirect immediately
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('mode') === 'setup' && localStorage.getItem('kobi_atlas_setup_done')) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            let isSettingsFound = false;
+
+            if (!uid) {
+                // Not logged in?
             } else {
-                opt.classList.remove('active');
-                opt.querySelector('.checkmark').style.display = 'none';
+                // Authenticate with Firebase before accessing Firestore
+                try {
+                    await firebase.auth().signInAnonymously();
+                } catch (authError) {
+                    console.error('Authentication error:', authError);
+                }
+
+                // Load Settings and Profile
+                try {
+                    // Academic Data
+                    const docRef = db.collection('users').doc(uid).collection('settings').doc('academic');
+                    const docSnap = await docRef.get();
+                    if (docSnap.exists) {
+                        isSettingsFound = true;
+                        const data = docSnap.data();
+                        if (data.gradingSystem) {
+                            gradingSystem = data.gradingSystem;
+                            localStorage.setItem('kobi_atlas_grading_system', JSON.stringify(gradingSystem));
+                        }
+                        if (data.caSystem) {
+                            caSystem = data.caSystem;
+                            localStorage.setItem('kobi_atlas_ca_system', JSON.stringify(caSystem));
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error fetching data:', e);
+                }
             }
-        });
 
-        function goBack() {
-            window.location.href = 'dashboard.html';
-        }
-
-        function setTheme(themeName) {
-            // Remove active class from all
-            document.querySelectorAll('.theme-option').forEach(opt => {
-                opt.classList.remove('active');
-                opt.querySelector('.checkmark').style.display = 'none';
-            });
-
-            // Add active to selected
-            event.target.closest('.theme-option').classList.add('active');
-            event.target.closest('.theme-option').querySelector('.checkmark').style.display = 'block';
-
-            // Save to localStorage
-            localStorage.setItem('kobi_atlas_theme', themeName);
-            document.documentElement.setAttribute('data-theme', themeName);
-        }
-
-        function showChangePIN() {
-            window.location.href = 'change-pin.html';
-        }
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                // Clear all app specific keys
-                localStorage.removeItem('kobi_atlas_uid');
-                localStorage.removeItem('kobi_atlas_email');
-                localStorage.removeItem('kobi_atlas_pin');
-                localStorage.removeItem('kobi_atlas_theme');
-
-                // Force redirect
-                window.location.replace('index.html');
+            // Fallback load from locals
+            if (!gradingSystem.type) {
+                const savedGrading = localStorage.getItem('kobi_atlas_grading_system');
+                if (savedGrading) try { gradingSystem = JSON.parse(savedGrading); } catch (e) { }
             }
-        }
+            if (!caSystem.type) {
+                const savedCA = localStorage.getItem('kobi_atlas_ca_system');
+                if (savedCA) try { caSystem = JSON.parse(savedCA); } catch (e) { }
+            }
 
-        // Load saved theme on page load
-        window.addEventListener('DOMContentLoaded', () => {
-            let savedTheme = localStorage.getItem('kobi_atlas_theme') || 'default';
-            if (savedTheme === 'dark') savedTheme = 'default';
+            // Grading UI
+            const gradSelect = document.getElementById('grading-system-select');
+            if (gradSelect) {
+                gradSelect.value = gradingSystem.type;
+                if (gradingSystem.type === 'custom' && gradingSystem.custom) {
+                    document.getElementById('custom-grades-list').innerHTML = '';
+                    gradingSystem.custom.forEach(g => addGradeRow(g));
+                }
+                updateGradingUI();
+            }
+
+            // CA UI
+            const caSelect = document.getElementById('ca-system-select');
+            if (caSelect) {
+                caSelect.value = caSystem.type;
+                if (caSystem.type === 'custom' && caSystem.custom) {
+                    document.getElementById('custom-ca-list').innerHTML = '';
+                    caSystem.custom.forEach(f => addCARow(f));
+                }
+                updateCAUI();
+                calculateCA();
+            }
+
+            // SETUP MODE LOGIC
+            // urlParams defined at top of function
+            if (urlParams.get('mode') === 'setup') {
+                // 100% NEW USER CHECK: If settings exist, kick out of setup
+                if (isSettingsFound) {
+                    localStorage.setItem('kobi_atlas_setup_done', 'true');
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+
+                document.querySelector('.header-title').textContent = 'Welcome / Setup';
+                const backBtn = document.querySelector('.back-button');
+                if (backBtn) backBtn.style.display = 'none';
+
+                // Show profile fields, hide navigation buttons
+                const profileFields = document.getElementById('profile-fields');
+                const profileNavButtons = document.getElementById('profile-nav-buttons');
+                if (profileFields) profileFields.style.display = 'block';
+                if (profileNavButtons) profileNavButtons.style.display = 'none';
+
+                // Hide unrelated sections
+                document.querySelectorAll('.section').forEach(sec => {
+                    const t = sec.querySelector('.section-title').textContent;
+                    if (t === 'Account' || t === 'Theme' || t === 'About') {
+                        sec.style.display = 'none';
+                    }
+                });
+
+                // Ensure Profile and Academic are visible and ordered
+                const profileSec = document.getElementById('profile-section');
+                const academicSec = document.getElementById('grading-system-select')?.closest('.section');
+
+                if (profileSec && academicSec) {
+                    // Profile first
+                    profileSec.parentElement.prepend(academicSec);
+                    profileSec.parentElement.prepend(profileSec);
+
+                    const hint = document.createElement('div');
+                    hint.style.cssText = 'background: rgba(102, 126, 234, 0.1); border-left: 4px solid var(--primary-color); padding: 12px; margin-bottom: 20px; font-size: 14px; border-radius: 4px;';
+                    hint.textContent = 'Please set up your Profile and Academic Configuration (Grading/CA) below.';
+                    profileSec.insertAdjacentElement('beforebegin', hint);
+                }
+
+                // Add Continue Button
+                const content = document.querySelector('.content');
+                const continueBtn = document.createElement('button');
+                continueBtn.type = 'button'; // Prevent form submission
+                continueBtn.className = 'button';
+                continueBtn.textContent = 'Finish Setup & Go to Dashboard';
+                continueBtn.style.cssText = 'background: var(--primary-color); color: white; justify-content: center; font-weight: bold; margin-top: 30px; padding: 16px; width: 100%; border-radius: 8px; border: none; font-size: 16px; cursor: pointer;';
+                continueBtn.onclick = async function (event) {
+                    if (event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    alert('DEBUG: Finish Setup button clicked');
+                    const success = await window.performSaveSettings(); // Calls the unified save
+                    if (success) {
+                        localStorage.setItem('kobi_atlas_setup_done', 'true');
+                        window.location.href = 'dashboard.html';
+                    }
+                };
+                content.appendChild(continueBtn);
+
+                const logoutBtn = document.querySelector('.logout-button');
+                if (logoutBtn) logoutBtn.style.display = 'none';
+
+                // Hide the regular Save Changes button in setup mode
+                const saveBtn = document.getElementById('save-settings-btn');
+                if (saveBtn) saveBtn.style.display = 'none';
+            }
+            // --- THEME LOGIC (Merged) ---
+            let currentTheme = localStorage.getItem('kobi_atlas_theme') || 'default';
+            if (currentTheme === 'dark') currentTheme = 'default';
 
             document.querySelectorAll('.theme-option').forEach(opt => {
                 opt.classList.remove('active');
@@ -400,13 +785,245 @@
 
             const themeOptions = document.querySelectorAll('.theme-option');
             const themes = ['default', 'blue', 'lightPink', 'light'];
-            const index = themes.indexOf(savedTheme);
+            const index = themes.indexOf(currentTheme);
 
             if (index >= 0 && themeOptions[index]) {
                 themeOptions[index].classList.add('active');
                 themeOptions[index].querySelector('.checkmark').style.display = 'block';
             }
+
+            // Hide loading overlay after everything is loaded
+            if (loadingOverlay) loadingOverlay.style.display = 'none';
         });
+
+        window.updateGradingUI = function () {
+            const type = document.getElementById('grading-system-select').value;
+            const customContainer = document.getElementById('custom-grading-container');
+            if (customContainer) customContainer.style.display = type === 'custom' ? 'block' : 'none';
+        };
+
+        window.updateCAUI = function () {
+            const type = document.getElementById('ca-system-select').value;
+            const customContainer = document.getElementById('custom-ca-container');
+            if (customContainer) customContainer.style.display = type === 'custom' ? 'block' : 'none';
+        };
+
+        window.addGradeRow = function (data = null) {
+            const container = document.getElementById('custom-grades-list');
+            const div = document.createElement('div');
+            div.className = 'custom-row';
+            div.style.cssText = 'display: flex; gap: 8px; margin-bottom: 8px; align-items: center;';
+            div.innerHTML = `
+                <input type="text" placeholder="Label (A)" value="${data ? data.label : ''}" class="grade-label" style="flex: 1; min-width: 0; padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color);">
+                <input type="number" placeholder="Min (80)" value="${data ? data.min : ''}" class="grade-min" style="flex: 1; min-width: 0; padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color);">
+                <input type="number" placeholder="GP (5.0)" value="${data ? data.gp : ''}" class="grade-gp" style="flex: 1; min-width: 0; padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color);">
+                <button onclick="this.parentElement.remove()" style="background: var(--card-bg); color: #ef4444; border: none; cursor: pointer; padding: 4px;">&times;</button>
+            `;
+            container.appendChild(div);
+        };
+
+        window.addCARow = function (data = null) {
+            const container = document.getElementById('custom-ca-list');
+            const div = document.createElement('div');
+            div.className = 'custom-row ca-row';
+            div.style.cssText = 'display: flex; gap: 8px; margin-bottom: 8px; align-items: center;';
+            div.innerHTML = `
+                <input type="text" placeholder="Name (e.g. HW)" value="${data ? data.name : ''}" class="ca-name" style="flex: 1; padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color);">
+                <input type="number" placeholder="%" value="${data ? data.weight : ''}" class="ca-weight" oninput="calculateCA()" style="width: 80px; padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color);">
+                <button onclick="this.parentElement.remove(); calculateCA();" style="background: var(--card-bg); color: #ef4444; border: none; cursor: pointer; padding: 4px;">&times;</button>
+            `;
+            container.appendChild(div);
+            calculateCA();
+        };
+
+        window.calculateCA = function () {
+            let total = 0;
+            document.querySelectorAll('.ca-weight').forEach(inp => {
+                total += parseFloat(inp.value || 0);
+            });
+            const totalDisplay = document.getElementById('total-ca-display');
+            if (totalDisplay) totalDisplay.textContent = total + '%';
+
+            const examDisplay = document.getElementById('exam-display');
+            if (examDisplay) examDisplay.textContent = (100 - total) + '%';
+
+            if (totalDisplay) {
+                if (total > 100) totalDisplay.style.color = 'red';
+                else totalDisplay.style.color = 'var(--primary-color)';
+            }
+        };
+
+        // Unified Save Function (Profile + Academic)
+        window.performSaveSettings = async function () {
+            const btn = document.getElementById('save-settings-btn') || document.querySelector('button[onclick="performSaveSettings()"]');
+            const originalText = btn ? btn.textContent : 'Save';
+            if (btn) btn.textContent = 'Saving...';
+
+            // Check if we're in setup mode
+            const urlParams = new URLSearchParams(window.location.search);
+            const isSetupMode = urlParams.get('mode') === 'setup';
+
+            try {
+                // Ensure Firebase authentication
+                if (!firebase.auth().currentUser) {
+                    await firebase.auth().signInAnonymously();
+                }
+
+                // Validate and save profile if in setup mode
+                if (isSetupMode) {
+                    const username = document.getElementById('username')?.value.trim();
+                    const aboutMe = document.getElementById('about-me')?.value.trim();
+
+                    // Validation
+                    if (!username) {
+                        if (btn) btn.textContent = originalText;
+                        showToast('Username is required', 'error');
+                        return false;
+                    }
+
+                    if (username.length < 3) {
+                        if (btn) btn.textContent = originalText;
+                        showToast('Username must be at least 3 characters', 'error');
+                        return false;
+                    }
+
+                    // Save profile data
+                    if (uid) {
+                        const profileUpdates = {
+                            username,
+                            displayName: username,
+                            aboutMe: aboutMe || '',
+                            lastActive: Date.now()
+                        };
+                        if (profilePictureBase64) {
+                            profileUpdates.profilePicture = profilePictureBase64;
+                        }
+                        await db.collection('users').doc(uid).set(profileUpdates, { merge: true });
+                    }
+                }
+
+                // 1. SAVE ACADEMIC
+                const gradingType = document.getElementById('grading-system-select').value;
+                const customGrades = [];
+                if (gradingType === 'custom') {
+                    document.querySelectorAll('#custom-grades-list .custom-row').forEach(row => {
+                        const label = row.querySelector('.grade-label').value.trim();
+                        const min = parseFloat(row.querySelector('.grade-min').value);
+                        const gp = parseFloat(row.querySelector('.grade-gp').value);
+                        if (label && !isNaN(min)) {
+                            customGrades.push({ label, min, gp });
+                        }
+                    });
+                    customGrades.sort((a, b) => b.min - a.min);
+                }
+                const newGradingConfig = { type: gradingType, custom: customGrades };
+                localStorage.setItem('kobi_atlas_grading_system', JSON.stringify(newGradingConfig));
+
+                const caType = document.getElementById('ca-system-select').value;
+                const customCA = [];
+                if (caType === 'custom') {
+                    document.querySelectorAll('#custom-ca-list .ca-row').forEach(row => {
+                        const name = row.querySelector('.ca-name').value.trim();
+                        const weight = parseFloat(row.querySelector('.ca-weight').value);
+                        if (name && !isNaN(weight)) {
+                            customCA.push({ name, weight });
+                        }
+                    });
+                }
+                const newCAConfig = { type: caType, custom: customCA };
+                localStorage.setItem('kobi_atlas_ca_system', JSON.stringify(newCAConfig));
+
+                if (uid) {
+                    await db.collection('users').doc(uid).collection('settings').doc('academic').set({
+                        gradingSystem: newGradingConfig,
+                        caSystem: newCAConfig,
+                        updatedAt: Date.now()
+                    });
+                }
+
+                // Update global variables so UI reflects changes immediately
+                gradingSystem = newGradingConfig;
+                caSystem = newCAConfig;
+
+                // Refresh UI to show saved state
+                updateGradingUI();
+                updateCAUI();
+                calculateCA();
+
+                if (btn) btn.textContent = originalText;
+
+                // Show appropriate success message
+                if (isSetupMode) {
+                    showToast('Setup complete! Your profile and settings have been saved.', 'success');
+                } else {
+                    showToast('Settings saved successfully!', 'success');
+                }
+
+                return true;
+            } catch (e) {
+                console.error('Error saving settings:', e);
+                if (btn) btn.textContent = originalText;
+                showToast('Error saving settings: ' + e.message, 'error');
+                return false;
+            }
+        };
+
+        // Alias for HTML button interaction
+        window.saveAcademicSettings = window.performSaveSettings;
+        window.saveAllSettings = window.performSaveSettings;
+
+        window.setTheme = function (themeName) {
+            document.querySelectorAll('.theme-option').forEach(opt => {
+                opt.classList.remove('active');
+                opt.querySelector('.checkmark').style.display = 'none';
+            });
+            if (event && event.target) {
+                const opt = event.target.closest('.theme-option');
+                if (opt) {
+                    opt.classList.add('active');
+                    opt.querySelector('.checkmark').style.display = 'block';
+                }
+            }
+            localStorage.setItem('kobi_atlas_theme', themeName);
+            document.documentElement.setAttribute('data-theme', themeName);
+        };
+
+        window.showChangePIN = function () {
+            window.location.href = 'change-pin.html';
+        };
+
+        window.performLogout = function () {
+            if (!confirm('Are you sure you want to logout?')) return;
+
+            const forceLogout = () => {
+                localStorage.removeItem('kobi_atlas_uid');
+                localStorage.removeItem('kobi_atlas_email');
+                localStorage.removeItem('kobi_atlas_pin');
+                localStorage.removeItem('kobi_atlas_theme');
+                localStorage.removeItem('kobi_atlas_setup_done');
+                window.location.replace('index.html');
+            };
+
+            try {
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    // Race condition: If signOut hangs (e.g. network/file protocol), force logout after 500ms
+                    const signOutPromise = firebase.auth().signOut();
+                    const timeoutPromise = new Promise(resolve => setTimeout(resolve, 500));
+
+                    Promise.race([signOutPromise, timeoutPromise])
+                        .then(() => forceLogout())
+                        .catch((error) => {
+                            console.error('Logout error:', error);
+                            forceLogout();
+                        });
+                } else {
+                    forceLogout();
+                }
+            } catch (e) {
+                console.error('Logout exception:', e);
+                forceLogout();
+            }
+        };
     </script>
 </body>
 

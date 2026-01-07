@@ -209,20 +209,31 @@
             background: var(--nav-bg);
             border-top: 1px solid var(--border-color);
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
+            /* Spread them out */
             padding: 8px 0;
+            padding-left: 10%;
+            /* 10% space left */
+            padding-right: 10%;
+            /* 10% space right = 80% content width */
             z-index: 1000;
+            padding-bottom: max(8px, env(safe-area-inset-bottom));
         }
 
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 8px;
+            justify-content: center;
+            padding: 4px 0;
             background: none;
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
+            flex: 1;
+            /* Distribute space evenly */
+            max-width: 80px;
+            /* Prevent them from getting too wide on desktop */
         }
 
         .nav-item ion-icon {
@@ -709,25 +720,8 @@
 
             <div id="course-info-tab">
                 <h3 style="margin-bottom: 16px;">CA Scores</h3>
-                <div class="ca-score-row">
-                    <span>Mid Semester:</span>
-                    <input type="number" id="ca-mid" class="ca-score-input" min="0" max="15"
-                        onchange="updateCAScores()">
-                </div>
-                <div class="ca-score-row">
-                    <span>Assignment:</span>
-                    <input type="number" id="ca-assignment" class="ca-score-input" min="0" max="10"
-                        onchange="updateCAScores()">
-                </div>
-                <div class="ca-score-row">
-                    <span>Quiz:</span>
-                    <input type="number" id="ca-quiz" class="ca-score-input" min="0" max="10"
-                        onchange="updateCAScores()">
-                </div>
-                <div class="ca-score-row">
-                    <span>Attendance:</span>
-                    <input type="number" id="ca-attendance" class="ca-score-input" min="0" max="5"
-                        onchange="updateCAScores()">
+                <div id="ca-inputs-container">
+                    <!-- Dynamic CA Inputs -->
                 </div>
                 <div class="ca-score-row" style="border-bottom: 2px solid #667eea;">
                     <span><strong>Total CA:</strong></span>
@@ -768,7 +762,7 @@
                             style="font-weight: bold; font-size: 18px; color: var(--primary-color);">--</span>
                     </div>
                     <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
-                        Based on Max Possible Score (CA + 60)
+                        Based on Max Possible Score (CA + Exam)
                     </p>
                 </div>
 
@@ -867,7 +861,7 @@
             <div class="stat-card" style="margin-bottom: 20px;">
                 <h3 style="margin-bottom: 16px;">GPA Trend</h3>
                 <div id="gpa-chart"
-                    style="display: flex; align-items: flex-end; justify-content: center; gap: 8px; height: 150px; overflow-x: auto;">
+                    style="display: flex; align-items: flex-end; justify-content: flex-start; gap: 16px; height: 250px; overflow-x: auto; padding-bottom: 10px; padding-left: 5px; scrollbar-width: thin; padding-top: 20px;">
                 </div>
             </div>
 
@@ -892,7 +886,7 @@
 
             <!-- Semester Breakdown -->
             <div class="stat-card" style="margin-bottom: 20px;">
-                <h3 style="margin-bottom: 16px;">Semester Breakdown</h3>
+                <h3 style="margin-bottom: 16px; text-align: center;">Semester Breakdown</h3>
                 <div id="semester-breakdown"></div>
             </div>
         </div>
@@ -1405,7 +1399,7 @@
     <!-- Firebase & App Logic -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-        import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+        import { getAuth, signInAnonymously, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
         import { getFirestore, collection, query, where, getDocs, doc, setDoc, addDoc, updateDoc, getDoc, deleteDoc, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
         const firebaseConfig = {
@@ -1438,7 +1432,15 @@
             const uid = localStorage.getItem('kobi_atlas_uid');
             if (!uid) return;
 
-            // Stop existing listeners if any
+            // FIRST TIME SETUP CHECK
+            // NEW USER SETUP CHECK (Only if just signed up)
+            if (sessionStorage.getItem('is_new_signup') === 'true') {
+                sessionStorage.removeItem('is_new_signup');
+                window.location.replace('settings.html?mode=setup');
+                return;
+            }
+
+            const notifRef = collection(db, 'users', uid, 'notifications');
             if (notifUnsubscribe) notifUnsubscribe();
             if (msgUnsubscribe) msgUnsubscribe();
             if (friendReqUnsubscribe) friendReqUnsubscribe();
@@ -1560,6 +1562,29 @@
             }
         };
 
+        window.logout = async function () {
+            if (!confirm('Are you sure you want to logout?')) return;
+
+            const forceExit = () => {
+                localStorage.removeItem('kobi_atlas_uid');
+                localStorage.removeItem('kobi_atlas_email');
+                localStorage.removeItem('kobi_atlas_pin');
+                localStorage.removeItem('kobi_atlas_theme');
+                localStorage.removeItem('kobi_atlas_setup_done');
+                window.location.replace('index.html');
+            };
+
+            try {
+                const signOutPromise = signOut(auth);
+                const timeoutPromise = new Promise(r => setTimeout(r, 500));
+                await Promise.race([signOutPromise, timeoutPromise]);
+            } catch (e) {
+                console.error('Sign out error', e);
+            } finally {
+                forceExit();
+            }
+        };
+
         const OWNER_EMAILS = ['kobioguadinma@gmail.com'];
         const ACHIEVEMENTS = [
             { id: 'first_semester', title: 'Freshman', description: 'Completed your first semester', icon: 'school' },
@@ -1584,6 +1609,16 @@
             return { type: 'babcock' }; // Default
         }
 
+        function getCAConfig() {
+            try {
+                const saved = localStorage.getItem('kobi_atlas_ca_system');
+                if (saved) return JSON.parse(saved);
+            } catch (e) {
+                console.error('Error parsing CA config', e);
+            }
+            return { type: 'babcock' };
+        }
+
         function getGradeFromScore(score) {
             const config = getGradingConfig();
 
@@ -1601,88 +1636,73 @@
                 if (score >= 60) return 'B';
                 if (score >= 50) return 'C';
                 if (score >= 45) return 'D';
-                if (score >= 40) return 'E';
                 return 'F';
             }
 
-            if (config.type === '4point') {
-                if (score >= 93) return 'A';
-                if (score >= 90) return 'A-';
-                if (score >= 87) return 'B+';
-                if (score >= 83) return 'B';
-                if (score >= 80) return 'B-';
-                if (score >= 77) return 'C+';
-                if (score >= 73) return 'C';
-                if (score >= 70) return 'C-';
-                if (score >= 67) return 'D+';
-                if (score >= 65) return 'D';
+            if (config.type === 'us') {
+                if (score >= 90) return 'A';
+                if (score >= 80) return 'B';
+                if (score >= 70) return 'C';
+                if (score >= 60) return 'D';
                 return 'F';
             }
 
-            if (config.type === 'custom' && config.config) {
-                // Custom usually only defines A-F thresholds
-                if (score >= (config.config.A.min || 70)) return 'A';
-                if (score >= (config.config.B.min || 60)) return 'B';
-                if (score >= (config.config.C.min || 50)) return 'C';
-                if (score >= (config.config.D.min || 45)) return 'D';
-                if (score >= (config.config.E.min || 40)) return 'E';
+            if (config.type === 'custom' && config.custom && Array.isArray(config.custom)) {
+                // Expect sorted desc
+                for (let g of config.custom) {
+                    if (score >= g.min) return g.label;
+                }
                 return 'F';
             }
 
-            // Fallback (Babcock)
-            if (score >= 80) return 'A';
-            if (score >= 60) return 'B';
-            if (score >= 50) return 'C';
-            if (score >= 45) return 'D';
-            if (score >= 40) return 'E';
-            return 'F';
+            return 'F'; // Default fallback
         }
+
 
         function gradeToPoint(grade) {
             if (!grade) return 0;
             const config = getGradingConfig();
             const g = grade.toString().toUpperCase();
 
-            // Standard Points Map (Default 5.0)
-            let points = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, 'F': 0 };
+            // Default Babcock
+            if (config.type === 'babcock' || config.type === 'nigerian') {
+                const points = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, 'F': 0 };
+                return points[g] !== undefined ? points[g] : 0;
+            }
 
-            if (config.type === '4point') {
-                points = {
-                    'A': 4.0, 'A+': 4.0,
-                    'A-': 3.7,
+            if (config.type === 'us') {
+                const points = {
+                    'A': 4.0, 'A-': 3.7,
                     'B+': 3.3, 'B': 3.0, 'B-': 2.7,
                     'C+': 2.3, 'C': 2.0, 'C-': 1.7,
                     'D+': 1.3, 'D': 1.0,
                     'F': 0.0
                 };
-            } else if (config.type === 'custom' && config.config) {
-                points = {
-                    'A': parseFloat(config.config.A.point),
-                    'B': parseFloat(config.config.B.point),
-                    'C': parseFloat(config.config.C.point),
-                    'D': parseFloat(config.config.D.point),
-                    'E': parseFloat(config.config.E.point),
-                    'F': parseFloat(config.config.F.point)
-                };
+                return points[g] !== undefined ? points[g] : 0;
             }
 
-            if (points.hasOwnProperty(g)) return points[g];
+            if (config.type === 'custom' && config.custom) {
+                const match = config.custom.find(gRow => gRow.label.toUpperCase() === g);
+                if (match) return parseFloat(match.gp);
+            }
 
-            // Handle edge maps if system is 5.0 but grade is A- (shouldn't happen if logic is consistent)
-            if (g === 'A+') return points['A'];
-
-            return 0;
+            // Fallback
+            const points = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, 'F': 0 };
+            return points[g] !== undefined ? points[g] : 0;
         }
-
-
 
         function getAvailableGrades() {
             const config = getGradingConfig();
-            if (config.type === '4point') {
+            if (config.type === 'us') {
                 return ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F'];
             }
+            if (config.type === 'custom' && config.custom) {
+                return config.custom.map(g => g.label);
+            }
+            // Default 5.0
             return ['A', 'B', 'C', 'D', 'E', 'F'];
         }
+
 
         function populateGradeDropdowns() {
             const grades = getAvailableGrades();
@@ -1728,12 +1748,14 @@
             } else if (config.type === 'nigerian') {
                 const map = { 'A': 70, 'B': 60, 'C': 50, 'D': 45, 'E': 40 };
                 minScore = map[targetGrade] || 70;
-            } else if (config.type === '4point') {
-                const map = { 'A': 93, 'A-': 90, 'B+': 87, 'B': 83, 'B-': 80, 'C+': 77, 'C': 73, 'C-': 70, 'D+': 67, 'D': 65 };
-                minScore = map[targetGrade] || 93;
-            } else if (config.type === 'custom' && config.config) {
-                minScore = parseInt(config.config[targetGrade]?.min || 70);
+            } else if (config.type === 'us') {
+                const map = { 'A': 90, 'A-': 90, 'B+': 87, 'B': 83, 'B-': 80, 'C+': 77, 'C': 73, 'C-': 70, 'D': 60 };
+                minScore = map[targetGrade] || 90;
+            } else if (config.type === 'custom' && config.custom) {
+                const match = config.custom.find(g => g.label === targetGrade);
+                minScore = match ? match.min : 70;
             }
+
 
             const required = minScore - caTotal;
             return Math.max(0, Math.min(60, required));
@@ -1745,11 +1767,7 @@
             return 'Low';
         }
 
-        function getDifficultyStars(difficulty) {
-            const filled = '★'.repeat(difficulty);
-            const empty = '☆'.repeat(5 - difficulty);
-            return filled + empty;
-        }
+
 
         window.toggleExcludeActive = function (isChecked) {
             localStorage.setItem('excludeCurrentGPA', isChecked);
@@ -1767,11 +1785,8 @@
             populateGradeDropdowns();
 
 
-            // Check for Grading System (First Time User)
-            if (!localStorage.getItem('kobi_atlas_grading_system')) {
-                window.location.href = 'grading-system.html?firstTime=true';
-                return;
-            }
+            // Legacy grading system redirect removed to support unified settings.html flow
+            // Grading system is handled via getGradingConfig() defaults or settings page.
 
             const excludeCurrentGPA = localStorage.getItem('excludeCurrentGPA') === 'true';
 
@@ -1949,11 +1964,32 @@
 
                 window.getGradeColor = function (grade) {
                     if (!grade || grade === '--') return '#667eea';
+
+                    // Get grading config to check if custom
+                    const config = getGradingConfig();
+
+                    if (config.type === 'custom' && config.custom && Array.isArray(config.custom)) {
+                        // For custom grading, assign colors based on position
+                        const gradeIndex = config.custom.findIndex(g => g.label === grade);
+
+                        if (gradeIndex === -1) return '#EF4444'; // Unknown grade = red
+
+                        // First grade = Green, Second = Yellow, Third = Gray, Rest check min value
+                        if (gradeIndex === 0) return '#10B981'; // Green
+                        if (gradeIndex === 1) return '#F59E0B'; // Yellow
+                        if (gradeIndex === 2) return '#6B7280'; // Gray
+
+                        // For remaining grades, check if below 50%
+                        const gradeData = config.custom[gradeIndex];
+                        return gradeData.min < 50 ? '#EF4444' : '#6B7280'; // Red if < 50%, else gray
+                    }
+
+                    // Standard grading (A, B, C, D, E, F)
                     const g = grade.charAt(0).toUpperCase();
                     if (g === 'A') return '#10B981'; // Green
                     if (g === 'B') return '#F59E0B'; // Yellow/Amber
-                    if (g === 'C') return '#4B5563'; // Dark Gray
-                    return '#EF4444'; // Red
+                    if (g === 'C') return '#6B7280'; // Gray
+                    return '#EF4444'; // Red (D, E, F)
                 };
 
                 const courses = currentSemester.courses || [];
@@ -2017,11 +2053,14 @@
         };
 
         window.updateCourseGradeUI = function () {
-            const totalCA = parseInt(document.getElementById('total-ca').textContent.split('/')[0]) || 0;
+            const totalCAElement = document.getElementById('total-ca');
+            const totalCA = parseInt(totalCAElement.textContent.split('/')[0]) || 0;
+            const maxCA = parseInt(totalCAElement.dataset.max) || 40; // Get the actual max CA from the data attribute
             const useCA = document.getElementById('use-ca-toggle').checked;
 
             if (useCA) {
-                const maxTotal = totalCA + 60;
+                const examWeight = 100 - maxCA; // Dynamic exam weight based on CA system
+                const maxTotal = totalCA + examWeight;
                 const grade = getGradeFromScore(maxTotal);
                 document.getElementById('max-possible-score').textContent = `${maxTotal}/100`;
                 document.getElementById('projected-grade-display').textContent = grade;
@@ -2037,12 +2076,49 @@
             document.getElementById('course-detail-title').textContent = currentCourse.name;
             document.getElementById('course-detail-code').textContent = currentCourse.code;
 
-            // Load CA scores
-            const ca = currentCourse.caScores || {};
-            document.getElementById('ca-mid').value = ca.midSemester || 0;
-            document.getElementById('ca-assignment').value = ca.assignment || 0;
-            document.getElementById('ca-quiz').value = ca.quiz || 0;
-            document.getElementById('ca-attendance').value = ca.attendance || 0;
+            // Load CA Inputs Dynamically
+            const caConfig = getCAConfig();
+            const caInputsContainer = document.getElementById('ca-inputs-container');
+            const caScores = currentCourse.caScores || {};
+            let inputsHTML = '';
+            let totalMaxCA = 0;
+
+            if (caConfig.type === 'custom' && caConfig.custom) {
+                caConfig.custom.forEach((field, i) => {
+                    const val = caScores[field.name] || 0;
+                    totalMaxCA += parseFloat(field.weight);
+                    inputsHTML += `
+                        <div class="ca-score-row">
+                            <span>${field.name} (${field.weight}%):</span>
+                            <input type="number" data-key="${field.name}" class="ca-score-input dynamic-ca-input" 
+                                min="0" max="${field.weight}" value="${val}"
+                                onchange="updateCAScores()">
+                        </div>`;
+                });
+            } else {
+                // Standard
+                totalMaxCA = 40;
+                const scores = [
+                    { label: 'Mid Semester', key: 'midSemester', max: 15 },
+                    { label: 'Assignment', key: 'assignment', max: 10 },
+                    { label: 'Quiz', key: 'quiz', max: 10 },
+                    { label: 'Attendance', key: 'attendance', max: 5 },
+                ];
+                scores.forEach(s => {
+                    const val = caScores[s.key] || 0;
+                    inputsHTML += `
+                        <div class="ca-score-row">
+                            <span>${s.label}:</span>
+                            <input type="number" data-key="${s.key}" class="ca-score-input dynamic-ca-input" 
+                                min="0" max="${s.max}" value="${val}"
+                                onchange="updateCAScores()">
+                        </div>`;
+                });
+            }
+
+            caInputsContainer.innerHTML = inputsHTML;
+            document.getElementById('total-ca').dataset.max = totalMaxCA;
+
 
             // Logic for Use CA
             const useCA = currentCourse.useCA !== false; // Default true
@@ -2066,13 +2142,14 @@
         };
 
         window.updateCAScores = function () {
-            const mid = parseInt(document.getElementById('ca-mid').value) || 0;
-            const assignment = parseInt(document.getElementById('ca-assignment').value) || 0;
-            const quiz = parseInt(document.getElementById('ca-quiz').value) || 0;
-            const attendance = parseInt(document.getElementById('ca-attendance').value) || 0;
+            let total = 0;
+            // Sum all dynamic inputs
+            document.querySelectorAll('.dynamic-ca-input').forEach(inp => {
+                total += parseFloat(inp.value) || 0;
+            });
 
-            const total = mid + assignment + quiz + attendance;
-            document.getElementById('total-ca').textContent = `${total}/40`;
+            const max = document.getElementById('total-ca').dataset.max || 40;
+            document.getElementById('total-ca').textContent = `${total}/${max}`;
 
             updateCourseGradeUI();
         };
@@ -2082,20 +2159,24 @@
             showLoading(true);
 
             try {
-                const caScores = {
-                    midSemester: parseInt(document.getElementById('ca-mid').value) || 0,
-                    assignment: parseInt(document.getElementById('ca-assignment').value) || 0,
-                    quiz: parseInt(document.getElementById('ca-quiz').value) || 0,
-                    attendance: parseInt(document.getElementById('ca-attendance').value) || 0
-                };
+                // Collect scores dynamically
+                const caScores = {};
+                document.querySelectorAll('.dynamic-ca-input').forEach(inp => {
+                    caScores[inp.dataset.key] = parseFloat(inp.value) || 0;
+                });
 
                 const useCA = document.getElementById('use-ca-toggle').checked;
                 const totalCA = Object.values(caScores).reduce((a, b) => a + b, 0);
+                const maxCA = parseFloat(document.getElementById('total-ca').dataset.max || 40);
+                const examMax = 100 - maxCA;
+
                 let finalGrade = '';
 
                 if (useCA) {
                     // Max grade logic
-                    finalGrade = getGradeFromScore(totalCA + 60);
+                    finalGrade = getGradeFromScore(totalCA + examMax); // Assuming Exam is perfect? 
+                    // Wait, previously `totalCA + 60` was hardcoded max.
+                    // Now `examMax` calculates dynamic standard (e.g. 100 - 30 = 70 exam).
                 } else {
                     finalGrade = document.getElementById('course-manual-grade').value || getAvailableGrades()[0];
                 }
@@ -2150,7 +2231,7 @@
                 });
 
                 showToast('Course deleted', 'success');
-                viewSemester(currentSemester.id);
+                await viewSemester(currentSemester.id);
             } catch (error) {
                 console.error('Delete course error:', error);
                 showToast('Error deleting course', 'error');
@@ -3480,7 +3561,7 @@
         };
 
         function getDegreeClassification(gpa) {
-            if (gpa >= 4.50) return { label: 'First Class', color: '#FFD700', icon: 'star' };
+            if (gpa >= 4.50) return { label: 'First Class', color: '#FFD700', icon: 'star', isFirstClass: true };
             if (gpa >= 3.50) return { label: 'Second Class (Upper Division)', color: '#4CAF50', icon: 'checkmark-circle' };
             if (gpa >= 2.40) return { label: 'Second Class (Lower Division)', color: '#FF9800', icon: 'remove-circle' };
             if (gpa >= 1.50) return { label: 'Third Class', color: '#9E9E9E', icon: 'ellipse' };
@@ -3618,16 +3699,47 @@
                 }
 
                 // Render GPA Chart (improved)
+                const gradingConfig = getGradingConfig();
+                let maxScale = 5.0; // Default
+                if (gradingConfig.type === 'us') maxScale = 4.0;
+                else if (gradingConfig.type === 'custom' && gradingConfig.custom) {
+                    // Find max GP in custom config
+                    maxScale = Math.max(...gradingConfig.custom.map(g => parseFloat(g.gp)));
+                }
+
+                document.getElementById('gpa-chart').style.justifyContent = relevantSemesters.length > 4 ? 'flex-start' : 'center';
+
                 const chartHTML = relevantSemesters.map(sem => {
-                    const semGPA = sem.gpa || parseFloat(calculateSemesterGPA(sem.courses || []));
-                    const height = (semGPA / 5.0) * 155; // Increased from 150 to 155
+                    let val = sem.gpa;
+                    if (val === undefined || val === null || val === '') {
+                        val = calculateSemesterGPA(sem.courses || []);
+                    }
+                    const semGPA = parseFloat(val) || 0;
+
+                    // Dynamic height based on maxScale
+                    let height = (semGPA / maxScale) * 155;
+
+                    // Safety clamps
+                    if (height < 0) height = 0;
+                    if (height > 160) height = 160;
+
                     const color = sem.type === 'past' ? '#667eea' : '#00d4ff';
+                    const displayGPA = semGPA.toFixed(2);
+
+                    // Hide text if bar is too short
+                    const textStyle = height < 20 ? 'display: none;' : 'font-size: 11px; color: white; font-weight: bold;';
+
                     return `
-                        <div style="display: flex; flex-direction: column; align-items: center; min-width: 60px; flex: 1; max-width: 70px;">
-                            <div style="width: 70%; min-width: 30px; background: ${color}; height: ${height}px; border-radius: 8px 8px 0 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 6px;">
-                                <span style="font-size: 11px; color: white; font-weight: bold;">${semGPA.toFixed(2)}</span>
+                        <div style="display: flex; flex-direction: column; align-items: center; min-width: 55px; flex: 0 0 auto; width: 65px;">
+                            <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; flex: 1; padding-bottom: 8px;">
+                                <div style="width: 80%; background: ${color}; height: ${height}px; border-radius: 8px 8px 0 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 8px; transition: height 0.5s;">
+                                    <span style="${textStyle} line-height: 1.2;">${displayGPA}</span>
+                                </div>
                             </div>
-                            <span style="font-size: 10px; color: var(--text-secondary); margin-top: 6px; line-height: 1.1; overflow: hidden; max-width: 100%; text-align: center;">${sem.name.replace('Level', 'Lvl')}</span>
+                            <!-- Fixed height label container for baseline alignment -->
+                            <div style="height: 45px; width: 100%; display: flex; align-items: flex-start; justify-content: center;">
+                                <span style="font-size: 10px; color: var(--text-secondary); line-height: 1.3; text-align: center; white-space: normal; width: 100%; word-break: keep-all;">${sem.name.replace('Level', 'Lvl')}</span>
+                            </div>
                         </div>
                     `;
                 }).join('');
@@ -3681,19 +3793,43 @@
                 }
 
                 // Semester Breakdown
-                const breakdownHTML = relevantSemesters.map(sem => {
+                const breakdownHTML = [...relevantSemesters].reverse().map(sem => {
                     const semGPA = sem.gpa || parseFloat(calculateSemesterGPA(sem.courses || []));
                     const credits = sem.totalUnits || sem.courses?.reduce((sum, c) => sum + (c.unitHours || 0), 0) || 0;
                     const courseCount = sem.courses?.length || 0;
+
+                    // Determine badge color based on GPA
+                    const classification = getDegreeClassification(semGPA);
+                    const badgeColor = classification.color;
+
+                    // Special styling for First Class
+                    let badgeStyle = `background: ${badgeColor}22; color: ${badgeColor}; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; border: 1px solid ${badgeColor}44;`;
+
+                    if (classification.isFirstClass) {
+                        badgeStyle = `
+                            background: linear-gradient(135deg, ${badgeColor}33, ${badgeColor}11); 
+                            color: ${badgeColor}; 
+                            padding: 6px 12px; 
+                            border-radius: 20px; 
+                            font-weight: 800; 
+                            font-size: 14px; 
+                            border: 1px solid ${badgeColor}66; 
+                            box-shadow: 0 0 10px ${badgeColor}33; 
+                            text-shadow: 0 0 5px ${badgeColor}66;
+                        `;
+                    }
+
                     return `
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #333; cursor: pointer;" onclick="viewSemester('${sem.id}')">
-                            <div>
-                                <div style="font-weight: bold;">${sem.name}</div>
-                                <div style="font-size: 12px; color: #999; margin-top: 4px;">${courseCount} courses • ${credits} credits</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; margin-bottom: 12px; background: rgba(255,255,255,0.05); border-radius: 12px; cursor: pointer; transition: background 0.2s;" onclick="viewSemester('${sem.id}')" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                            <div style="margin-left: 4px; text-align: left;">
+                                <div style="font-weight: bold; font-size: 16px; margin-bottom: 4px; text-align: left;">${sem.name}</div>
+                                <div style="font-size: 13px; color: #999; text-align: left;">${courseCount} courses • ${credits} credits</div>
                             </div>
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <span style="font-size: 20px; font-weight: bold; color: #667eea;">${semGPA.toFixed(2)}</span>
-                                <ion-icon name="chevron-forward" style="color: #999;"></ion-icon>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="${badgeStyle}">
+                                    ${semGPA.toFixed(2)}
+                                </div>
+                                <ion-icon name="chevron-forward" style="color: #666; font-size: 20px;"></ion-icon>
                             </div>
                         </div>
                     `;
@@ -5988,6 +6124,90 @@
 
                 <button class="btn btn-primary" onclick="uploadResource()"
                     style="width: 100%; margin-top: 10px;">Upload</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Settings Screen -->
+    <div id="settings-screen" class="screen hidden">
+        <div class="header" style="display: flex; align-items: center;">
+            <button onclick="backToDashboard()"
+                style="background:none;border:none;color:white;font-size:24px;cursor:pointer;">←</button>
+            <h2 style="margin: 0; margin-left:10px;">Settings</h2>
+        </div>
+
+        <div class="content-container" style="padding: 20px; max-width: 800px; margin: 0 auto; padding-bottom: 80px;">
+
+            <!-- Grading System Section -->
+            <div class="card"
+                style="margin-bottom: 24px; background: var(--card-bg); padding: 16px; border-radius: 12px;">
+                <h3 style="margin-bottom: 16px;">Grading System</h3>
+                <div style="margin-bottom: 16px;">
+                    <label>System Type:</label>
+                    <select id="grading-system-select" onchange="toggleCustomGradingUI()"
+                        style="width: 100%; padding: 8px; margin-top: 8px; background: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 8px;">
+                        <option value="babcock">Babcock (5.0, A=80)</option>
+                        <option value="nigerian">Nigerian (5.0, A=70)</option>
+                        <option value="us">US (4.0, A=90)</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+
+                <div id="custom-grading-ui" class="hidden">
+                    <h4>Custom Grades</h4>
+                    <p style="font-size: 12px; color: var(--text-secondary);">Define grades logic. Rows should be
+                        ordered by Min Score descending (e.g. 80, then 60...).</p>
+                    <div id="custom-grades-table" style="margin-top: 10px;">
+                        <!-- Rows added dynamically -->
+                    </div>
+                    <button class="btn btn-secondary" onclick="addCustomGradeRow()" style="margin-top: 10px;">+ Add
+                        Grade Row</button>
+                </div>
+            </div>
+
+            <!-- CA System Section -->
+            <div class="card"
+                style="margin-bottom: 24px; background: var(--card-bg); padding: 16px; border-radius: 12px;">
+                <h3 style="margin-bottom: 16px;">CA System</h3>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Configure how Continuous
+                    Assessment is calculated.</p>
+
+                <div style="margin-bottom: 16px;">
+                    <label>System Type:</label>
+                    <select id="ca-system-select" onchange="toggleCustomCAUI()"
+                        style="width: 100%; padding: 8px; margin-top: 8px; background: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 8px;">
+                        <option value="standard">Standard (Mid, Assignment, Quiz, Attendance)</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+
+                <div id="custom-ca-ui" class="hidden">
+                    <h4>Custom CA Fields</h4>
+                    <p style="font-size: 12px; color: var(--text-secondary);">Define fields and their max
+                        percentage/score.</p>
+                    <div id="custom-ca-table" style="margin-top: 10px;">
+                        <!-- Rows added dynamically -->
+                    </div>
+                    <button class="btn btn-secondary" onclick="addCustomCARow()" style="margin-top: 10px;">+ Add
+                        Field</button>
+
+                    <div style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 10px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Total CA:</span>
+                            <span id="custom-ca-total">0%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Exam:</span>
+                            <span id="custom-exam-total">100%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-direction: column;">
+                <button class="btn btn-primary" onclick="saveSettings()" style="width: 100%;">Save Settings</button>
+                <button class="btn btn-danger" onclick="confirmLogout()" style="width: 100%;">Logout</button>
             </div>
         </div>
     </div>
