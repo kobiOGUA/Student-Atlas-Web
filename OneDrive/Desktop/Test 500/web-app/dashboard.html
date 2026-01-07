@@ -687,35 +687,6 @@
             font-size: 14px;
             margin-top: 16px;
         }
-
-        /* Pull to Refresh */
-        #ptr-container {
-            position: fixed;
-            top: -60px;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-            transition: top 0.2s;
-        }
-
-        .ptr-spinner {
-            width: 24px;
-            height: 24px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
     </style>
     <script>
         // Load theme immediately
@@ -725,85 +696,6 @@
 </head>
 
 <body>
-    <!-- Pull to Refresh Spinner -->
-    <div id="ptr-container">
-        <div class="ptr-spinner"></div>
-    </div>
-
-    <script>
-        (function () {
-            // Disable native overscroll refresh to use custom one
-            document.body.style.overscrollBehaviorY = 'contain';
-
-            let startY = 0;
-            let currentY = 0;
-            let isPulling = false;
-            const ptr = document.getElementById('ptr-container');
-            const threshold = 80; // Pull distance required
-
-            // Ensure spinner is hidden on page load
-            if (ptr) {
-                ptr.style.transition = 'none';
-                ptr.style.top = '-60px';
-                setTimeout(() => {
-                    if (ptr) ptr.style.transition = 'top 0.3s';
-                }, 50);
-            }
-
-            window.addEventListener('touchstart', (e) => {
-                // Disable PTR if any modal is open to prevent accidental reloads
-                if (document.querySelector('.modal.show')) return;
-
-                if (window.scrollY <= 10) { // Near top
-                    startY = e.touches[0].clientY;
-                    isPulling = true;
-                } else {
-                    isPulling = false;
-                }
-            }, { passive: true });
-
-            window.addEventListener('touchmove', (e) => {
-                if (!isPulling) return;
-                currentY = e.touches[0].clientY;
-                let delta = currentY - startY;
-
-                if (delta > 0 && window.scrollY <= 0) {
-                    // Add resistance (pull feels heavier)
-                    let pull = Math.min(delta * 0.5, 100);
-
-                    // Move spinner down
-                    ptr.style.top = (pull - 60) + 'px'; // -60 is starting hidden position
-
-                    // Rotate spinner visually based on pull
-                    const spinner = ptr.querySelector('.ptr-spinner');
-                    spinner.style.transform = `rotate(${delta * 4}deg)`;
-                }
-            }, { passive: true });
-
-            window.addEventListener('touchend', (e) => {
-                if (!isPulling) return;
-                let delta = currentY - startY;
-
-                if (delta > threshold && window.scrollY <= 0) {
-                    // Trigger Refresh
-                    ptr.style.top = '30px'; // Lock spinner in view
-                    ptr.style.transition = 'top 0.3s';
-
-                    setTimeout(() => {
-                        // Save current screen to restore after reload
-                        sessionStorage.setItem('ptr_active_screen', currentActiveScreen);
-                        // Reload page
-                        window.location.reload();
-                    }, 500); // Small delay to show spinner
-                } else {
-                    // Reset
-                    ptr.style.transition = 'top 0.3s';
-                    ptr.style.top = '-60px';
-                }
-                isPulling = false;
-            });
-        })();
-    </script>
     <div id="app">
         <div id="loading-overlay" class="loading hidden">
             <div class="spinner"></div>
@@ -6211,19 +6103,8 @@
             const email = localStorage.getItem('kobi_atlas_email');
 
             if (uid && email) {
-                // Check if we need to restore a screen after pull-to-refresh
-                const savedScreen = sessionStorage.getItem('ptr_active_screen');
-                if (savedScreen) {
-                    sessionStorage.removeItem('ptr_active_screen');
-                    // Load dashboard first, then switch to saved screen
-                    loadDashboard();
-                    setTimeout(() => {
-                        showScreen(savedScreen);
-                    }, 100);
-                } else {
-                    // User is logged in, load dashboard normally
-                    loadDashboard();
-                }
+                // User is logged in, load dashboard
+                loadDashboard();
             } else {
                 // Not logged in, redirect to login page
                 window.location.href = 'index.html';
