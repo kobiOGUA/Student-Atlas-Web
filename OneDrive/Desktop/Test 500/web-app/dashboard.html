@@ -210,14 +210,19 @@
             border-top: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
-            /* Spread them out */
             padding: 8px 0;
             padding-left: 10%;
-            /* 10% space left */
+            /* Desktop: 80% width */
             padding-right: 10%;
-            /* 10% space right = 80% content width */
             z-index: 1000;
             padding-bottom: max(8px, env(safe-area-inset-bottom));
+        }
+
+        @media (max-width: 768px) {
+            .bottom-nav {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
         }
 
         .nav-item {

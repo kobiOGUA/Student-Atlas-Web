@@ -102,11 +102,31 @@ function MainTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarStyle: { backgroundColor: theme.surface },
+        tabBarStyle: {
+          backgroundColor: theme.surface,
+          borderTopWidth: 1,
+          borderTopColor: 'rgba(255,255,255,0.1)',
+          ...(Platform.OS === 'web' ? {
+            paddingHorizontal: '10%', // Center 80% layout
+            height: 65,
+            paddingBottom: 10,
+            paddingTop: 10,
+          } : {
+            height: Platform.OS === 'ios' ? 88 : 60,
+            paddingBottom: Platform.OS === 'ios' ? 28 : 8,
+            paddingTop: 8,
+          })
+        },
         tabBarActiveTintColor: theme.primary,
         tabBarInactiveTintColor: theme.textSecondary,
         headerStyle: { backgroundColor: theme.primary },
         headerTintColor: '#FFFFFF',
+        tabBarLabelStyle: {
+          fontSize: 11,
+          marginTop: -4,
+          marginBottom: 4,
+          fontWeight: '600',
+        },
       }}
     >
       <Tab.Screen
