@@ -781,14 +781,10 @@
                     ptr.style.transition = 'top 0.3s';
 
                     setTimeout(() => {
-                        // Refresh current screen instead of full reload
-                        refreshCurrentScreen();
-
-                        // Hide spinner after refresh
-                        setTimeout(() => {
-                            ptr.style.transition = 'top 0.3s';
-                            ptr.style.top = '-60px';
-                        }, 300);
+                        // Save current screen to restore after reload
+                        sessionStorage.setItem('ptr_active_screen', currentActiveScreen);
+                        // Reload page
+                        window.location.reload();
                     }, 500); // Small delay to show spinner
                 } else {
                     // Reset
@@ -797,32 +793,6 @@
                 }
                 isPulling = false;
             });
-
-            // Function to refresh the current active screen
-            function refreshCurrentScreen() {
-                try {
-                    switch (currentActiveScreen) {
-                        case 'dashboard':
-                            if (typeof loadDashboard === 'function') loadDashboard();
-                            break;
-                        case 'planner':
-                            if (typeof loadPlanner === 'function') loadPlanner();
-                            break;
-                        case 'gpa':
-                            if (typeof loadGPA === 'function') loadGPA();
-                            break;
-                        case 'community':
-                            if (typeof loadCommunityFeed === 'function') loadCommunityFeed();
-                            break;
-                        default:
-                            // Fallback to page reload if screen not recognized
-                            window.location.reload();
-                    }
-                } catch (error) {
-                    console.error('Error refreshing screen:', error);
-                    showToast('Refresh failed', 'error');
-                }
-            }
         })();
     </script>
     <div id="app">
@@ -6232,8 +6202,19 @@
             const email = localStorage.getItem('kobi_atlas_email');
 
             if (uid && email) {
-                // User is logged in, load dashboard
-                loadDashboard();
+                // Check if we need to restore a screen after pull-to-refresh
+                const savedScreen = sessionStorage.getItem('ptr_active_screen');
+                if (savedScreen) {
+                    sessionStorage.removeItem('ptr_active_screen');
+                    // Load dashboard first, then switch to saved screen
+                    loadDashboard();
+                    setTimeout(() => {
+                        showScreen(savedScreen);
+                    }, 100);
+                } else {
+                    // User is logged in, load dashboard normally
+                    loadDashboard();
+                }
             } else {
                 // Not logged in, redirect to login page
                 window.location.href = 'index.html';
