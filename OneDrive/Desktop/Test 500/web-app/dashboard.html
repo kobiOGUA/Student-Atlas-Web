@@ -2825,9 +2825,9 @@
                                 <div style="font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${res.fileName || 'Document'}</div>
                                 <div style="font-size: 12px; color: #999;">${res.fileSize || 'File'}</div>
                             </div>
-                            <a href="${res.fileData}" target="_blank" style="color: var(--primary-color); margin-right: 12px;" title="View">
+                            <button onclick="previewFile('${res.fileData}', '${res.fileName}')" style="background: none; border: none; color: var(--primary-color); margin-right: 12px; cursor: pointer;" title="View">
                                 <ion-icon name="eye-outline" style="font-size: 24px;"></ion-icon>
-                            </a>
+                            </button>
                             <a href="${res.fileData}" download="${res.fileName || 'download'}" style="color: var(--primary-color);" title="Download">
                                 <ion-icon name="download-outline" style="font-size: 24px;"></ion-icon>
                             </a>
@@ -3064,6 +3064,37 @@
                 showToast('Failed to delete resource', 'error');
             } finally {
                 showLoading(false);
+            }
+        };
+
+        window.previewFile = function (fileData, fileName) {
+            // Check if it's a PDF
+            if (fileName && fileName.toLowerCase().endsWith('.pdf')) {
+                // Open PDF in new window
+                const pdfWindow = window.open('', '_blank');
+                if (pdfWindow) {
+                    pdfWindow.document.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>${fileName}</title>
+                            <style>
+                                body { margin: 0; padding: 0; }
+                                iframe { width: 100vw; height: 100vh; border: none; }
+                            </style>
+                        </head>
+                        <body>
+                            <iframe src="${fileData}"></iframe>
+                        </body>
+                        </html>
+                    `);
+                    pdfWindow.document.close();
+                } else {
+                    showToast('Please allow popups to preview files', 'error');
+                }
+            } else {
+                // For other files, try to open in new tab
+                window.open(fileData, '_blank');
             }
         };
 
