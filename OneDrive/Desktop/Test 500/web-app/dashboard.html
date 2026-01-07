@@ -742,8 +742,13 @@
             const threshold = 80; // Pull distance required
 
             // Ensure spinner is hidden on page load
-            ptr.style.top = '-60px';
-            ptr.style.transition = 'none';
+            if (ptr) {
+                ptr.style.transition = 'none';
+                ptr.style.top = '-60px';
+                setTimeout(() => {
+                    if (ptr) ptr.style.transition = 'top 0.3s';
+                }, 50);
+            }
 
             window.addEventListener('touchstart', (e) => {
                 // Disable PTR if any modal is open to prevent accidental reloads
