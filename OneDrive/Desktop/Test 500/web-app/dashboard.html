@@ -776,12 +776,19 @@
                 let delta = currentY - startY;
 
                 if (delta > threshold && window.scrollY <= 0) {
-                    // Trigger Reload
+                    // Trigger Refresh
                     ptr.style.top = '30px'; // Lock spinner in view
                     ptr.style.transition = 'top 0.3s';
 
                     setTimeout(() => {
-                        window.location.reload();
+                        // Refresh current screen instead of full reload
+                        refreshCurrentScreen();
+
+                        // Hide spinner after refresh
+                        setTimeout(() => {
+                            ptr.style.transition = 'top 0.3s';
+                            ptr.style.top = '-60px';
+                        }, 300);
                     }, 500); // Small delay to show spinner
                 } else {
                     // Reset
@@ -790,6 +797,32 @@
                 }
                 isPulling = false;
             });
+
+            // Function to refresh the current active screen
+            function refreshCurrentScreen() {
+                try {
+                    switch (currentActiveScreen) {
+                        case 'dashboard':
+                            if (typeof loadDashboard === 'function') loadDashboard();
+                            break;
+                        case 'planner':
+                            if (typeof loadPlanner === 'function') loadPlanner();
+                            break;
+                        case 'gpa':
+                            if (typeof loadGPA === 'function') loadGPA();
+                            break;
+                        case 'community':
+                            if (typeof loadCommunityFeed === 'function') loadCommunityFeed();
+                            break;
+                        default:
+                            // Fallback to page reload if screen not recognized
+                            window.location.reload();
+                    }
+                } catch (error) {
+                    console.error('Error refreshing screen:', error);
+                    showToast('Refresh failed', 'error');
+                }
+            }
         })();
     </script>
     <div id="app">
@@ -1660,7 +1693,12 @@
             setTimeout(() => toast.remove(), 3000);
         }
 
+        let currentActiveScreen = 'dashboard'; // Track active screen for pull-to-refresh
+
         window.showScreen = function (screenId) {
+            // Track current screen
+            currentActiveScreen = screenId;
+
             // Hide all screens
             document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
 
