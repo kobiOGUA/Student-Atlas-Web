@@ -312,6 +312,11 @@
             align-items: center;
         }
 
+        /* Fix for Messages Modal on Mobile (Push down to avoid notch) */
+        #messages-modal .modal-header {
+            padding-top: max(16px, env(safe-area-inset-top) + 20px);
+        }
+
         .close-btn {
             background: none;
             border: none;
@@ -737,6 +742,9 @@
             const threshold = 80; // Pull distance required
 
             window.addEventListener('touchstart', (e) => {
+                // Disable PTR if any modal is open to prevent accidental reloads
+                if (document.querySelector('.modal.show')) return;
+
                 if (window.scrollY <= 10) { // Near top
                     startY = e.touches[0].clientY;
                     isPulling = true;

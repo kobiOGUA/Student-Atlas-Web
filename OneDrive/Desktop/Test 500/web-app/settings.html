@@ -803,11 +803,14 @@
                         event.preventDefault();
                         event.stopPropagation();
                     }
-                    alert('DEBUG: Finish Setup button clicked');
+                    // alert removed
                     const success = await window.performSaveSettings(); // Calls the unified save
                     if (success) {
                         localStorage.setItem('kobi_atlas_setup_done', 'true');
-                        window.location.href = 'dashboard.html';
+                        // Wait for toast to be visible before redirect
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1500);
                     }
                 };
                 content.appendChild(continueBtn);
