@@ -1,0 +1,128 @@
+create  me an app with the following specifications: the firebase is as follows: To make the google-services.json config values accessible to Firebase SDKs, you need the Google services Gradle plugin.
+
+
+Kotlin DSL (build.gradle.kts)
+
+Groovy (build.gradle)
+Add the plugin as a dependency to your project-level build.gradle.kts file:
+
+Root-level (project-level) Gradle file (<project>/build.gradle.kts):
+plugins {
+  // ...
+
+  // Add the dependency for the Google services Gradle plugin
+  id("com.google.gms.google-services") version "4.4.4" apply false
+
+}
+Then, in your module (app-level) build.gradle.kts file, add both the google-services plugin and any Firebase SDKs that you want to use in your app:
+
+Module (app-level) Gradle file (<project>/<app-module>/build.gradle.kts):
+plugins {
+  id("com.android.application")
+
+  // Add the Google services Gradle plugin
+  id("com.google.gms.google-services")
+
+  ...
+}
+
+dependencies {
+  // Import the Firebase BoM
+  implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+
+
+  // TODO: Add the dependencies for Firebase products you want to use
+  // When using the BoM, don't specify versions in Firebase dependencies
+  implementation("com.google.firebase:firebase-analytics")
+
+
+  // Add the dependencies for any other desired Firebase products
+  // https://firebase.google.com/docs/android/setup#available-libraries
+}
+By using the Firebase Android BoM, your app will always use compatible Firebase library versions. Learn more
+After adding the plugin and the desired SDKs, sync your Android project with Gradle files., then make it so that the user doesn't have to log in everytime thy open the app. if the user legs in, they stay logged in until they log out despite the app being closed.  this is my student atlas app. I want to add improvements such that courses are grouped by semesters whereby semesters are like folders. then when you create a semester you're asked if it's a past or present semester. if it's a past semester, you'll be asked to enter all the courses from that semester and the unit hours of the course then what you scored in the course. the grade will be calculated automatically using the system we have already. then from all that, the semester gpa is calculated and displayed. all gpas are on a 5 point scale. for present semesters, you're asked to enter courses for the semester then that's where you can do the normal app functions but remember to also ask for the units of each course. then from the CA calculations and certainty predictions, we can go ahead and add a predicted gpa. there should be a gpa section in the app where you can display the current cgpa and also the predicted cgpa after the current semester then also all semester gpas. also in a current semester, there can be an option to add final score out of 100. this is assuming the student has seen their result. when this is done for each course, then the semester becomes a past semester. there can only be one current semester at a time. then also student should be able to edit all semesters and delete them also. for viewing modes, there should be the default, dark, blue, light pink, and light. additionally, add any features you think would enhance the app even more and make it perfect. Also make it so that the default grading and gpa system is Babcock University. mention that other systems will come in future updates. make sure the app is beautifully animated and attractive. Achievements & Badges:
+
+Completing a semester
+
+Achieving GPA milestones
+
+Catching all tokens in the mini-game
+
+Progress Streaks:
+
+Track how many days the student logged CA scores or reviewed grades
+
+3. Study Planning & Productivity
+
+To-Do / Study Planner (optional for future updates):
+
+Daily study tasks based on current semester courses
+
+Assign time blocks for assignments, revisions, and exams
+
+Reminders & Notifications:
+
+Alert students about CA deadlines, assignments, or exams
+
+Encouragement messages when GPA improves
+
+4. Data & Analytics
+
+Performance Analysis:
+
+Highlight “priority courses” where scores are low
+
+Show trends of past semester performance
+
+Course Analytics:
+
+Average scores per course over multiple semesters
+
+Compare predicted vs actual GPA for past semesters
+
+Export / Backup:
+
+Export semester data, GPA summary, or mini-game scores in JSON or PDF
+
+5. UI & UX Enhancements
+
+Themes & Customization:
+
+Dark, blue, light, light pink, default
+
+Possibly allow custom accent colors in the future
+
+Responsive Layouts:
+
+Mobile-first with easy navigation
+
+Animations & Feedback:
+
+Progress bars, achievement confetti, simple animations in mini-games
+
+6. Social / Sharing Features
+
+Leaderboard for Tracking.
+
+Friending system (you can add and search for friends as well as see their achievements and daily streak)
+
+Share GPA or achievement milestones with friends
+
+Study groups: small feature to track courses together
+
+7. Convenience & Advanced Features
+
+Offline Support:
+
+Store semester/course data locally with sync to Firebase when online
+
+Search & Filter Courses:
+
+Search by course name/code, filter by semester
+
+Edit & Delete Everything:
+
+Full CRUD for semesters and courses
+
+Profile Section:
+

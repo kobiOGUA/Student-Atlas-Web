@@ -1,0 +1,32 @@
+Summary of changes between commit 1e24e49b (Jan 11) and dd434c17 (Jan 14):
+
+FILE: web-app/dashboard.html
+
+1. ARCHITECTURE CHANGE: Switched from ES6 Modules to Firebase Compat API
+   - Removed `type="module"` from the main script tag to allow global scope access (fixing `onclick` handlers).
+   - Replaced ES6 `import` statements with Firebase Compat CDN scripts:
+     - firebase-app-compat.js
+     - firebase-auth-compat.js
+     - firebase-firestore-compat.js
+   - Updated Firebase initialization to use `firebase.initializeApp` and `firebase.firestore()`.
+
+2. COMPATIBILITY LAYER
+   - Created wrapper functions (`collection`, `doc`, `getDocs`, `query`, `where`, etc.) to allow existing Modular API code to run on top of the Compat API without rewriting all logic.
+
+3. SYNTAX FIXES for COMPAT API
+   - Changed all 11 instances of `snapshot.exists()` (function) to `snapshot.exists` (property), as required by the Compat API.
+     - Locations included: loadCommunityFeed, initial load checks, friend request logic, and user searches.
+
+4. NEW FUNCTIONS ADDED
+   - Added `window.loadDashboard()`:
+     - Fetches semester data from Firestore.
+     - Calculates CGPA from 'past' semesters.
+     - Populates the "Academic Overview" grids (Current, Pending, Past) using correct DOM IDs.
+   - Added `window.loadGPAView()`:
+     - Calculates and displays Cumulative GPA.
+   - Modified `loadCommunityFeed()` to be globally accessible (`window.loadCommunityFeed = ...`).
+
+5. BUG FIXES
+   - Fixed `ReferenceError: loadSchedule is not defined` by removing premature lines trying to assign functions before they were defined.
+   - Fixed `ReferenceError: Cannot access 'allPosts'` by correcting function scope and ordering.
+   - Fixed "Refresh" buttons not working by ensuring all load functions are attached to the global `window` object.
