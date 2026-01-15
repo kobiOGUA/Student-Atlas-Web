@@ -976,7 +976,7 @@
 
             <!-- Grade Distribution -->
             <div id="grade-distribution" class="stat-card" style="margin-bottom: 20px;">
-                <h3 style="margin-bottom: 16px;">Grade Distribution (Graded Courses)</h3>
+                <h3 id="grade-distribution-title" style="margin-bottom: 16px;">Grade Distribution (Graded Courses)</h3>
                 <div id="distribution-content"></div>
             </div>
 
@@ -5097,16 +5097,28 @@
                     document.getElementById('worst-semester').innerHTML = `Lowest Semester: <strong>${worst.name}</strong> (${worst.gpa.toFixed(2)})`;
                 }
 
-                // Grade Distribution (only for past semesters with grades)
+                // Grade Distribution
                 const distribution = {};
-                semesters.filter(s => s.type === 'past').forEach(sem => {
+                relevantSemesters.forEach(sem => {
                     sem.courses?.forEach(course => {
-                        const grade = course.grade || course.predictedGrade;
-                        if (grade) {
+                        // Use grade if available (past), otherwise predicted/target (current)
+                        let rawGrade = course.grade || course.predictedGrade || course.targetGrade;
+
+                        if (rawGrade) {
+                            const grade = rawGrade.toString().trim().toUpperCase();
                             distribution[grade] = (distribution[grade] || 0) + 1;
                         }
                     });
                 });
+
+                // Update distribution title
+                const distTitle = document.getElementById('grade-distribution-title');
+                if (distTitle) {
+                    distTitle.textContent = currentGPATab === 'current'
+                        ? 'Grade Distribution (Graded Courses)'
+                        : 'Grade Distribution (Predicted)';
+                }
+
 
                 const total = Object.values(distribution).reduce((a, b) => a + b, 0);
                 if (total > 0) {
@@ -7080,9 +7092,9 @@
 
                 // Build Modal HTML
                 let html = `
-                < h3 style = "margin-bottom: 15px;" > Complete Semester: ${currentSemester.name}</h3 >
+                <h3 style="margin-bottom: 15px;">Complete Semester: ${currentSemester.name}</h3>
                     
-                    < !--Input Mode Toggle-- >
+                    <!--Input Mode Toggle-->
                     <div style="display: flex; gap: 10px; margin-bottom: 20px; background: #2a2a2a; border-radius: 8px; padding: 4px;">
                         <button type="button" id="score-mode-btn" class="btn btn-primary" onclick="setEndSemesterInputMode('score')" style="flex: 1; padding: 8px; font-size: 12px;">Enter Scores</button>
                         <button type="button" id="grade-mode-btn" class="btn btn-secondary" onclick="setEndSemesterInputMode('grade')" style="flex: 1; padding: 8px; font-size: 12px;">Enter Grades</button>
@@ -7187,7 +7199,7 @@
             selectedGrades[courseId] = grade;
 
             // Update button styles
-            const buttons = document.querySelectorAll(`[data - course - id= "${courseId}"]`);
+            const buttons = document.querySelectorAll(`[data-course-id="${courseId}"]`);
             buttons.forEach(btn => {
                 if (btn.dataset.grade === grade) {
                     btn.style.background = '#667eea';
