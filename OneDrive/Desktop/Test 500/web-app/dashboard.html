@@ -3962,9 +3962,12 @@
                 const formData = new FormData();
                 formData.append('fileToUpload', file);
 
-                // Use Vercel API endpoint (relative path works in production)
-                // For local dev, this requires running 'vercel dev' or a proxy setup.
-                const response = await fetch('/api/upload', {
+                // Determine API URL based on environment
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                // If local, assume our node proxy is running on 3000. If prod, use relative path.
+                const apiUrl = isLocalhost ? 'http://localhost:3000/api/upload' : '/api/upload';
+
+                const response = await fetch(apiUrl, {
                     method: 'POST',
                     body: formData
                 });
