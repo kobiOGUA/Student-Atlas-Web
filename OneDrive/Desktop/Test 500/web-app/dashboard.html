@@ -3962,8 +3962,9 @@
                 const formData = new FormData();
                 formData.append('fileToUpload', file);
 
-                // Use the running local-upload-server
-                const response = await fetch('http://localhost:3000/api/upload', {
+                // Use Vercel API endpoint (relative path works in production)
+                // For local dev, this requires running 'vercel dev' or a proxy setup.
+                const response = await fetch('/api/upload', {
                     method: 'POST',
                     body: formData
                 });
