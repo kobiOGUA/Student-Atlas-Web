@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kobi's Student Atlas - Complete</title>
+
+    <!-- CryptoJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .screen {
+            padding: 20px;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            margin: -20px -20px 20px -20px;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: #2a2a2a;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title {
+            font-size: 18px;
+            margin: 24px 0 12px 0;
+            color: #fff;
+        }
+
+        .semester-card {
+            background: #2a2a2a;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .semester-card:hover {
+            transform: translateY(-2px);
+            border-color: #667eea;
+        }
+
+        .semester-card.pending {
+            border-color: #00d4ff;
+        }
+
+        .semester-card.current {
+            border-color: #667eea;
+        }
+
+        .semester-card.past {
+            border-color: #4a4a4a;
+        }
+
+        .course-card {
+            background: #2a2a2a;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .course-card:hover {
+            background: #333;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            z-index: 100;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
+            margin: -24px -24px 20px -24px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 16px;
+            background: #2a2a2a;
+            color: #fff;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #2a2a2a;
+            color: white;
+            border: 1px solid #444;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: #2a2a2a;
+            color: #999;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .ca-score-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .ca-score-input {
+            width: 80px;
+            text-align: right;
+            margin: 0;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            border-top: 1px solid #333;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px;
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: #667eea;
+        }
+
+        .nav-item ion-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2a2a2a;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+        }
+
+        .toast.error {
+            background: #dc3545;
+        }
+
+        .toast.success {
+            background: #28a745;
+        }
+
+        .badge {
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .badge.pending {
+            background: #00d4ff;
+        }
+
+        .badge.current {
+            background: #667eea;
+        }
+
+        .badge.past {
+            background: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- Login Screen (simplified for brevity) -->
+        <div id="login-screen" class="hidden"></div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboard-screen" class="screen">
+            <div class="header">
+                <h2 style="margin: 0;">Student Atlas</h2>
+                <p style="margin: 5px 0 0 0; opacity: 0.9;">Academic Overview</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Current CGPA</div>
+                    <div class="stat-value" id="cgpa-value">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Predicted CGPA</div>
+                    <div class="stat-value" id="predicted-cgpa">--</div>
+                </div>
+            </div>
+
+            <div id="pending-semesters"></div>
+            <div id="current-semester"></div>
+            <div id="past-semesters"></div>
+
+            <button class="fab" onclick="showAddSemesterModal()">+</button>
+        </div>
+
+        <!-- Semester Detail Screen -->
+        <div id="semester-detail-screen" class="screen hidden">
+            <div class="header">
+                <button onclick="backToDashboard()"
+                    style="background:none;border:none;color:white;font-size:24px;cursor:pointer;">←</button>
+                <h2 id="semester-detail-title" style="margin: 10px 0 0 0;"></h2>
+                <p id="semester-detail-gpa" style="margin: 5px 0 0 0; opacity: 0.9;"></p>
+            </div>
+
+            <div id="courses-list"></div>
+
+            <button class="btn btn-primary" onclick="showAddCourseModal()" style="margin-top: 20px;">+ Add
+                Course</button>
+            <button class="btn btn-danger" onclick="deleteSemester()" style="margin-top: 10px;">Delete Semester</button>
+        </div>
+
+        <!-- Course Detail Screen -->
+        <div id="course-detail-screen" class="screen hidden">
+            <div class="header">
+                <button onclick="backToSemester()"
+                    style="background:none;border:none;color:white;font-size:24px;cursor:pointer;">←</button>
+                <h2 id="course-detail-title" style="margin: 10px 0 0 0;"></h2>
+                <p id="course-detail-code" style="margin: 5px 0 0 0; opacity: 0.9;"></p>
+            </div>
+
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchTab('info')">Info</button>
+                <button class="tab-btn" onclick="switchTab('resources')">Resources</button>
+            </div>
+
+            <div id="course-info-tab">
+                <h3 style="margin-bottom: 16px;">CA Scores</h3>
+                <div class="ca-score-row">
+                    <span>Mid Semester:</span>
+                    <input type="number" id="ca-mid" class="ca-score-input" min="0" max="15"
+                        onchange="updateCAScores()">
+                </div>
+                <div class="ca-score-row">
+                    <span>Assignment:</span>
+                    <input type="number" id="ca-assignment" class="ca-score-input" min="0" max="10"
+                        onchange="updateCAScores()">
+                </div>
+                <div class="ca-score-row">
+                    <span>Quiz:</span>
+                    <input type="number" id="ca-quiz" class="ca-score-input" min="0" max="10"
+                        onchange="updateCAScores()">
+                </div>
+                <div class="ca-score-row">
+                    <span>Attendance:</span>
+                    <input type="number" id="ca-attendance" class="ca-score-input" min="0" max="5"
+                        onchange="updateCAScores()">
+                </div>
+                <div class="ca-score-row" style="border-bottom: 2px solid #667eea;">
+                    <span><strong>Total CA:</strong></span>
+                    <span id="total-ca" style="font-weight: bold; color: #667eea;">0/40</span>
+                </div>
+
+                <h3 style="margin: 24px 0 16px 0;">Exam Target</h3>
+                <div class="ca-score-row">
+                    <span>Target Grade:</span>
+                    <select id="target-grade" onchange="updateExamTarget()" style="width: 100px; margin: 0;">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                </div>
+                <div class="ca-score-row">
+                    <span>Required Exam Score:</span>
+                    <span id="required-exam" style="font-weight: bold; color: #667eea;">--/60</span>
+                </div>
+                <div class="ca-score-row">
+                    <span>Certainty:</span>
+                    <span id="certainty" style="font-weight: bold;">--</span>
+                </div>
+
+                <h3 style="margin: 24px 0 16px 0;">Course Info</h3>
+                <div class="ca-score-row">
+                    <span>Unit Hours:</span>
+                    <span id="course-units">--</span>
+                </div>
+
+                <button class="btn btn-primary" onclick="saveCourseChanges()" style="margin-top: 24px;">Save
+                    Changes</button>
+                <button class="btn btn-danger" onclick="deleteCourse()">Delete Course</button>
+            </div>
+
+            <div id="course-resources-tab" class="hidden">
+                <p style="text-align: center; color: #999; padding: 40px;">Resources feature coming soon</p>
+            </div>
+        </div>
+
+        <!-- Add Semester Modal -->
+        <div id="add-semester-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin: 0;">Add Semester</h2>
+                </div>
+
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchEntryMethod('manual')">Manual Course Entry</button>
+                    <button class="tab-btn" onclick="switchEntryMethod('quick')">Quick Add (GPA)</button>
+                </div>
+
+                <div id="manual-entry">
+                    <label>Semester Name</label>
+                    <input type="text" id="semester-name" placeholder="e.g., 200 Level 1st Semester">
+
+                    <label>Semester Type</label>
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" id="type-current"
+                            onclick="selectType('current')">Current</button>
+                        <button class="tab-btn" id="type-pending" onclick="selectType('pending')">Pending</button>
+                        <button class="tab-btn" id="type-past" onclick="selectType('past')">Past</button>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="createSemester()">Create Semester</button>
+                </div>
+
+                <div id="quick-entry" class="hidden">
+                    <label>Semester Name</label>
+                    <input type="text" id="quick-semester-name" placeholder="e.g., 100 Level 1st Semester">
+
+                    <label>GPA</label>
+                    <input type="number" id="quick-gpa" placeholder="e.g., 4.55" step="0.01" min="0" max="5">
+
+                    <label>Total Units</label>
+                    <input type="number" id="quick-units" placeholder="e.g., 24" min="0">
+
+                    <button class="btn btn-primary" onclick="createQuickSemester()">Create Semester</button>
+                </div>
+
+                <button class="btn btn-secondary" onclick="closeModal('add-semester-modal')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Add Course Modal -->
+        <div id="add-course-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="margin: 0;">Add Course</h2>
+                </div>
+
+                <label>Course Title</label>
+                <input type="text" id="course-title" placeholder="e.g., Discrete Structures">
+
+                <label>Course Code</label>
+                <input type="text" id="course-code" placeholder="e.g., CSC203">
+
+                <label>Unit Hours</label>
+                <input type="number" id="course-units" placeholder="e.g., 2" min="1" max="6">
+
+                <label>Target Grade</label>
+                <select id="course-target-grade">
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                </select>
+
+                <button class="btn btn-primary" onclick="addCourse()">Add Course</button>
+                <button class="btn btn-secondary" onclick="closeModal('add-course-modal')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-item active" onclick="showScreen('dashboard')">
+                <ion-icon name="home"></ion-icon>
+                <span style="font-size: 11px;">Home</span>
+            </button>
+            <button class="nav-item" onclick="alert('Timetable coming soon')">
+                <ion-icon name="calendar"></ion-icon>
+                <span style="font-size: 11px;">Planner</span>
+            </button>
+            <button class="nav-item" onclick="alert('GPA View coming soon')">
+                <ion-icon name="stats-chart"></ion-icon>
+                <span style="font-size: 11px;">GPA</span>
+            </button>
+            <button class="nav-item" onclick="alert('Community coming soon')">
+                <ion-icon name="people"></ion-icon>
+                <span style="font-size: 11px;">Community</span>
+            </button>
+            <button class="nav-item" onclick="showSettings()">
+                <ion-icon name="settings"></ion-icon>
+                <span style="font-size: 11px;">Settings</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <!-- Firebase & App Logic -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+        import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+        import { getFirestore, collection, query, where, getDocs, doc, setDoc, updateDoc, getDoc, deleteDoc, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBKA2julrxpRhXTdU_8l5pSH73ERAjKtO4",
+            authDomain: "kobi-s-student-atlas.firebaseapp.com",
+            projectId: "kobi-s-student-atlas",
+            storageBucket: "kobi-s-student-atlas.firebasestorage.app",
+            messagingSenderId: "955486974004",
+            appId: "1:955486974004:web:be7d825c279d2e263c5a61"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Global state
+        let currentSemester = null;
+        let currentCourse = null;
+        let selectedSemesterType = 'current';
+        let entryMethod = 'manual';
+
+        // Utility functions
+        function showLoading(show) {
+            document.getElementById('loading').classList.toggle('hidden', !show);
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function gradeToPoint(grade) {
+            const points = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, 'F': 0 };
+            return points[grade] || 0;
+        }
+
+        function calculateSemesterGPA(courses) {
+            if (!courses || courses.length === 0) return 0;
+            let totalPoints = 0;
+            let totalUnits = 0;
+
+            courses.forEach(course => {
+                const grade = course.predictedGrade || course.targetGrade;
+                if (grade) {
+                    const points = gradeToPoint(grade);
+                    const units = course.units || 0;
+                    totalPoints += points * units;
+                    totalUnits += units;
+                }
+            });
+
+            return totalUnits === 0 ? 0 : (totalPoints / totalUnits).toFixed(2);
+        }
+
+        function calculateRequiredExam(caTotal, targetGrade) {
+            const targets = { 'A': 70, 'B': 60, 'C': 50 };
+            const required = (targets[targetGrade] || 70) - caTotal;
+            return Math.max(0, Math.min(60, required));
+        }
+
+        function getCertainty(required) {
+            if (required <= 30) return 'High';
+            if (required <= 45) return 'Medium';
+            return 'Low';
+        }
+
+        // Dashboard functions
+        async function loadDashboard() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            if (!uid) {
+                alert('Please login first');
+                return;
+            }
+
+            showLoading(true);
+
+            try {
+                const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+
+                const semesters = [];
+                snapshot.forEach(doc => {
+                    semesters.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Calculate CGPAs
+                let totalPoints = 0;
+                let totalUnits = 0;
+                let predictedPoints = 0;
+                let predictedUnits = 0;
+
+                semesters.forEach(sem => {
+                    if (sem.type === 'past' && sem.gpa && sem.totalUnits) {
+                        totalPoints += sem.gpa * sem.totalUnits;
+                        totalUnits += sem.totalUnits;
+                        predictedPoints += sem.gpa * sem.totalUnits;
+                        predictedUnits += sem.totalUnits;
+                    } else if (sem.courses) {
+                        const semGPA = parseFloat(calculateSemesterGPA(sem.courses));
+                        const semUnits = sem.courses.reduce((sum, c) => sum + (c.units || 0), 0);
+                        predictedPoints += semGPA * semUnits;
+                        predictedUnits += semUnits;
+                    }
+                });
+
+                const cgpa = totalUnits > 0 ? (totalPoints / totalUnits).toFixed(2) : '0.00';
+                const predictedCGPA = predictedUnits > 0 ? (predictedPoints / predictedUnits).toFixed(2) : '0.00';
+
+                document.getElementById('cgpa-value').textContent = cgpa;
+                document.getElementById('predicted-cgpa').textContent = predictedCGPA;
+
+                // Display semesters by type
+                const pending = semesters.filter(s => s.type === 'pending');
+                const current = semesters.filter(s => s.type === 'current');
+                const past = semesters.filter(s => s.type === 'past');
+
+                displaySemesterSection('pending-semesters', 'Pending Semesters', pending, 'pending');
+                displaySemesterSection('current-semester', 'Current Semester', current, 'current');
+                displaySemesterSection('past-semesters', 'Past Semesters', past, 'past');
+
+            } catch (error) {
+                console.error('Load dashboard error:', error);
+                showToast('Error loading dashboard', 'error');
+            }
+
+            showLoading(false);
+        }
+
+        function displaySemesterSection(containerId, title, semesters, type) {
+            const container = document.getElementById(containerId);
+
+            if (semesters.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const html = `
+                <div class="section-title">${title}</div>
+                ${semesters.map(sem => {
+                const gpa = sem.gpa || calculateSemesterGPA(sem.courses || []);
+                const courseCount = sem.courses?.length || 0;
+                return `
+                        <div class="semester-card ${type}" onclick="viewSemester('${sem.id}')">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: bold; font-size: 16px;">${sem.name}</div>
+                                    <div style="font-size: 14px; color: #999; margin-top: 4px;">${courseCount} courses</div>
+                                </div>
+                                <div>
+                                    <span class="badge ${type}">${type.toUpperCase()}</span>
+                                    <div style="font-size: 20px; font-weight: bold; color: #667eea; margin-top: 8px;">
+                                        ${type === 'pending' ? 'Predicted' : 'GPA'}: ${parseFloat(gpa).toFixed(2)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            }).join('')}
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Semester detail functions
+        window.viewSemester = async function (semesterId) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                const semDoc = await getDoc(doc(db, 'users', uid, 'semesters', semesterId));
+                if (!semDoc.exists()) {
+                    showToast('Semester not found', 'error');
+                    return;
+                }
+
+                currentSemester = { id: semDoc.id, ...semDoc.data() };
+
+                document.getElementById('semester-detail-title').textContent = currentSemester.name;
+                const gpa = currentSemester.gpa || calculateSemesterGPA(currentSemester.courses || []);
+                document.getElementById('semester-detail-gpa').textContent = `GPA: ${parseFloat(gpa).toFixed(2)}`;
+
+                const courses = currentSemester.courses || [];
+                const coursesHTML = courses.length > 0 ? courses.map((course, index) => {
+                    const grade = course.predictedGrade || course.targetGrade || '--';
+                    return `
+                        <div class="course-card" onclick="viewCourse(${index})">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: bold;">${course.title}</div>
+                                    <div style="font-size: 12px; color: #999;">${course.code}</div>
+                                    <div style="font-size: 12px; color: #999; margin-top: 4px;">${course.units} units • Target: ${course.targetGrade} • Grade: ${grade}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('') : '<p style="text-align: center; color: #999; padding: 40px;">No courses yet</p>';
+
+                document.getElementById('courses-list').innerHTML = coursesHTML;
+
+                showScreen('semester-detail');
+            } catch (error) {
+                console.error('View semester error:', error);
+                showToast('Error loading semester', 'error');
+            }
+
+            showLoading(false);
+        };
+
+        // Course detail functions
+        window.viewCourse = function (courseIndex) {
+            currentCourse = { ...currentSemester.courses[courseIndex], index: courseIndex };
+
+            document.getElementById('course-detail-title').textContent = currentCourse.title;
+            document.getElementById('course-detail-code').textContent = currentCourse.code;
+
+            // Load CA scores
+            const ca = currentCourse.caScores || {};
+            document.getElementById('ca-mid').value = ca.midSemester || 0;
+            document.getElementById('ca-assignment').value = ca.assignment || 0;
+            document.getElementById('ca-quiz').value = ca.quiz || 0;
+            document.getElementById('ca-attendance').value = ca.attendance || 0;
+
+            document.getElementById('target-grade').value = currentCourse.targetGrade || 'A';
+            document.getElementById('course-units').textContent = currentCourse.units || 0;
+
+            updateCAScores();
+            showScreen('course-detail');
+        };
+
+        window.updateCAScores = function () {
+            const mid = parseInt(document.getElementById('ca-mid').value) || 0;
+            const assignment = parseInt(document.getElementById('ca-assignment').value) || 0;
+            const quiz = parseInt(document.getElementById('ca-quiz').value) || 0;
+            const attendance = parseInt(document.getElementById('ca-attendance').value) || 0;
+
+            const total = mid + assignment + quiz + attendance;
+            document.getElementById('total-ca').textContent = `${total}/40`;
+
+            updateExamTarget();
+        };
+
+        window.updateExamTarget = function () {
+            const targetGrade = document.getElementById('target-grade').value;
+            const totalCA = parseInt(document.getElementById('total-ca').textContent.split('/')[0]) || 0;
+
+            const required = calculateRequiredExam(totalCA, targetGrade);
+            const certainty = getCertainty(required);
+
+            document.getElementById('required-exam').textContent = `${required.toFixed(0)}/60`;
+            document.getElementById('certainty').textContent = certainty;
+            document.getElementById('certainty').style.color =
+                certainty === 'High' ? '#28a745' : certainty === 'Medium' ? '#ffc107' : '#dc3545';
+        };
+
+        window.saveCourseChanges = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                const caScores = {
+                    midSemester: parseInt(document.getElementById('ca-mid').value) || 0,
+                    assignment: parseInt(document.getElementById('ca-assignment').value) || 0,
+                    quiz: parseInt(document.getElementById('ca-quiz').value) || 0,
+                    attendance: parseInt(document.getElementById('ca-attendance').value) || 0
+                };
+
+                const targetGrade = document.getElementById('target-grade').value;
+
+                // Update course in semester
+                currentSemester.courses[currentCourse.index].caScores = caScores;
+                currentSemester.courses[currentCourse.index].targetGrade = targetGrade;
+
+                // Calculate predicted grade based on CA + target
+                const totalCA = Object.values(caScores).reduce((a, b) => a + b, 0);
+                const requiredExam = calculateRequiredExam(totalCA, targetGrade);
+                const predictedTotal = totalCA + Math.min(requiredExam, 60);
+
+                let predictedGrade = 'F';
+                if (predictedTotal >= 70) predictedGrade = 'A';
+                else if (predictedTotal >= 60) predictedGrade = 'B';
+                else if (predictedTotal >= 50) predictedGrade = 'C';
+                else if (predictedTotal >= 45) predictedGrade = 'D';
+                else if (predictedTotal >= 40) predictedGrade = 'E';
+
+                currentSemester.courses[currentCourse.index].predictedGrade = predictedGrade;
+
+                await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                    courses: currentSemester.courses
+                });
+
+                showToast('Course updated successfully', 'success');
+                backToSemester();
+            } catch (error) {
+                console.error('Save course error:', error);
+                showToast('Error saving course', 'error');
+            }
+
+            showLoading(false);
+        };
+
+        window.deleteCourse = async function () {
+            if (!confirm('Delete this course?')) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                currentSemester.courses.splice(currentCourse.index, 1);
+
+                await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                    courses: currentSemester.courses
+                });
+
+                showToast('Course deleted', 'success');
+                backToSemester();
+            } catch (error) {
+                console.error('Delete course error:', error);
+                showToast('Error deleting course', 'error');
+            }
+
+            showLoading(false);
+        };
+
+        // Modal functions
+        window.showAddSemesterModal = function () {
+            document.getElementById('add-semester-modal').classList.add('show');
+        };
+
+        window.showAddCourseModal = function () {
+            document.getElementById('add-course-modal').classList.add('show');
+        };
+
+        window.closeModal = function (modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        };
+
+        window.switchEntryMethod = function (method) {
+            entryMethod = method;
+            document.getElementById('manual-entry').classList.toggle('hidden', method !== 'manual');
+            document.getElementById('quick-entry').classList.toggle('hidden', method !== 'quick');
+        };
+
+        window.selectType = function (type) {
+            selectedSemesterType = type;
+            ['current', 'pending', 'past'].forEach(t => {
+                document.getElementById(`type-${t}`).classList.toggle('active', t === type);
+            });
+        };
+
+        window.createSemester = async function () {
+            const name = document.getElementById('semester-name').value.trim();
+            if (!name) {
+                showToast('Please enter semester name', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                const semRef = doc(collection(db, 'users', uid, 'semesters'));
+                await setDoc(semRef, {
+                    id: semRef.id,
+                    name,
+                    type: selectedSemesterType,
+                    courses: [],
+                    timestamp: Date.now()
+                });
+
+                showToast('Semester created!', 'success');
+                closeModal('add-semester-modal');
+                loadDashboard();
+            } catch (error) {
+                console.error('Create semester error:', error);
+                showToast('Error creating semester', 'error');
+            }
+
+            showLoading(false);
+        };
+
+        window.createQuickSemester = async function () {
+            const name = document.getElementById('quick-semester-name').value.trim();
+            const gpa = parseFloat(document.getElementById('quick-gpa').value);
+            const units = parseInt(document.getElementById('quick-units').value);
+
+            if (!name || !gpa || !units) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                const semRef = doc(collection(db, 'users', uid, 'semesters'));
+                await setDoc(semRef, {
+                    id: semRef.id,
+                    name,
+                    type: 'past',
+                    gpa,
+                    totalUnits: units,
+                    timestamp: Date.now()
+                });
+
+                showToast('Semester created!', 'success');
+                closeModal('add-semester-modal');
+                loadDashboard();
+            } catch (error) {
+                console.error('Create quick semester error:', error);
+                showToast('Error creating semester', 'error');
+            }
+
+            showLoading(false);
+        };
+
+        window.addCourse = async function () {
+            const title = document.getElementById('course-title').value.trim();
+            const code = document.getElementById('course-code').value.trim();
+            const units = parseInt(document.getElementById('course-units').value);
+            const targetGrade = document.getElementById('course-target-grade').value;
+
+            if (!title || !code || !units) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                const newCourse = {
+                    title,
+                    code,
+                    units,
+                    targetGrade,
+                    caScores: { midSemester: 0, assignment: 0, quiz: 0, attendance: 0 },
+                    predictedGrade: targetGrade
+                };
+
+                currentSemester.courses = currentSemester.courses || [];
+                currentSemester.courses.push(newCourse);
+
+                await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                    courses: currentSemester.courses
+                });
+
+                showToast('Course added!', 'success');
+                closeModal('add-course-modal');
+                viewSemester(currentSemester.id);
+            } catch (error) {
+                console.error('Add course error:', error);
+                showToast('Error adding course', 'error');
+            }
+
+            showLoading(false);
+        };
+
+        window.deleteSemester = async function () {
+            if (!confirm('Delete this semester and all its courses?')) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                await deleteDoc(doc(db, 'users', uid, 'semesters', currentSemester.id));
+                showToast('Semester deleted', 'success');
+                backToDashboard();
+            } catch (error) {
+                console.error('Delete semester error:', error);
+                showToast('Error deleting semester', 'error');
+            }
+
+            showLoading(false);
+        };
+
+        // Navigation
+        window.showScreen = function (screenName) {
+            ['dashboard-screen', 'semester-detail-screen', 'course-detail-screen'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(`${screenName}-screen`).classList.remove('hidden');
+
+            if (screenName === 'dashboard') {
+                loadDashboard();
+            }
+        };
+
+        window.backToDashboard = function () {
+            showScreen('dashboard');
+        };
+
+        window.backToSemester = function () {
+            viewSemester(currentSemester.id);
+        };
+
+        window.switchTab = function (tab) {
+            document.getElementById('course-info-tab').classList.toggle('hidden', tab !== 'info');
+            document.getElementById('course-resources-tab').classList.toggle('hidden', tab !== 'resources');
+        };
+
+        window.showSettings = function () {
+            if (confirm('Logout?')) {
+                localStorage.clear();
+                location.reload();
+            }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if logged in
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            if (uid) {
+                loadDashboard();
+            } else {
+                // For demo, auto-login
+                localStorage.setItem('kobi_atlas_uid', 'demo_user');
+                loadDashboard();
+            }
+        });
+    </script>
+</body>
+
+</html>

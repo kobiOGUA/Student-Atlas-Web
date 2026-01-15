@@ -1,0 +1,481 @@
+/* ============================================
+   KOBI'S STUDENT ATLAS - GLOBAL STYLES
+   Pure HTML/CSS/JS Web Version
+   1:1 Replica of Android App
+   ============================================ */
+
+/* ========== CSS CUSTOM PROPERTIES (THEME) ========== */
+:root {
+    /* Default Theme Colors */
+    --primary: #008080;
+    --background: #F5F5F5;
+    --card: #FFFFFF;
+    --text: #333333;
+    --text-secondary: #666666;
+    --border: #E0E0E0;
+    --surface: #FFFFFF;
+    --error: #D32F2F;
+    --success: #388E3C;
+    --warning: #FFA726;
+
+    /* Layout */
+    --header-height: 60px;
+    --bottom-nav-height: 60px;
+    --content-padding: 16px;
+
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+    --primary: #008080;
+    --background: #121212;
+    --card: #1E1E1E;
+    --text: #FFFFFF;
+    --text-secondary: #AAAAAA;
+    --border: #333333;
+    --surface: #1E1E1E;
+    --error: #CF6679;
+}
+
+/* Blue Theme */
+[data-theme="blue"] {
+    --primary: #2196F3;
+    --background: #E3F2FD;
+    --card: #FFFFFF;
+    --text: #0D47A1;
+    --text-secondary: #5472d3;
+    --border: #BBDEFB;
+}
+
+/* Light Pink Theme */
+[data-theme="lightPink"] {
+    --primary: #EC407A;
+    --background: #FCE4EC;
+    --card: #FFFFFF;
+    --text: #880E4F;
+    --text-secondary: #AD1457;
+    --border: #F8BBD0;
+}
+
+/* Light Theme */
+[data-theme="light"] {
+    --primary: #616161;
+    --background: #FFFFFF;
+    --card: #F5F5F5;
+    --text: #212121;
+    --text-secondary: #757575;
+    --border: #E0E0E0;
+    --surface: #FAFAFA;
+}
+
+/* ========== RESET & BASE STYLES ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    overflow-x: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--background);
+    color: var(--text);
+    transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+#app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#screen-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: var(--bottom-nav-height);
+}
+
+/* ========== TYPOGRAPHY ========== */
+h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+}
+
+h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text);
+}
+
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+.text-small {
+    font-size: 14px;
+}
+
+.text-tiny {
+    font-size: 12px;
+}
+
+/* ========== BUTTONS ========== */
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: all var(--transition-fast);
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    max-width: 400px;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background-color: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.btn-icon {
+    background: none;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* ========== INPUTS ========== */
+input,
+textarea {
+    font-family: inherit;
+    font-size: 16px;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background-color: var(--surface);
+    color: var(--text);
+    width: 100%;
+    transition: border-color var(--transition-fast);
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* ========== CARDS ========== */
+.card {
+    background-color: var(--card);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.card-clickable {
+    cursor: pointer;
+}
+
+.card-clickable:hover {
+    transform: translateY(-2px);
+}
+
+/* ========== IMAGES ========== */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 60px;
+}
+
+.post-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 12px 0;
+}
+
+/* ========== LOADING & OVERLAYS ========== */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ========== TOAST NOTIFICATIONS ========== */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    background-color: var(--card);
+    color: var(--text);
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+    animation: slideDown 0.3s ease;
+}
+
+.toast.error {
+    background-color: var(--error);
+    color: white;
+}
+
+.toast.success {
+    background-color: var(--success);
+    color: white;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========== UTILITY CLASSES ========== */
+.hidden {
+    display: none !important;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.gap-1 {
+    gap: 8px;
+}
+
+.gap-2 {
+    gap: 16px;
+}
+
+.mb-1 {
+    margin-bottom: 8px;
+}
+
+.mb-2 {
+    margin-bottom: 16px;
+}
+
+.mb-3 {
+    margin-bottom: 24px;
+}
+
+.mt-1 {
+    margin-top: 8px;
+}
+
+.mt-2 {
+    margin-top: 16px;
+}
+
+.mt-3 {
+    margin-top: 24px;
+}
+
+.p-1 {
+    padding: 8px;
+}
+
+.p-2 {
+    padding: 16px;
+}
+
+.p-3 {
+    padding: 24px;
+}
+
+/* ========== SCROLLBAR STYLING ========== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+}
+
+/* ========== ANIMATIONS ========== */
+.fade-in {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.slide-up {
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

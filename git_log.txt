@@ -1,0 +1,12 @@
+dd434c17 | 2026-01-14 14:43 | Fixed dashboard auto-loading: switched to Firebase compat API, fixed .exists() calls, added loadDashboard and loadGPAView functions
+1e24e49b | 2026-01-11 00:11 | Implement 4-tier resource navigation, institution filtering, level-based folder grouping, and fix HTML rendering issues
+9fbe53c2 | 2026-01-08 17:13 | Switch from Cloudinary to Catbox.moe for free public file hosting
+2b6fe105 | 2026-01-08 16:18 | Fix: Add resourceFileObject variable for Cloudinary uploads
+63c76847 | 2026-01-08 16:08 | Implement Cloudinary integration for resource file uploads
+c1ddc44c | 2026-01-07 23:24 | Fix: Add proper PDF preview functionality for resource files
+d06a73b5 | 2026-01-07 23:18 | Fix: Pass uploaderId to deleteResource function so users can delete their own resources
+01f89118 | 2026-01-07 23:15 | Remove accidental messages icon from Community header
+cf96d271 | 2026-01-07 19:38 | Fix: Auto-load data when switching to Planner, GPA, and Community screens
+2a08d063 | 2026-01-07 18:36 | Fix: Expose load functions to window and remove refresh button from Community screen
+ecc9f9b7 | 2026-01-07 18:27 | Add refresh buttons to all main screens (Dashboard, Planner, GPA, Community)
+efc08c83 | 2026-01-07 18:21 | Remove pull-to-refresh feature completely

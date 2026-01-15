@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kobi's Atlas - Ultimate QA Testing Checklist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f2f5;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px 80px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .stats-bar {
+            max-width: 900px;
+            margin: -40px auto 30px;
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .progress-circle {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(#4caf50 var(--percent), #e0e0e0 0deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-circle::before {
+            content: '';
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .progress-value {
+            position: relative;
+            font-weight: 700;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .stats-text {
+            flex: 1;
+        }
+
+        .stats-text h3 {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .stats-text p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-header {
+            padding: 20px 24px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.25em;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-icon {
+            background: #eef2ff;
+            color: #667eea;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+        }
+
+        .section-progress {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #667eea;
+            background: #eef2ff;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .checklist-items {
+            display: none;
+            padding: 8px 0;
+            background: #fcfcfc;
+        }
+
+        .section.expanded .checklist-items {
+            display: block;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px 24px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .checklist-item:hover {
+            background: #f8f9fa;
+        }
+
+        .checklist-item.checked {
+            background: #f0fff4;
+        }
+
+        .checklist-item.checked .item-text {
+            color: #2f855a;
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            margin-right: 16px;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            background: white;
+        }
+
+        .checklist-item.checked .checkbox {
+            background: #4caf50;
+            border-color: #4caf50;
+            color: white;
+        }
+
+        .checkbox:after {
+            content: '✓';
+            font-size: 16px;
+            color: white;
+            display: none;
+        }
+
+        .checklist-item.checked .checkbox:after {
+            display: block;
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .item-text {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 1em;
+            color: #2d3748;
+        }
+
+        .item-desc {
+            font-size: 0.9em;
+            color: #718096;
+            line-height: 1.5;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 0.75em;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: 500;
+        }
+
+        .tag-critical {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+
+        .tag-edge {
+            background: #fffbeb;
+            color: #d97706;
+        }
+
+        .tag-ui {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-reset {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn-expand {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 30px 20px 60px;
+            }
+
+            .stats-bar {
+                margin: -30px 15px 30px;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .section-header {
+                padding: 15px;
+            }
+
+            .checklist-item {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🚀 Ultimate QA Checklist</h1>
+        <p>Exhaustive feature verification for Kobi's Atlas (Web & Mobile)</p>
+    </div>
+
+    <div class="stats-bar">
+        <div class="progress-circle" id="progressCircle">
+            <span class="progress-value">0%</span>
+        </div>
+        <div class="stats-text">
+            <h3>Testing Progress</h3>
+            <p><span id="completedCount">0</span> of <span id="totalCount">0</span> tests passed</p>
+        </div>
+    </div>
+
+    <div class="container" id="checklist-container">
+        <!-- Sections will be injected here -->
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-expand" onclick="expandAll()">Toggle All Sections</button>
+        <button class="btn btn-reset" onclick="resetProgress()">Reset All Progress</button>
+    </div>
+
+    <script>
+        const checklistData = {
+            auth: {
+                title: "Authentication & Security",
+                icon: "🔐",
+                items: [
+                    { text: "Fresh Sign Up", desc: "Create new account with valid email/password. Verify redirect to PIN setup.", tag: "critical" },
+                    { text: "Duplicate Email", desc: "Try registering with an existing email. Verify error message.", tag: "edge" },
+                    { text: "Weak Password", desc: "Try password < 6 chars. Verify validation error.", tag: "edge" },
+                    { text: "Login Success", desc: "Login with correct credentials. Verify redirect.", tag: "critical" },
+                    { text: "Login Failure", desc: "Login with wrong password. Verify error toast.", tag: "edge" },
+                    { text: "PIN Setup", desc: "Verify new user is forced to set 4-digit PIN.", tag: "critical" },
+                    { text: "PIN Login", desc: "Refresh page (Web) or reopen app (Mobile). Verify PIN screen.", tag: "critical" },
+                    { text: "Wrong PIN", desc: "Enter incorrect PIN. Verify shake/error feedback.", tag: "edge" },
+                    { text: "Forgot PIN", desc: "Test stored email/pass fallback or reset flow if available.", tag: "edge" },
+                    { text: "Logout", desc: "Click Logout. Verify session cleared and return to Login.", tag: "critical" }
+                ]
+            },
+            dashboard: {
+                title: "Dashboard & Navigation",
+                icon: "🏠",
+                items: [
+                    { text: "Zero State", desc: "New user dashboard should show 'No semesters' empty state.", tag: "ui" },
+                    { text: "GPA Display", desc: "Verify CGPA card shows 0.00 initially.", tag: "ui" },
+                    { text: "Tab Navigation", desc: "Click all 5 tabs. Verify correct screen loads.", tag: "critical" },
+                    { text: "Active Tab State", desc: "Verify current tab icon is highlighted color.", tag: "ui" },
+                    { text: "Mobile Responsiveness", desc: "Test on phone size. Verify layout stacks correctly.", tag: "ui" }
+                ]
+            },
+            semesters: {
+                title: "Semester Management",
+                icon: "📚",
+                items: [
+                    { text: "Create Semester", desc: "Add 'Year 1 Sem 1'. Verify success.", tag: "critical" },
+                    { text: "Duplicate Semester", desc: "Try adding same name again. Verify handling.", tag: "edge" },
+                    { text: "Edit Semester", desc: "Rename semester. Verify update in list.", tag: "critical" },
+                    { text: "Delete Semester", desc: "Delete semester. Verify removal and confirmation.", tag: "critical" },
+                    { text: "End Semester (Score)", desc: "Use Score mode (0-100). Enter 85. Verify GPA calc.", tag: "critical" },
+                    { text: "End Semester (Grade)", desc: "Use Grade mode (A-F). Select 'B'. Verify GPA calc.", tag: "critical" },
+                    { text: "Invalid Score", desc: "Try entering 105 or -5. Verify validation.", tag: "edge" },
+                    { text: "Switch Input Modes", desc: "Toggle between Score/Grade in modal. Verify UI updates.", tag: "ui" }
+                ]
+            },
+            courses: {
+                title: "Course Management",
+                icon: "📖",
+                items: [
+                    { text: "Add Course", desc: "Add course with Name, Code, Units. Verify list update.", tag: "critical" },
+                    { text: "Color Picker", desc: "Select custom color. Verify badge color matches.", tag: "ui" },
+                    { text: "Zero Units", desc: "Try adding course with 0 units. Verify GPA impact (should be none).", tag: "edge" },
+                    { text: "Long Names", desc: "Enter very long course title. Verify text handling/wrapping.", tag: "ui" },
+                    { text: "Course Details", desc: "Tap course. Verify detail view opens.", tag: "critical" }
+                ]
+            },
+            planner: {
+                title: "Schedule & Planner",
+                icon: "📅",
+                items: [
+                    { text: "Add Recurring Class", desc: "Add Mon 10am class. Check next week to verify recur.", tag: "critical" },
+                    { text: "Add One-time Event", desc: "Add non-recurring event for specific date.", tag: "critical" },
+                    { text: "Conflict/Overlap", desc: "Add two events at same time. Verify visual handling.", tag: "edge" },
+                    { text: "Edit Schedule (Web)", desc: "Click Edit on Dashboard card. Change time. Verify save.", tag: "critical" },
+                    { text: "Delete Schedule (Web)", desc: "Click Delete on Dashboard card. Verify removal.", tag: "critical" },
+                    { text: "Toggle styling", desc: "Verify 'Recurring' toggle is purple gradient.", tag: "ui" },
+                    { text: "Day Selection", desc: "Verify 'Day' dropdown appears only for recurring events.", tag: "ui" }
+                ]
+            },
+            tasks: {
+                title: "Task Management",
+                icon: "✅",
+                items: [
+                    { text: "Add Task", desc: "Create task linked to course.", tag: "critical" },
+                    { text: "Date Handling", desc: "Pick future date. Verify 'Due in X days' text.", tag: "ui" },
+                    { text: "Complete Task", desc: "Check box. Verify strikethrough and 0.5 opacity.", tag: "critical" },
+                    { text: "Uncomplete Task", desc: "Uncheck box. Verify opacity restores.", tag: "ui" },
+                    { text: "Edit Disabled", desc: "Verify Edit button disabled for completed tasks.", tag: "ui" }
+                ]
+            },
+            resources: {
+                title: "Community Resources",
+                icon: "📂",
+                items: [
+                    { text: "Upload Link", desc: "Paste URL. Verify 'Open Link' button works.", tag: "critical" },
+                    { text: "Upload Image (<5MB)", desc: "Upload small jpg/png. Verify preview.", tag: "critical" },
+                    { text: "Upload Image (>5MB)", desc: "Try huge image. Verify error toast.", tag: "edge" },
+                    { text: "Upload File (<10MB)", desc: "Upload PDF/DOC. Verify icon and name.", tag: "critical" },
+                    { text: "Upload File (>10MB)", desc: "Try huge video/file. Verify error toast.", tag: "edge" },
+                    { text: "Profile Display", desc: "Verify uploader's avatar shows on resource card.", tag: "ui" },
+                    { text: "Delete Permission", desc: "Verify Delete button shows ONLY on your resources.", tag: "critical" },
+                    { text: "Empty State", desc: "Verify 'No resources' message when list empty.", tag: "ui" }
+                ]
+            },
+            community: {
+                title: "Community Feed",
+                icon: "💬",
+                items: [
+                    { text: "Post Text", desc: "Create text post. Verify appearance in feed.", tag: "critical" },
+                    { text: "Empty Post", desc: "Try posting empty string. Verify validation.", tag: "edge" },
+                    { text: "Like Post", desc: "Click heart. Verify count +1 and red color.", tag: "critical" },
+                    { text: "Unlike Post", desc: "Click red heart. Verify count -1.", tag: "critical" },
+                    { text: "Delete Post", desc: "Delete your own post. Verify removal.", tag: "critical" }
+                ]
+            },
+            settings: {
+                title: "Settings & Profile",
+                icon: "⚙️",
+                items: [
+                    { text: "Change Avocado", desc: "Upload new profile pic. Verify header update.", tag: "ui" },
+                    { text: "Update Name", desc: "Change display name. Verify community posts update.", tag: "critical" },
+                    { text: "Theme Switch", desc: "Toggle Dark Mode. Check background/text contrast.", tag: "ui" },
+                    { text: "Persist Settings", desc: "Refresh page. Verify theme/profile stays.", tag: "edge" }
+                ]
+            }
+        };
+
+        function initChecklist() {
+            const container = document.getElementById('checklist-container');
+            const savedState = JSON.parse(localStorage.getItem('kobi_qa_full_state') || '{}');
+            let totalTests = 0;
+            let completedTests = 0;
+
+            for (const [key, section] of Object.entries(checklistData)) {
+                const sectionEl = document.createElement('div');
+                sectionEl.className = 'section expanded';
+
+                const itemsHtml = section.items.map((item, index) => {
+                    totalTests++;
+                    const id = `${key}-${index}`;
+                    const isChecked = savedState[id] || false;
+                    if (isChecked) completedTests++;
+
+                    let tagHtml = '';
+                    if (item.tag === 'critical') tagHtml = '<span class="tag tag-critical">Critical</span>';
+                    if (item.tag === 'edge') tagHtml = '<span class="tag tag-edge">Edge Case</span>';
+                    if (item.tag === 'ui') tagHtml = '<span class="tag tag-ui">UI/UX</span>';
+
+                    return `
+                        <div class="checklist-item ${isChecked ? 'checked' : ''}" onclick="toggleItem('${id}', this)">
+                            <div class="checkbox"></div>
+                            <div class="item-content">
+                                <div class="item-text">${item.text} ${tagHtml}</div>
+                                <div class="item-desc">${item.desc}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                const passedCount = section.items.reduce((acc, _, idx) =>
+                    acc + (savedState[`${key}-${idx}`] ? 1 : 0), 0);
+
+                sectionEl.innerHTML = `
+                    <div class="section-header" onclick="this.parentElement.classList.toggle('expanded')">
+                        <div class="section-title">
+                            <span class="section-icon">${section.icon}</span>
+                            ${section.title}
+                        </div>
+                        <span class="section-progress">${passedCount}/${section.items.length}</span>
+                    </div>
+                    <div class="checklist-items">
+                        ${itemsHtml}
+                    </div>
+                `;
+                container.appendChild(sectionEl);
+            }
+
+            updateStats(completedTests, totalTests);
+        }
+
+        function toggleItem(id, el) {
+            el.classList.toggle('checked');
+            const savedState = JSON.parse(localStorage.getItem('kobi_qa_full_state') || '{}');
+
+            if (el.classList.contains('checked')) {
+                savedState[id] = true;
+            } else {
+                delete savedState[id];
+            }
+
+            localStorage.setItem('kobi_qa_full_state', JSON.stringify(savedState));
+
+            // Update counts (lazy reload for simplicity or calc diff)
+            const total = document.querySelectorAll('.checklist-item').length;
+            const checked = document.querySelectorAll('.checklist-item.checked').length;
+            updateStats(checked, total);
+
+            // Update section count text
+            const section = el.closest('.section');
+            const secTotal = section.querySelectorAll('.checklist-item').length;
+            const secChecked = section.querySelectorAll('.checklist-item.checked').length;
+            section.querySelector('.section-progress').textContent = `${secChecked}/${secTotal}`;
+        }
+
+        function updateStats(completed, total) {
+            const percent = Math.round((completed / total) * 100);
+            document.getElementById('progressCircle').style.setProperty('--percent', `${percent * 3.6}deg`);
+            document.querySelector('.progress-value').textContent = `${percent}%`;
+            document.getElementById('completedCount').textContent = completed;
+            document.getElementById('totalCount').textContent = total;
+        }
+
+        function expandAll() {
+            document.querySelectorAll('.section').forEach(el => el.classList.toggle('expanded'));
+        }
+
+        function resetProgress() {
+            if (confirm('Reset EVERYTHING? Logic will be lost forever!')) {
+                localStorage.removeItem('kobi_qa_full_state');
+                location.reload();
+            }
+        }
+
+        initChecklist();
+    </script>
+</body>
+
+</html>
