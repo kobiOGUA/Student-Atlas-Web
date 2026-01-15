@@ -65,7 +65,12 @@ async function parseMultipartForm(req) {
         req.on('end', () => {
             try {
                 const buffer = Buffer.concat(chunks);
-                const boundary = req.headers['content-type'].split('boundary=')[1];
+                const contentType = req.headers['content-type'];
+                if (!contentType || !contentType.includes('boundary=')) {
+                    resolve({}); // Or reject, but robust handling preferred
+                    return;
+                }
+                const boundary = contentType.split('boundary=')[1];
                 const parts = buffer.toString('binary').split(`--${boundary}`);
 
                 const file = {};
@@ -81,8 +86,11 @@ async function parseMultipartForm(req) {
 
                             const dataStart = part.indexOf('\r\n\r\n') + 4;
                             const dataEnd = part.lastIndexOf('\r\n');
-                            file.data = Buffer.from(part.substring(dataStart, dataEnd), 'binary');
-                            file.size = file.data.length;
+                            // Ensure valid buffer range
+                            if (dataStart > 3 && dataEnd > dataStart) {
+                                file.data = Buffer.from(part.substring(dataStart, dataEnd), 'binary');
+                                file.size = file.data.length;
+                            }
                         }
                     }
                 }
