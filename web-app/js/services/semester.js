@@ -47,3 +47,13 @@ export async function deleteSemester(userId, semesterId) {
         throw error;
     }
 }
+
+export async function updateSemester(userId, semesterId, data) {
+    try {
+        const semRef = doc(db, 'users', userId, 'semesters', semesterId);
+        await updateDoc(semRef, data);
+    } catch (error) {
+        console.error('Update semester error:', error);
+        throw error;
+    }
+}

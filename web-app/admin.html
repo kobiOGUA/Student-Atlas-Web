@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Admin Panel - Kobi's Atlas</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#667eea">
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <!-- Ionicons -->
+    <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <!-- Firebase Compat Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+    <!-- CryptoJS (for PIN hashing) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --card-bg: #2a2a2a;
+            --text-color: #ffffff;
+            --text-secondary: #999999;
+            --primary-color: #667eea;
+            --danger-color: #dc3545;
+            --success-color: #28a745;
+            --border-color: #444444;
+        }
+
+        /* Matches existing themes logic if extended, but defaulting to dark/premium for Admin */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            padding: 20px;
+            padding-top: calc(env(safe-area-inset-top) + 20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            z-index: 10;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .content {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: sticky;
+            top: 20px;
+            z-index: 90;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 20px;
+            padding-left: 50px;
+            background: rgba(42, 42, 42, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-color);
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: var(--card-bg);
+            box-shadow: 0 8px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        /* User List */
+        .user-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .user-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .user-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #444 0%, #222 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--text-secondary);
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-details h3 {
+            margin: 0;
+            font-size: 16px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-details p {
+            margin: 4px 0 0 0;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .admin-badge {
+            background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .action-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-delete:hover {
+            background: rgba(220, 53, 69, 0.2);
+            color: var(--danger-color);
+        }
+
+        .btn-pin:hover {
+            background: rgba(102, 126, 234, 0.2);
+            color: var(--primary-color);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 400px;
+            color: var(--text-color);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: modalSlideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal h2 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        .modal-body {
+            margin: 20px 0;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        /* Loading */
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Toast */
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+        }
+
+        .toast {
+            background: var(--card-bg);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border-left: 4px solid var(--primary-color);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <button class="back-button" onclick="window.location.href='settings.html'">
+            <ion-icon name="arrow-back" style="margin-right: 5px;"></ion-icon>
+            Back
+        </button>
+        <div class="header-title">Admin Panel</div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999;">
+        <div class="loader" style="width: 40px; height: 40px;"></div>
+        <p style="margin-top: 10px; color: var(--text-secondary);">Verifying Admin Access...</p>
+    </div>
+
+    <div class="content" id="main-content" style="display: none;">
+        <div class="search-container">
+            <ion-icon name="search" class="search-icon"></ion-icon>
+            <input type="text" class="search-input" placeholder="Search users by name, email..." id="search-input">
+        </div>
+
+        <div class="user-list" id="user-list">
+            <!-- Users will be injected here -->
+        </div>
+    </div>
+
+    <!-- Change PIN Modal -->
+    <div class="modal-overlay" id="pin-modal">
+        <div class="modal">
+            <h2>Change User PIN</h2>
+            <div class="modal-body">
+                <p style="margin-bottom: 10px; font-size: 14px; color: var(--text-secondary);">
+                    Enter new 4-digit PIN for <strong id="pin-modal-username"
+                        style="color: var(--text-color);">User</strong>
+                </p>
+                <input type="number" id="new-pin-input" placeholder="0000" maxlength="4"
+                    style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; border-radius: 8px; font-size: 24px; text-align: center; letter-spacing: 4px;">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" onclick="closeModal('pin-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmChangePIN()">Save PIN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script>
+        // --- Firebase Config ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBKA2julrxpRhXTdU_8l5pSH73ERAjKtO4",
+            authDomain: "kobi-s-student-atlas.firebaseapp.com",
+            projectId: "kobi-s-student-atlas",
+            storageBucket: "kobi-s-student-atlas.firebasestorage.app",
+            messagingSenderId: "955486974004",
+            appId: "1:955486974004:web:be7d825c279d2e263c5a61",
+            measurementId: "G-8260ESQ6PQ"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        let currentUser = null;
+        let allUsers = [];
+        let selectedUserId = null;
+
+        // --- Helpers ---
+        function showToast(msg, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            if (type === 'error') toast.style.borderLeftColor = 'var(--danger-color)';
+            if (type === 'success') toast.style.borderLeftColor = 'var(--success-color)';
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // --- Auth & Init ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            if (!uid) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                await auth.signInAnonymously();
+
+                // Verify Admin
+                const userDoc = await db.collection('users').doc(uid).get();
+                if (!userDoc.exists || !userDoc.data().isAdmin) {
+                    alert('Access Denied: You must be an admin to view this page.');
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+
+                currentUser = userDoc.data();
+                document.getElementById('loading-overlay').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+
+                loadUsers();
+
+            } catch (error) {
+                console.error('Init error:', error);
+                alert('Connection error. Please try again.');
+                window.location.href = 'settings.html';
+            }
+        });
+
+        // --- Load Users ---
+        async function loadUsers() {
+            try {
+                const snapshot = await db.collection('users').get();
+                allUsers = [];
+                snapshot.forEach(doc => {
+                    allUsers.push({ id: doc.id, ...doc.data() });
+                });
+                renderUsers(allUsers);
+            } catch (error) {
+                console.error('Error loading users:', error);
+                showToast('Failed to load users', 'error');
+            }
+        }
+
+        // --- Render Users ---
+        function renderUsers(users) {
+            const list = document.getElementById('user-list');
+            list.innerHTML = '';
+
+            if (users.length === 0) {
+                list.innerHTML = '<div class="empty-state">No users found.</div>';
+                return;
+            }
+
+            users.forEach(user => {
+                const initial = (user.displayName || user.username || user.email || '?').charAt(0).toUpperCase();
+                const isAdmin = !!user.isAdmin;
+
+                // Create Card
+                const card = document.createElement('div');
+                card.className = 'user-card';
+                card.innerHTML = `
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            ${user.profilePicture ? `<img src="${user.profilePicture}" alt="Avatar">` : initial}
+                        </div>
+                        <div class="user-details">
+                            <h3>
+                                ${user.displayName || user.username || 'Unknown'}
+                                ${isAdmin ? `
+                                    <span class="admin-badge">
+                                        <ion-icon name="shield-checkmark"></ion-icon> Admin
+                                    </span>
+                                ` : ''}
+                            </h3>
+                            <p>${user.email}</p>
+                            <p style="font-size: 10px; opacity: 0.6;">ID: ${user.id}</p>
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <button class="action-btn btn-pin" onclick="openPinModal('${user.id}', '${user.displayName || user.username}')" title="Change PIN">
+                            <ion-icon name="key-outline"></ion-icon>
+                        </button>
+                        ${!isAdmin ? `
+                        <button class="action-btn btn-delete" onclick="deleteUser('${user.id}')" title="Delete User">
+                            <ion-icon name="trash-outline"></ion-icon>
+                        </button>
+                        ` : ''}
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        // --- Search ---
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = allUsers.filter(u =>
+                (u.displayName && u.displayName.toLowerCase().includes(query)) ||
+                (u.username && u.username.toLowerCase().includes(query)) ||
+                (u.email && u.email.toLowerCase().includes(query)) ||
+                (u.id && u.id.toLowerCase().includes(query))
+            );
+            renderUsers(filtered);
+        });
+
+        // --- Actions ---
+        window.deleteUser = async function (userId) {
+            if (!confirm('Are you sure you want to PERMANENTLY delete this user? This cannot be undone.')) return;
+
+            try {
+                // Delete from users collection
+                await db.collection('users').doc(userId).delete();
+                // Delete from auth collection (locking them out)
+                await db.collection('auth').doc(userId).delete();
+                // Optionally delete settings subcollections if needed, but primary docs are enough to "kill" the account logic
+
+                showToast('User deleted successfully', 'success');
+                // Refresh list
+                allUsers = allUsers.filter(u => u.id !== userId);
+                renderUsers(allUsers);
+            } catch (error) {
+                console.error('Delete error:', error);
+                showToast('Failed to delete user: ' + error.message, 'error');
+            }
+        };
+
+        window.openPinModal = function (userId, username) {
+            selectedUserId = userId;
+            document.getElementById('pin-modal-username').textContent = username;
+            document.getElementById('new-pin-input').value = '';
+            document.getElementById('pin-modal').style.display = 'flex';
+        };
+
+        window.closeModal = function (id) {
+            document.getElementById(id).style.display = 'none';
+        };
+
+        window.confirmChangePIN = async function () {
+            const newPin = document.getElementById('new-pin-input').value;
+            if (!newPin || newPin.length !== 4) {
+                showToast('PIN must be 4 digits', 'error');
+                return;
+            }
+
+            try {
+                // We need to hash the PIN. 
+                // Using the logic from auth.js: hashPINWithSalt(pin, salt)
+                // But we don't have access to auth.js exports easily here without module mess.
+                // We'll reimplement the hashing logic since we have CryptoJS imported.
+
+                // Fetch the auth doc to get the salt
+                const authDoc = await db.collection('auth').doc(selectedUserId).get();
+                if (!authDoc.exists) {
+                    throw new Error('User auth record not found');
+                }
+
+                const authData = authDoc.data();
+                const salt = authData.salt; // Salt should exist
+
+                // Hash: SHA256(pin + salt)
+                const pinHash = CryptoJS.SHA256(newPin + salt).toString();
+
+                await db.collection('auth').doc(selectedUserId).update({
+                    pinHash: pinHash
+                });
+
+                showToast('PIN updated successfully', 'success');
+                closeModal('pin-modal');
+            } catch (error) {
+                console.error('Change PIN error:', error);
+                showToast('Failed to update PIN: ' + error.message, 'error');
+            }
+        };
+
+    </script>
+</body>
+
+</html>

@@ -35,7 +35,17 @@
                     contentHtml = `<div style="margin:8px 0;cursor:pointer" onclick="openLightbox('${res.imageData}')"><img src="${res.imageData}" style="max-width:100%;border-radius:8px;max-height:200px;object-fit:cover"></div>`;
                 } else if (res.type === 'file') {
                     const fileSource = res.fileUrl || res.fileData;
-                    contentHtml = `<div style="margin:8px 0;background:#2a2a2a;padding:12px;border-radius:8px;display:flex;align-items:center"><ion-icon name="document-text-outline" style="font-size:24px;color:var(--primary-color);margin-right:12px"></ion-icon><div style="flex:1;overflow:hidden"><div style="font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${res.fileName || 'Document'}</div><div style="font-size:12px;color:#999">${res.fileSize || 'File'}</div></div><a href="${fileSource}" target="_blank" style="color:var(--primary-color);margin-right:12px" title="View"><ion-icon name="eye-outline" style="font-size:24px"></ion-icon></a><button onclick="downloadFile('${fileSource}','${res.fileName || 'download'}')" style="background:none;border:none;color:var(--primary-color);cursor:pointer" title="Download"><ion-icon name="download-outline" style="font-size:24px"></ion-icon></button></div>`;
+                    const cleanName = (res.fileName || 'Document').replace(/'/g, "\\'");
+                    contentHtml = `<div style="margin:8px 0;background:#2a2a2a;padding:12px;border-radius:8px;display:flex;align-items:center;cursor:pointer;transition:background 0.2s" onclick="window.previewResource('${fileSource}', '${cleanName}', 'file')" onmouseover="this.style.background='#333'" onmouseout="this.style.background='#2a2a2a'">
+                        <ion-icon name="document-text-outline" style="font-size:24px;color:var(--primary-color);margin-right:12px"></ion-icon>
+                        <div style="flex:1;overflow:hidden">
+                            <div style="font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:white">${res.fileName || 'Document'}</div>
+                            <div style="font-size:12px;color:#999">${res.fileSize || 'File'}</div>
+                        </div>
+                        <button onclick="event.stopPropagation(); downloadFile('${fileSource}','${cleanName}')" style="background:none;border:none;color:var(--primary-color);cursor:pointer;padding:8px;border-radius:50%" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='none'" title="Download">
+                            <ion-icon name="download-outline" style="font-size:24px"></ion-icon>
+                        </button>
+                    </div>`;
                 } else {
                     contentHtml = `<a href="${res.link}" target="_blank" style="color:var(--primary-color);font-weight:bold;text-decoration:none;display:inline-flex;align-items:center;margin-top:4px">Open Link <ion-icon name="open-outline" style="margin-left:4px"></ion-icon></a>`;
                 }

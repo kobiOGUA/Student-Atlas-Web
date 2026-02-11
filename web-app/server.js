@@ -3,7 +3,7 @@ const https = require('https');
 
 const PORT = 3000;
 
-const server = http.createServer(async (req, res) => {
+const server = http.createServer((req, res) => {
     // Enable CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -17,136 +17,67 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.url === '/api/upload' && req.method === 'POST') {
-        console.log('Received upload request');
-        try {
-            // Parse multipart form
-            const formData = await parseMultipartForm(req);
+        console.log('Received upload request request - Streaming to Catbox...');
 
-            if (!formData.file) {
-                res.writeHead(400, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'No file provided' }));
-                return;
+        const options = {
+            hostname: 'catbox.moe',
+            path: '/user/api.php',
+            method: 'POST',
+            timeout: 60000,
+            headers: {
+                // Forward critical headers from the browser's request
+                'Content-Type': req.headers['content-type'],
+                'Content-Length': req.headers['content-length'],
+                'User-Agent': req.headers['user-agent'] // Sometimes helpful
             }
+        };
 
-            console.log(`Uploading ${formData.file.filename} (${formData.file.size} bytes) to Catbox...`);
+        const proxyReq = https.request(options, (proxyRes) => {
+            console.log(`Catbox responded with status: ${proxyRes.statusCode}`);
 
-            // Construct multipart body for Catbox
-            const boundary = '----WebKitFormBoundary' + Math.random().toString(36).substring(2);
-
-            const postDataStart = [
-                `--${boundary}`,
-                'Content-Disposition: form-data; name="reqtype"',
-                '',
-                'fileupload',
-                `--${boundary}`,
-                `Content-Disposition: form-data; name="fileToUpload"; filename="${formData.file.filename}"`,
-                `Content-Type: ${formData.file.type}`,
-                '',
-                ''
-            ].join('\r\n');
-
-            const postDataEnd = `\r\n--${boundary}--`;
-
-            const options = {
-                hostname: 'catbox.moe',
-                path: '/user/api.php',
-                method: 'POST',
-                headers: {
-                    'Content-Type': `multipart/form-data; boundary=${boundary}`,
-                    'Content-Length': Buffer.byteLength(postDataStart) + formData.file.data.length + Buffer.byteLength(postDataEnd)
+            let data = '';
+            proxyRes.on('data', (chunk) => data += chunk);
+            proxyRes.on('end', () => {
+                if (proxyRes.statusCode === 200) {
+                    const url = data.trim();
+                    console.log('Upload success:', url);
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({
+                        success: true,
+                        url: url,
+                        fileName: 'uploaded_file', // We don't parse filename in streaming mode
+                        size: 0
+                    }));
+                } else {
+                    console.error('Catbox error:', data);
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Catbox upload failed: ' + data }));
                 }
-            };
-
-            const catboxReq = https.request(options, (catboxRes) => {
-                let data = '';
-                catboxRes.on('data', (chunk) => data += chunk);
-                catboxRes.on('end', () => {
-                    if (catboxRes.statusCode === 200) {
-                        const url = data.trim();
-                        console.log('Upload success:', url);
-                        res.writeHead(200, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({
-                            success: true,
-                            url: url,
-                            fileName: formData.file.filename,
-                            size: formData.file.size
-                        }));
-                    } else {
-                        console.error('Catbox error:', data);
-                        res.writeHead(500, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ error: 'Catbox upload failed' }));
-                    }
-                });
             });
+        });
 
-            catboxReq.on('error', (e) => {
-                console.error('Request error:', e);
-                res.writeHead(500, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: e.message }));
-            });
+        proxyReq.on('timeout', () => {
+            console.error('Catbox request timed out');
+            proxyReq.destroy();
+            res.writeHead(504, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Upload to Catbox timed out' }));
+        });
 
-            // Write Body
-            catboxReq.write(postDataStart);
-            catboxReq.write(formData.file.data);
-            catboxReq.write(postDataEnd);
-            catboxReq.end();
-
-        } catch (error) {
-            console.error('Server error:', error);
+        proxyReq.on('error', (e) => {
+            console.error('Proxy Request error:', e);
             res.writeHead(500, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ error: error.message }));
-        }
+            res.end(JSON.stringify({ error: e.message }));
+        });
+
+        // Pipe the incoming request stream directly to the outgoing request
+        req.pipe(proxyReq);
+
     } else {
         res.writeHead(404);
         res.end('Not Found');
     }
 });
 
-function parseMultipartForm(req) {
-    return new Promise((resolve, reject) => {
-        const chunks = [];
-        req.on('data', chunk => chunks.push(chunk));
-        req.on('end', () => {
-            try {
-                const buffer = Buffer.concat(chunks);
-                const contentType = req.headers['content-type'];
-                if (!contentType || !contentType.includes('boundary=')) {
-                    reject(new Error('Invalid Content-Type'));
-                    return;
-                }
-                const boundary = contentType.split('boundary=')[1];
-                const parts = buffer.toString('binary').split(`--${boundary}`);
-
-                const file = {};
-
-                for (const part of parts) {
-                    if (part.includes('filename=')) {
-                        const filenameMatch = part.match(/filename="([^"]+)"/);
-                        const contentTypeMatch = part.match(/Content-Type: ([^\r\n]+)/);
-
-                        if (filenameMatch) {
-                            file.filename = filenameMatch[1];
-                            file.type = contentTypeMatch ? contentTypeMatch[1] : 'application/octet-stream';
-
-                            const dataStart = part.indexOf('\r\n\r\n') + 4;
-                            const dataEnd = part.lastIndexOf('\r\n');
-                            // Handle cases where lat boundary includes extra dashes
-                            file.data = Buffer.from(part.substring(dataStart, dataEnd), 'binary');
-                            file.size = file.data.length;
-                            resolve({ file });
-                            return;
-                        }
-                    }
-                }
-                resolve({});
-            } catch (error) {
-                reject(error);
-            }
-        });
-        req.on('error', reject);
-    });
-}
-
 server.listen(PORT, () => {
-    console.log(`Upload proxy server running at http://localhost:${PORT}`);
+    console.log(`Streaming Upload Proxy running at http://localhost:${PORT}`);
 });

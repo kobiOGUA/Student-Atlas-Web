@@ -22,6 +22,9 @@
     <!-- Image Compression Utility -->
     <script src="js/imageCompression.js"></script>
 
+    <!-- Resource Functions -->
+    <script src="resource-functions.js"></script>
+
 
 
     <!-- Ionicons -->
@@ -732,6 +735,52 @@
             font-size: 14px;
             margin-top: 16px;
         }
+
+        .btn-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            width: 100%;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            filter: brightness(1.1);
+        }
+
+        .btn-action:active {
+            transform: translateY(0);
+        }
+
+        .btn-action-primary {
+            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+        }
+
+        .btn-action-graduate {
+            background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+        }
+
+        .btn-action-pending {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+        }
+
+        .btn-action-current {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        }
+
+        .btn-action-danger {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+        }
     </style>
     <script>
         // Load theme immediately
@@ -747,18 +796,19 @@
         </div>
         <!-- Dashboard Screen -->
         <div id="dashboard-screen" class="screen">
-            <div class="header" style="display: flex; justify-content: space-between; align-items: start;">
+            <div class="header"
+                style="display: flex; justify-content: space-between; align-items: center; padding-right: 20px;">
                 <div>
                     <h2 style="margin: 0;">Kobi's Atlas</h2>
                     <p style="margin: 5px 0 0 0; opacity: 0.9;">Academic Overview</p>
                 </div>
                 <div style="display: flex; align-items: center; gap: 12px;">
+                    <div id="dashboard-widgets" style="text-align: right; font-size: 11px; max-width: 400px;"></div>
                     <button onclick="loadDashboard()"
                         style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;"
                         title="Refresh">
                         <ion-icon name="refresh-outline" style="font-size: 20px;"></ion-icon>
                     </button>
-                    <div id="dashboard-widgets" style="text-align: right; font-size: 11px; max-width: 50%;"></div>
                 </div>
             </div>
 
@@ -787,10 +837,11 @@
 
             <div id="courses-list"></div>
 
-            <button class="btn btn-primary" onclick="showAddCourseModal()" style="margin-top: 20px;">+ Add
-                Course</button>
-            <button class="btn btn-danger" onclick="deleteSemester()" style="margin-top: 10px;">Delete
-                Semester</button>
+            <div id="courses-list"></div>
+
+            <div id="semester-actions"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 20px;">
+            </div>
         </div>
 
         <!-- Course Detail Screen -->
@@ -837,19 +888,8 @@
                     </select>
                 </div>
 
-                <div id="projected-grade-container" class="hidden">
-                    <div class="ca-score-row">
-                        <span>Max Possible Score:</span>
-                        <span id="max-possible-score" style="font-weight: bold;">--</span>
-                    </div>
-                    <div class="ca-score-row">
-                        <span>Projected Grade:</span>
-                        <span id="projected-grade-display"
-                            style="font-weight: bold; font-size: 18px; color: var(--primary-color);">--</span>
-                    </div>
-                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
-                        Based on Max Possible Score (CA + Exam)
-                    </p>
+                <div id="projected-grade-container" class="hidden" style="margin-top: 20px;">
+                    <div id="projected-grade-display"></div>
                 </div>
 
                 <h3 style="margin: 24px 0 16px 0;">Course Info</h3>
@@ -1038,36 +1078,49 @@
                 <div id="conversations-list"></div>
             </div>
 
-            <div id="community-resources-container" class="hidden">
-                <div class="search-bar" style="margin-bottom: 20px;">
-                    <input type="text" id="resource-search-input" placeholder="Search resources (code, title)..."
-                        oninput="filterResources(this.value)">
-                    <div
-                        style="display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch;">
-                        <button onclick="filterResourceCategory('All')" class="filter-btn active"
-                            style="font-size: 12px; padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--primary-color); color: white; flex-shrink: 0; transition: all 0.2s;">All</button>
-                        <button onclick="filterResourceCategory('Notes')" class="filter-btn"
-                            style="font-size: 12px; padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); flex-shrink: 0; transition: all 0.2s;">Notes</button>
-                        <button onclick="filterResourceCategory('Past Questions')" class="filter-btn"
-                            style="font-size: 12px; padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); flex-shrink: 0; transition: all 0.2s;">Past
-                            Questions</button>
-                        <button onclick="filterResourceCategory('Miscellaneous')" class="filter-btn"
-                            style="font-size: 12px; padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); flex-shrink: 0; transition: all 0.2s;">Miscellaneous</button>
-                        <button onclick="exportResourcesBackup()" class="filter-btn"
-                            style="font-size: 12px; padding: 6px 16px; border-radius: 20px; border: 1px solid #28a745; background: #28a745; color: white; flex-shrink: 0; transition: all 0.2s; margin-left: auto;">
-                            <ion-icon name="download-outline"
-                                style="vertical-align: middle; margin-right: 4px;"></ion-icon>Export Backup
-                        </button>
+            <div id="community-resources-wrapper" class="hidden" style="position: relative;">
+                <div id="resources-lock-overlay"
+                    style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; border-radius: 12px; height: 100%; min-height: 400px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🚧</div>
+                    <h2 style="margin: 0 0 8px 0; font-size: 20px;">Kobi isn't quite done with this yet! 🤫</h2>
+                    <p style="color: #ccc; margin: 0 0 24px 0; max-width: 300px;">
+                        Access to resources beta can be unlocked temporarily with a passcode.
+                    </p>
+                    <div style="display: flex; gap: 8px; max-width: 300px; width: 100%;">
+                        <input type="password" id="resources-passcode" placeholder="Enter Passcode"
+                            style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #222; color: white;"
+                            onkeypress="if(event.key === 'Enter') checkResourcesPasscode()">
+                        <button class="btn-primary" onclick="checkResourcesPasscode()"
+                            style="padding: 10px 16px; border-radius: 8px;">Unlock</button>
                     </div>
+                    <p id="lock-error-msg" style="color: #ef4444; font-size: 13px; margin-top: 12px; display: none;">
+                        Incorrect passcode</p>
                 </div>
 
-                <div id="resources-list" style="padding-bottom: 80px;">
-                    <!-- Resources will be loaded here -->
-                </div>
+                <div id="community-resources-container" class="hidden"
+                    style="filter: blur(5px); pointer-events: none; user-select: none;">
+                    <div class="search-bar" style="margin-bottom: 20px;">
+                        <input type="text" id="resource-search-input" placeholder="Search resources (code, title)..."
+                            oninput="filterResources(this.value)">
+                        <div
+                            style="display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch;">
 
-                <button class="fab" onclick="handleFabClick()">
-                    <ion-icon name="add"></ion-icon>
-                </button>
+                            <button onclick="exportResourcesBackup()" class="filter-btn"
+                                style="font-size: 12px; padding: 6px 16px; border-radius: 20px; border: 1px solid #28a745; background: #28a745; color: white; flex-shrink: 0; transition: all 0.2s; margin-left: auto;">
+                                <ion-icon name="download-outline"
+                                    style="vertical-align: middle; margin-right: 4px;"></ion-icon>Export Backup
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="resources-list" style="padding-bottom: 80px;">
+                        <!-- Resources will be loaded here -->
+                    </div>
+
+                    <button class="fab" onclick="handleFabClick()">
+                        <ion-icon name="add"></ion-icon>
+                    </button>
+                </div>
             </div>
 
             <div id="community-messages-container" class="hidden">
@@ -1927,6 +1980,157 @@
             loadDashboard();
         }
 
+
+        window.loadDashboardWidgets = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            if (!uid) return;
+
+            const widgetContainer = document.getElementById('dashboard-widgets');
+            if (!widgetContainer) return;
+
+            try {
+                const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+                let currentSem = null;
+                snapshot.forEach(doc => {
+                    if (doc.data().type === 'current') currentSem = { id: doc.id, ...doc.data() };
+                });
+
+                if (!currentSem) {
+                    widgetContainer.innerHTML = '<span style="color: #999;">No active semester</span>';
+                    return;
+                }
+
+                // Collect all events
+                let allEvents = [];
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                const now = new Date();
+
+                // 1. Courses
+                if (currentSem.courses) {
+                    currentSem.courses.forEach(c => {
+                        const schedules = c.schedules || (c.schedule ? [c.schedule] : []);
+                        schedules.forEach(s => {
+                            if (s) {
+                                allEvents.push({
+                                    title: c.code,
+                                    ...s,
+                                    type: 'class'
+                                });
+                            }
+                        });
+                    });
+                }
+
+                // 2. Custom Events
+                if (currentSem.customEvents) {
+                    currentSem.customEvents.forEach(e => {
+                        allEvents.push({
+                            ...e,
+                            type: 'custom'
+                        });
+                    });
+                }
+
+                // Find next occurrence for each
+                const futureEvents = [];
+
+                allEvents.forEach(event => {
+                    if (!event.startTime) return;
+
+                    let nextDate = null;
+                    const [hours, minutes] = event.startTime.split(':').map(Number);
+
+                    // Helper to format time string
+                    const fmtTime = (h, m) => {
+                        const d = new Date(); d.setHours(h, m);
+                        return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+                    };
+                    event.formattedTime = fmtTime(hours, minutes);
+
+                    if (event.isRecurring) {
+                        // Ensure event.day is valid (capitalize first letter just in case)
+                        if (!event.day) return;
+                        const dayName = event.day.charAt(0).toUpperCase() + event.day.slice(1).toLowerCase();
+                        const eventDayIdx = days.indexOf(dayName);
+
+                        if (eventDayIdx === -1) return;
+
+                        nextDate = new Date(now);
+                        nextDate.setHours(hours, minutes, 0, 0);
+
+                        let dayDiff = eventDayIdx - now.getDay();
+                        // If day passed OR (day is today AND time passed)
+                        if (dayDiff < 0 || (dayDiff === 0 && now > nextDate)) {
+                            dayDiff += 7;
+                        }
+                        // Create the target date
+                        const target = new Date(now);
+                        target.setDate(now.getDate() + dayDiff);
+                        target.setHours(hours, minutes, 0, 0);
+                        nextDate = target;
+
+                    } else if (event.date) {
+                        nextDate = new Date(event.date);
+                        nextDate.setHours(hours, minutes, 0, 0);
+                        if (nextDate < now) return; // Passed
+                    }
+
+                    if (nextDate) {
+                        futureEvents.push({
+                            ...event,
+                            nextDate: nextDate
+                        });
+                    }
+                });
+
+                // Sort by date
+                futureEvents.sort((a, b) => a.nextDate - b.nextDate);
+
+                if (futureEvents.length > 0) {
+                    const next = futureEvents[0];
+                    const diffMs = next.nextDate - now;
+                    const diffMins = Math.floor(diffMs / 60000);
+                    const diffHours = Math.floor(diffMins / 60);
+                    const diffDays = Math.floor(diffHours / 24);
+
+                    let timeText = '';
+                    if (diffMins < 60) {
+                        timeText = `In ${diffMins} min${diffMins !== 1 ? 's' : ''}`;
+                    } else if (next.nextDate.getDate() === now.getDate()) {
+                        timeText = `Today, ${next.formattedTime}`;
+                    } else if (diffDays < 2) { // Roughly tomorrow
+                        // Check strictly if it's tomorrow's date
+                        const tom = new Date(now); tom.setDate(now.getDate() + 1);
+                        if (next.nextDate.getDate() === tom.getDate()) {
+                            timeText = `Bmro, ${next.formattedTime}`; // Bmro? shorthand for tomorrow if space tight? Let's use Tom.
+                            timeText = `Tom, ${next.formattedTime}`;
+                        } else {
+                            timeText = `${next.day ? next.day.substr(0, 3) : ''}, ${next.formattedTime}`;
+                        }
+                    } else {
+                        timeText = `${next.day ? next.day.substr(0, 3) : ''}, ${next.formattedTime}`;
+                    }
+
+                    if (diffDays >= 7) {
+                        // If it's more than a week away (rare for recurring, but possible for one-off)
+                        timeText = `${next.nextDate.toLocaleDateString()}, ${next.formattedTime}`;
+                    }
+
+                    widgetContainer.innerHTML = `
+                        <div style="font-weight: bold; color: var(--primary-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;">${next.title}</div>
+                        <div style="color: #ccc;">${timeText}</div>
+                    `;
+                } else {
+                    widgetContainer.innerHTML = '<span style="color: #999;">No upcoming events</span>';
+                }
+
+            } catch (e) {
+                console.error('Widget error', e);
+                widgetContainer.innerHTML = '';
+            }
+        };
+
         // Dashboard functions
         async function loadDashboard() {
             const uid = localStorage.getItem('kobi_atlas_uid');
@@ -2057,6 +2261,24 @@
             showLoading(false);
         }
 
+        window.updateSemesterStatus = async function (semesterId, newType) {
+            if (!confirm(`Are you sure you want to mark this semester as ${newType}?`)) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+            try {
+                const semRef = doc(db, 'users', uid, 'semesters', semesterId);
+                await updateDoc(semRef, { type: newType });
+                showToast('Semester updated', 'success');
+                loadDashboard();
+            } catch (error) {
+                console.error(error);
+                showToast('Failed to update status', 'error');
+            } finally {
+                showLoading(false);
+            }
+        };
+
         // Expose functions to window for refresh buttons
         window.loadDashboard = loadDashboard;
         window.loadSchedule = loadSchedule;
@@ -2080,17 +2302,12 @@
                 return `
                         <div class="semester-card ${type}" onclick="viewSemester('${sem.id}')" style="position: relative;">
                             <span class="badge ${type}">${type.toUpperCase()}</span>
-                            ${type === 'pending' ? `
-                                <button onclick="event.stopPropagation(); showEndSemesterModal('${sem.id}')" style="position: absolute; bottom: 10px; right: 10px; background: #667eea; color: white; border: none; borderRadius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer; z-index: 10;">
-                                    Enter Grades
-                                </button>
-                            ` : ''}
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div>
                                     <div style="font-weight: bold; font-size: 16px;">${sem.name}</div>
                                     <div style="font-size: 14px; color: #999; margin-top: 4px;">${courseCount} courses</div>
                                 </div>
-                                <div style="text-align: right; padding-bottom: ${type === 'pending' ? '20px' : '0'};">
+                                <div style="text-align: right; padding-bottom: 0;">
                                     <div style="font-size: 20px; font-weight: bold; color: #667eea;">
                                         ${type === 'pending' || type === 'current' ? 'Predicted' : 'GPA'}: ${parseFloat(gpa).toFixed(2)}
                                     </div>
@@ -2183,6 +2400,68 @@
 
                 document.getElementById('courses-list').innerHTML = coursesHTML;
 
+                // Handle Action Buttons
+                const actionsContainer = document.getElementById('semester-actions');
+                let actionsHTML = '';
+
+                // Common Actions
+                const addCourseBtn = `
+                    <button class="btn-action btn-action-primary" onclick="showAddCourseModal()">
+                        <ion-icon name="add-circle" style="margin-right: 8px; font-size: 20px;"></ion-icon>
+                        Add Course
+                    </button>
+                `;
+
+                const deleteSemBtn = `
+                    <button class="btn-action btn-action-danger" onclick="deleteSemester()">
+                        <ion-icon name="trash" style="margin-right: 8px; font-size: 18px;"></ion-icon>
+                        Delete Semester
+                    </button>
+                `;
+
+                if (currentSemester.type === 'current') {
+                    actionsHTML += `
+                        ${addCourseBtn}
+                        <button class="btn-action btn-action-graduate" onclick="showEndSemesterModal('${currentSemester.id}')">
+                            <ion-icon name="ribbon" style="margin-right: 8px; font-size: 20px;"></ion-icon>
+                            End Semester
+                        </button>
+                        <button class="btn-action btn-action-pending" onclick="updateSemesterStatus('${currentSemester.id}', 'pending')">
+                            <ion-icon name="hourglass" style="margin-right: 8px; font-size: 18px;"></ion-icon>
+                            Mark as Pending
+                        </button>
+                    `;
+                } else if (currentSemester.type === 'pending') {
+                    actionsHTML += `
+                        ${addCourseBtn}
+                        <button class="btn-action btn-action-graduate" onclick="showEndSemesterModal('${currentSemester.id}')">
+                            <ion-icon name="ribbon" style="margin-right: 8px; font-size: 20px;"></ion-icon>
+                            Enter Grades
+                        </button>
+                        <button class="btn-action btn-action-current" onclick="updateSemesterStatus('${currentSemester.id}', 'current')">
+                             <ion-icon name="play" style="margin-right: 8px; font-size: 18px;"></ion-icon>
+                             Mark as Current
+                        </button>
+                    `;
+                } else if (currentSemester.type === 'past') {
+                    actionsHTML += `
+                        ${addCourseBtn}
+                        <button class="btn-action btn-action-current" onclick="updateSemesterStatus('${currentSemester.id}', 'current')">
+                             <ion-icon name="refresh" style="margin-right: 8px; font-size: 18px;"></ion-icon>
+                             Reopen as Current
+                        </button>
+                        <button class="btn-action btn-action-pending" onclick="updateSemesterStatus('${currentSemester.id}', 'pending')">
+                            <ion-icon name="hourglass" style="margin-right: 8px; font-size: 18px;"></ion-icon>
+                            Mark as Pending
+                        </button>
+                    `;
+                }
+
+                // Add Delete button at the end
+                actionsHTML += deleteSemBtn;
+
+                actionsContainer.innerHTML = actionsHTML;
+
                 showScreen('semester-detail');
             } catch (error) {
                 console.error('View semester error:', error);
@@ -2235,20 +2514,42 @@
             const caConfig = getCAConfig();
             const caInputsContainer = document.getElementById('ca-inputs-container');
             const caScores = currentCourse.caScores || {};
+            // Track enabled state for each field (default true if not present)
+            const caEnabled = currentCourse.caEnabled || {};
+
             let inputsHTML = '';
             let totalMaxCA = 0;
 
+            const renderField = (label, key, max) => {
+                const val = caScores[key] || 0;
+                const isEnabled = caEnabled[key] !== false; // Default true
+                const dimStyle = isEnabled ? '' : 'opacity: 0.5;';
+
+                return `
+                    <div class="ca-score-row" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 8px; transition: opacity 0.2s; border: 1px solid rgba(255,255,255,0.1); ${dimStyle}">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <input type="checkbox" id="check-${key}" class="ca-enable-check" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary-color);" 
+                                data-key="${key}" ${isEnabled ? 'checked' : ''} onchange="toggleCAField(this)">
+                            
+                            <div style="display: flex; flex-direction: column;">
+                                <label for="check-${key}" style="font-weight: 500; cursor: pointer; font-size: 15px;">${label}</label>
+                                <span style="font-size: 11px; color: #999;">Max Score: ${max}</span>
+                            </div>
+                        </div>
+                        
+                        <input type="number" data-key="${key}" data-max="${max}" class="ca-score-input dynamic-ca-input" 
+                            min="0" max="${max}" value="${val}" ${isEnabled ? '' : 'disabled'}
+                            style="width: 70px; height: 36px; text-align: center; font-weight: bold; background: rgba(0,0,0,0.3); border: 1px solid #444; border-radius: 6px; color: white; font-size: 14px;"
+                            oninput="validateCAInput(this)"
+                            onblur="validateCAInput(this)"
+                            placeholder="0">
+                    </div>`;
+            };
+
             if (caConfig.type === 'custom' && caConfig.custom) {
-                caConfig.custom.forEach((field, i) => {
-                    const val = caScores[field.name] || 0;
+                caConfig.custom.forEach((field) => {
                     totalMaxCA += parseFloat(field.weight);
-                    inputsHTML += `
-                        <div class="ca-score-row">
-                            <span>${field.name} (${field.weight}%):</span>
-                            <input type="number" data-key="${field.name}" class="ca-score-input dynamic-ca-input" 
-                                min="0" max="${field.weight}" value="${val}"
-                                onchange="updateCAScores()">
-                        </div>`;
+                    inputsHTML += renderField(field.name, field.name, field.weight);
                 });
             } else {
                 // Standard
@@ -2259,16 +2560,7 @@
                     { label: 'Quiz', key: 'quiz', max: 10 },
                     { label: 'Attendance', key: 'attendance', max: 5 },
                 ];
-                scores.forEach(s => {
-                    const val = caScores[s.key] || 0;
-                    inputsHTML += `
-                        <div class="ca-score-row">
-                            <span>${s.label}:</span>
-                            <input type="number" data-key="${s.key}" class="ca-score-input dynamic-ca-input" 
-                                min="0" max="${s.max}" value="${val}"
-                                onchange="updateCAScores()">
-                        </div>`;
-                });
+                scores.forEach(s => inputsHTML += renderField(s.label, s.key, s.max));
             }
 
             caInputsContainer.innerHTML = inputsHTML;
@@ -2296,17 +2588,189 @@
             showScreen('course-detail');
         };
 
+
+        window.validateCAInput = function (input) {
+            let val = parseFloat(input.value);
+            const max = parseFloat(input.dataset.max);
+
+            if (isNaN(val)) {
+                // Allow empty during typing, but treat as 0 for calc
+                // Don't force 0 yet if user is just deleting
+                if (input.value === '') {
+                    // It's empty
+                } else {
+                    input.value = ''; // Invalid char
+                }
+            } else {
+                if (val < 0) {
+                    input.value = 0;
+                } else if (val > max) {
+                    input.value = max;
+                    showToast(`Max score for this field is ${max}`, 'info');
+                }
+            }
+            updateCAScores();
+        };
+
+        window.toggleCAField = function (checkbox) {
+            const key = checkbox.dataset.key;
+            // Use quotes for selector to handle keys with spaces if any (though keys usually camelCase)
+            const input = document.querySelector(`.dynamic-ca-input[data-key="${key}"]`);
+            const row = checkbox.closest('.ca-score-row');
+
+            if (checkbox.checked) {
+                input.disabled = false;
+                row.style.opacity = '1';
+                row.style.background = 'rgba(255,255,255,0.03)';
+            } else {
+                input.disabled = true;
+                row.style.opacity = '0.5';
+                row.style.background = 'transparent';
+            }
+            updateCAScores();
+        };
+
         window.updateCAScores = function () {
             let total = 0;
-            // Sum all dynamic inputs
+            let currentMax = 0;
+
+            // Sum all ENABLED dynamic inputs
             document.querySelectorAll('.dynamic-ca-input').forEach(inp => {
-                total += parseFloat(inp.value) || 0;
+                if (!inp.disabled) {
+                    total += parseFloat(inp.value) || 0;
+                    currentMax += parseFloat(inp.dataset.max) || 0;
+                }
             });
 
-            const max = document.getElementById('total-ca').dataset.max || 40;
-            document.getElementById('total-ca').textContent = `${total}/${max}`;
+            // Show: Current Score / Max of Enabled Fields
+            document.getElementById('total-ca').textContent = `${total}/${currentMax}`;
+
+            // Store valid total for grade calc
+            document.getElementById('total-ca').dataset.validTotal = total;
+            document.getElementById('total-ca').dataset.validMax = currentMax;
 
             updateCourseGradeUI();
+        };
+
+        window.updateCourseGradeUI = function () {
+            const totalElement = document.getElementById('total-ca');
+            const totalCA = parseFloat(totalElement.dataset.validTotal) || 0;
+            const validMaxCA = parseFloat(totalElement.dataset.validMax) || 0;
+            const totalMaxCA = parseFloat(totalElement.dataset.max) || 40;
+
+            const useCA = document.getElementById('use-ca-toggle').checked;
+
+            if (useCA) {
+                // Points accumulated so far vs Points possible so far
+                const passedCA = totalCA;
+                // Remaining points in the semester (Exams + Untaken CAs)
+                const remainingScore = 100 - validMaxCA;
+
+                // --- Header Section ---
+                let html = `<div style="background: rgba(255,255,255,0.02); border-radius: 12px; padding: 16px; border: 1px solid rgba(255,255,255,0.05);">`;
+
+                // Simplified "Score So Far" Header
+                html += `
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
+                        <div>
+                            <div style="font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Score So Far</div>
+                            <div style="font-size: 28px; font-weight: 800; color: white;">
+                                <span style="color: var(--primary-color)">${passedCA}</span> <span style="font-size: 16px; color: #555;">/ ${validMaxCA}</span>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                             <div style="font-size: 11px; color: #999; margin-bottom: 4px;">Remaining Points</div>
+                             <div style="font-size: 18px; font-weight: 600; color: #ccc;">${remainingScore}</div>
+                        </div>
+                    </div>
+                `;
+
+                // --- Grade Targets List ---
+                const grades = getAvailableGrades();
+
+                html += `<div style="display: flex; flex-direction: column; gap: 10px;">`;
+
+                grades.forEach(g => {
+                    let minScore = 0;
+                    const config = getGradingConfig();
+                    // Determine Min Score
+                    if (config.type === 'babcock') {
+                        const map = { 'A': 80, 'B': 60, 'C': 50, 'D': 45, 'E': 40 }; minScore = map[g] || 0;
+                    } else if (config.type === 'nigerian') {
+                        const map = { 'A': 70, 'B': 60, 'C': 50, 'D': 45, 'E': 40 }; minScore = map[g] || 0;
+                    } else if (config.type === 'us') {
+                        const map = { 'A': 90, 'B': 80, 'C': 70, 'D': 60 }; minScore = map[g.substring(0, 1)] || 90;
+                    } else if (config.type === 'custom' && config.custom) {
+                        const match = config.custom.find(r => r.label === g); minScore = match ? match.min : 0;
+                    } else {
+                        if (g === 'A') minScore = 70; else if (g === 'B') minScore = 60; else if (g === 'C') minScore = 50; else if (g === 'D') minScore = 45; else if (g === 'E') minScore = 40;
+                    }
+
+                    if (minScore === 0) return; // Skip F
+
+                    const needed = minScore - passedCA;
+                    let pctNeeded = 0;
+                    let statusLabel = '';
+                    let statusSub = '';
+                    let barColor = '#444';
+                    let barWidth = '0%';
+                    let labelColor = '#999';
+
+                    if (needed <= 0) {
+                        statusLabel = 'Secured';
+                        barColor = '#10B981'; // Green
+                        barWidth = '100%';
+                        labelColor = '#10B981';
+                        statusSub = 'Done';
+                    } else if (needed > remainingScore) {
+                        statusLabel = 'Impossible';
+                        barColor = '#333';
+                        barWidth = '0%';
+                        labelColor = '#EF4444'; // Red
+                        statusSub = `Need ${needed}`; // Impossible
+                    } else {
+                        statusLabel = `${needed} / ${remainingScore}`;
+                        pctNeeded = (needed / remainingScore) * 100;
+
+                        // Bar represents "How much of the remaining pie does this eat?"
+                        barWidth = `${pctNeeded}%`;
+
+                        if (pctNeeded > 90) { barColor = '#EF4444'; labelColor = '#EF4444'; } // Red - super hard
+                        else if (pctNeeded > 60) { barColor = '#F59E0B'; labelColor = '#F59E0B'; } // Yellow
+                        else { barColor = '#667eea'; labelColor = '#667eea'; } // Blue/Green
+
+                        statusSub = 'Needed';
+                    }
+
+                    html += `
+                        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 13px;">
+                            <div style="display: flex; align-items: center; gap: 10px; min-width: 80px;">
+                                <div style="background: rgba(255,255,255,0.1); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white;">${g}</div>
+                                <div style="color: #ccc; font-size: 12px;">${minScore}%</div>
+                            </div>
+                            
+                            <div style="flex: 1; margin: 0 16px;">
+                                <div style="height: 6px; width: 100%; background: rgba(255,255,255,0.05); border-radius: 3px; position: relative; overflow: hidden;">
+                                    <div style="height: 100%; width: ${barWidth}; background: ${barColor}; border-radius: 3px; transition: width 0.3s ease;"></div>
+                                </div>
+                            </div>
+                            
+                            <div style="text-align: right; min-width: 70px;">
+                                <div style="font-weight: 700; color: ${labelColor}; font-size: 14px;">${statusLabel}</div>
+                                <div style="font-size: 10px; color: #666;">${statusSub}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `</div></div>`; // Close card
+
+                document.getElementById('projected-grade-display').innerHTML = html;
+                document.getElementById('projected-grade-display').style.fontSize = '14px';
+
+                const maxPossible = document.getElementById('max-possible-score');
+                if (maxPossible && maxPossible.parentElement) maxPossible.parentElement.style.display = 'none';
+            }
         };
 
         window.saveCourseChanges = async function () {
@@ -2316,23 +2780,20 @@
             try {
                 // Collect scores dynamically
                 const caScores = {};
+                const caEnabled = {};
+
                 document.querySelectorAll('.dynamic-ca-input').forEach(inp => {
-                    caScores[inp.dataset.key] = parseFloat(inp.value) || 0;
+                    const key = inp.dataset.key;
+                    caScores[key] = parseFloat(inp.value) || 0;
+                    caEnabled[key] = !inp.disabled;
                 });
 
                 const useCA = document.getElementById('use-ca-toggle').checked;
-                const totalCA = Object.values(caScores).reduce((a, b) => a + b, 0);
-                const maxCA = parseFloat(document.getElementById('total-ca').dataset.max || 40);
-                const examMax = 100 - maxCA;
+                // Calculate simplistic final grade for storage based on 'Projected' max?
+                // Or just keep '--'.
+                let finalGrade = '--';
 
-                let finalGrade = '';
-
-                if (useCA) {
-                    // Max grade logic
-                    finalGrade = getGradeFromScore(totalCA + examMax); // Assuming Exam is perfect? 
-                    // Wait, previously `totalCA + 60` was hardcoded max.
-                    // Now `examMax` calculates dynamic standard (e.g. 100 - 30 = 70 exam).
-                } else {
+                if (!useCA) {
                     finalGrade = document.getElementById('course-manual-grade').value || getAvailableGrades()[0];
                 }
 
@@ -2340,9 +2801,10 @@
                 currentSemester.courses[currentCourse.index] = {
                     ...currentSemester.courses[currentCourse.index],
                     caScores,
+                    caEnabled,
                     useCA,
                     grade: finalGrade,
-                    predictedGrade: finalGrade, // Sync
+                    predictedGrade: finalGrade,
                     targetGrade: null
                 };
 
@@ -2362,7 +2824,6 @@
                 console.error('Save course error:', error);
                 showToast('Error saving course', 'error');
             }
-
             showLoading(false);
         };
 
@@ -2424,37 +2885,61 @@
                 }
 
                 container.innerHTML = resources.map(res => {
-                    const isImage = /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(res.link);
-                    const actionText = isImage ? 'View Image' : 'Download';
-                    const iconName = isImage ? 'image-outline' : 'download-outline';
-                    const downloadAttr = isImage ? '' : 'download';
+                    // Handle different types (support both old 'link' and new 'fileUrl')
+                    let link = res.link || res.fileUrl || res.fileData;
+                    let title = res.title || res.fileName || 'Untitled Resource';
+                    let type = res.type || 'link'; // 'link', 'file', 'image'
+                    let iconName = 'open-outline';
+                    let actionFn = '';
+                    let actionText = '';
+
+                    // Safe strings for onclick
+                    const safeLink = (link || '').replace(/'/g, "\\'");
+                    const safeName = (title || 'Document').replace(/'/g, "\\'");
+
+                    // Determine type-specific behavior
+                    if (type === 'image' || (link && /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(link))) {
+                        iconName = 'image-outline';
+                        actionFn = `event.stopPropagation(); window.openLightbox('${safeLink}')`;
+                        actionText = 'View Image';
+                    } else if (type === 'file' || res.fileUrl) {
+                        iconName = 'document-text-outline';
+                        actionFn = `event.stopPropagation(); window.previewResource('${safeLink}', '${safeName}', 'file')`;
+                        actionText = 'Preview File';
+                    } else {
+                        // Normal link
+                        iconName = 'globe-outline';
+                        actionFn = `event.stopPropagation(); window.open('${safeLink}', '_blank')`;
+                        actionText = 'Open Link';
+                    }
 
                     return `
-                    <div class="stat-card" style="margin-bottom: 12px; text-align: left;">
+                    <div class="stat-card" style="margin-bottom: 12px; text-align: left; cursor: pointer; transition: background 0.2s;" onclick="${actionFn}" onmouseover="this.style.background='#333'" onmouseout="this.style.background='var(--card-bg)'">
                         <div style="display: flex; justify-content: space-between;">
                             <div style="flex: 1;">
-                                <a href="${res.link}" target="_blank" ${downloadAttr} style="text-decoration: none; color: inherit;">
-                                    <div style="font-weight: bold; font-size: 16px; color: var(--primary-color); margin-bottom: 4px;">${res.title}</div>
-                                    ${res.description ? `<div style="font-size: 14px; margin-bottom: 6px;">${res.description}</div>` : ''}
-                                    <div style="font-size: 12px; color: var(--text-secondary);">
-                                        By ${res.uploadedByName} • ${new Date(res.timestamp).toLocaleDateString()}
-                                    </div>
-                                </a>
+                                <div style="font-weight: bold; font-size: 16px; color: var(--primary-color); margin-bottom: 4px; display:flex; align-items:center; gap:8px;">
+                                    <ion-icon name="${iconName}"></ion-icon>
+                                    ${title}
+                                </div>
+                                ${res.description ? `<div style="font-size: 14px; margin-bottom: 6px;">${res.description}</div>` : ''}
+                                <div style="font-size: 12px; color: var(--text-secondary);">
+                                    By ${res.uploadedByName || 'Student'} • ${new Date(res.timestamp).toLocaleDateString()}
+                                </div>
                             </div>
                             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-left: 10px;">
-                                <button onclick="voteResource('${res.id}', 1)" style="background: none; border: none; cursor: pointer;">
+                                <button onclick="event.stopPropagation(); voteResource('${res.id}', 1)" style="background: none; border: none; cursor: pointer; padding: 4px;">
                                     <ion-icon name="caret-up" style="font-size: 24px; color: var(--text-color);"></ion-icon>
                                 </button>
-                                <span style="font-weight: bold; font-size: 14px; color: var(--primary-color);">${res.votes}</span>
-                                <button onclick="voteResource('${res.id}', -1)" style="background: none; border: none; cursor: pointer;">
+                                <span style="font-weight: bold; font-size: 14px; color: var(--primary-color);">${res.votes || 0}</span>
+                                <button onclick="event.stopPropagation(); voteResource('${res.id}', -1)" style="background: none; border: none; cursor: pointer; padding: 4px;">
                                     <ion-icon name="caret-down" style="font-size: 24px; color: var(--text-color);"></ion-icon>
                                 </button>
                             </div>
                         </div>
-                        <a href="${res.link}" target="_blank" ${downloadAttr} style="display: flex; align-items: center; justify-content: flex-end; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-color); text-decoration: none; color: var(--primary-color); font-weight: 600; font-size: 14px;">
+                         <div style="display: flex; align-items: center; justify-content: flex-end; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-color); color: var(--primary-color); font-weight: 600; font-size: 14px;">
                             <span style="margin-right: 5px;">${actionText}</span>
-                            <ion-icon name="${iconName}"></ion-icon>
-                        </a>
+                            <ion-icon name="arrow-forward-outline"></ion-icon>
+                        </div>
                     </div>
                 `;
                 }).join('');
@@ -2964,7 +3449,15 @@
         window.renderPdfThumbnail = async function (url, canvasId) {
             try {
                 if (!url) return;
-                const pdf = await pdfjsLib.getDocument(url).promise;
+
+                // Optimize loading: Don't fetch the whole file, just what we need
+                const loadingTask = pdfjsLib.getDocument({
+                    url: url,
+                    disableAutoFetch: true,
+                    disableStream: true
+                });
+
+                const pdf = await loadingTask.promise;
                 const page = await pdf.getPage(1);
 
                 const canvas = document.getElementById(canvasId);
@@ -3705,35 +4198,66 @@
                 const resourcesHtml = courseResourcesList.map(res => {
                     const isOwnerResource = res.uploadedBy === currentUid;
 
-                    // visual preview logic
+                    // UPDATED LOGIC START: Robust variable resolution
+                    let link = res.link || res.fileUrl || res.fileData;
+                    let displayTitle = res.title || res.fileName || 'Untitled Resource';
+                    let fileName = res.fileName || displayTitle;
+                    let type = res.type || 'link';
+
                     let previewBlock = '';
                     let clickAction = '';
 
-                    if (res.type === 'image') {
-                        previewBlock = `< img src = "${res.imageData}" style = "width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" > `;
-                        clickAction = `openLightbox('${res.imageData}')`;
-                    } else if (res.type === 'file') {
-                        const fileSource = res.fileUrl || res.fileData;
-                        const isPdf = res.fileName && res.fileName.toLowerCase().endsWith('.pdf');
+                    const safeLink = (link || '').replace(/'/g, "\\'");
+                    const safeName = (fileName || 'Document').replace(/'/g, "\\'");
+                    const safeTitle = displayTitle.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
 
-                        if (isPdf) {
-                            const canvasId = `pdf - ${res.id} `;
-                            pdfsToRender.push({ url: fileSource, id: canvasId });
-                            previewBlock = `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;"><canvas id="${canvasId}" style="width:100%;height:100%;object-fit:contain;"></canvas></div>`;
+                    // Type Detection & Display
+                    if (type === 'image' || (link && /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(link))) {
+                        // Image
+                        previewBlock = `<img src="${link}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;">`;
+                        clickAction = `event.stopPropagation(); window.openLightbox('${safeLink}')`;
+                    } else if (type === 'file' || res.fileUrl) {
+                        // File
+                        const isPdf = fileName.toLowerCase().endsWith('.pdf');
+                        if (isPdf && link) {
+                            if (res.thumbnail) {
+                                // FAST PATH: Use pre-generated thumbnail
+                                previewBlock = `<img src="${res.thumbnail}" style="width: 100%; height: 100%; object-fit: contain; background: #fff;">`;
+                            } else {
+                                // SLOW PATH: Render using PDF.js
+                                const canvasId = `pdf-${res.id}`;
+                                pdfsToRender.push({ url: link, id: canvasId });
+                                previewBlock = `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;"><canvas id="${canvasId}" style="width:100%;height:100%;object-fit:contain;"></canvas></div>`;
+                            }
                         } else {
-                            previewBlock = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--primary-color);">
-                                <ion-icon name="document-text" style="font-size: 48px; margin-bottom: 8px;"></ion-icon>
-                                <span style="font-size: 10px; opacity: 0.8; text-transform: uppercase;">${res.fileName ? res.fileName.split('.').pop() : 'FILE'}</span>
-                            </div>`;
+                            // Dynamic Icon for File Type
+                            const ext = fileName.split('.').pop().toLowerCase();
+                            let iconColor = 'var(--primary-color)';
+                            let iconName = 'document-text';
+
+                            if (['doc', 'docx'].includes(ext)) {
+                                iconColor = '#4285F4'; // Word Blue
+                            } else if (['xls', 'xlsx', 'csv'].includes(ext)) {
+                                iconColor = '#0F9D58'; // Excel Green
+                            } else if (['ppt', 'pptx'].includes(ext)) {
+                                iconColor = '#F4B400'; // PPT Orange
+                            }
+
+                            previewBlock = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: ${iconColor};">
+                                <ion-icon name="${iconName}" style="font-size: 48px; margin-bottom: 8px;"></ion-icon>
+                                <span style="font-size: 10px; opacity: 0.8; text-transform: uppercase;">${ext || 'FILE'}</span>
+                              </div>`;
                         }
-                        clickAction = `previewResource('${fileSource}', '${res.fileName || 'download'}', '${res.type}')`;
+                        clickAction = `event.stopPropagation(); window.previewResource('${safeLink}', '${safeName}', 'file')`;
                     } else {
+                        // Link
                         previewBlock = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #4fd1c5;">
                             <ion-icon name="link" style="font-size: 48px; margin-bottom: 8px;"></ion-icon>
                             <span style="font-size: 10px; opacity: 0.8;">LINK</span>
                         </div>`;
-                        clickAction = `window.open('${res.link}', '_blank')`;
+                        clickAction = `event.stopPropagation(); window.open('${safeLink}', '_blank')`;
                     }
+                    // UPDATED LOGIC END
 
                     // Selection Overlay
                     let overlayHtml = '';
@@ -3751,7 +4275,7 @@
 
                     return `
                         <div class="resource-card"
-                    style="background: #2a2a2a; border-radius: 12px; overflow: hidden; position: relative; border: ${isSelectMode && window.selectedResourceIds.has(res.id) ? '2px solid var(--primary-color)' : '1px solid #333'}; transition: all 0.2s ease; aspect-ratio: 0.85; display: flex; flex-direction: column;"
+                    style="background: #2a2a2a; border-radius: 12px; overflow: hidden; position: relative; border: ${isSelectMode && window.selectedResourceIds.has(res.id) ? '2px solid var(--primary-color)' : '1px solid #333'}; transition: all 0.2s ease; aspect-ratio: 0.75; display: flex; flex-direction: column;"
                         >
                         ${overlayHtml}
                         <!-- Preview Area -->
@@ -3759,11 +4283,11 @@
                             ${previewBlock}
                         </div>
 
-                        <!--Footer Info-- >
+                        <!--Footer Info-->
                         <div style="padding: 12px; background: #2a2a2a; position: relative; z-index: 2;">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
-                                <h3 style="margin: 0; font-size: 14px; line-height: 1.3; max-height: 2.6em; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; flex: 1; padding-right: 8px; color: #fff;" title="${res.title}">
-                                    ${res.title}
+                                <h3 style="margin: 0; font-size: 13px; line-height: 1.35; max-height: 5.4em; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; flex: 1; padding-right: 8px; color: #fff;" title="${safeTitle}">
+                                    ${displayTitle}
                                 </h3>
                                 ${isOwnerResource && !isSelectMode ?
                             `<button onclick="event.stopPropagation(); deleteResource('${res.id}', '${res.uploadedBy}')" style="background: none; border: none; cursor: pointer; color: #dc3545; padding: 0; display: flex;"><ion-icon name="trash-outline"></ion-icon></button>`
@@ -3783,7 +4307,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div > `;
+                    </div> `;
                 }).join('');
 
                 container.innerHTML = headerHtml + `
@@ -3932,26 +4456,41 @@
         };
 
         window.handleResourceFileSelect = function (event) {
-            const file = event.target.files[0];
-            if (!file) return;
+            const files = event.target.files;
+            if (!files || files.length === 0) return;
 
-            const maxSize = 100 * 1024 * 1024; // 100MB (Cloudinary free tier supports this)
-            if (file.size > maxSize) {
-                showToast('File size must be less than 100MB', 'error');
-                event.target.value = '';
-                return;
+            window.resourceFilesBatch = files;
+
+            if (files.length > 1) {
+                // Batch Mode
+                const totalSize = Array.from(files).reduce((acc, f) => acc + f.size, 0);
+                const sizeInMB = (totalSize / (1024 * 1024)).toFixed(2);
+                document.getElementById('res-file-info').textContent = `Batch Selected: ${files.length} files (${sizeInMB} MB Total)`;
+                document.getElementById('res-title').value = `Batch Upload (${files.length} items)`;
+            } else {
+                // Single Mode
+                const file = files[0];
+                const maxSize = 100 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    showToast('File size must be less than 100MB', 'error');
+                    event.target.value = '';
+                    return;
+                }
+
+                resourceFileName = file.name;
+                resourceFileObject = file;
+                if (!document.getElementById('res-title').value) {
+                    document.getElementById('res-title').value = file.name;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    resourceFileData = e.target.result;
+                    const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+                    document.getElementById('res-file-info').textContent = `Selected: ${file.name} (${sizeInMB} MB)`;
+                };
+                reader.readAsDataURL(file);
             }
-
-            resourceFileName = file.name;
-            resourceFileObject = file; // Store the actual File object for Cloudinary
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                resourceFileData = e.target.result;
-                const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
-                document.getElementById('res-file-info').textContent = `Selected: ${file.name} (${sizeInMB} MB)`;
-            };
-            reader.readAsDataURL(file);
         };
 
         // Helper function to upload file to Catbox.moe via Local Proxy
@@ -3960,12 +4499,11 @@
                 console.log('Starting Upload via Proxy:', file.name);
 
                 const formData = new FormData();
+                formData.append('reqtype', 'fileupload');
                 formData.append('fileToUpload', file);
 
-                // Determine API URL based on environment
-                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                // If local, assume our node proxy is running on 3000. If prod, use relative path.
-                const apiUrl = isLocalhost ? 'http://localhost:3000/api/upload' : '/api/upload';
+                // Use local proxy server strictly (as requested)
+                const apiUrl = 'http://localhost:3000/api/upload';
 
                 const response = await fetch(apiUrl, {
                     method: 'POST',
@@ -4014,8 +4552,42 @@
                 const downloadBtn = document.getElementById('preview-download-btn');
                 const loader = document.getElementById('preview-loader');
 
+                // ENFORCE FULL SCREEN (Premium Focus Mode)
+                const modalContent = modal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.style.width = '100%';
+                    modalContent.style.height = '100%';
+                    modalContent.style.maxWidth = 'none';
+                    modalContent.style.borderRadius = '0';
+                    modalContent.style.margin = '0';
+                }
+
+                // INJECT POP-OUT BLOCKER (Visual Mask)
+                const frameContainer = frame.parentElement;
+                let blocker = document.getElementById('popout-blocker');
+                if (!blocker) {
+                    blocker = document.createElement('div');
+                    blocker.id = 'popout-blocker';
+                    blocker.style.position = 'absolute';
+                    blocker.style.top = '0';
+                    blocker.style.right = '0';
+                    blocker.style.width = '80px';
+                    blocker.style.height = '60px'; // Covers the top-right corner
+                    blocker.style.zIndex = '100';
+                    blocker.style.backgroundColor = '#2a2a2a'; // Match App Theme (Dark)
+                    blocker.style.cursor = 'default';
+                    frameContainer.appendChild(blocker);
+                } else {
+                    blocker.style.display = 'block';
+                }
+
+                // DISABLE POPOUT / NEW TABS (Security)
+                frame.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin');
+
                 title.textContent = filename;
-                downloadBtn.onclick = () => downloadFile(url, filename);
+
+                // Hide download button (Premium Feature)
+                if (downloadBtn) downloadBtn.style.display = 'none';
 
                 // Clear and show loader
                 frame.src = 'about:blank';
@@ -4027,31 +4599,13 @@
 
                 modal.classList.add('show');
             } else {
-                downloadFile(url, filename);
+                showToast('Preview not available. Downloads are a Premium feature.', 'warning');
             }
         };
 
         window.downloadFile = async function (url, filename) {
-            try {
-                showToast('Starting download...', 'info');
-                // Fetch as blob to force download for cross-origin files
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('Network error');
-
-                const blob = await response.blob();
-                const blobUrl = URL.createObjectURL(blob);
-
-                const a = document.createElement('a');
-                a.href = blobUrl;
-                a.download = filename || 'download';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(blobUrl);
-            } catch (error) {
-                console.error('Download error, falling back to open:', error);
-                window.open(url, '_blank');
-            }
+            showToast('Downloads are a Premium feature.', 'warning');
+            return;
         };
 
         window.showResourceUploadModal = function () {
@@ -4097,7 +4651,7 @@
             } else if (selectedResourceType === 'image' && !resourceImageData) {
                 showToast('Please select an image', 'error');
                 return;
-            } else if (selectedResourceType === 'file' && !resourceFileData) {
+            } else if (selectedResourceType === 'file' && !resourceFileData && (!window.resourceFilesBatch || window.resourceFilesBatch.length === 0)) {
                 showToast('Please select a file', 'error');
                 return;
             }
@@ -4123,6 +4677,52 @@
                         showLoading(false);
                         return;
                     }
+                }
+
+                // BATCH UPLOAD LOGIC
+                if (selectedResourceType === 'file' && window.resourceFilesBatch && window.resourceFilesBatch.length > 1) {
+                    const files = window.resourceFilesBatch;
+                    showToast(`Starting batch upload of ${files.length} files...`, 'info');
+                    let successCount = 0;
+                    const category = document.getElementById('res-category').value || 'Miscellaneous';
+
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        try {
+                            showToast(`Uploading ${i + 1}/${files.length}: ${file.name}...`, 'info');
+                            const catboxResult = await uploadToCatbox(file);
+
+                            const batchData = {
+                                courseCode,
+                                courseName,
+                                level,
+                                title: file.name,
+                                description: description || 'Batch Upload',
+                                category: category,
+                                institution: institution || 'Babcock University',
+                                uploadedBy: uid,
+                                uploadedByName: userData.username || userData.displayName || 'Student',
+                                uploadedByProfilePicture: userData.profilePicture || null,
+                                timestamp: Date.now(),
+                                votes: 0,
+                                type: 'file',
+                                fileUrl: catboxResult.url,
+                                fileName: file.name,
+                                fileSize: (catboxResult.bytes / (1024 * 1024)).toFixed(2) + ' MB'
+                            };
+
+                            await addDoc(collection(db, 'resources'), batchData);
+                            successCount++;
+                        } catch (err) {
+                            console.error(`Batch upload error for ${file.name}:`, err);
+                        }
+                    }
+
+                    showToast(`Batch completed: ${successCount} uploaded.`, 'success');
+                    closeModal('resource-upload-modal');
+                    loadResources();
+                    showLoading(false);
+                    return;
                 }
 
                 const resourceData = {
@@ -5770,6 +6370,63 @@
         };
 
 
+        // Resources Lock Logic
+        // Resources Lock Logic
+        window.resourcesUnlocked = false;
+
+        window.checkResourcesPasscode = function () {
+            const input = document.getElementById('resources-passcode');
+            const errorMsg = document.getElementById('lock-error-msg');
+            const overlay = document.getElementById('resources-lock-overlay');
+            const container = document.getElementById('community-resources-container');
+
+            if (input.value === 'ATLASRES2008') {
+                window.resourcesUnlocked = true;
+                unlockResourcesUI();
+                input.value = '';
+                errorMsg.style.display = 'none';
+            } else {
+                errorMsg.style.display = 'block';
+                input.classList.add('shake');
+                setTimeout(() => input.classList.remove('shake'), 500);
+            }
+        };
+
+        function unlockResourcesUI() {
+            const overlay = document.getElementById('resources-lock-overlay');
+            const container = document.getElementById('community-resources-container');
+
+            if (overlay && container) {
+                overlay.style.display = 'none';
+                container.style.filter = 'none';
+                container.style.pointerEvents = 'auto';
+                container.style.userSelect = 'auto';
+            }
+        }
+
+        // Check lock status on load/tab switch
+        // Check lock status on load/tab switch
+        window.checkResourcesLock = function () {
+            const isUnlocked = window.resourcesUnlocked === true;
+            const container = document.getElementById('community-resources-container');
+            const overlay = document.getElementById('resources-lock-overlay');
+
+            // Special case: If we are not on the resources tab, the container is hidden anyway.
+            // We only need to apply the blur/overlay logic when the tab is active.
+
+            if (isUnlocked) {
+                unlockResourcesUI();
+            } else {
+                if (overlay) overlay.style.display = 'flex';
+                if (container) {
+                    container.style.filter = 'blur(5px)';
+                    container.style.pointerEvents = 'none';
+                    container.style.userSelect = 'none';
+                }
+            }
+        };
+
+
         // USER SEARCH & PROFILE FUNCTIONS
         let allUsers = [];
 
@@ -7311,6 +7968,43 @@
             }
         };
 
+
+        window.switchCommunityTab = function (tab) {
+            // Update Tab Buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`comm-${tab}-tab`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            // Get Containers
+            const feedContainer = document.getElementById('community-feed-container');
+            const resourcesWrapper = document.getElementById('community-resources-wrapper');
+            const messagesContainer = document.getElementById('community-messages-container');
+
+            // Hide All
+            if (feedContainer) feedContainer.classList.add('hidden');
+            if (resourcesWrapper) resourcesWrapper.classList.add('hidden'); // Hides overlay + content
+            if (messagesContainer) messagesContainer.classList.add('hidden');
+
+            // Show Selected
+            if (tab === 'feed') {
+                if (feedContainer) feedContainer.classList.remove('hidden');
+            } else if (tab === 'resources') {
+                if (resourcesWrapper) resourcesWrapper.classList.remove('hidden');
+
+                // Check lock status
+                if (window.checkResourcesLock) window.checkResourcesLock();
+
+                // Ensure inner container is technically visible (for blur effect to be visible when locked)
+                const innerContainer = document.getElementById('community-resources-container');
+                if (innerContainer) innerContainer.classList.remove('hidden');
+
+                if (window.loadResources) window.loadResources();
+            } else if (tab === 'messages') {
+                if (messagesContainer) messagesContainer.classList.remove('hidden');
+                if (window.loadConversations) window.loadConversations();
+            }
+        };
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             const uid = localStorage.getItem('kobi_atlas_uid');
@@ -7387,7 +8081,7 @@
 
                 <div class="form-group hidden" id="res-file-container">
                     <label>Upload File</label>
-                    <input type="file" id="res-file-input" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
+                    <input type="file" id="res-file-input" multiple accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
                         onchange="handleResourceFileSelect(event)">
                     <div id="res-file-info" style="margin-top: 10px; font-size: 14px; color: #999;"></div>
                 </div>
@@ -7798,6 +8492,7 @@
                 style="width: 100%; margin-top: 10px; background: transparent; color: #888;">Cancel</button>
         </div>
     </div>
+
 
 </body>
 

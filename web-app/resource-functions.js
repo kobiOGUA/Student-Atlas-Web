@@ -4,6 +4,7 @@ let selectedResourceType = 'link';
 let resourceImageData = null;
 let resourceFileData = null;
 let resourceFileName = null;
+let resourceThumbnailData = null;
 
 window.setResourceType = function (type) {
     selectedResourceType = type;
@@ -26,25 +27,52 @@ window.handleResourceImageSelect = function (event) {
     const file = event.target.files[0];
     if (!file) return;
 
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 10 * 1024 * 1024; // 10MB limit (increased from 5)
     if (file.size > maxSize) {
-        showToast('Image size must be less than 5MB', 'error');
+        showToast('Image size must be less than 10MB', 'error');
         event.target.value = '';
         return;
     }
 
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        resourceImageData = e.target.result;
-        document.getElementById('res-image-preview').src = e.target.result;
-        document.getElementById('res-image-preview').style.display = 'block';
-    };
-    reader.readAsDataURL(file);
+    // Show loading indicator in preview
+    const previewEl = document.getElementById('res-image-preview');
+    previewEl.style.display = 'block';
+    previewEl.style.opacity = '0.5';
+
+    // Use imageCompression.js if available
+    if (window.compressResourceImage) {
+        window.compressResourceImage(file)
+            .then(compressedDataUrl => {
+                resourceImageData = compressedDataUrl;
+                previewEl.src = compressedDataUrl;
+                previewEl.style.opacity = '1';
+                console.log('Image compressed for upload');
+            })
+            .catch(err => {
+                console.error('Compression failed, falling back to original', err);
+                readFileAsDataURL(file);
+            });
+    } else {
+        readFileAsDataURL(file);
+    }
+
+    function readFileAsDataURL(f) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            resourceImageData = e.target.result;
+            previewEl.src = e.target.result;
+            previewEl.style.opacity = '1';
+        };
+        reader.readAsDataURL(f);
+    }
 };
 
-window.handleResourceFileSelect = function (event) {
+window.handleResourceFileSelect = async function (event) {
     const file = event.target.files[0];
     if (!file) return;
+
+    // Reset global data
+    resourceThumbnailData = null;
 
     const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
@@ -58,9 +86,39 @@ window.handleResourceFileSelect = function (event) {
     reader.onload = function (e) {
         resourceFileData = e.target.result;
         const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
-        document.getElementById('res-file-info').textContent = `Selected: ${file.name} (${sizeInMB} MB)`;
+        let infoText = `Selected: ${file.name} (${sizeInMB} MB)`;
+        document.getElementById('res-file-info').textContent = infoText;
     };
     reader.readAsDataURL(file);
+
+    // Generate Thumbnail for PDF
+    if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+        try {
+            document.getElementById('res-file-info').textContent += ' - Generating thumbnail...';
+
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            const page = await pdf.getPage(1);
+
+            const scale = 0.5; // Small thumbnail
+            const viewport = page.getViewport({ scale: scale });
+            const canvas = document.createElement('canvas');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            await page.render({
+                canvasContext: canvas.getContext('2d'),
+                viewport: viewport
+            }).promise;
+
+            resourceThumbnailData = canvas.toDataURL('image/jpeg', 0.7);
+            console.log('PDF Thumbnail generated!');
+            document.getElementById('res-file-info').textContent += ' ✓';
+        } catch (error) {
+            console.error('Thumbnail generation failed:', error);
+            document.getElementById('res-file-info').textContent += ' (No thumbnail)';
+        }
+    }
 };
 
 // Replace the existing window.uploadResource function with this:
@@ -114,6 +172,9 @@ window.uploadResource = async function () {
         } else if (selectedResourceType === 'file') {
             resourceData.fileData = resourceFileData;
             resourceData.fileName = resourceFileName;
+            if (resourceThumbnailData) {
+                resourceData.thumbnail = resourceThumbnailData;
+            }
         }
 
         await addDoc(collection(db, 'resources'), resourceData);
@@ -133,6 +194,7 @@ window.uploadResource = async function () {
         resourceImageData = null;
         resourceFileData = null;
         resourceFileName = null;
+        resourceThumbnailData = null;
         setResourceType('link'); // Reset to link
 
         loadResources();

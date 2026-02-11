@@ -70,7 +70,10 @@ async function renderPost(post, currentUserId) {
             : (user?.username?.[0]?.toUpperCase() || '?')}
                 </div>
                 <div style="flex: 1;">
-                    <div style="font-weight: bold;">${user?.displayName || user?.username || 'Unknown User'}</div>
+                    <div style="font-weight: bold; display: flex; align-items: center; gap: 4px;">
+                        ${user?.displayName || user?.username || 'Unknown User'}
+                        ${user?.isAdmin ? `<ion-icon name="shield-checkmark" style="color: #FFD700; font-size: 14px;" title="Admin"></ion-icon>` : ''}
+                    </div>
                     <div class="text-secondary text-tiny">${formatDate(post.timestamp)}</div>
                 </div>
                 ${isOwner ? `<button class="btn-icon" onclick="handleDeletePost('${post.id}')">🗑️</button>` : ''}

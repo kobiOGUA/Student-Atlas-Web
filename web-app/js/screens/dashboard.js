@@ -1,7 +1,8 @@
 // Dashboard Screen
-import { fetchSemesters } from '../services/semester.js';
+import { fetchSemesters, updateSemester } from '../services/semester.js';
 import { calculateCGPA, calculatePredictedCGPA } from '../utils/calculations.js';
 import { storage } from '../utils/storage.js';
+import { showToast, showLoading } from '../utils/helpers.js';
 
 export function renderDashboardScreen() {
     return `
@@ -78,6 +79,17 @@ export async function initDashboardScreen() {
                 </div>
                 <p class="text-secondary text-small">${currentSem.courses?.length || 0} Courses Enrolled</p>
                 <p style="font-weight: bold; margin-top: 8px;">Target GPA: <span style="color: var(--success);">5.00</span></p>
+                
+                <div style="margin-top: 15px; display: flex; gap: 10px; border-top: 1px solid var(--border); padding-top: 10px;">
+                    <button onclick="event.stopPropagation(); window.updateSemesterStatus('${currentSem.id}', 'past')" 
+                            class="btn-outline" style="flex: 1; padding: 6px; font-size: 12px;">
+                        End Semester
+                    </button>
+                    <button onclick="event.stopPropagation(); window.updateSemesterStatus('${currentSem.id}', 'pending')" 
+                            class="btn-outline" style="flex: 1; padding: 6px; font-size: 12px;">
+                        Mark Pending
+                    </button>
+                </div>
             </div>
         `;
 
@@ -131,4 +143,23 @@ export async function initDashboardScreen() {
 window.toggleExcludeCurrent = function (checked) {
     storage.setItem('excludeCurrentGPA', String(checked));
     initDashboardScreen(); // Reload to recalculate
+};
+
+window.updateSemesterStatus = async function (semesterId, newType) {
+    if (!confirm(`Are you sure you want to change this semester to ${newType}?`)) return;
+
+    const userId = storage.getItem('kobi_atlas_uid');
+    if (!userId) return;
+
+    try {
+        showLoading(true);
+        await updateSemester(userId, semesterId, { type: newType });
+        showToast('Semester updated successfully', 'success');
+        initDashboardScreen(); // Reload
+    } catch (error) {
+        showToast('Failed to update semester', 'error');
+        console.error(error);
+    } finally {
+        showLoading(false);
+    }
 };
