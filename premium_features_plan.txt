@@ -1,0 +1,155 @@
+# Premium Features & Payment Implementation Plan
+
+## Premium Feature Ideas (Next Update)
+1. **Offline Downloads**: As implemented, downloading resources will be restricted to premium users.
+2. **Ad-Free Experience**: Remove all banner ads and sponsored content.
+3. **Advanced GPA Insights**:
+    - "What-If" Calculator (Simulate future grades to see impact on CGPA).
+    - Historical Trend Analysis (Graph showing GPA progression over semesters).
+    - Peer Comparison (Anonymous percentile ranking).
+4. **Unlimited File Uploads**: Increase file size limit and storage capacity for premium users.
+5. **Priority Support**: Dedicated support channel with faster response times.
+6. **Custom Themes**: Exclusive dark mode themes, accent colors, and app icons.
+7. **Schedule Export**: Ability to export class schedule to Google Calendar/Outlook.
+8. **AI Study Assistant**: Integration with an AI tutor (like ChatGPT API) trained on course materials.
+9. **Private Folders**: Ability to create password-protected folders for personal study materials.
+
+---
+
+## Implementation Plan: Payment System (Stripe)
+
+We will use **Stripe** as it is robust, developer-friendly, and handles recurring subscriptions easily.
+
+### Prerequisites
+1.  **Stripe Account**: Create an account at [stripe.com](https://stripe.com).
+2.  **API Keys**: Get your `Publishable Key` (for frontend) and `Secret Key` (for backend).
+3.  **Firebase Functions** (or your existing Node.js server): To handle secure payment processing.
+
+### Step 1: Backend Setup (Node.js / Firebase Functions)
+
+Install dependencies:
+`npm install stripe`
+
+Create a backend endpoint to create a **Payment Intent** or **Checkout Session**.
+
+**`server.js` (or Firebase Cloud Function):**
+
+```javascript
+const stripe = require('stripe')('YOUR_STRIPE_SECRET_KEY');
+
+app.post('/create-checkout-session', async (req, res) => {
+  const { priceId, userId } = req.body;
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      mode: 'subscription', // or 'payment' for one-time
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price: priceId, // Created in Stripe Dashboard
+          quantity: 1,
+        },
+      ],
+      success_url: 'https://your-app-url.com/success?session_id={CHECKOUT_SESSION_ID}',
+      cancel_url: 'https://your-app-url.com/dashboard',
+      client_reference_id: userId, // To link payment to user
+      metadata: { userId: userId }
+    });
+
+    res.json({ url: session.url });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Webhook to handle successful payment (CRITICAL for updating DB)
+app.post('/stripe-webhook', express.raw({type: 'application/json'}), async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, 'YOUR_WEBHOOK_SECRET');
+  } catch (err) {
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    const userId = session.client_reference_id;
+    
+    // UPDATE FIREBASE USER "isPremium" STATUS
+    // const userRef = db.collection('users').doc(userId);
+    // await userRef.update({ isPremium: true, subscriptionId: session.subscription });
+    console.log(`User ${userId} is now Premium!`);
+  }
+
+  res.send();
+});
+```
+
+### Step 2: Frontend Implementation (Client-Side)
+
+On your "Upgrade to Premium" page/modal:
+
+```javascript
+async function upgradeToPremium() {
+    const user = firebase.auth().currentUser;
+    if (!user) return;
+
+    try {
+        const response = await fetch('http://localhost:3000/create-checkout-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                priceId: 'price_123456789', // From Stripe Dashboard
+                userId: user.uid 
+            })
+        });
+
+        const data = await response.json();
+        if (data.url) {
+            window.location.href = data.url; // Redirect to Stripe Checkout
+        } else {
+            alert('Payment initialization failed');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+```
+
+### Step 3: Verify Premium Status (Frontend)
+
+In `dashboard.html` or global app logic, check the user's status before allowing premium actions (like downloading).
+
+```javascript
+async function checkPremiumStatus() {
+    const user = firebase.auth().currentUser;
+    const userDoc = await db.collection('users').doc(user.uid).get();
+    const isPremium = userDoc.data()?.isPremium;
+
+    if (isPremium) {
+        // Enable download buttons
+        document.querySelectorAll('.download-btn').forEach(btn => btn.style.display = 'block');
+    } else {
+        // Show upgrade prompt
+    }
+}
+```
+
+### Alternative: Paystack / Flutterwave (For Nigeria/Africa)
+If your target audience is primarily in Nigeria, consider **Paystack**. The flow is similar but supports local payment methods (Bank Transfer, USSD) better.
+
+**Paystack Implementation Snippet:**
+```javascript
+const paystack = new PaystackPop();
+paystack.newTransaction({
+    key: 'YOUR_PUBLIC_KEY',
+    email: user.email,
+    amount: 500000, // 5000.00 NGN (in kobo)
+    onSuccess: (transaction) => { 
+        // Call backend to verify transaction and update DB
+        verifyPaystackTransaction(transaction.reference);
+    }
+});
+```

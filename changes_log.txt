@@ -1,3 +1,7 @@
+
+- Removed download functionality and disabled pop-outs in preview modal (Premium Feature implementation).
+- Implemented Batch Upload functionality for resources.
+- Fixed validation logic to support batch uploads without errors.
 Summary of changes between commit 1e24e49b (Jan 11) and dd434c17 (Jan 14):
 
 FILE: web-app/dashboard.html
@@ -30,3 +34,6 @@ FILE: web-app/dashboard.html
    - Fixed `ReferenceError: loadSchedule is not defined` by removing premature lines trying to assign functions before they were defined.
    - Fixed `ReferenceError: Cannot access 'allPosts'` by correcting function scope and ordering.
    - Fixed "Refresh" buttons not working by ensuring all load functions are attached to the global `window` object.
+- Resized resource cards (Aspect Ratio 0.75) and allowed Titles to span 4 lines to display full file names.
+Reverted resource navigation to hierarchical folder structure (removed Tabs from Course View). Removed Category Filter Tabs from Main Community Resources Screen.
+Verified Word/PPT support: Uploads enabled and Preview uses cloud conversion.
