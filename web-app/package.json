@@ -1,0 +1,8 @@
+{
+  "type": "module",
+  "dependencies": {
+    "firebase": "^12.6.0",
+    "firebase-admin": "^13.6.0",
+    "qrcode-terminal": "^0.12.0"
+  }
+}

@@ -16,7 +16,7 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    if (req.url === '/api/upload' && req.method === 'POST') {
+    if (req.url === '/api/catbox' && req.method === 'POST') {
         console.log('Received upload request request - Streaming to Catbox...');
 
         const options = {

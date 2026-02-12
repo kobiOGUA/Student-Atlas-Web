@@ -4503,7 +4503,7 @@
                 formData.append('fileToUpload', file);
 
                 // Use local proxy server strictly (as requested)
-                const apiUrl = 'http://localhost:3000/api/upload';
+                const apiUrl = '/api/catbox';
 
                 const response = await fetch(apiUrl, {
                     method: 'POST',
