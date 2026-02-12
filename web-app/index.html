@@ -745,7 +745,7 @@
                 localStorage.setItem('kobi_atlas_uid', authData.uid);
                 localStorage.setItem('kobi_atlas_email', authData.email);
 
-                window.location.href = 'dashboard.html';
+                window.location.href = `dashboard.html?v=${Date.now()}`;
             } catch (error) {
                 console.error('Login error:', error);
                 showLoading(false);
