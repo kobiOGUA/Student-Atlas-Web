@@ -701,51 +701,71 @@
 
                 // Load Settings and Profile
                 try {
-                    // Fetch full user profile for Admin check
-                    const userProfileDoc = await db.collection('users').doc(uid).get();
-                    if (userProfileDoc.exists) {
-                        const userData = userProfileDoc.data();
-
-                        // Check for Admin Status
-                        if (userData.isAdmin) {
-                            // 1. Add Badge to Profile
-                            const profileNameEl = document.querySelector('#profile-section .section-title'); // Or wherever name is better placed 
-                            // Actually, let's find a better place for the badge. Maybe next to the generated profile picture or we need to fetch username.
-                            // The settings page doesn't explicitly show "Username" in view mode, it shows "Edit Profile". 
-                            // I'll add the badge to the header title or next to the profile picture.
-
-                            // Let's add an Admin Panel button
-                            const navButtons = document.getElementById('profile-nav-buttons');
-                            if (navButtons) {
-                                const adminBtn = document.createElement('button');
-                                adminBtn.className = 'button';
-                                adminBtn.onclick = () => window.location.href = 'admin.html';
-                                adminBtn.innerHTML = `
-                                    <ion-icon name="shield-checkmark" style="color: #FFD700;"></ion-icon>
-                                    <span style="font-weight: bold; color: #FFD700;">Admin Panel</span>
-                                 `;
-                                navButtons.insertBefore(adminBtn, navButtons.firstChild);
-                            }
-                        }
+                    // Cache First Strategy
+                    const cachedProfile = localStorage.getItem('kobi_atlas_user_profile');
+                    if (cachedProfile) {
+                        const userData = JSON.parse(cachedProfile);
+                        renderAdminButton(userData);
                     }
+
+                    // Background fetch
+                    db.collection('users').doc(uid).get().then(userProfileDoc => {
+                        if (userProfileDoc.exists) {
+                            const userData = userProfileDoc.data();
+                            localStorage.setItem('kobi_atlas_user_profile', JSON.stringify(userData));
+                            renderAdminButton(userData);
+                        }
+                    });
 
                     // Academic Data
+                    // Try Local Storage First
+                    const localGrading = localStorage.getItem('kobi_atlas_grading_system');
+                    const localCA = localStorage.getItem('kobi_atlas_ca_system');
+                    if (localGrading) gradingSystem = JSON.parse(localGrading);
+                    if (localCA) caSystem = JSON.parse(localCA);
+
+                    // Then update from Cloud
                     const docRef = db.collection('users').doc(uid).collection('settings').doc('academic');
-                    const docSnap = await docRef.get();
-                    if (docSnap.exists) {
-                        isSettingsFound = true;
-                        const data = docSnap.data();
-                        if (data.gradingSystem) {
-                            gradingSystem = data.gradingSystem;
-                            localStorage.setItem('kobi_atlas_grading_system', JSON.stringify(gradingSystem));
+                    docRef.get().then(docSnap => {
+                        if (docSnap.exists) {
+                            const data = docSnap.data();
+                            if (data.gradingSystem) {
+                                gradingSystem = data.gradingSystem;
+                                localStorage.setItem('kobi_atlas_grading_system', JSON.stringify(gradingSystem));
+                            }
+                            if (data.caSystem) {
+                                caSystem = data.caSystem;
+                                localStorage.setItem('kobi_atlas_ca_system', JSON.stringify(caSystem));
+                            }
+                            // Re-render only if needed, but for settings page inputs usually init once.
+                            // We might need to refresh UI if user is actively editing.
+                            // For V1, local first is enough speed up.
                         }
-                        if (data.caSystem) {
-                            caSystem = data.caSystem;
-                            localStorage.setItem('kobi_atlas_ca_system', JSON.stringify(caSystem));
-                        }
-                    }
+                    });
+
                 } catch (e) {
                     console.error('Error fetching data:', e);
+                }
+            }
+
+            // Hide loading overlay immediately if we have cached data or fallback defaults
+            if (loadingOverlay) loadingOverlay.style.display = 'none';
+
+            function renderAdminButton(userData) {
+                // Check for Admin Status
+                if (userData.isAdmin) {
+                    const navButtons = document.getElementById('profile-nav-buttons');
+                    if (navButtons && !document.getElementById('admin-btn')) {
+                        const adminBtn = document.createElement('button');
+                        adminBtn.id = 'admin-btn';
+                        adminBtn.className = 'button';
+                        adminBtn.onclick = () => window.location.href = 'admin.html';
+                        adminBtn.innerHTML = `
+                        <ion-icon name="shield-checkmark" style="color: #FFD700;"></ion-icon>
+                        <span style="font-weight: bold; color: #FFD700;">Admin Panel</span>
+                        `;
+                        navButtons.insertBefore(adminBtn, navButtons.firstChild);
+                    }
                 }
             }
 
@@ -1170,6 +1190,8 @@
                 if (loadingOverlay) loadingOverlay.style.display = 'none';
             }
         }
+        
+        }); // Close DOMContentLoaded defined at start of script
     </script>
 </body>
 
