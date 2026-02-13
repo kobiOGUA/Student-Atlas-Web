@@ -821,12 +821,11 @@
                 style="display: flex; justify-content: space-between; align-items: center; padding-right: 20px;">
                 <div>
                     <h2 style="margin: 0;">Kobi's Atlas</h2>
-                    <p style="margin: 5px 0 0 0; opacity: 0.9;">Academic Overview</p>
                 </div>
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <div id="dashboard-widgets" style="text-align: right; font-size: 11px; max-width: 400px;"></div>
                     <button onclick="loadDashboard()"
-                        style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;"
+                        style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; margin-right: 12px;"
                         title="Refresh">
                         <ion-icon name="refresh-outline" style="font-size: 20px;"></ion-icon>
                     </button>
@@ -930,10 +929,11 @@
 
         <!-- Planner Screen -->
         <div id="planner-screen" class="screen hidden">
-            <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="header"
+                style="display: flex; justify-content: space-between; align-items: center; padding-right: 20px;">
                 <h2 style="margin: 0;">Planner</h2>
                 <button onclick="loadSchedule(); loadTasks();"
-                    style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;"
+                    style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; margin-right: 12px;"
                     title="Refresh">
                     <ion-icon name="refresh-outline" style="font-size: 20px;"></ion-icon>
                 </button>
@@ -961,10 +961,11 @@
 
         <!-- GPA View Screen -->
         <div id="gpa-screen" class="screen hidden">
-            <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="header"
+                style="display: flex; justify-content: space-between; align-items: center; padding-right: 20px;">
                 <h2 style="margin: 0;">GPA Overview</h2>
                 <button onclick="loadGPAView();"
-                    style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;"
+                    style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; margin-right: 12px;"
                     title="Refresh">
                     <ion-icon name="refresh-outline" style="font-size: 20px;"></ion-icon>
                 </button>
@@ -1053,7 +1054,7 @@
             <div class="header">
                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                     <h2 style="margin: 0;">Community</h2>
-                    <div style="display: flex; gap: 16px; align-items: center;">
+                    <div style="display: flex; gap: 16px; align-items: center; padding-right: 20px;">
                         <button onclick="showUserSearch()" style="background: none; border: none; cursor: pointer;">
                             <ion-icon name="search-outline" style="font-size: 24px; color: white;"></ion-icon>
                         </button>
@@ -1101,7 +1102,7 @@
 
             <div id="community-resources-wrapper" class="hidden" style="position: relative;">
                 <div id="resources-lock-overlay"
-                    style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; border-radius: 12px; height: 100%; min-height: 400px;">
+                    style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; border-radius: 0; height: 100vh;">
                     <div style="font-size: 48px; margin-bottom: 16px;">🚧</div>
                     <h2 style="margin: 0 0 8px 0; font-size: 20px;">Kobi isn't quite done with this yet! 🤫</h2>
                     <p style="color: #ccc; margin: 0 0 24px 0; max-width: 300px;">
@@ -1144,13 +1145,7 @@
                 </div>
             </div>
 
-            <div id="community-messages-container" class="hidden">
-                <div style="padding: 20px;">
-                    <div id="messages-content" style="min-height: 400px;">
-                        <!-- Messages will be loaded here -->
-                    </div>
-                </div>
-            </div>
+
         </div>
 
         <!-- Create Post Modal -->
@@ -3310,18 +3305,7 @@
         };
 
         // Load Conversations/Messages
-        window.loadConversations = async function () {
-            const messagesContent = document.getElementById('messages-content');
-            if (!messagesContent) return;
 
-            messagesContent.innerHTML = `
-                <div style="text-align: center; padding: 60px 20px;">
-                    <ion-icon name="chatbubbles-outline" style="font-size: 64px; color: #666; margin-bottom: 16px;"></ion-icon>
-                    <h3 style="color: var(--text-color); margin-bottom: 8px;">Messages Coming Soon</h3>
-                    <p style="color: #999; font-size: 14px;">Direct messaging feature is under development.</p>
-                </div>
-            `;
-        };
 
         window.showScreen = function (screenName) {
             if (screenName === 'messages') {
@@ -6987,7 +6971,7 @@
             await loadConversations();
         };
 
-        async function loadConversations() {
+        window.loadConversations = async function () {
             const uid = localStorage.getItem('kobi_atlas_uid');
             showLoading(true);
 
@@ -7149,47 +7133,120 @@
             }
         };
 
-        async function loadMessages(friendId) {
-            const uid = localStorage.getItem('kobi_atlas_uid');
+        let conversationUnsubscribe = null;
+        let activeChatUnsubscribe1 = null;
+        let activeChatUnsubscribe2 = null;
 
+        window.loadConversations = function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const messagesContent = document.getElementById('messages-content'); // Wait, we use conversations-list
+            // Actually let's assume valid container exist as per previous code
+
+            // Unsubscribe previous listener if exists
+            if (conversationUnsubscribe) {
+                conversationUnsubscribe();
+            }
+
+            const messagesRef = collection(db, 'messages');
+            // Listen for any incoming messages to trigger updates
+            const q = query(messagesRef, where('receiverId', '==', uid));
+
+            conversationUnsubscribe = onSnapshot(q, (snapshot) => {
+                fetchConversationsOnce();
+            });
+
+            // Initial load
+            fetchConversationsOnce();
+        };
+
+        async function fetchConversationsOnce() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
             try {
                 const messagesRef = collection(db, 'messages');
-                const q1 = query(messagesRef, where('senderId', '==', uid), where('receiverId', '==', friendId));
-                const q2 = query(messagesRef, where('senderId', '==', friendId), where('receiverId', '==', uid));
+                const q1 = query(messagesRef, where('senderId', '==', uid));
+                const q2 = query(messagesRef, where('receiverId', '==', uid));
+                const [snapshot1, snapshot2] = await Promise.all([getDocs(q1), getDocs(q2)]);
 
-                const [snap1, snap2] = await Promise.all([getDocs(q1), getDocs(q2)]);
+                const userIds = new Set();
+                const messagesByUser = new Map();
 
-                const messages = [];
-                snap1.forEach(doc => {
+                snapshot1.forEach(doc => {
                     const data = doc.data();
-                    if (!data.deleted) {
-                        messages.push({ id: doc.id, ...data });
-                    }
+                    if (!data.deleted) { userIds.add(data.receiverId); if (!messagesByUser.has(data.receiverId)) messagesByUser.set(data.receiverId, []); messagesByUser.get(data.receiverId).push(data); }
                 });
-                const batch = writeBatch(db);
-                let updateCount = 0;
-
-                snap2.forEach(doc => {
+                snapshot2.forEach(doc => {
                     const data = doc.data();
-                    if (!data.deleted) {
-                        messages.push({ id: doc.id, ...data });
-
-                        if (!data.read) {
-                            batch.update(doc.ref, { read: true });
-                            updateCount++;
-                        }
-                    }
+                    if (!data.deleted) { userIds.add(data.senderId); if (!messagesByUser.has(data.senderId)) messagesByUser.set(data.senderId, []); messagesByUser.get(data.senderId).push(data); }
                 });
 
-                if (updateCount > 0) {
-                    try {
-                        await batch.commit();
-                        loadConversations();
-                    } catch (e) {
-                        console.error("Error marking read:", e);
-                    }
+                const conversations = [];
+                for (const userId of userIds) {
+                    const userDoc = await getDoc(doc(db, 'users', userId));
+                    if (!userDoc.exists()) continue;
+                    const userData = userDoc.data();
+                    const userMessages = messagesByUser.get(userId) || [];
+                    userMessages.sort((a, b) => b.timestamp - a.timestamp);
+                    const lastMsg = userMessages[0];
+                    const unread = userMessages.filter(msg => msg.senderId != uid && (msg.read !== true && msg.read !== 'true')).length;
+
+                    conversations.push({
+                        friendId: userId,
+                        username: userData.username || 'Anonymous',
+                        profilePicture: userData.profilePicture,
+                        lastMessage: lastMsg?.text || 'No messages yet',
+                        timestamp: lastMsg?.timestamp || 0,
+                        unreadCount: unread,
+                        isOnline: userData.lastActive && (Date.now() - userData.lastActive < 300000)
+                    });
                 }
 
+                conversations.sort((a, b) => b.timestamp - a.timestamp);
+                renderConversationList(conversations);
+
+            } catch (e) { console.error("Conversations error", e); }
+        }
+
+        function renderConversationList(conversations) {
+            const unreadMessages = conversations.filter(c => c.unreadCount > 0);
+            const readMessages = conversations.filter(c => c.unreadCount === 0);
+            let html = '';
+
+            if (conversations.length === 0) {
+                html = `<div style="text-align: center; padding: 60px 20px;"><ion-icon name="chatbubbles-outline" style="font-size: 64px; color: #666;"></ion-icon><p style="font-size: 20px; font-weight: 600; margin: 16px 0 8px 0;">No messages found.</p><p style="font-size: 14px; color: #999; margin-bottom: 24px;">Start a conversation by searching for users</p><button class="btn btn-primary" onclick="showUserSearch()">Find Users</button></div>`;
+            } else {
+                if (unreadMessages.length > 0) {
+                    html += `<div style="padding: 8px 12px; margin-bottom: 8px; color: var(--primary-color); font-weight: bold; font-size: 12px; text-transform: uppercase;"> Unread(${unreadMessages.length})</div>`;
+                    html += unreadMessages.map(conv => renderConversationItem(conv)).join('');
+                }
+                if (readMessages.length > 0) {
+                    html += `<div style="padding: 8px 12px; margin-top: 16px; margin-bottom: 8px; color: #999; font-weight: bold; font-size: 12px; text-transform: uppercase;"> Read Messages</div>`;
+                    html += readMessages.map(conv => renderConversationItem(conv)).join('');
+                }
+            }
+            const list = document.getElementById('conversations-list');
+            if (list) list.innerHTML = html;
+        }
+
+        // Standard loadConversations remains "pull to refresh" or we make it realtime? 
+        // User asked "why dont you make the realtime updates right now".
+        // Okay, I will make the CHAT WINDOW realtime.
+
+        window.loadMessages = function (friendId) { // Changed to non-async to return unsubscribe? No, standard void.
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            // Detach old listeners
+            if (activeChatUnsubscribe1) activeChatUnsubscribe1();
+            if (activeChatUnsubscribe2) activeChatUnsubscribe2();
+
+            const messagesRef = collection(db, 'messages');
+
+            // We need to merge two streams: Sent by me, Sent by them.
+            // Firestore doesn't support logical OR in streams easily without 2 listeners.
+
+            let messagesMap = new Map();
+
+            const updateUI = () => {
+                const messages = Array.from(messagesMap.values());
                 messages.sort((a, b) => a.timestamp - b.timestamp);
 
                 const html = messages.length > 0 ? messages.map(msg => {
@@ -7204,13 +7261,56 @@
                 `;
                 }).join('') : '<p style="text-align: center; color: #999; padding: 20px;">No messages yet. Say hi!</p>';
 
-                document.getElementById('messages-list').innerHTML = html;
-                document.getElementById('messages-list').scrollTop = document.getElementById('messages-list').scrollHeight;
+                const list = document.getElementById('messages-list');
+                if (list) {
+                    list.innerHTML = html;
+                    list.scrollTop = list.scrollHeight;
+                }
+            };
 
-            } catch (error) {
-                console.error('Load messages error:', error);
-                showToast('Error sending message', 'error');
-            }
+            // Listener 1: Messages I sent
+            const q1 = query(messagesRef, where('senderId', '==', uid), where('receiverId', '==', friendId));
+            activeChatUnsubscribe1 = onSnapshot(q1, (snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added" || change.type === "modified") {
+                        const data = change.doc.data();
+                        if (!data.deleted) messagesMap.set(change.doc.id, { id: change.doc.id, ...data });
+                    }
+                    if (change.type === "removed") {
+                        messagesMap.delete(change.doc.id);
+                    }
+                });
+                updateUI();
+            });
+
+            // Listener 2: Messages I received
+            const q2 = query(messagesRef, where('senderId', '==', friendId), where('receiverId', '==', uid));
+            activeChatUnsubscribe2 = onSnapshot(q2, (snapshot) => {
+                let needsMarkRead = false;
+                const batch = writeBatch(db);
+
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added" || change.type === "modified") {
+                        const data = change.doc.data();
+                        if (!data.deleted) {
+                            messagesMap.set(change.doc.id, { id: change.doc.id, ...data });
+                            // Mark as read if strictly new/unread
+                            if (!data.read) {
+                                batch.update(change.doc.ref, { read: true });
+                                needsMarkRead = true;
+                            }
+                        }
+                    }
+                    if (change.type === "removed") {
+                        messagesMap.delete(change.doc.id);
+                    }
+                });
+                updateUI();
+
+                if (needsMarkRead) {
+                    batch.commit().catch(e => console.error("Error marking read:", e));
+                }
+            });
         };
 
         window.sendMessage = async function () {
@@ -7668,7 +7768,6 @@
             const uid = localStorage.getItem('kobi_atlas_uid');
             const now = new Date();
             const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            const today = DAYS[now.getDay()];
             const nowTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
             const todayDate = now.toISOString().split('T')[0];
 
@@ -7676,36 +7775,53 @@
             let nextTask = null;
 
             try {
-                // 1. Get Next Event (Today)
+                // 1. Get Next Event (Look ahead 7 days)
                 const semRef = collection(db, 'users', uid, 'semesters');
                 const snapshot = await getDocs(semRef);
                 let currentSemester = null;
                 snapshot.forEach(doc => { if (doc.data().type === 'current') currentSemester = doc.data(); });
 
                 if (currentSemester) {
-                    const candidates = [];
-                    // Courses
-                    (currentSemester.courses || []).forEach(c => {
-                        (c.schedules || (c.schedule ? [c.schedule] : [])).forEach(s => {
-                            if (s.day === today && s.startTime > nowTime) {
-                                candidates.push({ ...s, title: c.name + ' (' + c.code + ')' });
+                    // Check next 7 days
+                    for (let i = 0; i < 7; i++) {
+                        const d = new Date();
+                        d.setDate(now.getDate() + i);
+                        const checkDateStr = d.toISOString().split('T')[0];
+                        const checkDayName = DAYS[d.getDay()];
+                        const isToday = (i === 0);
+
+                        const candidates = [];
+
+                        // Courses
+                        (currentSemester.courses || []).forEach(c => {
+                            (c.schedules || (c.schedule ? [c.schedule] : [])).forEach(s => {
+                                if (s.day === checkDayName) {
+                                    // If today, must be in future time
+                                    if (!isToday || s.startTime > nowTime) {
+                                        candidates.push({ ...s, title: c.name + ' (' + c.code + ')', isToday: isToday, displayDay: checkDayName });
+                                    }
+                                }
+                            });
+                        });
+
+                        // Custom Events
+                        (currentSemester.customEvents || []).forEach(e => {
+                            let matches = false;
+                            if (e.isRecurring && e.day === checkDayName) matches = true;
+                            if (!e.isRecurring && e.date === checkDateStr) matches = true;
+
+                            if (matches) {
+                                if (!isToday || e.startTime > nowTime) {
+                                    candidates.push({ ...e, isToday: isToday, displayDay: checkDayName });
+                                }
                             }
                         });
-                    });
-                    // Custom
-                    (currentSemester.customEvents || []).forEach(e => {
-                        let isToday = false;
-                        if (e.isRecurring && e.day === today) isToday = true;
-                        if (!e.isRecurring && e.date === todayDate) isToday = true;
 
-                        if (isToday && e.startTime > nowTime) {
-                            candidates.push(e);
+                        if (candidates.length > 0) {
+                            candidates.sort((a, b) => a.startTime.localeCompare(b.startTime));
+                            nextEvent = candidates[0];
+                            break; // Found the next event!
                         }
-                    });
-
-                    if (candidates.length > 0) {
-                        candidates.sort((a, b) => a.startTime.localeCompare(b.startTime));
-                        nextEvent = candidates[0];
                     }
                 }
 
@@ -7733,7 +7849,19 @@
                 // Render
                 let html = '';
                 if (nextEvent) {
-                    html += `<div style="margin-bottom: 4px;"> Next Event: <strong>${nextEvent.startTime} - ${nextEvent.title}</strong></div>`;
+                    let timeLabel = nextEvent.startTime;
+                    if (!nextEvent.isToday) {
+                        // Check if tomorrow
+                        const tmrw = new Date();
+                        tmrw.setDate(now.getDate() + 1);
+                        const tmrwDay = DAYS[tmrw.getDay()];
+
+                        if (nextEvent.displayDay === tmrwDay) timeLabel = `Tmrw ${nextEvent.startTime}`;
+                        else timeLabel = `${nextEvent.displayDay.substring(0, 3)} ${nextEvent.startTime}`;
+                    }
+                    html += `<div style="margin-bottom: 4px;"> Next Event: <strong>${timeLabel} - ${nextEvent.title}</strong></div>`;
+                } else {
+                    html += `<div style="margin-bottom: 4px; opacity: 0.7;">No upcoming events</div>`;
                 }
 
                 if (nextTask) {
