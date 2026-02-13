@@ -1102,7 +1102,7 @@
 
             <div id="community-resources-wrapper" class="hidden" style="position: relative; min-height: 80vh;">
                 <div id="resources-lock-overlay"
-                    style="position: absolute; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; border-radius: 0; min-height: 80vh;">
+                    style="position: absolute; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 30vh; text-align: center; border-radius: 0;">
                     <div style="font-size: 48px; margin-bottom: 16px;">🚧</div>
                     <h2 style="margin: 0 0 8px 0; font-size: 20px;">Kobi isn't quite done with this yet! 🤫</h2>
                     <p style="color: #ccc; margin: 0 0 24px 0; max-width: 300px;">
@@ -5864,13 +5864,18 @@
             showLoading(true);
 
             try {
-                const semRef = collection(db, 'users', uid, 'semesters');
-                const snapshot = await getDocs(semRef);
+                let semesters = [];
 
-                const semesters = [];
-                snapshot.forEach(doc => {
-                    semesters.push({ id: doc.id, ...doc.data() });
-                });
+                if (cachedSemesters) {
+                    semesters = cachedSemesters;
+                } else {
+                    const semRef = collection(db, 'users', uid, 'semesters');
+                    const snapshot = await getDocs(semRef);
+                    snapshot.forEach(doc => {
+                        semesters.push({ id: doc.id, ...doc.data() });
+                    });
+                    cachedSemesters = semesters;
+                }
 
                 const currentSemester = semesters.find(s => s.type === 'current');
                 const courses = currentSemester?.courses || [];
@@ -6009,20 +6014,26 @@
             }
         }
 
-        async function loadTasks() {
+        let cachedTasks = null;
+
+        async function loadTasks(forceRefresh = false) {
             const uid = localStorage.getItem('kobi_atlas_uid');
             showLoading(true);
 
             try {
-                // CHANGED: Use root 'tasks' collection to match mobile
-                const tasksRef = collection(db, 'tasks');
-                const q = query(tasksRef, where('userId', '==', uid));
-                const snapshot = await getDocs(q);
+                if (cachedTasks && !forceRefresh) {
+                    allTasks = cachedTasks;
+                } else {
+                    const tasksRef = collection(db, 'tasks');
+                    const q = query(tasksRef, where('userId', '==', uid));
+                    const snapshot = await getDocs(q);
 
-                allTasks = [];
-                snapshot.forEach(doc => {
-                    allTasks.push({ id: doc.id, ...doc.data() });
-                });
+                    allTasks = [];
+                    snapshot.forEach(doc => {
+                        allTasks.push({ id: doc.id, ...doc.data() });
+                    });
+                    cachedTasks = allTasks;
+                }
 
                 // Sort by due date
                 allTasks.sort((a, b) => a.dueDate - b.dueDate);
@@ -6088,6 +6099,21 @@
             } else {
                 document.getElementById('schedule-day-container').classList.add('hidden');
                 document.getElementById('schedule-date-container').classList.remove('hidden');
+            }
+        };
+
+        window.toggleTask = async function (taskId, currentStatus) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            try {
+                const taskRef = doc(db, 'tasks', taskId);  // Root collection
+                await updateDoc(taskRef, { isCompleted: !currentStatus });
+
+                // Invalidate cache
+                cachedTasks = null;
+                loadTasks(true);
+            } catch (error) {
+                console.error('Error toggling task:', error);
+                showToast('Error updating task', 'error');
             }
         };
 
