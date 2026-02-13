@@ -844,47 +844,6 @@
             <div id="past-semesters"></div>
 
             <button class="fab" onclick="showAddSemesterModal()">+</button>
-            <!-- AI Chat Modal -->
-            <div id="ai-chat-modal" class="modal">
-                <div class="modal-content" style="height: 80vh; display: flex; flex-direction: column; padding: 0;">
-                    <div class="modal-header" style="padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                        <h3 style="margin: 0; display: flex; align-items: center; gap: 10px;">
-                            <ion-icon name="sparkles" style="color: #FFD700;"></ion-icon>
-                            Atlas AI Assistant
-                        </h3>
-                        <button class="close-btn" onclick="closeModal('ai-chat-modal')">&times;</button>
-                    </div>
-
-                    <div id="ai-chat-messages"
-                        style="flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px;">
-                        <div class="message ai-message">
-                            <div class="message-content">
-                                Hello! I'm your academic assistant. I can help you manage your schedule, plan tasks, or
-                                answer study questions. How can I help you today?
-                            </div>
-                            <div class="message-time">Just now</div>
-                        </div>
-                    </div>
-
-                    <div class="chat-input-area"
-                        style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px; align-items: center;">
-                        <input type="text" id="ai-input" placeholder="Ask about your schedule..."
-                            style="flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 20px; color: white;"
-                            onkeypress="if(event.key === 'Enter') sendAIMessage()">
-                        <button onclick="sendAIMessage()"
-                            style="background: var(--primary-color); border: none; width: 40px; height: 40px; border-radius: 20px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                            <ion-icon name="send"></ion-icon>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- AI Floating Button (Above Add Semester) -->
-            <button class="fab" onclick="openAIChat()"
-                style="bottom: 90px; background: linear-gradient(135deg, #FFD700, #FFA500); box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);">
-                <ion-icon name="sparkles" style="color: black;"></ion-icon>
-            </button>
-
             <!-- Current Semester Detail Screen -->
             <div id="semester-detail-screen" class="screen hidden">
                 <div class="header">
@@ -2209,11 +2168,6 @@
                     document.querySelectorAll('.fa-refresh, ion-icon[name="refresh-outline"]').forEach(el => el.classList.add('fa-spin'));
                 }
 
-                // Auto-configure AI Key if missing
-                if (!localStorage.getItem('kobi_atlas_ai_key')) {
-                    localStorage.setItem('kobi_atlas_ai_key', 'AIzaSyCbuXLiPpunb2kSaES5dzSzfj66jhuKchA');
-                }
-
                 populateGradeDropdowns();
                 const excludeCurrentGPA = localStorage.getItem('excludeCurrentGPA') === 'true';
 
@@ -2374,126 +2328,6 @@
                     showLoading(false);
                 }
             };
-
-            // Expose functions to window for refresh buttons
-            // --- AI ASSISTANT LOGIC ---
-
-            window.openAIChat = function () {
-                document.getElementById('ai-chat-modal').classList.add('show');
-                // Scroll to bottom
-                const container = document.getElementById('ai-chat-messages');
-                container.scrollTop = container.scrollHeight;
-            };
-
-            window.sendAIMessage = async function () {
-                const input = document.getElementById('ai-input');
-                const text = input.value.trim();
-                if (!text) return;
-
-                // Add User Message
-                addChatMessage(text, 'user');
-                input.value = '';
-
-                // Show Thinking...
-                const loadingId = addChatMessage('Thinking...', 'ai', true);
-
-                try {
-                    // Get Context
-                    const context = getAIContext();
-                    const systemPrompt = `You are Atlas, an academic AI assistant. 
-                Current Date: ${new Date().toLocaleString()}
-                
-                User Context:
-                ${context}
-                
-                Answer the user's question based on this context. Keep answers concise and helpful.`;
-
-                    // Call API (Gemini or Simulated)
-                    const apiKey = localStorage.getItem('kobi_atlas_ai_key');
-                    let responseText = '';
-
-                    if (!apiKey) {
-                        responseText = "I'm ready to help! To enable my brain, please go to Settings and enter your Google Gemini API Key (it's free!). For now, I can only echo: " + text;
-                    } else {
-                        responseText = await callGeminiAPI(apiKey, systemPrompt, text);
-                    }
-
-                    // Update UI
-                    updateChatMessage(loadingId, responseText);
-
-                } catch (error) {
-                    console.error('AI Error:', error);
-                    updateChatMessage(loadingId, "Sorry, I had a brain freeze. Please try again.");
-                }
-            };
-
-            function addChatMessage(text, sender, isLoading = false) {
-                const container = document.getElementById('ai-chat-messages');
-                const div = document.createElement('div');
-                div.className = `message ${sender}-message`;
-                div.id = isLoading ? 'ai-thinking-' + Date.now() : '';
-                div.innerHTML = `
-                <div class="message-content">${text}</div>
-                <div class="message-time">Just now</div>
-            `;
-                container.appendChild(div);
-                container.scrollTop = container.scrollHeight;
-                return div.id;
-            }
-
-            function updateChatMessage(id, newText) {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.querySelector('.message-content').innerHTML = newText.replace(/\n/g, '<br>');
-                    el.id = ''; // Remove ID
-                }
-            }
-
-            function getAIContext() {
-                let context = "";
-
-                // Schedule
-                if (cachedSemesters) {
-                    const current = cachedSemesters.find(s => s.type === 'current');
-                    if (current) {
-                        context += "Current Courses:\n";
-                        current.courses.forEach(c => {
-                            context += `- ${c.code} (${c.name})\n`;
-                            if (c.schedule) context += `  Schedule: ${c.schedule.day} ${c.schedule.startTime}-${c.schedule.endTime}\n`;
-                        });
-                    }
-                }
-
-                // Tasks
-                if (cachedTasks) {
-                    context += "\nPending Tasks:\n";
-                    cachedTasks.forEach(t => {
-                        if (!t.isCompleted) context += `- ${t.title} (Due: ${t.dueDate})\n`;
-                    });
-                }
-
-                return context || "No schedule or tasks found.";
-            }
-
-            async function callGeminiAPI(key, system, userMsg) {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`;
-
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: system + "\n\nUser Question: " + userMsg
-                            }]
-                        }]
-                    })
-                });
-
-                const data = await response.json();
-                if (data.error) throw new Error(data.error.message);
-                return data.candidates[0].content.parts[0].text;
-            }
 
             // Expose functions to window
             window.loadDashboard = loadDashboard;
