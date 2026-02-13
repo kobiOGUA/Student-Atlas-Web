@@ -2209,6 +2209,11 @@
                     document.querySelectorAll('.fa-refresh, ion-icon[name="refresh-outline"]').forEach(el => el.classList.add('fa-spin'));
                 }
 
+                // Auto-configure AI Key if missing
+                if (!localStorage.getItem('kobi_atlas_ai_key')) {
+                    localStorage.setItem('kobi_atlas_ai_key', 'AIzaSyCbuXLiPpunb2kSaES5dzSzfj66jhuKchA');
+                }
+
                 populateGradeDropdowns();
                 const excludeCurrentGPA = localStorage.getItem('excludeCurrentGPA') === 'true';
 
