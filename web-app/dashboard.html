@@ -824,7 +824,7 @@
                 </div>
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <div id="dashboard-widgets" style="text-align: right; font-size: 11px; max-width: 400px;"></div>
-                    <button onclick="loadDashboard()"
+                    <button onclick="loadDashboard(true)"
                         style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; margin-right: 12px;"
                         title="Refresh">
                         <ion-icon name="refresh-outline" style="font-size: 20px;"></ion-icon>
@@ -1709,8 +1709,6 @@
             startRealtimeListeners();
             // Force load all main data views to ensure availability
             loadDashboard();
-            loadSchedule();
-            loadTasks();
         }
 
         // Utility functions
@@ -2151,11 +2149,18 @@
         let cachedSemesters = null;
 
         // Dashboard functions
-        async function loadDashboard() {
+        async function loadDashboard(hardRefresh = false) {
             const uid = localStorage.getItem('kobi_atlas_uid');
             if (!uid) {
                 window.location.href = 'index.html';
                 return;
+            }
+
+            if (hardRefresh) {
+                cachedSemesters = null;
+                cachedTasks = null;
+                // Add spin animation to refresh button if it exists
+                document.querySelectorAll('.fa-refresh, ion-icon[name="refresh-outline"]').forEach(el => el.classList.add('fa-spin'));
             }
 
             populateGradeDropdowns();
@@ -2199,9 +2204,23 @@
                 const current = semesters.filter(s => s.type === 'current');
                 const past = semesters.filter(s => s.type === 'past');
 
+                displaySemesterSection('current-semester', 'Current Semester', current, 'current');
+                displaySemesterSection('pending-semesters', 'Pending Semesters', pending, 'pending');
+                displaySemesterSection('past-semesters', 'Past Semesters', past, 'past');
+
+                // Now safe to load dependent views that use cachedSemesters
+                loadDashboardWidgets();
+
+                // Load Planner Data silently (background) so it's ready when tab is switched
+                // Passing 'false' to use cache if available (which we just populated for semesters)
+                loadSchedule().catch(e => console.log('Background schedule load', e));
+                loadTasks(hardRefresh).catch(e => console.log('Background task load', e));
+
                 const currentSemester = current[0];
                 const hasPredicted = currentSemester || pending.length > 0;
 
+                // Update UI...
+                // This block was accidentally inserted and broke the function scope. Removing.
                 // Calculate CGPAs
                 let totalPoints = 0;
                 let totalUnits = 0;
@@ -2284,6 +2303,7 @@
             loadUnreadCounts();
             if (window.loadDashboardWidgets) window.loadDashboardWidgets();
             showLoading(false);
+            document.querySelectorAll('.fa-spin').forEach(el => el.classList.remove('fa-spin'));
         }
 
         window.updateSemesterStatus = async function (semesterId, newType) {
@@ -7401,6 +7421,8 @@
 
                 document.getElementById('message-input').value = '';
                 await loadMessages(currentChatUser.id);
+                // Auto-refresh conversation list to show new message preview
+                if (window.loadConversations) window.loadConversations();
 
             } catch (error) {
                 console.error('Send message error:', error);

@@ -678,7 +678,11 @@
         window.addEventListener('DOMContentLoaded', async () => {
             // Show loading overlay
             const loadingOverlay = document.getElementById('loading-overlay');
-            if (loadingOverlay) loadingOverlay.style.display = 'flex';
+            if (loadingOverlay) {
+                loadingOverlay.style.display = 'flex';
+                // Safety timeout
+                setTimeout(() => { if (loadingOverlay) loadingOverlay.style.display = 'none'; }, 3000);
+            }
 
             // FAST EXIT: If in setup mode but already done locally, redirect immediately
             const urlParams = new URLSearchParams(window.location.search);
