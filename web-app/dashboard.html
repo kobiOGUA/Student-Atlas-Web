@@ -6024,6 +6024,14 @@
                         }
                     });
 
+                    if (!html) {
+                        html = `
+                        <div class="empty-container">
+                            <ion-icon name="calendar-outline" size="large" style="font-size: 64px; color: #666;"></ion-icon>
+                            <p class="empty-text">No upcoming events found.</p>
+                        </div>
+                        `;
+                    }
                     scheduleContent.innerHTML = html;
 
                 } catch (error) {
