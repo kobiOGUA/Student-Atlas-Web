@@ -1100,9 +1100,9 @@
                 <div id="conversations-list"></div>
             </div>
 
-            <div id="community-resources-wrapper" class="hidden" style="position: relative;">
+            <div id="community-resources-wrapper" class="hidden" style="position: relative; min-height: 80vh;">
                 <div id="resources-lock-overlay"
-                    style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; border-radius: 0; height: 100vh;">
+                    style="position: absolute; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; border-radius: 0; min-height: 80vh;">
                     <div style="font-size: 48px; margin-bottom: 16px;">🚧</div>
                     <h2 style="margin: 0 0 8px 0; font-size: 20px;">Kobi isn't quite done with this yet! 🤫</h2>
                     <p style="color: #ccc; margin: 0 0 24px 0; max-width: 300px;">
@@ -2147,6 +2147,9 @@
             }
         };
 
+        // Cache for semester data to share between dashboard and widgets
+        let cachedSemesters = null;
+
         // Dashboard functions
         async function loadDashboard() {
             const uid = localStorage.getItem('kobi_atlas_uid');
@@ -2156,11 +2159,6 @@
             }
 
             populateGradeDropdowns();
-
-
-            // Legacy grading system redirect removed to support unified settings.html flow
-            // Grading system is handled via getGradingConfig() defaults or settings page.
-
             const excludeCurrentGPA = localStorage.getItem('excludeCurrentGPA') === 'true';
 
             showLoading(true);
@@ -2171,13 +2169,24 @@
                     await signInAnonymously(auth);
                 }
 
+                // Start fetching data in parallel
+                // 1. Semesters (Main Data)
                 const semRef = collection(db, 'users', uid, 'semesters');
-                const snapshot = await getDocs(semRef);
+                const semesterPromise = getDocs(semRef);
+
+                // 2. Unread Counts & Widgets (Can run in parallel)
+                // We call them, but they might need data. Widgets needs semester data.
+                // So we'll trigger unread counts now, and widgets AFTER we get semester data.
+                loadUnreadCounts();
+
+                const snapshot = await semesterPromise;
 
                 const semesters = [];
                 snapshot.forEach(doc => {
                     semesters.push({ id: doc.id, ...doc.data() });
                 });
+
+                cachedSemesters = semesters; // Store for widgets
 
                 // Sort: Latest first (Descending timestamp/createdAt)
                 semesters.sort((a, b) => {
@@ -4855,6 +4864,23 @@
             });
         }
 
+        // Cache for user profiles to avoid repeated fetches
+        const userProfileCache = new Map();
+
+        async function getUserProfile(uid) {
+            if (userProfileCache.has(uid)) return userProfileCache.get(uid);
+
+            try {
+                const docSnap = await getDoc(doc(db, 'users', uid));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    userProfileCache.set(uid, data);
+                    return data;
+                }
+            } catch (e) { console.error(e); }
+            return null;
+        }
+
         async function loadCommunityFeed() {
             const uid = localStorage.getItem('kobi_atlas_uid');
             // Only show full loading if we don't have posts or explicit refresh? 
@@ -4877,18 +4903,29 @@
                 const q = query(postsRef, orderBy('timestamp', 'desc'));
                 const snapshot = await getDocs(q);
 
+                // 1. Collect all data first
+                const postsData = [];
+                snapshot.forEach(docSnap => {
+                    const d = docSnap.data();
+                    if (!d.deleted) postsData.push({ id: docSnap.id, ...d });
+                });
+
+                // 2. Identify unique authors to fetch
+                const authorIds = new Set(postsData.map(p => p.authorId));
+
+                // 3. Fetch authors in parallel
+                const authorPromises = Array.from(authorIds).map(async (authorId) => {
+                    await getUserProfile(authorId);
+                });
+                await Promise.all(authorPromises);
+
+                // 4. Assemble posts with author data
                 allPosts = [];
-                for (const docSnap of snapshot.docs) {
-                    const postData = { id: docSnap.id, ...docSnap.data() };
+                for (const post of postsData) {
+                    const authorData = userProfileCache.get(post.authorId);
+                    if (!authorData) continue; // Skip if user deleted/not found
 
-                    // Check if post is deleted
-                    if (postData.deleted) continue;
-
-                    // Check if author still exists
-                    const authorDoc = await getDoc(doc(db, 'users', postData.authorId));
-                    if (!authorDoc.exists()) continue; // Skip posts by deleted users
-
-                    allPosts.push({ ...postData, authorEmail: authorDoc.data().email });
+                    allPosts.push({ ...post, authorEmail: authorData.email });
                 }
 
                 const feedHTML = allPosts.length > 0 ? allPosts.map(post => {
@@ -7180,10 +7217,17 @@
                 });
 
                 const conversations = [];
+
+                // Fetch profiles in parallel
+                const fetchPromises = Array.from(userIds).map(async (userId) => {
+                    await getUserProfile(userId);
+                });
+                await Promise.all(fetchPromises);
+
                 for (const userId of userIds) {
-                    const userDoc = await getDoc(doc(db, 'users', userId));
-                    if (!userDoc.exists()) continue;
-                    const userData = userDoc.data();
+                    const userData = userProfileCache.get(userId);
+                    if (!userData) continue;
+
                     const userMessages = messagesByUser.get(userId) || [];
                     userMessages.sort((a, b) => b.timestamp - a.timestamp);
                     const lastMsg = userMessages[0];
@@ -7776,10 +7820,16 @@
 
             try {
                 // 1. Get Next Event (Look ahead 7 days)
-                const semRef = collection(db, 'users', uid, 'semesters');
-                const snapshot = await getDocs(semRef);
                 let currentSemester = null;
-                snapshot.forEach(doc => { if (doc.data().type === 'current') currentSemester = doc.data(); });
+
+                // Use cached if available
+                if (cachedSemesters) {
+                    currentSemester = cachedSemesters.find(s => s.type === 'current');
+                } else {
+                    const semRef = collection(db, 'users', uid, 'semesters');
+                    const snapshot = await getDocs(semRef);
+                    snapshot.forEach(doc => { if (doc.data().type === 'current') currentSemester = doc.data(); });
+                }
 
                 if (currentSemester) {
                     // Check next 7 days
