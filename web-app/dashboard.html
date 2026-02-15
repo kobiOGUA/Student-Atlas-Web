@@ -456,6 +456,33 @@
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 5px;
+            /* Space for scrollbar if needed */
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: fit-content;
+            /* Ensure text fits */
+            padding: 10px 12px;
+            /* Slightly smaller padding */
+            font-size: 14px;
+            /* Slightly smaller font */
+        }
+
+        @media (min-width: 768px) {
+            .tab-buttons {
+                overflow-x: visible;
+                white-space: normal;
+            }
+
+            .tab-btn {
+                font-size: 16px;
+                padding: 12px;
+            }
         }
 
         .tab-btn.active {
@@ -3878,6 +3905,41 @@
                 if (gamesContainer) gamesContainer.classList.remove('hidden');
                 if (gameBtn) gameBtn.classList.add('active');
 
+                // --- COMING SOON OVERLAY ---
+                let overlay = document.getElementById('games-coming-soon-overlay');
+                // Ensure container is relative so absolute overlay works
+                if (gamesContainer) gamesContainer.style.position = 'relative';
+
+                if (!overlay) {
+                    overlay = document.createElement('div');
+                    overlay.id = 'games-coming-soon-overlay';
+                    overlay.classList.add('screen'); // Add screen class for padding consistency
+                    overlay.style.position = 'absolute';
+                    overlay.style.inset = '0'; // Cover entire container
+                    overlay.style.background = 'rgba(0,0,0,0.9)'; // Dark overlay
+                    overlay.style.backdropFilter = 'blur(5px)';
+                    overlay.style.zIndex = '1000'; // Make sure it's on top
+                    overlay.style.display = 'flex';
+                    overlay.style.flexDirection = 'column';
+                    overlay.style.alignItems = 'center';
+                    overlay.style.justifyContent = 'center';
+                    overlay.style.textAlign = 'center';
+
+                    overlay.innerHTML = `
+                        <div style="font-size: 64px; margin-bottom: 24px;">🚧</div>
+                        <h2 style="margin: 0 0 16px 0; font-size: 28px; color: white;">Coming Soon!</h2>
+                        <p style="color: #ccc; margin: 0 0 24px 0; max-width: 320px; line-height: 1.6; font-size: 16px;">
+                            Multiplayer games are currently under construction. Check back later for updates!
+                        </p>
+                        <button onclick="switchCommunityTab('feed')" style="padding: 12px 24px; border-radius: 8px; border: none; background: #667eea; color: white; font-weight: bold; cursor: pointer;">
+                            Back to Feed
+                        </button>
+                    `;
+                    gamesContainer.appendChild(overlay);
+                } else {
+                    overlay.style.display = 'flex'; // Ensure it's shown
+                }
+
                 const ticTacToe = document.getElementById('tictactoe-game');
                 const fiftyGuesses = document.getElementById('fiftyguesses-game');
                 const selection = document.getElementById('game-selection');
@@ -5571,11 +5633,14 @@
                 }).join('') : '<div class="empty-container"><p class="empty-text">No posts yet. Be the first to share something!</p></div>';
 
                 // Fetch System Announcement
-                let announcementText = 'Welcome to the Kobi\'s Atlas community!';
+                let announcementText = `Stream the official theme song: https://open.spotify.com/track/4BksvzM7NjlFvhJRoG5kdl?si=8e90fb241f7a4253`;
+                let announcementLink = "https://open.spotify.com/track/4BksvzM7NjlFvhJRoG5kdl?si=8e90fb241f7a4253";
+
                 try {
                     const annSnapshot = await getDoc(doc(db, 'system', 'announcements'));
                     if (annSnapshot.exists()) {
                         announcementText = annSnapshot.data().content || announcementText;
+                        announcementLink = annSnapshot.data().link || announcementLink;
                     }
                 } catch (e) {
                     console.log('Announcement fetch error', e);
@@ -5592,7 +5657,14 @@
                              <span style="font-weight:bold; color:var(--text-color); font-size:14px;">Important Announcements</span>
                              ${editControls}
                         </div>
-                        <div id="announcement-display" style="font-size:15px; color:var(--text-color); line-height:1.6; white-space: pre-wrap; font-weight: 500;">${announcementText}</div>
+                        <div id="announcement-display" style="font-size:15px; color:var(--text-color); line-height:1.6; white-space: pre-wrap; font-weight: 500;">
+                            ${announcementText}
+                            <div style="margin-top: 8px;">
+                                <a href="${announcementLink}" target="_blank" style="color: #1DB954; font-weight: bold; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+                                    <ion-icon name="musical-notes"></ion-icon> Listen on Spotify
+                                </a>
+                            </div>
+                        </div>
                         
                         <div id="announcement-editor" class="hidden" style="margin-top:8px;">
                             <textarea id="announcement-input" style="width:100%; background:var(--input-bg); color:var(--text-color); border:1px solid var(--border-color); border-radius:8px; padding:8px; font-family:inherit; font-size:13px;" rows="3">${announcementText}</textarea>
