@@ -3831,34 +3831,68 @@
         // Navigation
         // Navigation
         window.switchCommunityTab = function (tab) {
-            document.getElementById('community-feed-container').classList.toggle('hidden', tab !== 'feed');
-            document.getElementById('community-messages-container').classList.toggle('hidden', tab !== 'messages');
-            document.getElementById('community-resources-container').classList.toggle('hidden', tab !== 'resources');
-            document.getElementById('games-container-fixed').classList.toggle('hidden', tab !== 'games');
+            // Hide all content containers
+            const feedContainer = document.getElementById('community-feed-container');
+            const messagesContainer = document.getElementById('community-messages-container');
+            const resourcesWrapper = document.getElementById('community-resources-wrapper');
+            const gamesContainer = document.getElementById('games-container-fixed');
 
-            document.getElementById('comm-feed-tab').classList.toggle('active', tab === 'feed');
-            document.getElementById('comm-messages-tab').classList.toggle('active', tab === 'messages');
-            document.getElementById('comm-resources-tab').classList.toggle('active', tab === 'resources');
-            document.getElementById('comm-games-tab').classList.toggle('active', tab === 'games');
+            if (feedContainer) feedContainer.classList.add('hidden');
+            if (messagesContainer) messagesContainer.classList.add('hidden');
+            if (resourcesWrapper) resourcesWrapper.classList.add('hidden');
+            if (gamesContainer) gamesContainer.classList.add('hidden');
 
-            if (tab === 'messages') {
-                loadConversations();
+            // Deactivate all buttons
+            const feedBtn = document.getElementById('comm-feed-tab');
+            const msgBtn = document.getElementById('comm-messages-tab');
+            const resBtn = document.getElementById('comm-resources-tab');
+            const gameBtn = document.getElementById('comm-games-tab');
+
+            if (feedBtn) feedBtn.classList.remove('active');
+            if (msgBtn) msgBtn.classList.remove('active');
+            if (resBtn) resBtn.classList.remove('active');
+            if (gameBtn) gameBtn.classList.remove('active');
+
+            // Show selected content
+            if (tab === 'feed') {
+                if (feedContainer) feedContainer.classList.remove('hidden');
+                if (feedBtn) feedBtn.classList.add('active');
+
+                // Optional: reload feed if empty
+                const postsFeed = document.getElementById('posts-feed');
+                if (window.loadCommunityFeed && postsFeed && postsFeed.children.length === 0) {
+                    window.loadCommunityFeed();
+                }
+
+            } else if (tab === 'messages') {
+                if (messagesContainer) messagesContainer.classList.remove('hidden');
+                if (msgBtn) msgBtn.classList.add('active');
+                if (window.loadConversations) window.loadConversations();
+
             } else if (tab === 'resources') {
-                loadResources();
+                if (resourcesWrapper) resourcesWrapper.classList.remove('hidden');
+                if (resBtn) resBtn.classList.add('active');
+                if (window.loadResources) window.loadResources();
+
             } else if (tab === 'games') {
+                if (gamesContainer) gamesContainer.classList.remove('hidden');
+                if (gameBtn) gameBtn.classList.add('active');
+
                 const ticTacToe = document.getElementById('tictactoe-game');
                 const fiftyGuesses = document.getElementById('fiftyguesses-game');
                 const selection = document.getElementById('game-selection');
 
                 if (ticTacToe && fiftyGuesses && selection) {
-                    if (ticTacToe.classList.contains('hidden') && fiftyGuesses.classList.contains('hidden')) {
+                    // Check if any game is currently active/visible
+                    const isTicTacToeActive = !ticTacToe.classList.contains('hidden');
+                    const isFiftyGuessesActive = !fiftyGuesses.classList.contains('hidden');
+
+                    if (!isTicTacToeActive && !isFiftyGuessesActive) {
+                        // No game active, show selection
                         selection.classList.remove('hidden');
+                        selection.style.display = 'block';
                     }
                 }
-            } else if (tab === 'feed') {
-                // Optional: reload feed if empty
-                const postsFeed = document.getElementById('posts-feed');
-                if (postsFeed && postsFeed.children.length === 0) loadCommunityFeed();
             }
         };
 
