@@ -1079,6 +1079,7 @@
                 <button class="tab-btn active" id="comm-feed-tab" onclick="switchCommunityTab('feed')">Feed</button>
                 <button class="tab-btn" id="comm-resources-tab"
                     onclick="switchCommunityTab('resources')">Resources</button>
+                <button class="tab-btn" id="comm-games-tab" onclick="switchCommunityTab('games')">Games</button>
                 <button class="tab-btn" id="comm-messages-tab" onclick="switchCommunityTab('messages')">
                     Messages
                     <span id="inner-message-badge" class="badge current hidden"
@@ -1142,6 +1143,107 @@
                     <button class="fab" onclick="handleFabClick()">
                         <ion-icon name="add"></ion-icon>
                     </button>
+                </div>
+            </div>
+
+            <!-- Games Container -->
+            <div id="community-games-container" class="hidden">
+                <!-- Game Selection -->
+                <div id="game-selection" class="stat-card" style="margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 16px;">🎮 Available Games</h3>
+                    <div style="display: grid; gap: 12px;">
+                        <button class="btn btn-primary" onclick="selectGame('tictactoe')"
+                            style="display: flex; align-items: center; justify-content: space-between;">
+                            <span>⭕❌ Tic-Tac-Toe</span>
+                            <span style="font-size: 12px; opacity: 0.8;">2 Players Required</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tic-Tac-Toe Game -->
+                <div id="tictactoe-game" class="hidden">
+                    <!-- Mode Selection -->
+                    <div id="ttt-mode-selection" class="stat-card" style="margin-bottom: 20px;">
+                        <button onclick="backToGameSelection()"
+                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">←
+                            Back</button>
+                        <h3 style="margin-bottom: 16px;">Choose Game Mode</h3>
+                        <div style="display: grid; gap: 12px;">
+                            <button class="btn btn-action-primary" onclick="startLocalGame()">
+                                <ion-icon name="phone-portrait-outline" style="margin-right: 8px;"></ion-icon>
+                                Local Multiplayer (One Device)
+                            </button>
+                            <button class="btn btn-action-current" onclick="showOnlinePlayers()">
+                                <ion-icon name="globe-outline" style="margin-right: 8px;"></ion-icon>
+                                Online Multiplayer
+                            </button>
+                            <button class="btn btn-action-graduate" onclick="showTTTLeaderboard()">
+                                <ion-icon name="trophy-outline" style="margin-right: 8px;"></ion-icon>
+                                Leaderboard
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Online Players List -->
+                    <div id="ttt-online-players" class="hidden stat-card" style="margin-bottom: 20px;">
+                        <button onclick="backToTTTMode()"
+                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">←
+                            Back</button>
+                        <h3 style="margin-bottom: 16px;">Online Players</h3>
+                        <input type="text" id="player-search" placeholder="Search players..."
+                            style="margin-bottom: 16px;" oninput="filterOnlinePlayers(this.value)">
+                        <div id="online-players-list" style="max-height: 400px; overflow-y: auto;">
+                            <!-- Players will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Game Board -->
+                    <div id="ttt-game-board" class="hidden stat-card" style="margin-bottom: 20px;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <button onclick="quitGame()"
+                                style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer;">←
+                                Quit</button>
+                            <div id="game-status" style="font-weight: bold; font-size: 18px;">Your Turn</div>
+                        </div>
+
+                        <div
+                            style="display: flex; justify-content: space-between; margin-bottom: 20px; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary);">Player X</div>
+                                <div id="player-x-name" style="font-weight: bold;">You</div>
+                            </div>
+                            <div style="font-size: 24px; opacity: 0.5;">VS</div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 12px; color: var(--text-secondary);">Player O</div>
+                                <div id="player-o-name" style="font-weight: bold;">Opponent</div>
+                            </div>
+                        </div>
+
+                        <div id="ttt-board"
+                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 400px; margin: 0 auto 20px auto; aspect-ratio: 1;">
+                            <!-- 9 cells will be created dynamically -->
+                        </div>
+
+                        <div id="game-result" class="hidden"
+                            style="text-align: center; padding: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; margin-top: 20px;">
+                            <div id="result-text" style="font-size: 20px; font-weight: bold; margin-bottom: 12px;">
+                            </div>
+                            <button class="btn btn-primary" onclick="playAgain()"
+                                style="background: white; color: #667eea;">Play Again</button>
+                        </div>
+                    </div>
+
+                    <!-- Leaderboard -->
+                    <div id="ttt-leaderboard" class="hidden stat-card" style="margin-bottom: 20px;">
+                        <button onclick="backToTTTMode()"
+                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">←
+                            Back</button>
+                        <h3 style="margin-bottom: 16px;">🏆 Tic-Tac-Toe Leaderboard</h3>
+                        <div id="leaderboard-list" style="max-height: 500px; overflow-y: auto;">
+                            <!-- Leaderboard entries will be loaded here -->
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -8789,6 +8891,454 @@
             document.getElementById('welcome-modal').classList.add('hidden');
             localStorage.setItem('kobi_atlas_welcome_seen_v1', 'true');
         }
+    </script>
+
+    <!-- Tic-Tac-Toe Game Logic -->
+    <script type="module">
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+        const gameDb = getFirestore();
+        let currentGame = null;
+        let gameMode = null; // 'local' or 'online'
+        let currentPlayer = 'X';
+        let gameBoard = ['', '', '', '', '', '', '', '', ''];
+        let gameActive = false;
+        let onlinePlayersListener = null;
+        let gameListener = null;
+
+        // Switch Community Tab
+        window.switchCommunityTab = function (tab) {
+            // Hide all containers
+            document.getElementById('community-feed-container').classList.add('hidden');
+            document.getElementById('community-messages-container').classList.add('hidden');
+            document.getElementById('community-resources-wrapper').classList.add('hidden');
+            document.getElementById('community-games-container').classList.add('hidden');
+
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            // Show selected container
+            if (tab === 'feed') {
+                document.getElementById('community-feed-container').classList.remove('hidden');
+                document.getElementById('comm-feed-tab').classList.add('active');
+            } else if (tab === 'resources') {
+                document.getElementById('community-resources-wrapper').classList.remove('hidden');
+                document.getElementById('comm-resources-tab').classList.add('active');
+            } else if (tab === 'games') {
+                document.getElementById('community-games-container').classList.remove('hidden');
+                document.getElementById('comm-games-tab').classList.add('active');
+            } else if (tab === 'messages') {
+                document.getElementById('community-messages-container').classList.remove('hidden');
+                document.getElementById('comm-messages-tab').classList.add('active');
+            }
+        };
+
+        // Game Selection
+        window.selectGame = function (game) {
+            if (game === 'tictactoe') {
+                document.getElementById('game-selection').classList.add('hidden');
+                document.getElementById('tictactoe-game').classList.remove('hidden');
+            }
+        };
+
+        window.backToGameSelection = function () {
+            document.getElementById('tictactoe-game').classList.add('hidden');
+            document.getElementById('game-selection').classList.remove('hidden');
+            resetGameViews();
+        };
+
+        function resetGameViews() {
+            document.getElementById('ttt-mode-selection').classList.remove('hidden');
+            document.getElementById('ttt-online-players').classList.add('hidden');
+            document.getElementById('ttt-game-board').classList.add('hidden');
+            document.getElementById('ttt-leaderboard').classList.add('hidden');
+        }
+
+        // Start Local Game
+        window.startLocalGame = function () {
+            gameMode = 'local';
+            currentPlayer = 'X';
+            gameBoard = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+
+            document.getElementById('ttt-mode-selection').classList.add('hidden');
+            document.getElementById('ttt-game-board').classList.remove('hidden');
+            document.getElementById('player-x-name').textContent = 'Player 1';
+            document.getElementById('player-o-name').textContent = 'Player 2';
+            document.getElementById('game-status').textContent = "Player 1's Turn (X)";
+            document.getElementById('game-result').classList.add('hidden');
+
+            createBoard();
+        };
+
+        // Show Online Players
+        window.showOnlinePlayers = async function () {
+            document.getElementById('ttt-mode-selection').classList.add('hidden');
+            document.getElementById('ttt-online-players').classList.remove('hidden');
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            // Set current user as online
+            await setDoc(doc(gameDb, 'onlinePlayers', uid), {
+                uid: uid,
+                username: localStorage.getItem('kobi_atlas_username') || 'Anonymous',
+                timestamp: serverTimestamp(),
+                inGame: false
+            });
+
+            loadOnlinePlayers();
+        };
+
+        async function loadOnlinePlayers() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const playersList = document.getElementById('online-players-list');
+
+            // Listen for online players
+            if (onlinePlayersListener) onlinePlayersListener();
+
+            const q = query(collection(gameDb, 'onlinePlayers'));
+            onlinePlayersListener = onSnapshot(q, (snapshot) => {
+                playersList.innerHTML = '';
+                const players = [];
+
+                snapshot.forEach(doc => {
+                    const player = doc.data();
+                    if (player.uid !== uid) {
+                        players.push(player);
+                    }
+                });
+
+                if (players.length === 0) {
+                    playersList.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-secondary);">No players online</div>';
+                    return;
+                }
+
+                players.forEach(player => {
+                    const playerCard = document.createElement('div');
+                    playerCard.style.cssText = 'padding: 16px; background: var(--card-bg); border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;';
+                    playerCard.innerHTML = `
+                        <div>
+                            <div style="font-weight: bold;">${player.username}</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">${player.inGame ? '🎮 In Game' : '🟢 Available'}</div>
+                        </div>
+                        <button class="btn btn-primary" onclick="challengePlayer('${player.uid}', '${player.username}')" 
+                            ${player.inGame ? 'disabled style="opacity: 0.5;"' : ''}>
+                            Challenge
+                        </button>
+                    `;
+                    playersList.appendChild(playerCard);
+                });
+            });
+        }
+
+        window.filterOnlinePlayers = function (searchTerm) {
+            const players = document.querySelectorAll('#online-players-list > div');
+            players.forEach(player => {
+                const username = player.querySelector('div > div').textContent.toLowerCase();
+                if (username.includes(searchTerm.toLowerCase())) {
+                    player.style.display = 'flex';
+                } else {
+                    player.style.display = 'none';
+                }
+            });
+        };
+
+        // Challenge Player
+        window.challengePlayer = async function (opponentId, opponentName) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const username = localStorage.getItem('kobi_atlas_username') || 'Anonymous';
+
+            // Create game
+            const gameId = `${uid}_${opponentId}_${Date.now()}`;
+            currentGame = gameId;
+
+            await setDoc(doc(gameDb, 'tictactoe_games', gameId), {
+                gameId: gameId,
+                playerX: uid,
+                playerO: opponentId,
+                playerXName: username,
+                playerOName: opponentName,
+                board: ['', '', '', '', '', '', '', '', ''],
+                currentTurn: 'X',
+                status: 'waiting', // waiting, active, finished
+                winner: null,
+                createdAt: serverTimestamp()
+            });
+
+            // Update player status
+            await updateDoc(doc(gameDb, 'onlinePlayers', uid), { inGame: true });
+
+            gameMode = 'online';
+            document.getElementById('ttt-online-players').classList.add('hidden');
+            document.getElementById('ttt-game-board').classList.remove('hidden');
+            document.getElementById('player-x-name').textContent = username + ' (You)';
+            document.getElementById('player-o-name').textContent = opponentName;
+            document.getElementById('game-status').textContent = 'Waiting for opponent...';
+
+            listenToGame(gameId, 'X');
+        };
+
+        function listenToGame(gameId, mySymbol) {
+            if (gameListener) gameListener();
+
+            gameListener = onSnapshot(doc(gameDb, 'tictactoe_games', gameId), (doc) => {
+                if (!doc.exists()) return;
+
+                const game = doc.data();
+                gameBoard = game.board;
+                currentPlayer = game.currentTurn;
+
+                // Update board
+                createBoard();
+
+                // Update status
+                if (game.status === 'finished') {
+                    gameActive = false;
+                    showGameResult(game.winner, mySymbol);
+                } else if (game.status === 'active') {
+                    gameActive = true;
+                    if (currentPlayer === mySymbol) {
+                        document.getElementById('game-status').textContent = 'Your Turn';
+                    } else {
+                        document.getElementById('game-status').textContent = "Opponent's Turn";
+                    }
+                } else if (game.status === 'waiting') {
+                    document.getElementById('game-status').textContent = 'Waiting for opponent...';
+                }
+            });
+        }
+
+        // Create Board
+        function createBoard() {
+            const board = document.getElementById('ttt-board');
+            board.innerHTML = '';
+
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement('div');
+                cell.style.cssText = 'background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: bold; cursor: pointer; transition: all 0.2s;';
+                cell.textContent = gameBoard[i];
+
+                if (gameBoard[i] === 'X') {
+                    cell.style.color = '#3b82f6';
+                } else if (gameBoard[i] === 'O') {
+                    cell.style.color = '#ef4444';
+                }
+
+                if (gameActive && gameBoard[i] === '') {
+                    cell.addEventListener('click', () => makeMove(i));
+                    cell.addEventListener('mouseenter', () => {
+                        if (gameBoard[i] === '') {
+                            cell.style.background = 'rgba(102, 126, 234, 0.2)';
+                        }
+                    });
+                    cell.addEventListener('mouseleave', () => {
+                        cell.style.background = 'var(--card-bg)';
+                    });
+                } else {
+                    cell.style.cursor = 'not-allowed';
+                    cell.style.opacity = '0.7';
+                }
+
+                board.appendChild(cell);
+            }
+        }
+
+        // Make Move
+        async function makeMove(index) {
+            if (!gameActive || gameBoard[index] !== '') return;
+
+            if (gameMode === 'local') {
+                gameBoard[index] = currentPlayer;
+                createBoard();
+
+                const result = checkWinner();
+                if (result) {
+                    gameActive = false;
+                    showGameResult(result, currentPlayer);
+                    if (result !== 'draw') {
+                        await updateLeaderboard(currentPlayer);
+                    }
+                } else {
+                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                    document.getElementById('game-status').textContent = `Player ${currentPlayer === 'X' ? '1' : '2'}'s Turn (${currentPlayer})`;
+                }
+            } else if (gameMode === 'online') {
+                const uid = localStorage.getItem('kobi_atlas_uid');
+                const gameDoc = await getDoc(doc(gameDb, 'tictactoe_games', currentGame));
+                const game = gameDoc.data();
+
+                const mySymbol = game.playerX === uid ? 'X' : 'O';
+                if (currentPlayer !== mySymbol) return;
+
+                gameBoard[index] = mySymbol;
+                const result = checkWinner();
+
+                await updateDoc(doc(gameDb, 'tictactoe_games', currentGame), {
+                    board: gameBoard,
+                    currentTurn: mySymbol === 'X' ? 'O' : 'X',
+                    status: result ? 'finished' : 'active',
+                    winner: result
+                });
+
+                if (result && result !== 'draw') {
+                    await updateLeaderboard(mySymbol);
+                }
+            }
+        }
+
+        // Check Winner
+        function checkWinner() {
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                [0, 4, 8], [2, 4, 6] // Diagonals
+            ];
+
+            for (let pattern of winPatterns) {
+                const [a, b, c] = pattern;
+                if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+                    return gameBoard[a];
+                }
+            }
+
+            if (!gameBoard.includes('')) {
+                return 'draw';
+            }
+
+            return null;
+        }
+
+        // Show Game Result
+        function showGameResult(winner, mySymbol) {
+            const resultDiv = document.getElementById('game-result');
+            const resultText = document.getElementById('result-text');
+
+            if (winner === 'draw') {
+                resultText.textContent = "It's a Draw!";
+            } else if (gameMode === 'local') {
+                resultText.textContent = `Player ${winner === 'X' ? '1' : '2'} Wins! 🎉`;
+            } else {
+                if (winner === mySymbol) {
+                    resultText.textContent = 'You Win! 🎉';
+                } else {
+                    resultText.textContent = 'You Lose 😔';
+                }
+            }
+
+            resultDiv.classList.remove('hidden');
+        }
+
+        // Play Again
+        window.playAgain = function () {
+            if (gameMode === 'local') {
+                startLocalGame();
+            } else {
+                quitGame();
+            }
+        };
+
+        // Quit Game
+        window.quitGame = async function () {
+            if (gameMode === 'online' && currentGame) {
+                const uid = localStorage.getItem('kobi_atlas_uid');
+                await updateDoc(doc(gameDb, 'onlinePlayers', uid), { inGame: false });
+                await deleteDoc(doc(gameDb, 'tictactoe_games', currentGame));
+                if (gameListener) gameListener();
+            }
+
+            document.getElementById('ttt-game-board').classList.add('hidden');
+            document.getElementById('ttt-mode-selection').classList.remove('hidden');
+            currentGame = null;
+            gameMode = null;
+        };
+
+        window.backToTTTMode = function () {
+            document.getElementById('ttt-online-players').classList.add('hidden');
+            document.getElementById('ttt-leaderboard').classList.add('hidden');
+            document.getElementById('ttt-mode-selection').classList.remove('hidden');
+
+            if (onlinePlayersListener) onlinePlayersListener();
+        };
+
+        // Leaderboard
+        window.showTTTLeaderboard = async function () {
+            document.getElementById('ttt-mode-selection').classList.add('hidden');
+            document.getElementById('ttt-leaderboard').classList.remove('hidden');
+
+            const leaderboardList = document.getElementById('leaderboard-list');
+            leaderboardList.innerHTML = '<div style="text-align: center; padding: 20px;">Loading...</div>';
+
+            const snapshot = await getDocs(collection(gameDb, 'tictactoe_leaderboard'));
+            const players = [];
+
+            snapshot.forEach(doc => {
+                players.push({ id: doc.id, ...doc.data() });
+            });
+
+            players.sort((a, b) => b.wins - a.wins);
+
+            if (players.length === 0) {
+                leaderboardList.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-secondary);">No games played yet</div>';
+                return;
+            }
+
+            leaderboardList.innerHTML = '';
+            players.forEach((player, index) => {
+                const rank = index + 1;
+                const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '';
+
+                const playerCard = document.createElement('div');
+                playerCard.style.cssText = 'padding: 16px; background: var(--card-bg); border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;';
+                playerCard.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="font-size: 24px; min-width: 40px;">${medal || rank}</div>
+                        <div>
+                            <div style="font-weight: bold;">${player.username}</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">
+                                ${player.wins} wins • ${player.losses} losses • ${player.draws} draws
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 20px; font-weight: bold; color: var(--primary-color);">${player.wins}</div>
+                        <div style="font-size: 10px; color: var(--text-secondary);">WINS</div>
+                    </div>
+                `;
+                leaderboardList.appendChild(playerCard);
+            });
+        };
+
+        async function updateLeaderboard(winner) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const username = localStorage.getItem('kobi_atlas_username') || 'Anonymous';
+
+            const leaderboardRef = doc(gameDb, 'tictactoe_leaderboard', uid);
+            const leaderboardDoc = await getDoc(leaderboardRef);
+
+            if (leaderboardDoc.exists()) {
+                const data = leaderboardDoc.data();
+                await updateDoc(leaderboardRef, {
+                    wins: data.wins + (winner !== 'draw' ? 1 : 0),
+                    draws: data.draws + (winner === 'draw' ? 1 : 0)
+                });
+            } else {
+                await setDoc(leaderboardRef, {
+                    uid: uid,
+                    username: username,
+                    wins: winner !== 'draw' ? 1 : 0,
+                    losses: 0,
+                    draws: winner === 'draw' ? 1 : 0
+                });
+            }
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', async () => {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            if (uid) {
+                await deleteDoc(doc(gameDb, 'onlinePlayers', uid));
+            }
+        });
     </script>
 </body>
 
