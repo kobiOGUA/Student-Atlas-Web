@@ -1172,6 +1172,26 @@
                                 <span style="font-size: 12px; color: white;">2 Players Required</span>
                             </div>
                         </div>
+
+                        <!-- 50 Guesses Card -->
+                        <div onclick="selectGame('fiftyguesses')"
+                            style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 16px; padding: 24px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"
+                            onmouseenter="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.25)';"
+                            onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';">
+                            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+                                <ion-icon name="help-circle-outline" style="font-size: 48px; color: white;"></ion-icon>
+                                <div style="flex: 1;">
+                                    <h4 style="margin: 0; font-size: 20px; color: white;">50 Guesses</h4>
+                                    <p style="margin: 4px 0 0 0; font-size: 13px; color: rgba(255,255,255,0.8);">Number
+                                        guessing challenge</p>
+                                </div>
+                            </div>
+                            <div
+                                style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: rgba(255,255,255,0.2); border-radius: 8px;">
+                                <ion-icon name="person-outline" style="font-size: 16px; color: white;"></ion-icon>
+                                <span style="font-size: 12px; color: white;">Single Player</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1294,6 +1314,99 @@
                         </h3>
                         <div id="leaderboard-list" style="max-height: 500px; overflow-y: auto;">
                             <!-- Leaderboard entries will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 50 Guesses Game -->
+                <div id="fiftyguesses-game" class="hidden">
+                    <div class="stat-card" style="margin-bottom: 20px;">
+                        <button onclick="backToGameSelection()"
+                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">
+                            <ion-icon name="arrow-back-outline"></ion-icon> Back
+                        </button>
+
+                        <div style="text-align: center; margin-bottom: 24px;">
+                            <h2
+                                style="margin: 0 0 8px 0; font-size: 28px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                                50 Guesses</h2>
+                            <p style="margin: 0; color: var(--text-secondary); font-size: 14px;">Guess the number before
+                                you run out of tries!</p>
+                        </div>
+
+                        <!-- Game Stats -->
+                        <div
+                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px;">
+                            <div
+                                style="background: rgba(240, 147, 251, 0.1); border-radius: 12px; padding: 16px; text-align: center;">
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Level
+                                </div>
+                                <div id="fg-level" style="font-size: 24px; font-weight: bold; color: #f093fb;">1</div>
+                            </div>
+                            <div
+                                style="background: rgba(245, 87, 108, 0.1); border-radius: 12px; padding: 16px; text-align: center;">
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Guesses
+                                    Left</div>
+                                <div id="fg-guesses-left" style="font-size: 24px; font-weight: bold; color: #f5576c;">50
+                                </div>
+                            </div>
+                            <div
+                                style="background: rgba(102, 126, 234, 0.1); border-radius: 12px; padding: 16px; text-align: center;">
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Score
+                                </div>
+                                <div id="fg-score" style="font-size: 24px; font-weight: bold; color: #667eea;">0</div>
+                            </div>
+                        </div>
+
+                        <!-- Range Display -->
+                        <div
+                            style="background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center;">
+                            <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">Guess a
+                                number between</div>
+                            <div style="font-size: 32px; font-weight: bold;">
+                                <span id="fg-min-range">1</span> - <span id="fg-max-range">10</span>
+                            </div>
+                        </div>
+
+                        <!-- Input and Submit -->
+                        <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+                            <input type="number" id="fg-guess-input" placeholder="Enter your guess..."
+                                style="flex: 1; padding: 16px; background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 12px; color: var(--text-color); font-size: 18px; text-align: center;"
+                                onkeypress="if(event.key === 'Enter') submitGuess()">
+                            <button class="btn btn-primary" onclick="submitGuess()"
+                                style="padding: 16px 32px; font-size: 16px;">
+                                <ion-icon name="checkmark-outline" style="margin-right: 8px;"></ion-icon>
+                                Guess
+                            </button>
+                        </div>
+
+                        <!-- Feedback Message -->
+                        <div id="fg-feedback"
+                            style="text-align: center; padding: 16px; border-radius: 12px; margin-bottom: 20px; display: none;">
+                            <div id="fg-feedback-text" style="font-size: 18px; font-weight: bold;"></div>
+                        </div>
+
+                        <!-- Guess History -->
+                        <div id="fg-history-container" style="display: none;">
+                            <h4 style="margin: 0 0 12px 0; font-size: 16px;">Your Guesses</h4>
+                            <div id="fg-guess-history" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                <!-- Guess history will appear here -->
+                            </div>
+                        </div>
+
+                        <!-- Game Over / Victory -->
+                        <div id="fg-game-over" class="hidden"
+                            style="text-align: center; padding: 24px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 16px;">
+                            <div id="fg-result-icon" style="font-size: 64px; margin-bottom: 16px;"></div>
+                            <div id="fg-result-text"
+                                style="font-size: 24px; font-weight: bold; color: white; margin-bottom: 8px;"></div>
+                            <div id="fg-result-details"
+                                style="font-size: 14px; color: rgba(255,255,255,0.9); margin-bottom: 20px;"></div>
+                            <button class="btn" onclick="restartFiftyGuesses()"
+                                style="background: white; color: #f5576c; font-weight: bold;">
+                                <ion-icon name="refresh-outline" style="margin-right: 8px;"></ion-icon>
+                                Play Again
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -8957,6 +9070,8 @@
         let gameActive = false;
         let onlinePlayersListener = null;
         let gameListener = null;
+        let savedPlayer1Name = '';
+        let savedPlayer2Name = '';
 
         // Switch Community Tab
         window.switchCommunityTab = function (tab) {
@@ -8972,16 +9087,20 @@
             // Show selected container
             if (tab === 'feed') {
                 document.getElementById('community-feed-container').classList.remove('hidden');
-                document.getElementById('comm-feed-tab').classList.add('active');
+                const feedTab = document.getElementById('comm-feed-tab');
+                if (feedTab) feedTab.classList.add('active');
             } else if (tab === 'resources') {
                 document.getElementById('community-resources-wrapper').classList.remove('hidden');
-                document.getElementById('comm-resources-tab').classList.add('active');
+                const resourcesTab = document.getElementById('comm-resources-tab');
+                if (resourcesTab) resourcesTab.classList.add('active');
             } else if (tab === 'games') {
                 document.getElementById('community-games-container').classList.remove('hidden');
-                document.getElementById('comm-games-tab').classList.add('active');
+                const gamesTab = document.getElementById('comm-games-tab');
+                if (gamesTab) gamesTab.classList.add('active');
             } else if (tab === 'messages') {
                 document.getElementById('community-messages-container').classList.remove('hidden');
-                document.getElementById('comm-messages-tab').classList.add('active');
+                const messagesTab = document.getElementById('comm-messages-tab');
+                if (messagesTab) messagesTab.classList.add('active');
             }
         };
 
@@ -8990,11 +9109,16 @@
             if (game === 'tictactoe') {
                 document.getElementById('game-selection').classList.add('hidden');
                 document.getElementById('tictactoe-game').classList.remove('hidden');
+            } else if (game === 'fiftyguesses') {
+                document.getElementById('game-selection').classList.add('hidden');
+                document.getElementById('fiftyguesses-game').classList.remove('hidden');
+                initFiftyGuesses();
             }
         };
 
         window.backToGameSelection = function () {
             document.getElementById('tictactoe-game').classList.add('hidden');
+            document.getElementById('fiftyguesses-game').classList.add('hidden');
             document.getElementById('game-selection').classList.remove('hidden');
             resetGameViews();
         };
@@ -9011,14 +9135,19 @@
         window.showPlayerNameInput = function () {
             document.getElementById('ttt-mode-selection').classList.add('hidden');
             document.getElementById('ttt-player-names').classList.remove('hidden');
-            document.getElementById('player1-name').value = '';
-            document.getElementById('player2-name').value = '';
+            // Restore saved names if they exist
+            document.getElementById('player1-name').value = savedPlayer1Name;
+            document.getElementById('player2-name').value = savedPlayer2Name;
         };
 
         // Start Local Game with Names
         window.startLocalGameWithNames = function () {
             const player1 = document.getElementById('player1-name').value.trim() || 'Player 1';
             const player2 = document.getElementById('player2-name').value.trim() || 'Player 2';
+
+            // Save names for later use
+            savedPlayer1Name = player1;
+            savedPlayer2Name = player2;
 
             gameMode = 'local';
             currentPlayer = 'X';
@@ -9321,7 +9450,17 @@
         // Play Again
         window.playAgain = function () {
             if (gameMode === 'local') {
-                startLocalGame();
+                // Restart with same player names
+                currentPlayer = 'X';
+                gameBoard = ['', '', '', '', '', '', '', '', ''];
+                gameActive = true;
+
+                document.getElementById('player-x-name').textContent = savedPlayer1Name || 'Player 1';
+                document.getElementById('player-o-name').textContent = savedPlayer2Name || 'Player 2';
+                document.getElementById('game-status').textContent = `${savedPlayer1Name || 'Player 1'}'s Turn (X)`;
+                document.getElementById('game-result').classList.add('hidden');
+
+                createBoard();
             } else {
                 quitGame();
             }
@@ -9430,6 +9569,148 @@
                 await deleteDoc(doc(gameDb, 'onlinePlayers', uid));
             }
         });
+
+        // ========== 50 GUESSES GAME ==========
+        let fgLevel = 1;
+        let fgGuessesLeft = 50;
+        let fgScore = 0;
+        let fgMinRange = 1;
+        let fgMaxRange = 10;
+        let fgTargetNumber = 0;
+        let fgGuessHistory = [];
+
+        function initFiftyGuesses() {
+            fgLevel = 1;
+            fgGuessesLeft = 50;
+            fgScore = 0;
+            fgMinRange = 1;
+            fgMaxRange = 10;
+            fgGuessHistory = [];
+            fgTargetNumber = Math.floor(Math.random() * (fgMaxRange - fgMinRange + 1)) + fgMinRange;
+
+            updateFGDisplay();
+            document.getElementById('fg-game-over').classList.add('hidden');
+            document.getElementById('fg-feedback').style.display = 'none';
+            document.getElementById('fg-history-container').style.display = 'none';
+            document.getElementById('fg-guess-input').value = '';
+            document.getElementById('fg-guess-history').innerHTML = '';
+        }
+
+        function updateFGDisplay() {
+            document.getElementById('fg-level').textContent = fgLevel;
+            document.getElementById('fg-guesses-left').textContent = fgGuessesLeft;
+            document.getElementById('fg-score').textContent = fgScore;
+            document.getElementById('fg-min-range').textContent = fgMinRange;
+            document.getElementById('fg-max-range').textContent = fgMaxRange;
+        }
+
+        window.submitGuess = function () {
+            const input = document.getElementById('fg-guess-input');
+            const guess = parseInt(input.value);
+
+            if (isNaN(guess)) {
+                showFGFeedback('Please enter a valid number!', '#ef4444');
+                return;
+            }
+
+            if (guess < fgMinRange || guess > fgMaxRange) {
+                showFGFeedback(`Number must be between ${fgMinRange} and ${fgMaxRange}!`, '#ef4444');
+                return;
+            }
+
+            if (fgGuessHistory.includes(guess)) {
+                showFGFeedback('You already guessed that number!', '#f59e0b');
+                return;
+            }
+
+            fgGuessesLeft--;
+            fgGuessHistory.push(guess);
+            addGuessToHistory(guess);
+
+            if (guess === fgTargetNumber) {
+                // Correct guess!
+                const pointsEarned = fgLevel * 10;
+                fgScore += pointsEarned;
+                fgLevel++;
+
+                // Double the range
+                fgMaxRange = fgMaxRange * 2;
+                fgMinRange = 1;
+                fgTargetNumber = Math.floor(Math.random() * (fgMaxRange - fgMinRange + 1)) + fgMinRange;
+                fgGuessHistory = [];
+
+                showFGFeedback(`🎉 Correct! +${pointsEarned} points! Level ${fgLevel} - Range doubled!`, '#10b981');
+                document.getElementById('fg-guess-history').innerHTML = '';
+                document.getElementById('fg-history-container').style.display = 'none';
+
+                setTimeout(() => {
+                    document.getElementById('fg-feedback').style.display = 'none';
+                }, 2000);
+            } else {
+                // Wrong guess
+                const hint = guess < fgTargetNumber ? 'Higher!' : 'Lower!';
+                showFGFeedback(hint, '#667eea');
+                document.getElementById('fg-history-container').style.display = 'block';
+
+                if (fgGuessesLeft === 0) {
+                    endFGGame(false);
+                }
+            }
+
+            updateFGDisplay();
+            input.value = '';
+        };
+
+        function showFGFeedback(message, color) {
+            const feedback = document.getElementById('fg-feedback');
+            const feedbackText = document.getElementById('fg-feedback-text');
+            feedbackText.textContent = message;
+            feedbackText.style.color = color;
+            feedback.style.background = `${color}15`;
+            feedback.style.border = `2px solid ${color}`;
+            feedback.style.display = 'block';
+        }
+
+        function addGuessToHistory(guess) {
+            const history = document.getElementById('fg-guess-history');
+            const guessChip = document.createElement('div');
+            const isCorrect = guess === fgTargetNumber;
+            const isClose = Math.abs(guess - fgTargetNumber) <= (fgMaxRange - fgMinRange) * 0.1;
+
+            let bgColor = '#ef4444';
+            if (isCorrect) bgColor = '#10b981';
+            else if (isClose) bgColor = '#f59e0b';
+
+            guessChip.style.cssText = `
+                padding: 8px 12px;
+                background: ${bgColor}20;
+                border: 2px solid ${bgColor};
+                border-radius: 8px;
+                font-weight: bold;
+                color: ${bgColor};
+            `;
+            guessChip.textContent = guess;
+            history.appendChild(guessChip);
+        }
+
+        function endFGGame(won) {
+            document.getElementById('fg-game-over').classList.remove('hidden');
+            document.getElementById('fg-feedback').style.display = 'none';
+
+            if (won) {
+                document.getElementById('fg-result-icon').innerHTML = '<ion-icon name="trophy-outline" style="color: #FFD700;"></ion-icon>';
+                document.getElementById('fg-result-text').textContent = 'Amazing!';
+                document.getElementById('fg-result-details').textContent = `You reached level ${fgLevel} with a score of ${fgScore}!`;
+            } else {
+                document.getElementById('fg-result-icon').innerHTML = '<ion-icon name="close-circle-outline" style="color: white;"></ion-icon>';
+                document.getElementById('fg-result-text').textContent = 'Game Over!';
+                document.getElementById('fg-result-details').textContent = `You reached level ${fgLevel} with ${fgScore} points. The number was ${fgTargetNumber}.`;
+            }
+        }
+
+        window.restartFiftyGuesses = function () {
+            initFiftyGuesses();
+        };
     </script>
 </body>
 
