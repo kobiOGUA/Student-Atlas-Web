@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Kobi's Atlas v1.1</title>
+    <title>Kobi's Atlas</title>
     <link rel="icon" type="image/png" href="favicon.png">
 
     <!-- Apple Touch Icon -->
@@ -932,7 +932,7 @@
             <div class="header"
                 style="display: flex; justify-content: space-between; align-items: center; padding-right: 20px;">
                 <h2 style="margin: 0;">Planner</h2>
-                <button onclick="loadSchedule(); loadTasks();"
+                <button onclick="loadSchedule(true); loadTasks(true);"
                     style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; margin-right: 12px;"
                     title="Refresh">
                     <ion-icon name="refresh-outline" style="font-size: 20px;"></ion-icon>
@@ -964,7 +964,7 @@
             <div class="header"
                 style="display: flex; justify-content: space-between; align-items: center; padding-right: 20px;">
                 <h2 style="margin: 0;">GPA Overview</h2>
-                <button onclick="loadGPAView();"
+                <button onclick="loadSchedule(true).then(loadGPAView);"
                     style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; margin-right: 12px;"
                     title="Refresh">
                     <ion-icon name="refresh-outline" style="font-size: 20px;"></ion-icon>
@@ -1598,7 +1598,7 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
         import { getAuth, signInAnonymously, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-        import { getFirestore, collection, query, where, getDocs, doc, setDoc, addDoc, updateDoc, getDoc, deleteDoc, orderBy, onSnapshot, writeBatch } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+        import { getFirestore, collection, query, where, getDocs, doc, setDoc, addDoc, updateDoc, getDoc, deleteDoc, orderBy, onSnapshot, writeBatch, limit } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyBKA2julrxpRhXTdU_8l5pSH73ERAjKtO4",
@@ -4920,7 +4920,7 @@
 
             try {
                 const postsRef = collection(db, 'posts');
-                const q = query(postsRef, orderBy('timestamp', 'desc'));
+                const q = query(postsRef, orderBy('timestamp', 'desc'), limit(50));
                 const snapshot = await getDocs(q);
 
                 // 1. Collect all data first
@@ -5879,14 +5879,14 @@
             }
         };
 
-        async function loadSchedule() {
+        async function loadSchedule(forceRefresh = false) {
             const uid = localStorage.getItem('kobi_atlas_uid');
             showLoading(true);
 
             try {
                 let semesters = [];
 
-                if (cachedSemesters) {
+                if (cachedSemesters && !forceRefresh) {
                     semesters = cachedSemesters;
                 } else {
                     const semRef = collection(db, 'users', uid, 'semesters');
@@ -6241,7 +6241,7 @@
 
                 showToast('Schedule added!', 'success');
                 closeModal('add-schedule-modal');
-                loadSchedule();
+                loadSchedule(true);
 
             } catch (error) {
                 console.error('Save schedule error:', error);
@@ -6286,7 +6286,7 @@
                             courses
                         });
                         showToast('Class cancelled', 'success');
-                        loadSchedule();
+                        loadSchedule(true);
                     }
                 }
             } catch (e) {
@@ -6414,7 +6414,7 @@
                 document.getElementById('task-id').value = '';
                 document.getElementById('task-title').value = '';
                 document.getElementById('task-description').value = '';
-                loadTasks();
+                loadTasks(true);
 
             } catch (error) {
                 console.error('Task error:', error);
@@ -6432,7 +6432,7 @@
                     isCompleted: !currentStatus
                 });
 
-                loadTasks();
+                loadTasks(true);
             } catch (error) {
                 console.error('Toggle task error:', error);
                 showToast('Error updating task', 'error');
@@ -6448,7 +6448,7 @@
             try {
                 await deleteDoc(doc(db, 'tasks', taskId));
                 showToast('Task deleted', 'success');
-                loadTasks();
+                loadTasks(true);
             } catch (error) {
                 console.error('Delete task error:', error);
                 showToast('Error deleting task', 'error');
@@ -7221,6 +7221,7 @@
         let activeChatUnsubscribe2 = null;
 
         window.loadConversations = function () {
+            showLoading(true);
             const uid = localStorage.getItem('kobi_atlas_uid');
             const messagesContent = document.getElementById('messages-content'); // Wait, we use conversations-list
             // Actually let's assume valid container exist as per previous code
@@ -7293,7 +7294,11 @@
                 conversations.sort((a, b) => b.timestamp - a.timestamp);
                 renderConversationList(conversations);
 
-            } catch (e) { console.error("Conversations error", e); }
+            } catch (e) {
+                console.error("Conversations error", e);
+            } finally {
+                showLoading(false);
+            }
         }
 
         function renderConversationList(conversations) {

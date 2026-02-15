@@ -375,26 +375,11 @@
         <div class="header-title">Settings</div>
     </div>
 
-    <!-- Loading Overlay -->
-    <div id="loading-overlay"
-        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 9999;">
-        <div style="text-align: center; color: white;">
-            <div
-                style="border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid white; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px;">
-            </div>
-            <div>Loading settings...</div>
-        </div>
-    </div>
-    <style>
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
 
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+    100% {
+    transform: rotate(360deg);
+    }
+    }
     </style>
 
     <!-- Toast Container -->
@@ -756,8 +741,8 @@
             if (loadingOverlay) loadingOverlay.style.display = 'none';
 
             function renderAdminButton(userData) {
-                // Check for Admin Status
-                if (userData.isAdmin) {
+                // Check for Admin Status - Only kobioguadinma@gmail.com
+                if (userData.email === 'kobioguadinma@gmail.com') {
                     const navButtons = document.getElementById('profile-nav-buttons');
                     if (navButtons && !document.getElementById('admin-btn')) {
                         const adminBtn = document.createElement('button');

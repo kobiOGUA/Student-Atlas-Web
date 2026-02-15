@@ -473,9 +473,9 @@
             try {
                 await auth.signInAnonymously();
 
-                // Verify Admin
+                // Verify Admin - Only kobioguadinma@gmail.com
                 const userDoc = await db.collection('users').doc(uid).get();
-                if (!userDoc.exists || !userDoc.data().isAdmin) {
+                if (!userDoc.exists || userDoc.data().email !== 'kobioguadinma@gmail.com') {
                     alert('Access Denied: You must be an admin to view this page.');
                     window.location.href = 'dashboard.html';
                     return;
