@@ -1149,14 +1149,29 @@
             <!-- Games Container -->
             <div id="community-games-container" class="hidden">
                 <!-- Game Selection -->
-                <div id="game-selection" class="stat-card" style="margin-bottom: 20px;">
-                    <h3 style="margin-bottom: 16px;">🎮 Available Games</h3>
-                    <div style="display: grid; gap: 12px;">
-                        <button class="btn btn-primary" onclick="selectGame('tictactoe')"
-                            style="display: flex; align-items: center; justify-content: space-between;">
-                            <span>⭕❌ Tic-Tac-Toe</span>
-                            <span style="font-size: 12px; opacity: 0.8;">2 Players Required</span>
-                        </button>
+                <div id="game-selection">
+                    <h3 style="margin-bottom: 20px; font-size: 20px;">Available Games</h3>
+                    <div
+                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+                        <!-- Tic-Tac-Toe Card -->
+                        <div onclick="selectGame('tictactoe')"
+                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 24px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"
+                            onmouseenter="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.25)';"
+                            onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';">
+                            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+                                <ion-icon name="grid-outline" style="font-size: 48px; color: white;"></ion-icon>
+                                <div style="flex: 1;">
+                                    <h4 style="margin: 0; font-size: 20px; color: white;">Tic-Tac-Toe</h4>
+                                    <p style="margin: 4px 0 0 0; font-size: 13px; color: rgba(255,255,255,0.8);">Classic
+                                        strategy game</p>
+                                </div>
+                            </div>
+                            <div
+                                style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: rgba(255,255,255,0.2); border-radius: 8px;">
+                                <ion-icon name="people-outline" style="font-size: 16px; color: white;"></ion-icon>
+                                <span style="font-size: 12px; color: white;">2 Players Required</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1165,11 +1180,12 @@
                     <!-- Mode Selection -->
                     <div id="ttt-mode-selection" class="stat-card" style="margin-bottom: 20px;">
                         <button onclick="backToGameSelection()"
-                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">←
-                            Back</button>
+                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">
+                            <ion-icon name="arrow-back-outline"></ion-icon> Back
+                        </button>
                         <h3 style="margin-bottom: 16px;">Choose Game Mode</h3>
                         <div style="display: grid; gap: 12px;">
-                            <button class="btn btn-action-primary" onclick="startLocalGame()">
+                            <button class="btn btn-action-primary" onclick="showPlayerNameInput()">
                                 <ion-icon name="phone-portrait-outline" style="margin-right: 8px;"></ion-icon>
                                 Local Multiplayer (One Device)
                             </button>
@@ -1184,11 +1200,42 @@
                         </div>
                     </div>
 
+                    <!-- Player Name Input for Local Game -->
+                    <div id="ttt-player-names" class="hidden stat-card" style="margin-bottom: 20px;">
+                        <button onclick="backToTTTMode()"
+                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">
+                            <ion-icon name="arrow-back-outline"></ion-icon> Back
+                        </button>
+                        <h3 style="margin-bottom: 20px;">Enter Player Names</h3>
+
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                                <span style="color: #3b82f6;">Player 1 (X)</span>
+                            </label>
+                            <input type="text" id="player1-name" placeholder="Enter name..."
+                                style="width: 100%; padding: 12px; background: var(--card-bg); border: 2px solid #3b82f6; border-radius: 8px; color: var(--text-color); font-size: 16px;">
+                        </div>
+
+                        <div style="margin-bottom: 24px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                                <span style="color: #ef4444;">Player 2 (O)</span>
+                            </label>
+                            <input type="text" id="player2-name" placeholder="Enter name..."
+                                style="width: 100%; padding: 12px; background: var(--card-bg); border: 2px solid #ef4444; border-radius: 8px; color: var(--text-color); font-size: 16px;">
+                        </div>
+
+                        <button class="btn btn-primary" onclick="startLocalGameWithNames()" style="width: 100%;">
+                            <ion-icon name="play-outline" style="margin-right: 8px;"></ion-icon>
+                            Start Game
+                        </button>
+                    </div>
+
                     <!-- Online Players List -->
                     <div id="ttt-online-players" class="hidden stat-card" style="margin-bottom: 20px;">
                         <button onclick="backToTTTMode()"
-                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">←
-                            Back</button>
+                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">
+                            <ion-icon name="arrow-back-outline"></ion-icon> Back
+                        </button>
                         <h3 style="margin-bottom: 16px;">Online Players</h3>
                         <input type="text" id="player-search" placeholder="Search players..."
                             style="margin-bottom: 16px;" oninput="filterOnlinePlayers(this.value)">
@@ -1202,8 +1249,9 @@
                         <div
                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                             <button onclick="quitGame()"
-                                style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer;">←
-                                Quit</button>
+                                style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer;">
+                                <ion-icon name="arrow-back-outline"></ion-icon> Quit
+                            </button>
                             <div id="game-status" style="font-weight: bold; font-size: 18px;">Your Turn</div>
                         </div>
 
@@ -1237,9 +1285,13 @@
                     <!-- Leaderboard -->
                     <div id="ttt-leaderboard" class="hidden stat-card" style="margin-bottom: 20px;">
                         <button onclick="backToTTTMode()"
-                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">←
-                            Back</button>
-                        <h3 style="margin-bottom: 16px;">🏆 Tic-Tac-Toe Leaderboard</h3>
+                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">
+                            <ion-icon name="arrow-back-outline"></ion-icon> Back
+                        </button>
+                        <h3 style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                            <ion-icon name="trophy-outline" style="font-size: 24px; color: #FFD700;"></ion-icon>
+                            Tic-Tac-Toe Leaderboard
+                        </h3>
                         <div id="leaderboard-list" style="max-height: 500px; overflow-y: auto;">
                             <!-- Leaderboard entries will be loaded here -->
                         </div>
@@ -8949,12 +9001,41 @@
 
         function resetGameViews() {
             document.getElementById('ttt-mode-selection').classList.remove('hidden');
+            document.getElementById('ttt-player-names').classList.add('hidden');
             document.getElementById('ttt-online-players').classList.add('hidden');
             document.getElementById('ttt-game-board').classList.add('hidden');
             document.getElementById('ttt-leaderboard').classList.add('hidden');
         }
 
-        // Start Local Game
+        // Show Player Name Input
+        window.showPlayerNameInput = function () {
+            document.getElementById('ttt-mode-selection').classList.add('hidden');
+            document.getElementById('ttt-player-names').classList.remove('hidden');
+            document.getElementById('player1-name').value = '';
+            document.getElementById('player2-name').value = '';
+        };
+
+        // Start Local Game with Names
+        window.startLocalGameWithNames = function () {
+            const player1 = document.getElementById('player1-name').value.trim() || 'Player 1';
+            const player2 = document.getElementById('player2-name').value.trim() || 'Player 2';
+
+            gameMode = 'local';
+            currentPlayer = 'X';
+            gameBoard = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+
+            document.getElementById('ttt-player-names').classList.add('hidden');
+            document.getElementById('ttt-game-board').classList.remove('hidden');
+            document.getElementById('player-x-name').textContent = player1;
+            document.getElementById('player-o-name').textContent = player2;
+            document.getElementById('game-status').textContent = `${player1}'s Turn (X)`;
+            document.getElementById('game-result').classList.add('hidden');
+
+            createBoard();
+        };
+
+        // Start Local Game (legacy - keeping for compatibility)
         window.startLocalGame = function () {
             gameMode = 'local';
             currentPlayer = 'X';
@@ -9019,7 +9100,10 @@
                     playerCard.innerHTML = `
                         <div>
                             <div style="font-weight: bold;">${player.username}</div>
-                            <div style="font-size: 12px; color: var(--text-secondary);">${player.inGame ? '🎮 In Game' : '🟢 Available'}</div>
+                            <div style="font-size: 12px; color: ${player.inGame ? '#999' : '#10b981'}; display: flex; align-items: center; gap: 4px;">
+                                <div style="width: 8px; height: 8px; border-radius: 50%; background: ${player.inGame ? '#999' : '#10b981'};"></div>
+                                ${player.inGame ? 'In Game' : 'Available'}
+                            </div>
                         </div>
                         <button class="btn btn-primary" onclick="challengePlayer('${player.uid}', '${player.username}')" 
                             ${player.inGame ? 'disabled style="opacity: 0.5;"' : ''}>
@@ -9160,7 +9244,10 @@
                     }
                 } else {
                     currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-                    document.getElementById('game-status').textContent = `Player ${currentPlayer === 'X' ? '1' : '2'}'s Turn (${currentPlayer})`;
+                    const playerName = currentPlayer === 'X' ?
+                        document.getElementById('player-x-name').textContent :
+                        document.getElementById('player-o-name').textContent;
+                    document.getElementById('game-status').textContent = `${playerName}'s Turn (${currentPlayer})`;
                 }
             } else if (gameMode === 'online') {
                 const uid = localStorage.getItem('kobi_atlas_uid');
@@ -9216,12 +9303,15 @@
             if (winner === 'draw') {
                 resultText.textContent = "It's a Draw!";
             } else if (gameMode === 'local') {
-                resultText.textContent = `Player ${winner === 'X' ? '1' : '2'} Wins! 🎉`;
+                const winnerName = winner === 'X' ?
+                    document.getElementById('player-x-name').textContent :
+                    document.getElementById('player-o-name').textContent;
+                resultText.textContent = `${winnerName} Wins!`;
             } else {
                 if (winner === mySymbol) {
-                    resultText.textContent = 'You Win! 🎉';
+                    resultText.textContent = 'You Win!';
                 } else {
-                    resultText.textContent = 'You Lose 😔';
+                    resultText.textContent = 'You Lose';
                 }
             }
 
@@ -9285,13 +9375,14 @@
             leaderboardList.innerHTML = '';
             players.forEach((player, index) => {
                 const rank = index + 1;
-                const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '';
+                const rankColor = rank === 1 ? '#FFD700' : rank === 2 ? '#C0C0C0' : rank === 3 ? '#CD7F32' : 'var(--text-color)';
+                const rankDisplay = `#${rank}`;
 
                 const playerCard = document.createElement('div');
                 playerCard.style.cssText = 'padding: 16px; background: var(--card-bg); border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;';
                 playerCard.innerHTML = `
                     <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="font-size: 24px; min-width: 40px;">${medal || rank}</div>
+                        <div style="font-size: 20px; font-weight: bold; min-width: 40px; color: ${rankColor};">${rankDisplay}</div>
                         <div>
                             <div style="font-weight: bold;">${player.username}</div>
                             <div style="font-size: 12px; color: var(--text-secondary);">
