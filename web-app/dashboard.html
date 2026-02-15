@@ -1146,16 +1146,28 @@
                 </div>
             </div>
 
+
+
+
+
             <!-- Games Container -->
-            <div id="community-games-container" class="hidden">
+            <div id="games-container-fixed" class="hidden" style="min-height: 100vh;">
                 <!-- Game Selection -->
                 <div id="game-selection">
-                    <h3 style="margin-bottom: 20px; font-size: 20px;">Available Games</h3>
                     <div
-                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; font-size: 20px;">Available Games</h3>
+
+                        <div onclick="showTTTLeaderboard()"
+                            style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 12px; padding: 8px 16px; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            <ion-icon name="trophy-outline" style="font-size: 18px; color: white;"></ion-icon>
+                            <span style="font-size: 12px; color: white; font-weight: bold;">Leaderboard</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;">
                         <!-- Tic-Tac-Toe Card -->
                         <div onclick="selectGame('tictactoe')"
-                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 24px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"
+                            style="flex: 1; min-width: 280px; max-width: 400px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 24px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"
                             onmouseenter="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.25)';"
                             onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';">
                             <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
@@ -1175,7 +1187,7 @@
 
                         <!-- 50 Guesses Card -->
                         <div onclick="selectGame('fiftyguesses')"
-                            style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 16px; padding: 24px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"
+                            style="flex: 1; min-width: 280px; max-width: 400px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 16px; padding: 24px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"
                             onmouseenter="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.25)';"
                             onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';">
                             <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
@@ -1198,56 +1210,205 @@
                 <!-- Tic-Tac-Toe Game -->
                 <div id="tictactoe-game" class="hidden">
                     <!-- Mode Selection -->
-                    <div id="ttt-mode-selection" class="stat-card" style="margin-bottom: 20px;">
+                    <div id="ttt-mode-selection" class="stat-card" style="margin-bottom: 20px; padding: 32px;">
                         <button onclick="backToGameSelection()"
-                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">
-                            <ion-icon name="arrow-back-outline"></ion-icon> Back
+                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 8px; transition: all 0.3s;"
+                            onmouseenter="this.style.background='var(--card-bg)'"
+                            onmouseleave="this.style.background='none'">
+                            <ion-icon name="arrow-back-outline"></ion-icon>
+                            <span>Back</span>
                         </button>
-                        <h3 style="margin-bottom: 16px;">Choose Game Mode</h3>
-                        <div style="display: grid; gap: 12px;">
-                            <button class="btn btn-action-primary" onclick="showPlayerNameInput()">
-                                <ion-icon name="phone-portrait-outline" style="margin-right: 8px;"></ion-icon>
-                                Local Multiplayer (One Device)
-                            </button>
-                            <button class="btn btn-action-current" onclick="showOnlinePlayers()">
-                                <ion-icon name="globe-outline" style="margin-right: 8px;"></ion-icon>
-                                Online Multiplayer
-                            </button>
-                            <button class="btn btn-action-graduate" onclick="showTTTLeaderboard()">
-                                <ion-icon name="trophy-outline" style="margin-right: 8px;"></ion-icon>
-                                Leaderboard
-                            </button>
+
+                        <div style="text-align: center; margin-bottom: 32px;">
+                            <h2
+                                style="margin: 0 0 8px 0; font-size: 28px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                                Choose Your Mode</h2>
+                            <p style="margin: 0; color: var(--text-secondary); font-size: 14px;">Select how you want to
+                                play Tic-Tac-Toe</p>
+                        </div>
+
+                        <div style="max-width: 800px; margin: 0 auto;">
+                            <!-- Leaderboard Removed from here -->
+
+                            <!-- Local and Online Side by Side -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                                <!-- Local Multiplayer Card -->
+                                <div onclick="showPlayerNameInput()"
+                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 24px; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden;"
+                                    onmouseenter="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 24px rgba(102, 126, 234, 0.3)'"
+                                    onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                                    <div
+                                        style="position: absolute; top: -20px; right: -20px; font-size: 120px; opacity: 0.1;">
+                                        <ion-icon name="phone-portrait-outline"></ion-icon>
+                                    </div>
+                                    <div style="position: relative; z-index: 1;">
+                                        <div
+                                            style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+                                            <div
+                                                style="width: 56px; height: 56px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                                <ion-icon name="phone-portrait-outline"
+                                                    style="font-size: 32px; color: white;"></ion-icon>
+                                            </div>
+                                            <div style="flex: 1;">
+                                                <h3 style="margin: 0; font-size: 22px; color: white; font-weight: 700;">
+                                                    Local Multiplayer</h3>
+                                                <p
+                                                    style="margin: 4px 0 0 0; font-size: 13px; color: rgba(255,255,255,0.9);">
+                                                    Play on one device</p>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                            <span
+                                                style="padding: 6px 12px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 12px; color: white; font-weight: 500;">
+                                                <ion-icon name="people-outline"
+                                                    style="vertical-align: middle; margin-right: 4px;"></ion-icon>
+                                                2 Players
+                                            </span>
+                                            <span
+                                                style="padding: 6px 12px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 12px; color: white; font-weight: 500;">
+                                                <ion-icon name="flash-outline"
+                                                    style="vertical-align: middle; margin-right: 4px;"></ion-icon>
+                                                Quick Start
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Online Multiplayer Card -->
+                                <div onclick="showOnlinePlayers()"
+                                    style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); border-radius: 16px; padding: 24px; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden;"
+                                    onmouseenter="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 24px rgba(17, 153, 142, 0.3)'"
+                                    onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                                    <div
+                                        style="position: absolute; top: -20px; right: -20px; font-size: 120px; opacity: 0.1;">
+                                        <ion-icon name="globe-outline"></ion-icon>
+                                    </div>
+                                    <div style="position: relative; z-index: 1;">
+                                        <div
+                                            style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+                                            <div
+                                                style="width: 56px; height: 56px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                                <ion-icon name="globe-outline"
+                                                    style="font-size: 32px; color: white;"></ion-icon>
+                                            </div>
+                                            <div style="flex: 1;">
+                                                <h3 style="margin: 0; font-size: 22px; color: white; font-weight: 700;">
+                                                    Online Multiplayer</h3>
+                                                <p
+                                                    style="margin: 4px 0 0 0; font-size: 13px; color: rgba(255,255,255,0.9);">
+                                                    Challenge other players</p>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                            <span
+                                                style="padding: 6px 12px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 12px; color: white; font-weight: 500;">
+                                                <ion-icon name="wifi-outline"
+                                                    style="vertical-align: middle; margin-right: 4px;"></ion-icon>
+                                                Real-time
+                                            </span>
+                                            <span
+                                                style="padding: 6px 12px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 12px; color: white; font-weight: 500;">
+                                                <ion-icon name="trophy-outline"
+                                                    style="vertical-align: middle; margin-right: 4px;"></ion-icon>
+                                                Ranked
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mobile Responsive: Stack on small screens -->
+                            <style>
+                                @media (max-width: 768px) {
+                                    div[style*="grid-template-columns: 1fr 1fr"] {
+                                        grid-template-columns: 1fr !important;
+                                    }
+                                }
+                            </style>
                         </div>
                     </div>
 
                     <!-- Player Name Input for Local Game -->
-                    <div id="ttt-player-names" class="hidden stat-card" style="margin-bottom: 20px;">
+                    <div id="ttt-player-names" class="hidden stat-card" style="margin-bottom: 20px; padding: 32px;">
                         <button onclick="backToTTTMode()"
-                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">
-                            <ion-icon name="arrow-back-outline"></ion-icon> Back
+                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 8px; transition: all 0.3s;"
+                            onmouseenter="this.style.background='var(--card-bg)'"
+                            onmouseleave="this.style.background='none'">
+                            <ion-icon name="arrow-back-outline"></ion-icon>
+                            <span>Back</span>
                         </button>
-                        <h3 style="margin-bottom: 20px;">Enter Player Names</h3>
 
-                        <div style="margin-bottom: 20px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600;">
-                                <span style="color: #3b82f6;">Player 1 (X)</span>
-                            </label>
-                            <input type="text" id="player1-name" placeholder="Enter name..."
-                                style="width: 100%; padding: 12px; background: var(--card-bg); border: 2px solid #3b82f6; border-radius: 8px; color: var(--text-color); font-size: 16px;">
+                        <div style="text-align: center; margin-bottom: 32px;">
+                            <h2
+                                style="margin: 0 0 8px 0; font-size: 28px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                                Enter Player Names</h2>
+                            <p style="margin: 0; color: var(--text-secondary); font-size: 14px;">Who's playing today?
+                            </p>
                         </div>
 
-                        <div style="margin-bottom: 24px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600;">
-                                <span style="color: #ef4444;">Player 2 (O)</span>
-                            </label>
-                            <input type="text" id="player2-name" placeholder="Enter name..."
-                                style="width: 100%; padding: 12px; background: var(--card-bg); border: 2px solid #ef4444; border-radius: 8px; color: var(--text-color); font-size: 16px;">
-                        </div>
+                        <div style="max-width: 500px; margin: 0 auto;">
+                            <!-- Player 1 Card -->
+                            <div
+                                style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-radius: 16px; padding: 24px; margin-bottom: 20px; position: relative; overflow: hidden;">
+                                <div
+                                    style="position: absolute; top: -10px; right: -10px; font-size: 100px; opacity: 0.1; color: white;">
+                                    X</div>
+                                <div style="position: relative; z-index: 1;">
+                                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                                        <div
+                                            style="width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; color: white;">
+                                            X
+                                        </div>
+                                        <div>
+                                            <h4 style="margin: 0; color: white; font-size: 18px; font-weight: 700;">
+                                                Player 1</h4>
+                                            <p
+                                                style="margin: 4px 0 0 0; color: rgba(255,255,255,0.8); font-size: 12px;">
+                                                Plays as X (goes first)</p>
+                                        </div>
+                                    </div>
+                                    <input type="text" id="player1-name" placeholder="Enter name..."
+                                        style="width: 100%; padding: 14px 16px; background: rgba(255,255,255,0.95); border: none; border-radius: 12px; color: #1e293b; font-size: 16px; font-weight: 500; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"
+                                        onkeypress="if(event.key === 'Enter') document.getElementById('player2-name').focus()">
+                                </div>
+                            </div>
 
-                        <button class="btn btn-primary" onclick="startLocalGameWithNames()" style="width: 100%;">
-                            <ion-icon name="play-outline" style="margin-right: 8px;"></ion-icon>
-                            Start Game
-                        </button>
+                            <!-- Player 2 Card -->
+                            <div
+                                style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border-radius: 16px; padding: 24px; margin-bottom: 28px; position: relative; overflow: hidden;">
+                                <div
+                                    style="position: absolute; top: -10px; right: -10px; font-size: 100px; opacity: 0.1; color: white;">
+                                    O</div>
+                                <div style="position: relative; z-index: 1;">
+                                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                                        <div
+                                            style="width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; color: white;">
+                                            O
+                                        </div>
+                                        <div>
+                                            <h4 style="margin: 0; color: white; font-size: 18px; font-weight: 700;">
+                                                Player 2</h4>
+                                            <p
+                                                style="margin: 4px 0 0 0; color: rgba(255,255,255,0.8); font-size: 12px;">
+                                                Plays as O (goes second)</p>
+                                        </div>
+                                    </div>
+                                    <input type="text" id="player2-name" placeholder="Enter name..."
+                                        style="width: 100%; padding: 14px 16px; background: rgba(255,255,255,0.95); border: none; border-radius: 12px; color: #1e293b; font-size: 16px; font-weight: 500; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"
+                                        onkeypress="if(event.key === 'Enter') startLocalGameWithNames()">
+                                </div>
+                            </div>
+
+                            <!-- Start Button -->
+                            <button onclick="startLocalGameWithNames()"
+                                style="width: 100%; padding: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 12px; color: white; font-size: 18px; font-weight: 700; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);"
+                                onmouseenter="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(102, 126, 234, 0.4)'"
+                                onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.3)'">
+                                <ion-icon name="play-outline"
+                                    style="vertical-align: middle; margin-right: 8px; font-size: 20px;"></ion-icon>
+                                Start Game
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Online Players List -->
@@ -1265,7 +1426,8 @@
                     </div>
 
                     <!-- Game Board -->
-                    <div id="ttt-game-board" class="hidden stat-card" style="margin-bottom: 20px;">
+                    <div id="ttt-game-board" class="hidden stat-card"
+                        style="margin-bottom: 10px; padding: 16px; height: calc(100vh - 40px); overflow: hidden; display: flex; flex-direction: column;">
                         <div
                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                             <button onclick="quitGame()"
@@ -1288,566 +1450,650 @@
                             </div>
                         </div>
 
-                        <div id="ttt-board"
-                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 400px; margin: 0 auto 20px auto; aspect-ratio: 1;">
-                            <!-- 9 cells will be created dynamically -->
-                        </div>
-
-                        <div id="game-result" class="hidden"
-                            style="text-align: center; padding: 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; margin-top: 20px;">
-                            <div id="result-text" style="font-size: 20px; font-weight: bold; margin-bottom: 12px;">
+                        <div
+                            style="flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0;">
+                            <div id="ttt-board"
+                                style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: min(400px, 80vh); aspect-ratio: 1;">
+                                <!-- 9 cells will be created dynamically -->
                             </div>
-                            <button class="btn btn-primary" onclick="playAgain()"
-                                style="background: white; color: #667eea;">Play Again</button>
                         </div>
                     </div>
 
-                    <!-- Leaderboard -->
-                    <div id="ttt-leaderboard" class="hidden stat-card" style="margin-bottom: 20px;">
-                        <button onclick="backToTTTMode()"
-                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">
-                            <ion-icon name="arrow-back-outline"></ion-icon> Back
-                        </button>
-                        <h3 style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-                            <ion-icon name="trophy-outline" style="font-size: 24px; color: #FFD700;"></ion-icon>
-                            Tic-Tac-Toe Leaderboard
-                        </h3>
-                        <div id="leaderboard-list" style="max-height: 500px; overflow-y: auto;">
-                            <!-- Leaderboard entries will be loaded here -->
+                    <!-- Game Result Modal -->
+                    <div id="game-result" class="hidden"
+                        onclick="if(event.target === this) this.classList.add('hidden')"
+                        style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 10000;">
+                        <div
+                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; padding: 40px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); animation: modalSlideIn 0.3s ease;">
+                            <div style="font-size: 60px; margin-bottom: 16px;">🎉</div>
+                            <div id="result-text"
+                                style="font-size: 28px; font-weight: bold; margin-bottom: 20px; color: white;"></div>
+                            <button class="btn btn-primary" onclick="playAgain()"
+                                style="background: white; color: #667eea; padding: 14px 32px; font-size: 16px; margin-bottom: 12px; width: 100%;">Play
+                                Again</button>
+                            <button onclick="quitGame()"
+                                style="background: transparent; border: 2px solid white; color: white; padding: 12px 32px; font-size: 14px; border-radius: 10px; cursor: pointer; width: 100%;">Back
+                                to Menu</button>
                         </div>
                     </div>
+
+                    <style>
+                        @keyframes modalSlideIn {
+                            from {
+                                transform: scale(0.8);
+                                opacity: 0;
+                            }
+
+                            to {
+                                transform: scale(1);
+                                opacity: 1;
+                            }
+                        }
+                    </style>
                 </div>
 
-                <!-- 50 Guesses Game -->
-                <div id="fiftyguesses-game" class="hidden">
-                    <div class="stat-card" style="margin-bottom: 20px;">
-                        <button onclick="backToGameSelection()"
-                            style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">
-                            <ion-icon name="arrow-back-outline"></ion-icon> Back
+                <!-- Leaderboard -->
+                <div id="ttt-leaderboard" class="hidden stat-card" style="margin-bottom: 20px;">
+                    <button onclick="backToGameSelection()"
+                        style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">
+                        <ion-icon name="arrow-back-outline"></ion-icon> Back
+                    </button>
+                    <h3 style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                        <ion-icon name="trophy-outline" style="font-size: 24px; color: #FFD700;"></ion-icon>
+                        Tic-Tac-Toe Leaderboard
+                    </h3>
+                    <div id="leaderboard-list" style="max-height: 500px; overflow-y: auto;">
+                        <!-- Leaderboard entries will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 50 Guesses Game -->
+            <div id="fiftyguesses-game" class="hidden"
+                style="height: 100vh; overflow: hidden; display: flex; flex-direction: column;">
+                <div class="stat-card"
+                    style="margin-bottom: 10px; padding: 16px; flex: 1; display: flex; flex-direction: column; overflow-y: auto;">
+                    <button onclick="backToGameSelection()"
+                        style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">
+                        <ion-icon name="arrow-back-outline"></ion-icon> Back
+                    </button>
+
+                    <div style="text-align: center; margin-bottom: 24px;">
+                        <h2
+                            style="margin: 0 0 8px 0; font-size: 28px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                            50 Guesses</h2>
+                        <p style="margin: 0; color: var(--text-secondary); font-size: 14px;">Guess the number before
+                            you run out of tries!</p>
+                    </div>
+
+                    <!-- Game Stats -->
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px;">
+                        <div
+                            style="background: rgba(240, 147, 251, 0.1); border-radius: 12px; padding: 16px; text-align: center;">
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Level
+                            </div>
+                            <div id="fg-level" style="font-size: 24px; font-weight: bold; color: #f093fb;">1</div>
+                        </div>
+                        <div
+                            style="background: rgba(245, 87, 108, 0.1); border-radius: 12px; padding: 16px; text-align: center;">
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Guesses
+                                Left</div>
+                            <div id="fg-guesses-left" style="font-size: 24px; font-weight: bold; color: #f5576c;">50
+                            </div>
+                        </div>
+                        <div
+                            style="background: rgba(102, 126, 234, 0.1); border-radius: 12px; padding: 16px; text-align: center;">
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Score
+                            </div>
+                            <div id="fg-score" style="font-size: 24px; font-weight: bold; color: #667eea;">0</div>
+                        </div>
+                    </div>
+
+                    <!-- Range Display -->
+                    <div
+                        style="background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center;">
+                        <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">Guess a
+                            number between</div>
+                        <div style="font-size: 32px; font-weight: bold;">
+                            <span id="fg-min-range">1</span> - <span id="fg-max-range">10</span>
+                        </div>
+                    </div>
+
+                    <!-- Input and Submit -->
+                    <!-- Numpad Input Display -->
+                    <div style="margin-bottom: 20px;">
+                        <input type="text" id="fg-guess-input" placeholder="?" readonly
+                            style="width: 100%; padding: 20px; background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 16px; color: var(--text-color); font-size: 32px; text-align: center; font-weight: bold; letter-spacing: 2px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);">
+                    </div>
+
+                    <!-- Numpad Grid -->
+                    <div
+                        style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 320px; margin: 0 auto 24px auto;">
+                        <!-- Numbers 1-9 -->
+                        <button onclick="fgAppendNumber(1)" class="numpad-btn"
+                            style="padding: 20px; font-size: 24px; border-radius: 12px; border: none; background: var(--card-bg); color: var(--text-color); cursor: pointer; transition: all 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);">1</button>
+                        <button onclick="fgAppendNumber(2)" class="numpad-btn"
+                            style="padding: 20px; font-size: 24px; border-radius: 12px; border: none; background: var(--card-bg); color: var(--text-color); cursor: pointer; transition: all 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);">2</button>
+                        <button onclick="fgAppendNumber(3)" class="numpad-btn"
+                            style="padding: 20px; font-size: 24px; border-radius: 12px; border: none; background: var(--card-bg); color: var(--text-color); cursor: pointer; transition: all 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);">3</button>
+
+                        <button onclick="fgAppendNumber(4)" class="numpad-btn"
+                            style="padding: 20px; font-size: 24px; border-radius: 12px; border: none; background: var(--card-bg); color: var(--text-color); cursor: pointer; transition: all 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);">4</button>
+                        <button onclick="fgAppendNumber(5)" class="numpad-btn"
+                            style="padding: 20px; font-size: 24px; border-radius: 12px; border: none; background: var(--card-bg); color: var(--text-color); cursor: pointer; transition: all 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);">5</button>
+                        <button onclick="fgAppendNumber(6)" class="numpad-btn"
+                            style="padding: 20px; font-size: 24px; border-radius: 12px; border: none; background: var(--card-bg); color: var(--text-color); cursor: pointer; transition: all 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);">6</button>
+
+                        <button onclick="fgAppendNumber(7)" class="numpad-btn"
+                            style="padding: 20px; font-size: 24px; border-radius: 12px; border: none; background: var(--card-bg); color: var(--text-color); cursor: pointer; transition: all 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);">7</button>
+                        <button onclick="fgAppendNumber(8)" class="numpad-btn"
+                            style="padding: 20px; font-size: 24px; border-radius: 12px; border: none; background: var(--card-bg); color: var(--text-color); cursor: pointer; transition: all 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);">8</button>
+                        <button onclick="fgAppendNumber(9)" class="numpad-btn"
+                            style="padding: 20px; font-size: 24px; border-radius: 12px; border: none; background: var(--card-bg); color: var(--text-color); cursor: pointer; transition: all 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);">9</button>
+
+                        <!-- Bottom Row -->
+                        <button onclick="fgBackspace()" class="numpad-btn"
+                            style="padding: 20px; font-size: 24px; border-radius: 12px; border: none; background: rgba(239, 68, 68, 0.1); color: #ef4444; cursor: pointer; transition: all 0.1s; box-shadow: 0 4px 0 rgba(239, 68, 68, 0.2);">
+                            <ion-icon name="backspace-outline"></ion-icon>
                         </button>
+                        <button onclick="fgAppendNumber(0)" class="numpad-btn"
+                            style="padding: 20px; font-size: 24px; border-radius: 12px; border: none; background: var(--card-bg); color: var(--text-color); cursor: pointer; transition: all 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);">0</button>
+                        <button onclick="submitGuess()" class="numpad-btn"
+                            style="padding: 20px; font-size: 24px; border-radius: 12px; border: none; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; cursor: pointer; transition: all 0.1s; box-shadow: 0 4px 0 #047857;">
+                            <ion-icon name="checkmark-outline"></ion-icon>
+                        </button>
+                    </div>
 
-                        <div style="text-align: center; margin-bottom: 24px;">
-                            <h2
-                                style="margin: 0 0 8px 0; font-size: 28px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                                50 Guesses</h2>
-                            <p style="margin: 0; color: var(--text-secondary); font-size: 14px;">Guess the number before
-                                you run out of tries!</p>
+                    <!-- Feedback Message -->
+                    <div id="fg-feedback"
+                        style="text-align: center; padding: 16px; border-radius: 12px; margin-bottom: 20px; display: none;">
+                        <div id="fg-feedback-text" style="font-size: 18px; font-weight: bold;"></div>
+                    </div>
+
+                    <!-- Guess History -->
+                    <div id="fg-history-container" style="display: none;">
+                        <h4 style="margin: 0 0 12px 0; font-size: 16px;">Your Guesses</h4>
+                        <div id="fg-guess-history" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            <!-- Guess history will appear here -->
                         </div>
+                    </div>
 
-                        <!-- Game Stats -->
+                    <!-- Game Over / Victory Modal -->
+                    <div id="fg-game-over" class="hidden"
+                        onclick="if(event.target === this) this.classList.add('hidden')"
+                        style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 10000;">
                         <div
-                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px;">
-                            <div
-                                style="background: rgba(240, 147, 251, 0.1); border-radius: 12px; padding: 16px; text-align: center;">
-                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Level
-                                </div>
-                                <div id="fg-level" style="font-size: 24px; font-weight: bold; color: #f093fb;">1</div>
-                            </div>
-                            <div
-                                style="background: rgba(245, 87, 108, 0.1); border-radius: 12px; padding: 16px; text-align: center;">
-                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Guesses
-                                    Left</div>
-                                <div id="fg-guesses-left" style="font-size: 24px; font-weight: bold; color: #f5576c;">50
-                                </div>
-                            </div>
-                            <div
-                                style="background: rgba(102, 126, 234, 0.1); border-radius: 12px; padding: 16px; text-align: center;">
-                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Score
-                                </div>
-                                <div id="fg-score" style="font-size: 24px; font-weight: bold; color: #667eea;">0</div>
-                            </div>
-                        </div>
-
-                        <!-- Range Display -->
-                        <div
-                            style="background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center;">
-                            <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">Guess a
-                                number between</div>
-                            <div style="font-size: 32px; font-weight: bold;">
-                                <span id="fg-min-range">1</span> - <span id="fg-max-range">10</span>
-                            </div>
-                        </div>
-
-                        <!-- Input and Submit -->
-                        <div style="display: flex; gap: 12px; margin-bottom: 20px;">
-                            <input type="number" id="fg-guess-input" placeholder="Enter your guess..."
-                                style="flex: 1; padding: 16px; background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 12px; color: var(--text-color); font-size: 18px; text-align: center;"
-                                onkeypress="if(event.key === 'Enter') submitGuess()">
-                            <button class="btn btn-primary" onclick="submitGuess()"
-                                style="padding: 16px 32px; font-size: 16px;">
-                                <ion-icon name="checkmark-outline" style="margin-right: 8px;"></ion-icon>
-                                Guess
-                            </button>
-                        </div>
-
-                        <!-- Feedback Message -->
-                        <div id="fg-feedback"
-                            style="text-align: center; padding: 16px; border-radius: 12px; margin-bottom: 20px; display: none;">
-                            <div id="fg-feedback-text" style="font-size: 18px; font-weight: bold;"></div>
-                        </div>
-
-                        <!-- Guess History -->
-                        <div id="fg-history-container" style="display: none;">
-                            <h4 style="margin: 0 0 12px 0; font-size: 16px;">Your Guesses</h4>
-                            <div id="fg-guess-history" style="display: flex; flex-wrap: wrap; gap: 8px;">
-                                <!-- Guess history will appear here -->
-                            </div>
-                        </div>
-
-                        <!-- Game Over / Victory -->
-                        <div id="fg-game-over" class="hidden"
-                            style="text-align: center; padding: 24px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 16px;">
+                            style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 20px; padding: 40px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); animation: modalSlideIn 0.3s ease;">
                             <div id="fg-result-icon" style="font-size: 64px; margin-bottom: 16px;"></div>
                             <div id="fg-result-text"
                                 style="font-size: 24px; font-weight: bold; color: white; margin-bottom: 8px;"></div>
                             <div id="fg-result-details"
                                 style="font-size: 14px; color: rgba(255,255,255,0.9); margin-bottom: 20px;"></div>
                             <button class="btn" onclick="restartFiftyGuesses()"
-                                style="background: white; color: #f5576c; font-weight: bold;">
+                                style="background: white; color: #f5576c; font-weight: bold; width: 100%; margin-bottom: 12px;">
                                 <ion-icon name="refresh-outline" style="margin-right: 8px;"></ion-icon>
                                 Play Again
                             </button>
+                            <button onclick="showFGLeaderboard()"
+                                style="background: transparent; border: 2px solid white; color: white; padding: 12px 32px; font-size: 14px; border-radius: 10px; cursor: pointer; width: 100%; margin-bottom: 12px;">
+                                <ion-icon name="trophy-outline" style="margin-right: 8px;"></ion-icon>
+                                Leaderboard
+                            </button>
+                            <button onclick="backToGameSelection()"
+                                style="background: transparent; border: 2px solid white; color: white; padding: 12px 32px; font-size: 14px; border-radius: 10px; cursor: pointer; width: 100%;">Back
+                                to Menu</button>
                         </div>
                     </div>
                 </div>
-            </div>
 
-
-        </div>
-
-        <!-- Create Post Modal -->
-        <div id="create-post-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Create Post</h2>
-                    <button class="close-btn" onclick="closeModal('create-post-modal')">&times;</button>
-                </div>
-
-                <label>What's on your mind?</label>
-                <textarea id="post-content" placeholder="Share something with the community..." rows="4"></textarea>
-
-                <label>Image (Optional)</label>
-                <input type="file" id="post-image" accept="image/*"
-                    onchange="handleImageUpload(this, 'post-image-preview')">
-                <img id="post-image-preview"
-                    style="display: none; width: 100%; max-height: 200px; object-fit: contain; margin-top: 10px; border-radius: 8px;">
-
-                <label>Link (Optional)</label>
-                <input type="text" id="post-link" placeholder="https://...">
-
-                <button class="btn btn-primary" onclick="createPost()">Post</button>
-                <button class="btn btn-secondary" onclick="closeModal('create-post-modal')">Cancel</button>
-            </div>
-        </div>
-
-        <!-- Post Detail Modal -->
-        <div id="post-detail-modal" class="modal">
-            <div class="modal-content" style="max-width: 600px;">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Post</h2>
-                    <button onclick="closeModal('post-detail-modal')"
-                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
-                </div>
-
-                <!-- Post Content -->
-                <div id="post-detail-content"></div>
-
-                <!-- Reply Input -->
-                <div style="margin: 20px 0; padding: 16px; background: #2a2a2a; border-radius: 8px;">
-                    <textarea id="reply-input" placeholder="Write a reply..." rows="3"
-                        style="margin-bottom: 12px;"></textarea>
-                    <button class="btn btn-primary" onclick="createReply()">Reply</button>
-                </div>
-
-                <!-- Replies Section -->
-                <div>
-                    <h3 style="margin-bottom: 16px;">Replies (<span id="replies-count">0</span>)</h3>
-                    <div id="replies-list"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- User Search Modal -->
-        <div id="user-search-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Search Users</h2>
-                    <button onclick="closeModal('user-search-modal')"
-                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
-                </div>
-
-                <input type="text" id="user-search-input" placeholder="Search by username or email..."
-                    style="margin-bottom: 20px;" oninput="searchUsers()">
-
-                <div id="users-list"></div>
-            </div>
-        </div>
-
-        <!-- User Profile Modal -->
-        <div id="user-profile-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Profile</h2>
-                    <button onclick="closeModal('user-profile-modal')"
-                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
-                </div>
-
-                <div id="user-profile-content"></div>
-            </div>
-        </div>
-
-        <!-- Notifications Modal -->
-        <div id="notifications-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Notifications</h2>
-                    <button onclick="closeModal('notifications-modal')"
-                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
-                </div>
-
-                <div id="notifications-list"></div>
-            </div>
-        </div>
-
-        <!-- Chat Modal -->
-        <div id="chat-modal" class="modal">
-            <div class="modal-content chat-modal-content"
-                style="display: flex; flex-direction: column; height: 95vh; padding: 0;">
-                <div class="modal-header"
-                    style="margin: 0; padding: 16px; padding-top: max(16px, env(safe-area-inset-top) + 20px); border-radius: 12px 12px 0 0;">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <ion-icon name="arrow-back" style="font-size: 24px; cursor: pointer;"
-                            onclick="closeModal('chat-modal')"></ion-icon>
-                        <h2 style="margin: 0; font-size: 18px;" id="chat-username">Chat</h2>
-                    </div>
-                </div>
-
-                <div id="messages-list"
-                    style="flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px;">
-                </div>
-
-                <div
-                    style="padding: 12px; padding-bottom: max(12px, env(safe-area-inset-bottom) + 20px); background: var(--modal-bg); border-top: 1px solid var(--border-color); display: flex; gap: 10px; border-radius: 0 0 12px 12px;">
-                    <input type="text" id="message-input" placeholder="Type a message..."
-                        style="flex: 1; margin: 0; border-radius: 20px;"
-                        onkeypress="if(event.key==='Enter') sendMessage()">
-                    <button class="btn btn-primary"
-                        style="width: auto; margin: 0; padding: 0 20px; border-radius: 20px;" onclick="sendMessage()">
-                        <ion-icon name="send"></ion-icon>
+                <!-- 50 Guesses Leaderboard -->
+                <div id="fg-leaderboard" class="hidden stat-card" style="margin-bottom: 20px;">
+                    <button onclick="hideFGLeaderboard()"
+                        style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; margin-bottom: 12px;">
+                        <ion-icon name="arrow-back-outline"></ion-icon> Back
                     </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Profile Settings Modal -->
-        <div id="profile-settings-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Edit Profile</h2>
-                    <button onclick="closeModal('profile-settings-modal')"
-                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
-                </div>
-
-                <label>Profile Picture</label>
-                <input type="file" id="profile-picture-input" accept="image/*"
-                    onchange="handleImageUpload(this, 'profile-picture-preview')">
-                <img id="profile-picture-preview"
-                    style="display: none; width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin: 10px 0;">
-
-                <label>Username</label>
-                <input type="text" id="profile-username" placeholder="Username">
-
-                <label>Bio</label>
-                <textarea id="profile-bio" placeholder="Tell us about yourself..." rows="3"></textarea>
-
-                <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
-                <button class="btn btn-secondary" onclick="closeModal('profile-settings-modal')">Cancel</button>
-            </div>
-        </div>
-
-        <!-- Settings Modal -->
-        <div id="settings-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Settings</h2>
-                    <button onclick="closeModal('settings-modal')"
-                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
-                </div>
-
-                <div style="margin-bottom: 24px;">
-                    <h3 style="margin: 0 0 12px 0; color: #999; font-size: 14px; text-transform: uppercase;">
-                        Account
+                    <h3 style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                        <ion-icon name="trophy-outline" style="font-size: 24px; color: #FFD700;"></ion-icon>
+                        50 Guesses Leaderboard
                     </h3>
-                    <button class="btn btn-primary"
-                        style="width: 100%; margin-bottom: 10px; justify-content: flex-start;"
-                        onclick="closeModal('settings-modal'); document.getElementById('profile-settings-modal').classList.add('show');">
-                        <ion-icon name="person-outline" style="margin-right: 8px;"></ion-icon>
-                        Edit Profile
-                    </button>
-                    <button class="btn btn-primary"
-                        style="width: 100%; margin-bottom: 10px; justify-content: flex-start;"
-                        onclick="window.location.href='change-pin.html'">
-                        <ion-icon name="key-outline" style="margin-right: 8px;"></ion-icon>
-                        Change PIN
-                    </button>
-                </div>
-
-                <div style="margin-bottom: 24px;">
-                    <h3 style="margin: 0 0 12px 0; color: #999; font-size: 14px; text-transform: uppercase;">
-                        About</h3>
-                    <div style="padding: 16px; background: #2a2a2a; border-radius: 8px;">
-                        <h4 style="margin: 0 0 8px 0; color: white;">Kobi's Atlas</h4>
-                        <p style="margin: 4px 0; color: #999; font-size: 14px;">Version 1.0.0</p>
-                        <p style="margin: 4px 0; color: #999; font-size: 14px;">By Kobi Oguadinma</p>
-                        <p style="margin: 4px 0; color: #999; font-size: 14px;">Babcock University</p>
-                        <p style="margin: 12px 0 0 0; color: #ccc; font-size: 13px; line-height: 1.5;">An
-                            academic
-                            companion for tracking courses, calculating GPA, and predicting grades.</p>
-                        <p
-                            style="margin: 12px 0 0 0; color: #ccc; font-size: 13px; line-height: 1.5; font-style: italic;">
-                            Kobi's Atlas was an individual project by Kobi Oguadinma, a second-year Software
-                            Engineering student at Babcock University. He frequently calculated his predicted
-                            grades
-                            manually and wanted a mobile app to automate this process.</p>
-                        <p style="margin: 12px 0 0 0; color: #ff9800; font-size: 12px; font-style: italic;">
-                            Currently
-                            supports Babcock University grading system. Other systems will be available in
-                            future
-                            updates.</p>
+                    <div id="fg-leaderboard-list" style="max-height: 500px; overflow-y: auto;">
+                        <!-- Leaderboard entries will be loaded here -->
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <button class="btn" style="width: 100%; background: #dc3545; color: white;" onclick="logout()">
-                    <ion-icon name="log-out-outline" style="margin-right: 8px;"></ion-icon>
-                    Logout
+
+    </div>
+
+    <!-- Create Post Modal -->
+    <div id="create-post-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin: 0;">Create Post</h2>
+                <button class="close-btn" onclick="closeModal('create-post-modal')">&times;</button>
+            </div>
+
+            <label>What's on your mind?</label>
+            <textarea id="post-content" placeholder="Share something with the community..." rows="4"></textarea>
+
+            <label>Image (Optional)</label>
+            <input type="file" id="post-image" accept="image/*"
+                onchange="handleImageUpload(this, 'post-image-preview')">
+            <img id="post-image-preview"
+                style="display: none; width: 100%; max-height: 200px; object-fit: contain; margin-top: 10px; border-radius: 8px;">
+
+            <label>Link (Optional)</label>
+            <input type="text" id="post-link" placeholder="https://...">
+
+            <button class="btn btn-primary" onclick="createPost()">Post</button>
+            <button class="btn btn-secondary" onclick="closeModal('create-post-modal')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Post Detail Modal -->
+    <div id="post-detail-modal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 style="margin: 0;">Post</h2>
+                <button onclick="closeModal('post-detail-modal')"
+                    style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
+            </div>
+
+            <!-- Post Content -->
+            <div id="post-detail-content"></div>
+
+            <!-- Reply Input -->
+            <div style="margin: 20px 0; padding: 16px; background: #2a2a2a; border-radius: 8px;">
+                <textarea id="reply-input" placeholder="Write a reply..." rows="3"
+                    style="margin-bottom: 12px;"></textarea>
+                <button class="btn btn-primary" onclick="createReply()">Reply</button>
+            </div>
+
+            <!-- Replies Section -->
+            <div>
+                <h3 style="margin-bottom: 16px;">Replies (<span id="replies-count">0</span>)</h3>
+                <div id="replies-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Search Modal -->
+    <div id="user-search-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin: 0;">Search Users</h2>
+                <button onclick="closeModal('user-search-modal')"
+                    style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
+            </div>
+
+            <input type="text" id="user-search-input" placeholder="Search by username or email..."
+                style="margin-bottom: 20px;" oninput="searchUsers()">
+
+            <div id="users-list"></div>
+        </div>
+    </div>
+
+    <!-- User Profile Modal -->
+    <div id="user-profile-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin: 0;">Profile</h2>
+                <button onclick="closeModal('user-profile-modal')"
+                    style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
+            </div>
+
+            <div id="user-profile-content"></div>
+        </div>
+    </div>
+
+    <!-- Notifications Modal -->
+    <div id="notifications-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin: 0;">Notifications</h2>
+                <button onclick="closeModal('notifications-modal')"
+                    style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
+            </div>
+
+            <div id="notifications-list"></div>
+        </div>
+    </div>
+
+    <!-- Chat Modal -->
+    <div id="chat-modal" class="modal">
+        <div class="modal-content chat-modal-content"
+            style="display: flex; flex-direction: column; height: 95vh; padding: 0;">
+            <div class="modal-header"
+                style="margin: 0; padding: 16px; padding-top: max(16px, env(safe-area-inset-top) + 20px); border-radius: 12px 12px 0 0;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <ion-icon name="arrow-back" style="font-size: 24px; cursor: pointer;"
+                        onclick="closeModal('chat-modal')"></ion-icon>
+                    <h2 style="margin: 0; font-size: 18px;" id="chat-username">Chat</h2>
+                </div>
+            </div>
+
+            <div id="messages-list"
+                style="flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px;">
+            </div>
+
+            <div
+                style="padding: 12px; padding-bottom: max(12px, env(safe-area-inset-bottom) + 20px); background: var(--modal-bg); border-top: 1px solid var(--border-color); display: flex; gap: 10px; border-radius: 0 0 12px 12px;">
+                <input type="text" id="message-input" placeholder="Type a message..."
+                    style="flex: 1; margin: 0; border-radius: 20px;" onkeypress="if(event.key==='Enter') sendMessage()">
+                <button class="btn btn-primary" style="width: auto; margin: 0; padding: 0 20px; border-radius: 20px;"
+                    onclick="sendMessage()">
+                    <ion-icon name="send"></ion-icon>
                 </button>
             </div>
         </div>
+    </div>
 
-        <!-- Change PIN Modal -->
-        <div id="change-pin-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Change PIN</h2>
-                    <button onclick="closeModal('change-pin-modal')"
-                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
-                </div>
-
-                <label>Current PIN</label>
-                <input type="password" id="current-pin" placeholder="Enter current PIN" maxlength="4" pattern="[0-9]*"
-                    inputmode="numeric">
-
-                <label>New PIN</label>
-                <input type="password" id="new-pin" placeholder="Enter new PIN (4 digits)" maxlength="4"
-                    pattern="[0-9]*" inputmode="numeric">
-
-                <label>Confirm New PIN</label>
-                <input type="password" id="confirm-pin" placeholder="Confirm new PIN" maxlength="4" pattern="[0-9]*"
-                    inputmode="numeric">
-
-                <button class="btn btn-primary" onclick="changePIN()">Change PIN</button>
-                <button class="btn btn-secondary" onclick="closeModal('change-pin-modal')">Cancel</button>
+    <!-- Profile Settings Modal -->
+    <div id="profile-settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin: 0;">Edit Profile</h2>
+                <button onclick="closeModal('profile-settings-modal')"
+                    style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
             </div>
+
+            <label>Profile Picture</label>
+            <input type="file" id="profile-picture-input" accept="image/*"
+                onchange="handleImageUpload(this, 'profile-picture-preview')">
+            <img id="profile-picture-preview"
+                style="display: none; width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin: 10px 0;">
+
+            <label>Username</label>
+            <input type="text" id="profile-username" placeholder="Username">
+
+            <label>Bio</label>
+            <textarea id="profile-bio" placeholder="Tell us about yourself..." rows="3"></textarea>
+
+            <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
+            <button class="btn btn-secondary" onclick="closeModal('profile-settings-modal')">Cancel</button>
         </div>
+    </div>
 
-        <!-- Add Schedule Modal -->
-        <div id="add-schedule-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Add Schedule</h2>
-                    <button class="close-btn" onclick="closeModal('add-schedule-modal')">&times;</button>
-                </div>
-
-                <label>Title (Optional if Course selected)</label>
-                <input type="text" id="schedule-title" placeholder="Event Title or Course Name">
-
-                <label>Course (Optional)</label>
-                <select id="schedule-course-select">
-                    <option value="">No Course / Personal</option>
-                </select>
-
-                <div style="display: flex; align-items: center; justify-content: space-between; margin: 12px 0;">
-                    <label style="margin: 0;">Recurring Event?</label>
-                    <label class="switch">
-                        <input type="checkbox" id="schedule-recurring" checked onchange="toggleScheduleDateInput()">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-
-                <div id="schedule-day-container">
-                    <label>Day</label>
-                    <select id="schedule-day">
-                        <option value="Monday">Monday</option>
-                        <option value="Tuesday">Tuesday</option>
-                        <option value="Wednesday">Wednesday</option>
-                        <option value="Thursday">Thursday</option>
-                        <option value="Friday">Friday</option>
-                        <option value="Saturday">Saturday</option>
-                        <option value="Sunday">Sunday</option>
-                    </select>
-                </div>
-
-                <div id="schedule-date-container" class="hidden">
-                    <label>Date</label>
-                    <input type="date" id="schedule-date">
-                </div>
-
-                <label>Start Time</label>
-                <input type="time" id="schedule-start-time" value="08:00">
-
-                <label>End Time</label>
-                <input type="time" id="schedule-end-time" value="09:00">
-
-                <label>Venue (Optional)</label>
-                <input type="text" id="schedule-venue" placeholder="e.g., LT1, Lab 3">
-
-                <input type="hidden" id="edit-schedule-id">
-                <input type="hidden" id="edit-schedule-course-id">
-                <input type="hidden" id="edit-schedule-original-start">
-
-                <button class="btn btn-primary" onclick="saveScheduleV2()">Save Schedule</button>
-                <button class="btn btn-secondary" onclick="closeModal('add-schedule-modal')">Cancel</button>
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin: 0;">Settings</h2>
+                <button onclick="closeModal('settings-modal')"
+                    style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
             </div>
-        </div>
 
-        <!-- Add Task Modal -->
-        <div id="add-task-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Add Task</h2>
-                    <button class="close-btn" onclick="closeModal('add-task-modal')">&times;</button>
-                </div>
-
-                <label>Task Title</label>
-                <input type="text" id="task-title" placeholder="e.g., Complete Assignment 1">
-                <input type="hidden" id="task-id">
-
-                <label>Course (Optional)</label>
-                <select id="task-course-select">
-                    <option value="">None</option>
-                </select>
-
-                <label>Type</label>
-                <select id="task-type">
-                    <option value="assignment">Assignment</option>
-                    <option value="exam">Exam</option>
-                    <option value="study">Study</option>
-                    <option value="other">Other</option>
-                </select>
-
-                <label>Due Date</label>
-                <input type="date" id="task-due-date">
-
-                <label>Description (Optional)</label>
-                <textarea id="task-description" placeholder="Add details..." rows="3"></textarea>
-
-                <button class="btn btn-primary" onclick="addTask()">Add Task</button>
-                <button class="btn btn-secondary" onclick="closeModal('add-task-modal')">Cancel</button>
+            <div style="margin-bottom: 24px;">
+                <h3 style="margin: 0 0 12px 0; color: #999; font-size: 14px; text-transform: uppercase;">
+                    Account
+                </h3>
+                <button class="btn btn-primary" style="width: 100%; margin-bottom: 10px; justify-content: flex-start;"
+                    onclick="closeModal('settings-modal'); document.getElementById('profile-settings-modal').classList.add('show');">
+                    <ion-icon name="person-outline" style="margin-right: 8px;"></ion-icon>
+                    Edit Profile
+                </button>
+                <button class="btn btn-primary" style="width: 100%; margin-bottom: 10px; justify-content: flex-start;"
+                    onclick="window.location.href='change-pin.html'">
+                    <ion-icon name="key-outline" style="margin-right: 8px;"></ion-icon>
+                    Change PIN
+                </button>
             </div>
-        </div>
 
-        <!-- Add Semester Modal -->
-        <div id="add-semester-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Add Semester</h2>
-                    <button class="close-btn" onclick="closeModal('add-semester-modal')">&times;</button>
+            <div style="margin-bottom: 24px;">
+                <h3 style="margin: 0 0 12px 0; color: #999; font-size: 14px; text-transform: uppercase;">
+                    About</h3>
+                <div style="padding: 16px; background: #2a2a2a; border-radius: 8px;">
+                    <h4 style="margin: 0 0 8px 0; color: white;">Kobi's Atlas</h4>
+                    <p style="margin: 4px 0; color: #999; font-size: 14px;">Version 1.0.0</p>
+                    <p style="margin: 4px 0; color: #999; font-size: 14px;">By Kobi Oguadinma</p>
+                    <p style="margin: 4px 0; color: #999; font-size: 14px;">Babcock University</p>
+                    <p style="margin: 12px 0 0 0; color: #ccc; font-size: 13px; line-height: 1.5;">An
+                        academic
+                        companion for tracking courses, calculating GPA, and predicting grades.</p>
+                    <p style="margin: 12px 0 0 0; color: #ccc; font-size: 13px; line-height: 1.5; font-style: italic;">
+                        Kobi's Atlas was an individual project by Kobi Oguadinma, a second-year Software
+                        Engineering student at Babcock University. He frequently calculated his predicted
+                        grades
+                        manually and wanted a mobile app to automate this process.</p>
+                    <p style="margin: 12px 0 0 0; color: #ff9800; font-size: 12px; font-style: italic;">
+                        Currently
+                        supports Babcock University grading system. Other systems will be available in
+                        future
+                        updates.</p>
                 </div>
+            </div>
 
-                <label>Entry Method</label>
+            <button class="btn" style="width: 100%; background: #dc3545; color: white;" onclick="logout()">
+                <ion-icon name="log-out-outline" style="margin-right: 8px;"></ion-icon>
+                Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- Change PIN Modal -->
+    <div id="change-pin-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin: 0;">Change PIN</h2>
+                <button onclick="closeModal('change-pin-modal')"
+                    style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
+            </div>
+
+            <label>Current PIN</label>
+            <input type="password" id="current-pin" placeholder="Enter current PIN" maxlength="4" pattern="[0-9]*"
+                inputmode="numeric">
+
+            <label>New PIN</label>
+            <input type="password" id="new-pin" placeholder="Enter new PIN (4 digits)" maxlength="4" pattern="[0-9]*"
+                inputmode="numeric">
+
+            <label>Confirm New PIN</label>
+            <input type="password" id="confirm-pin" placeholder="Confirm new PIN" maxlength="4" pattern="[0-9]*"
+                inputmode="numeric">
+
+            <button class="btn btn-primary" onclick="changePIN()">Change PIN</button>
+            <button class="btn btn-secondary" onclick="closeModal('change-pin-modal')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Add Schedule Modal -->
+    <div id="add-schedule-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin: 0;">Add Schedule</h2>
+                <button class="close-btn" onclick="closeModal('add-schedule-modal')">&times;</button>
+            </div>
+
+            <label>Title (Optional if Course selected)</label>
+            <input type="text" id="schedule-title" placeholder="Event Title or Course Name">
+
+            <label>Course (Optional)</label>
+            <select id="schedule-course-select">
+                <option value="">No Course / Personal</option>
+            </select>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; margin: 12px 0;">
+                <label style="margin: 0;">Recurring Event?</label>
+                <label class="switch">
+                    <input type="checkbox" id="schedule-recurring" checked onchange="toggleScheduleDateInput()">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div id="schedule-day-container">
+                <label>Day</label>
+                <select id="schedule-day">
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                </select>
+            </div>
+
+            <div id="schedule-date-container" class="hidden">
+                <label>Date</label>
+                <input type="date" id="schedule-date">
+            </div>
+
+            <label>Start Time</label>
+            <input type="time" id="schedule-start-time" value="08:00">
+
+            <label>End Time</label>
+            <input type="time" id="schedule-end-time" value="09:00">
+
+            <label>Venue (Optional)</label>
+            <input type="text" id="schedule-venue" placeholder="e.g., LT1, Lab 3">
+
+            <input type="hidden" id="edit-schedule-id">
+            <input type="hidden" id="edit-schedule-course-id">
+            <input type="hidden" id="edit-schedule-original-start">
+
+            <button class="btn btn-primary" onclick="saveScheduleV2()">Save Schedule</button>
+            <button class="btn btn-secondary" onclick="closeModal('add-schedule-modal')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Add Task Modal -->
+    <div id="add-task-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin: 0;">Add Task</h2>
+                <button class="close-btn" onclick="closeModal('add-task-modal')">&times;</button>
+            </div>
+
+            <label>Task Title</label>
+            <input type="text" id="task-title" placeholder="e.g., Complete Assignment 1">
+            <input type="hidden" id="task-id">
+
+            <label>Course (Optional)</label>
+            <select id="task-course-select">
+                <option value="">None</option>
+            </select>
+
+            <label>Type</label>
+            <select id="task-type">
+                <option value="assignment">Assignment</option>
+                <option value="exam">Exam</option>
+                <option value="study">Study</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label>Due Date</label>
+            <input type="date" id="task-due-date">
+
+            <label>Description (Optional)</label>
+            <textarea id="task-description" placeholder="Add details..." rows="3"></textarea>
+
+            <button class="btn btn-primary" onclick="addTask()">Add Task</button>
+            <button class="btn btn-secondary" onclick="closeModal('add-task-modal')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Add Semester Modal -->
+    <div id="add-semester-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin: 0;">Add Semester</h2>
+                <button class="close-btn" onclick="closeModal('add-semester-modal')">&times;</button>
+            </div>
+
+            <label>Entry Method</label>
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchEntryMethod('manual')">Manual Course
+                    Entry</button>
+                <button class="tab-btn" onclick="switchEntryMethod('quick')">Quick Add (GPA)</button>
+            </div>
+
+            <div id="manual-entry">
+                <label>Semester Name</label>
+                <input type="text" id="semester-name" placeholder="e.g., 200 Level 1st Semester">
+
+                <label>Semester Type</label>
                 <div class="tab-buttons">
-                    <button class="tab-btn active" onclick="switchEntryMethod('manual')">Manual Course
-                        Entry</button>
-                    <button class="tab-btn" onclick="switchEntryMethod('quick')">Quick Add (GPA)</button>
+                    <button class="tab-btn active" id="type-current" onclick="selectType('current')">Current</button>
+                    <button class="tab-btn" id="type-pending" onclick="selectType('pending')">Pending</button>
+                    <button class="tab-btn" id="type-past" onclick="selectType('past')">Past</button>
                 </div>
 
-                <div id="manual-entry">
-                    <label>Semester Name</label>
-                    <input type="text" id="semester-name" placeholder="e.g., 200 Level 1st Semester">
+                <button class="btn btn-primary" onclick="createSemester()">Create Semester</button>
+                <button class="btn btn-secondary" onclick="closeModal('add-semester-modal')">Cancel</button>
+            </div>
 
-                    <label>Semester Type</label>
-                    <div class="tab-buttons">
-                        <button class="tab-btn active" id="type-current"
-                            onclick="selectType('current')">Current</button>
-                        <button class="tab-btn" id="type-pending" onclick="selectType('pending')">Pending</button>
-                        <button class="tab-btn" id="type-past" onclick="selectType('past')">Past</button>
-                    </div>
+            <div id="quick-entry" class="hidden">
+                <label>Semester Name</label>
+                <input type="text" id="quick-semester-name" placeholder="e.g., 100 Level">
 
-                    <button class="btn btn-primary" onclick="createSemester()">Create Semester</button>
-                    <button class="btn btn-secondary" onclick="closeModal('add-semester-modal')">Cancel</button>
-                </div>
+                <label>GPA</label>
+                <input type="number" id="quick-gpa" placeholder="0.00 - 5.00" step="0.01">
 
-                <div id="quick-entry" class="hidden">
-                    <label>Semester Name</label>
-                    <input type="text" id="quick-semester-name" placeholder="e.g., 100 Level">
+                <label>Total Units</label>
+                <input type="number" id="quick-units" placeholder="Total units taken">
 
-                    <label>GPA</label>
-                    <input type="number" id="quick-gpa" placeholder="0.00 - 5.00" step="0.01">
-
-                    <label>Total Units</label>
-                    <input type="number" id="quick-units" placeholder="Total units taken">
-
-                    <button class="btn btn-primary" onclick="createQuickSemester()">Create Semester</button>
-                    <button class="btn btn-secondary" onclick="closeModal('add-semester-modal')">Cancel</button>
-                </div>
+                <button class="btn btn-primary" onclick="createQuickSemester()">Create Semester</button>
+                <button class="btn btn-secondary" onclick="closeModal('add-semester-modal')">Cancel</button>
             </div>
         </div>
+    </div>
 
-        <!-- Add Course Modal -->
-        <div id="add-course-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Add Course</h2>
-                    <button class="close-btn" onclick="closeModal('add-course-modal')">&times;</button>
-                </div>
-
-                <label>Course Title</label>
-                <input type="text" id="course-title" placeholder="e.g., Discrete Structures">
-
-                <label>Course Code</label>
-                <input type="text" id="course-code" placeholder="e.g., CSC203">
-
-                <label>Unit Hours</label>
-                <input type="number" id="course-unit-hours" placeholder="e.g., 2" min="1" max="6">
-
-                <label>Grade</label>
-                <select id="course-target-grade">
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="C">C</option>
-                </select>
-
-
-
-                <button class="btn btn-primary" onclick="addCourse()">Add Course</button>
-                <button class="btn btn-secondary" onclick="closeModal('add-course-modal')">Cancel</button>
+    <!-- Add Course Modal -->
+    <div id="add-course-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin: 0;">Add Course</h2>
+                <button class="close-btn" onclick="closeModal('add-course-modal')">&times;</button>
             </div>
-        </div>
 
-        <!-- Bottom Navigation -->
-        <div class="bottom-nav">
-            <button class="nav-item active" onclick="showScreen('dashboard')">
-                <ion-icon name="home"></ion-icon>
-                <span style="font-size: 11px;">Home</span>
-            </button>
-            <button class="nav-item" onclick="showScreen('planner')">
-                <ion-icon name="calendar"></ion-icon>
-                <span style="font-size: 11px;">Planner</span>
-            </button>
-            <button class="nav-item" onclick="showScreen('gpa')">
-                <ion-icon name="stats-chart"></ion-icon>
-                <span style="font-size: 11px;">GPA</span>
-            </button>
-            <button class="nav-item" onclick="showScreen('community')" style="position: relative;">
-                <ion-icon name="people"></ion-icon>
-                <span style="font-size: 11px;">Community</span>
-                <span id="nav-community-badge" class="nav-badge hidden">0</span>
-            </button>
-            <button class="nav-item" onclick="window.location.href='settings.html'">
-                <ion-icon name="settings"></ion-icon>
-                <span style="font-size: 11px;">Settings</span>
-            </button>
+            <label>Course Title</label>
+            <input type="text" id="course-title" placeholder="e.g., Discrete Structures">
+
+            <label>Course Code</label>
+            <input type="text" id="course-code" placeholder="e.g., CSC203">
+
+            <label>Unit Hours</label>
+            <input type="number" id="course-unit-hours" placeholder="e.g., 2" min="1" max="6">
+
+            <label>Grade</label>
+            <select id="course-target-grade">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+            </select>
+
+
+
+            <button class="btn btn-primary" onclick="addCourse()">Add Course</button>
+            <button class="btn btn-secondary" onclick="closeModal('add-course-modal')">Cancel</button>
         </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="showScreen('dashboard')">
+            <ion-icon name="home"></ion-icon>
+            <span style="font-size: 11px;">Home</span>
+        </button>
+        <button class="nav-item" onclick="showScreen('planner')">
+            <ion-icon name="calendar"></ion-icon>
+            <span style="font-size: 11px;">Planner</span>
+        </button>
+        <button class="nav-item" onclick="showScreen('gpa')">
+            <ion-icon name="stats-chart"></ion-icon>
+            <span style="font-size: 11px;">GPA</span>
+        </button>
+        <button class="nav-item" onclick="showScreen('community')" style="position: relative;">
+            <ion-icon name="people"></ion-icon>
+            <span style="font-size: 11px;">Community</span>
+            <span id="nav-community-badge" class="nav-badge hidden">0</span>
+        </button>
+        <button class="nav-item" onclick="window.location.href='settings.html'">
+            <ion-icon name="settings"></ion-icon>
+            <span style="font-size: 11px;">Settings</span>
+        </button>
+    </div>
 
     </div>
 
@@ -3588,15 +3834,31 @@
             document.getElementById('community-feed-container').classList.toggle('hidden', tab !== 'feed');
             document.getElementById('community-messages-container').classList.toggle('hidden', tab !== 'messages');
             document.getElementById('community-resources-container').classList.toggle('hidden', tab !== 'resources');
+            document.getElementById('games-container-fixed').classList.toggle('hidden', tab !== 'games');
 
             document.getElementById('comm-feed-tab').classList.toggle('active', tab === 'feed');
             document.getElementById('comm-messages-tab').classList.toggle('active', tab === 'messages');
             document.getElementById('comm-resources-tab').classList.toggle('active', tab === 'resources');
+            document.getElementById('comm-games-tab').classList.toggle('active', tab === 'games');
 
             if (tab === 'messages') {
                 loadConversations();
             } else if (tab === 'resources') {
                 loadResources();
+            } else if (tab === 'games') {
+                const ticTacToe = document.getElementById('tictactoe-game');
+                const fiftyGuesses = document.getElementById('fiftyguesses-game');
+                const selection = document.getElementById('game-selection');
+
+                if (ticTacToe && fiftyGuesses && selection) {
+                    if (ticTacToe.classList.contains('hidden') && fiftyGuesses.classList.contains('hidden')) {
+                        selection.classList.remove('hidden');
+                    }
+                }
+            } else if (tab === 'feed') {
+                // Optional: reload feed if empty
+                const postsFeed = document.getElementById('posts-feed');
+                if (postsFeed && postsFeed.children.length === 0) loadCommunityFeed();
             }
         };
 
@@ -5392,7 +5654,7 @@
                 showToast('Error loading posts', 'error');
                 document.getElementById('posts-feed').innerHTML = '<div class="empty-container"><p class="empty-text">Error loading posts. Please try again.</p></div>';
             } finally {
-                if (!isRefresing) showLoading(false);
+                showLoading(false);
             }
         }
 
@@ -9058,6 +9320,9 @@
         }
     </script>
 
+    <!-- Resource Folders Logic -->
+    <script src="js/resource-folders.js"></script>
+
     <!-- Tic-Tac-Toe Game Logic -->
     <script type="module">
         import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -9073,34 +9338,87 @@
         let savedPlayer1Name = '';
         let savedPlayer2Name = '';
 
+        // Helper functions to hide/show bottom nav
+        function hideBottomNav() {
+            const bottomNav = document.getElementById('bottom-nav');
+            if (bottomNav) {
+                bottomNav.style.display = 'none';
+            }
+        }
+
+        function showBottomNav() {
+            const bottomNav = document.getElementById('bottom-nav');
+            if (bottomNav) {
+                bottomNav.style.display = 'flex';
+            }
+        }
+
         // Switch Community Tab
         window.switchCommunityTab = function (tab) {
-            // Hide all containers
-            document.getElementById('community-feed-container').classList.add('hidden');
-            document.getElementById('community-messages-container').classList.add('hidden');
-            document.getElementById('community-resources-wrapper').classList.add('hidden');
-            document.getElementById('community-games-container').classList.add('hidden');
+            try {
+                // Hide all containers safely
+                const ids = ['community-feed-container', 'community-messages-container', 'community-resources-wrapper', 'games-container-fixed'];
+                ids.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.classList.add('hidden');
+                        el.style.display = 'none'; // Force hide
+                    }
+                });
 
-            // Update tab buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                // Update tab buttons
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
 
-            // Show selected container
-            if (tab === 'feed') {
-                document.getElementById('community-feed-container').classList.remove('hidden');
-                const feedTab = document.getElementById('comm-feed-tab');
-                if (feedTab) feedTab.classList.add('active');
-            } else if (tab === 'resources') {
-                document.getElementById('community-resources-wrapper').classList.remove('hidden');
-                const resourcesTab = document.getElementById('comm-resources-tab');
-                if (resourcesTab) resourcesTab.classList.add('active');
-            } else if (tab === 'games') {
-                document.getElementById('community-games-container').classList.remove('hidden');
-                const gamesTab = document.getElementById('comm-games-tab');
-                if (gamesTab) gamesTab.classList.add('active');
-            } else if (tab === 'messages') {
-                document.getElementById('community-messages-container').classList.remove('hidden');
-                const messagesTab = document.getElementById('comm-messages-tab');
-                if (messagesTab) messagesTab.classList.add('active');
+                // Show selected container
+                if (tab === 'feed') {
+                    const el = document.getElementById('community-feed-container');
+                    if (el) { el.classList.remove('hidden'); el.style.display = 'block'; }
+                    const feedTab = document.getElementById('comm-feed-tab');
+                    if (feedTab) feedTab.classList.add('active');
+                } else if (tab === 'resources') {
+                    const el = document.getElementById('community-resources-wrapper');
+                    if (el) { el.classList.remove('hidden'); el.style.display = 'block'; }
+                    const resourcesTab = document.getElementById('comm-resources-tab');
+                    if (resourcesTab) resourcesTab.classList.add('active');
+                    if (typeof window.loadResources === 'function') window.loadResources();
+                } else if (tab === 'games') {
+                    const el = document.getElementById('games-container-fixed');
+                    if (el) {
+                        el.classList.remove('hidden');
+                        el.style.display = 'block';
+                        // Force visibility properties
+                        el.style.position = 'relative';
+                        el.style.zIndex = '10';
+                        el.style.opacity = '1';
+                        el.style.pointerEvents = 'auto';
+                    }
+
+                    // Reset Games View
+                    const sel = document.getElementById('game-selection');
+                    if (sel) {
+                        sel.classList.remove('hidden');
+                        sel.style.display = 'block';
+                        sel.style.opacity = '1';
+                    }
+
+                    const ttt = document.getElementById('tictactoe-game');
+                    if (ttt) ttt.classList.add('hidden');
+
+                    if (document.getElementById('fiftyguesses-game')) document.getElementById('fiftyguesses-game').classList.add('hidden');
+                    if (document.getElementById('fg-leaderboard')) document.getElementById('fg-leaderboard').classList.add('hidden');
+                    if (typeof showBottomNav === 'function') showBottomNav();
+
+                    const gamesTab = document.getElementById('comm-games-tab');
+                    if (gamesTab) gamesTab.classList.add('active');
+                } else if (tab === 'messages') {
+                    const el = document.getElementById('community-messages-container');
+                    if (el) { el.classList.remove('hidden'); el.style.display = 'block'; }
+                    const messagesTab = document.getElementById('comm-messages-tab');
+                    if (messagesTab) messagesTab.classList.add('active');
+                    if (typeof window.loadConversations === 'function') window.loadConversations();
+                }
+            } catch (e) {
+                console.error('Switch tab error:', e);
             }
         };
 
@@ -9109,16 +9427,20 @@
             if (game === 'tictactoe') {
                 document.getElementById('game-selection').classList.add('hidden');
                 document.getElementById('tictactoe-game').classList.remove('hidden');
+                hideBottomNav(); // Hide navbar for Tic-Tac-Toe too
             } else if (game === 'fiftyguesses') {
                 document.getElementById('game-selection').classList.add('hidden');
                 document.getElementById('fiftyguesses-game').classList.remove('hidden');
+                hideBottomNav(); // Hide navbar when starting game
                 initFiftyGuesses();
             }
         };
 
         window.backToGameSelection = function () {
+            showBottomNav(); // Show navbar when going back
             document.getElementById('tictactoe-game').classList.add('hidden');
             document.getElementById('fiftyguesses-game').classList.add('hidden');
+            document.getElementById('fg-leaderboard').classList.add('hidden');
             document.getElementById('game-selection').classList.remove('hidden');
             resetGameViews();
         };
@@ -9153,6 +9475,9 @@
             currentPlayer = 'X';
             gameBoard = ['', '', '', '', '', '', '', '', ''];
             gameActive = true;
+
+            // Hide bottom nav when game starts
+            hideBottomNav();
 
             document.getElementById('ttt-player-names').classList.add('hidden');
             document.getElementById('ttt-game-board').classList.remove('hidden');
@@ -9281,6 +9606,9 @@
             // Update player status
             await updateDoc(doc(gameDb, 'onlinePlayers', uid), { inGame: true });
 
+            // Hide bottom nav when game starts
+            hideBottomNav();
+
             gameMode = 'online';
             document.getElementById('ttt-online-players').classList.add('hidden');
             document.getElementById('ttt-game-board').classList.remove('hidden');
@@ -9368,9 +9696,7 @@
                 if (result) {
                     gameActive = false;
                     showGameResult(result, currentPlayer);
-                    if (result !== 'draw') {
-                        await updateLeaderboard(currentPlayer);
-                    }
+                    // Don't update leaderboard for local games
                 } else {
                     currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
                     const playerName = currentPlayer === 'X' ?
@@ -9396,6 +9722,7 @@
                     winner: result
                 });
 
+                // Only update leaderboard for online games
                 if (result && result !== 'draw') {
                     await updateLeaderboard(mySymbol);
                 }
@@ -9475,6 +9802,9 @@
                 if (gameListener) gameListener();
             }
 
+            // Show bottom nav when quitting game
+            showBottomNav();
+
             document.getElementById('ttt-game-board').classList.add('hidden');
             document.getElementById('ttt-mode-selection').classList.remove('hidden');
             currentGame = null;
@@ -9482,8 +9812,12 @@
         };
 
         window.backToTTTMode = function () {
+            // Show bottom nav when going back to mode selection
+            showBottomNav();
+
             document.getElementById('ttt-online-players').classList.add('hidden');
             document.getElementById('ttt-leaderboard').classList.add('hidden');
+            document.getElementById('ttt-player-names').classList.add('hidden');
             document.getElementById('ttt-mode-selection').classList.remove('hidden');
 
             if (onlinePlayersListener) onlinePlayersListener();
@@ -9491,6 +9825,9 @@
 
         // Leaderboard
         window.showTTTLeaderboard = async function () {
+            // Logic to showing leaderboard from Game Selection
+            document.getElementById('game-selection').classList.add('hidden');
+            document.getElementById('tictactoe-game').classList.remove('hidden'); // Show wrapper
             document.getElementById('ttt-mode-selection').classList.add('hidden');
             document.getElementById('ttt-leaderboard').classList.remove('hidden');
 
@@ -9661,6 +9998,32 @@
             input.value = '';
         };
 
+        // Numpad Helper Functions
+        window.fgAppendNumber = function (num) {
+            const input = document.getElementById('fg-guess-input');
+            if (input.value === '0') input.value = '';
+            input.value += num;
+        };
+
+        window.fgBackspace = function () {
+            const input = document.getElementById('fg-guess-input');
+            input.value = input.value.slice(0, -1);
+        };
+
+        // Keyboard Support for Numpad
+        document.addEventListener('keydown', function (event) {
+            const gameContainer = document.getElementById('fiftyguesses-game');
+            if (gameContainer && !gameContainer.classList.contains('hidden')) {
+                if (event.key >= '0' && event.key <= '9') {
+                    fgAppendNumber(event.key);
+                } else if (event.key === 'Backspace') {
+                    fgBackspace();
+                } else if (event.key === 'Enter') {
+                    submitGuess();
+                }
+            }
+        });
+
         function showFGFeedback(message, color) {
             const feedback = document.getElementById('fg-feedback');
             const feedbackText = document.getElementById('fg-feedback-text');
@@ -9706,11 +10069,478 @@
                 document.getElementById('fg-result-text').textContent = 'Game Over!';
                 document.getElementById('fg-result-details').textContent = `You reached level ${fgLevel} with ${fgScore} points. The number was ${fgTargetNumber}.`;
             }
+
+            // Update leaderboard
+            updateFGLeaderboard(fgScore, fgLevel);
         }
 
         window.restartFiftyGuesses = function () {
             initFiftyGuesses();
         };
+
+        // 50 Guesses Leaderboard Functions
+        window.showFGLeaderboard = async function () {
+            document.getElementById('fg-game-over').classList.add('hidden');
+            document.getElementById('fiftyguesses-game').classList.add('hidden');
+            document.getElementById('fg-leaderboard').classList.remove('hidden');
+
+            const leaderboardList = document.getElementById('fg-leaderboard-list');
+            leaderboardList.innerHTML = '<div style="text-align: center; padding: 20px;">Loading...</div>';
+
+            const snapshot = await getDocs(collection(gameDb, 'fiftyguesses_leaderboard'));
+            const players = [];
+
+            snapshot.forEach(doc => {
+                players.push({ id: doc.id, ...doc.data() });
+            });
+
+            players.sort((a, b) => b.highScore - a.highScore);
+
+            if (players.length === 0) {
+                leaderboardList.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-secondary);">No games played yet</div>';
+                return;
+            }
+
+            leaderboardList.innerHTML = '';
+            players.forEach((player, index) => {
+                const rank = index + 1;
+                const rankColor = rank === 1 ? '#FFD700' : rank === 2 ? '#C0C0C0' : rank === 3 ? '#CD7F32' : 'var(--text-color)';
+                const rankDisplay = `#${rank}`;
+
+                const playerCard = document.createElement('div');
+                playerCard.style.cssText = 'padding: 16px; background: var(--card-bg); border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;';
+                playerCard.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="font-size: 20px; font-weight: bold; min-width: 40px; color: ${rankColor};">${rankDisplay}</div>
+                        <div>
+                            <div style="font-weight: bold;">${player.username}</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">
+                                Level ${player.highLevel} • ${player.gamesPlayed} games played
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 20px; font-weight: bold; color: var(--primary-color);">${player.highScore}</div>
+                        <div style="font-size: 10px; color: var(--text-secondary);">HIGH SCORE</div>
+                    </div>
+                `;
+                leaderboardList.appendChild(playerCard);
+            });
+        };
+
+        window.hideFGLeaderboard = function () {
+            document.getElementById('fg-leaderboard').classList.add('hidden');
+            document.getElementById('fiftyguesses-game').classList.remove('hidden');
+        };
+
+        async function updateFGLeaderboard(score, level) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const username = localStorage.getItem('kobi_atlas_username') || 'Anonymous';
+
+            const leaderboardRef = doc(gameDb, 'fiftyguesses_leaderboard', uid);
+            const leaderboardDoc = await getDoc(leaderboardRef);
+
+            if (leaderboardDoc.exists()) {
+                const data = leaderboardDoc.data();
+                await updateDoc(leaderboardRef, {
+                    highScore: Math.max(data.highScore, score),
+                    highLevel: Math.max(data.highLevel, level),
+                    gamesPlayed: data.gamesPlayed + 1
+                });
+            } else {
+                await setDoc(leaderboardRef, {
+                    uid: uid,
+                    username: username,
+                    highScore: score,
+                    highLevel: level,
+                    gamesPlayed: 1
+                });
+            }
+        }
+
+        // Toast Helper
+        window.showToast = function (message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+                background: ${type === 'error' ? '#ef4444' : '#10b981'};
+                color: white; padding: 12px 24px; border-radius: 8px; z-index: 10000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2); animation: fadeIn 0.3s;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        // Load Resources
+        window.loadResources = async function () {
+            try {
+                const q = query(collection(gameDb, 'resources'));
+                const snapshot = await getDocs(q);
+                const resources = [];
+                snapshot.forEach(doc => {
+                    resources.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort by timestamp desc
+                resources.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+                if (window.renderResources) {
+                    window.renderResources(resources);
+                } else {
+                    console.error('renderResources not found');
+                }
+            } catch (error) {
+                console.error('Error loading resources:', error);
+                if (window.showToast) window.showToast('Error loading resources', 'error');
+            }
+        };
+
+        // Load Conversations
+        window.loadConversations = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            if (!uid) return;
+
+            try {
+                const messagesRef = collection(gameDb, 'messages');
+
+                // Get all messages where user is sender or receiver
+                const q1 = query(messagesRef, where('senderId', '==', uid));
+                const q2 = query(messagesRef, where('receiverId', '==', uid));
+
+                const [snapshot1, snapshot2] = await Promise.all([getDocs(q1), getDocs(q2)]);
+
+                // Collect all unique user IDs and messages by user
+                const userIds = new Set();
+                const messagesByUser = new Map();
+
+                const processDoc = (doc) => {
+                    const data = doc.data();
+                    if (data.deleted) return; // Skip deleted
+
+                    const otherId = data.senderId === uid ? data.receiverId : data.senderId;
+
+                    userIds.add(otherId);
+                    if (!messagesByUser.has(otherId)) {
+                        messagesByUser.set(otherId, []);
+                    }
+                    messagesByUser.get(otherId).push(data);
+                };
+
+                snapshot1.forEach(processDoc);
+                snapshot2.forEach(processDoc);
+
+                // Fetch user details and create conversations
+                const conversations = [];
+
+                for (const userId of userIds) {
+                    if (userId === uid) continue; // Skip self
+
+                    const userDoc = await getDoc(doc(gameDb, 'users', userId));
+                    let userData = { username: 'Unknown User', profilePicture: null };
+
+                    if (userDoc.exists()) {
+                        userData = userDoc.data();
+                    }
+
+                    const userMessages = messagesByUser.get(userId) || [];
+
+                    // Sort by timestamp descending
+                    userMessages.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+                    const lastMsg = userMessages[0];
+                    const unread = userMessages.filter(msg => msg.receiverId === uid && !msg.read).length;
+
+                    // Helper to get time
+                    const getLastActive = (user) => {
+                        if (!user.lastActive) return 0;
+                        if (user.lastActive.toMillis) return user.lastActive.toMillis();
+                        return user.lastActive;
+                    };
+
+                    conversations.push({
+                        friendId: userId,
+                        username: userData.username || 'Anonymous',
+                        profilePicture: userData.profilePicture,
+                        lastMessage: lastMsg?.text || (lastMsg?.image ? 'Sent an image' : 'No messages yet'),
+                        timestamp: lastMsg?.timestamp || 0,
+                        unreadCount: unread,
+                        isOnline: (Date.now() - getLastActive(userData) < 300000)
+                    });
+                }
+
+                conversations.sort((a, b) => b.timestamp - a.timestamp);
+
+                const html = conversations.length > 0 ? conversations.map(conv => `
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--card-bg); border-radius: 8px; margin-bottom: 10px; cursor: pointer; border-bottom: 1px solid var(--border-color);" onclick="openChat('${conv.friendId}')">
+                        <div style="position: relative;">
+                            ${conv.profilePicture ?
+                        `<img src="${conv.profilePicture}" style="width: 50px; height: 50px; border-radius: 25px; object-fit: cover;">` :
+                        `<div style="width: 50px; height: 50px; border-radius: 25px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 20px;">${conv.username?.[0]?.toUpperCase() || 'U'}</div>`
+                    }
+                            ${conv.isOnline ? '<div style="position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; border-radius: 7px; background: #4CAF50; border: 2px solid var(--card-bg);"></div>' : ''}
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <div style="font-weight: 600; font-size: 16px;">${conv.username}</div>
+                                <div style="font-size: 12px; color: var(--text-secondary);">${conv.timestamp ? formatTime(conv.timestamp) : ''}</div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="font-size: 14px; color: ${conv.unreadCount > 0 ? 'var(--text-color)' : 'var(--text-secondary)'}; ${conv.unreadCount > 0 ? 'font-weight: 600;' : ''} flex: 1;">${conv.lastMessage}</div>
+                                ${conv.unreadCount > 0 ? `
+                                    <div style="min-width: 20px; height: 20px; border-radius: 10px; background: #667eea; display: flex; align-items: center; justify-content: center; padding: 0 6px; margin-left: 8px;">
+                                        <span style="color: white; font-size: 11px; font-weight: bold;">${conv.unreadCount}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('') : `
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <ion-icon name="chatbubbles-outline" style="font-size: 64px; color: var(--text-secondary); opacity: 0.5;"></ion-icon>
+                        <p style="font-size: 20px; font-weight: 600; margin: 16px 0 8px 0;">No messages yet</p>
+                        <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 24px;">Start a conversation by searching for users</p>
+                        <button class="btn btn-primary" onclick="showUserSearch()">Find Users</button>
+                    </div>
+                `;
+
+                const list = document.getElementById('conversations-list');
+                if (list) list.innerHTML = html;
+
+            } catch (error) {
+                console.error('Load conversations error:', error);
+                if (window.showToast) window.showToast('Error loading conversations', 'error');
+            }
+        };
+
+        // Helper: formatTime
+        function formatTime(timestamp) {
+            if (!timestamp) return '';
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+
+            // If today, return time
+            if (date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
+                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+
+            // If yesterday, return 'Yesterday'
+            const yesterday = new Date(now);
+            yesterday.setDate(yesterday.getDate() - 1);
+            if (date.getDate() === yesterday.getDate() && date.getMonth() === yesterday.getMonth() && date.getFullYear() === yesterday.getFullYear()) {
+                return 'Yesterday';
+            }
+
+            // Otherwise return date
+            return date.toLocaleDateString();
+        }
+
+        // Toast Helper
+        window.showToast = function (message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+                background: ${type === 'error' ? '#ef4444' : '#10b981'};
+                color: white; padding: 12px 24px; border-radius: 8px; z-index: 10000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2); animation: fadeIn 0.3s;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        // Load Resources
+        window.loadResources = async function () {
+            try {
+                // Unlock container just in case
+                const container = document.getElementById('community-resources-container');
+                if (container) {
+                    container.classList.remove('hidden');
+                    container.style.filter = 'none';
+                    container.style.pointerEvents = 'auto';
+                    container.style.userSelect = 'auto';
+                }
+                const lock = document.getElementById('resources-lock-overlay');
+                if (lock) lock.style.display = 'none';
+
+                const q = query(collection(gameDb, 'resources'));
+                const snapshot = await getDocs(q);
+                const resources = [];
+                snapshot.forEach(doc => {
+                    resources.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort by timestamp desc
+                resources.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+                if (window.renderResources) {
+                    window.renderResources(resources);
+                } else {
+                    console.error('renderResources not found');
+                }
+            } catch (error) {
+                console.error('Error loading resources:', error);
+                if (window.showToast) window.showToast('Error loading resources', 'error');
+            }
+        };
+
+        // Load Conversations
+        window.loadConversations = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            if (!uid) return;
+
+            try {
+                const messagesRef = collection(gameDb, 'messages');
+
+                // Get all messages where user is sender or receiver
+                const q1 = query(messagesRef, where('senderId', '==', uid));
+                const q2 = query(messagesRef, where('receiverId', '==', uid));
+
+                const [snapshot1, snapshot2] = await Promise.all([getDocs(q1), getDocs(q2)]);
+
+                // Collect all unique user IDs and messages by user
+                const userIds = new Set();
+                const messagesByUser = new Map();
+
+                const processDoc = (doc) => {
+                    const data = doc.data();
+                    if (data.deleted) return; // Skip deleted
+
+                    const otherId = data.senderId === uid ? data.receiverId : data.senderId;
+
+                    userIds.add(otherId);
+                    if (!messagesByUser.has(otherId)) {
+                        messagesByUser.set(otherId, []);
+                    }
+                    messagesByUser.get(otherId).push(data);
+                };
+
+                snapshot1.forEach(processDoc);
+                snapshot2.forEach(processDoc);
+
+                // Fetch user details and create conversations
+                const conversations = [];
+
+                for (const userId of userIds) {
+                    if (userId === uid) continue; // Skip self
+
+                    const userDoc = await getDoc(doc(gameDb, 'users', userId));
+                    let userData = { username: 'Unknown User', profilePicture: null };
+
+                    if (userDoc.exists()) {
+                        userData = userDoc.data();
+                    }
+
+                    const userMessages = messagesByUser.get(userId) || [];
+
+                    // Sort by timestamp descending
+                    userMessages.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+                    const lastMsg = userMessages[0];
+                    const unread = userMessages.filter(msg => msg.receiverId === uid && !msg.read).length;
+
+                    // Helper to get time
+                    const getLastActive = (user) => {
+                        if (!user.lastActive) return 0;
+                        if (user.lastActive.toMillis) return user.lastActive.toMillis();
+                        return user.lastActive;
+                    };
+
+                    conversations.push({
+                        friendId: userId,
+                        username: userData.username || 'Anonymous',
+                        profilePicture: userData.profilePicture,
+                        lastMessage: lastMsg?.text || (lastMsg?.image ? 'Sent an image' : 'No messages yet'),
+                        timestamp: lastMsg?.timestamp || 0,
+                        unreadCount: unread,
+                        isOnline: (Date.now() - getLastActive(userData) < 300000)
+                    });
+                }
+
+                conversations.sort((a, b) => b.timestamp - a.timestamp);
+
+                const html = conversations.length > 0 ? conversations.map(conv => `
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--card-bg); border-radius: 8px; margin-bottom: 10px; cursor: pointer; border-bottom: 1px solid var(--border-color);" onclick="openChat('${conv.friendId}')">
+                        <div style="position: relative;">
+                            ${conv.profilePicture ?
+                        `<img src="${conv.profilePicture}" style="width: 50px; height: 50px; border-radius: 25px; object-fit: cover;">` :
+                        `<div style="width: 50px; height: 50px; border-radius: 25px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 20px;">${conv.username?.[0]?.toUpperCase() || 'U'}</div>`
+                    }
+                            ${conv.isOnline ? '<div style="position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; border-radius: 7px; background: #4CAF50; border: 2px solid var(--card-bg);"></div>' : ''}
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <div style="font-weight: 600; font-size: 16px;">${conv.username}</div>
+                                <div style="font-size: 12px; color: var(--text-secondary);">${conv.timestamp ? formatTime(conv.timestamp) : ''}</div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="font-size: 14px; color: ${conv.unreadCount > 0 ? 'var(--text-color)' : 'var(--text-secondary)'}; ${conv.unreadCount > 0 ? 'font-weight: 600;' : ''} flex: 1;">${conv.lastMessage}</div>
+                                ${conv.unreadCount > 0 ? `
+                                    <div style="min-width: 20px; height: 20px; border-radius: 10px; background: #667eea; display: flex; align-items: center; justify-content: center; padding: 0 6px; margin-left: 8px;">
+                                        <span style="color: white; font-size: 11px; font-weight: bold;">${conv.unreadCount}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('') : `
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <ion-icon name="chatbubbles-outline" style="font-size: 64px; color: var(--text-secondary); opacity: 0.5;"></ion-icon>
+                        <p style="font-size: 20px; font-weight: 600; margin: 16px 0 8px 0;">No messages yet</p>
+                        <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 24px;">Start a conversation by searching for users</p>
+                        <button class="btn btn-primary" onclick="showUserSearch()">Find Users</button>
+                    </div>
+                `;
+
+                const list = document.getElementById('conversations-list');
+                if (list) list.innerHTML = html;
+
+            } catch (error) {
+                console.error('Load conversations error:', error);
+                if (window.showToast) window.showToast('Error loading conversations', 'error');
+            }
+        };
+
+        // Helper: formatTime
+        function formatTime(timestamp) {
+            if (!timestamp) return '';
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+
+            // If today, return time
+            if (date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
+                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+
+            // If yesterday, return 'Yesterday'
+            const yesterday = new Date(now);
+            yesterday.setDate(yesterday.getDate() - 1);
+            if (date.getDate() === yesterday.getDate() && date.getMonth() === yesterday.getMonth() && date.getFullYear() === yesterday.getFullYear()) {
+                return 'Yesterday';
+            }
+
+            // Otherwise return date
+            return date.toLocaleDateString();
+        }
+
+        // Nav Helpers
+        function hideBottomNav() {
+            const nav = document.getElementById('bottom-nav') || document.querySelector('.bottom-nav') || document.querySelector('nav');
+            if (nav) nav.classList.add('hidden');
+        }
+        function showBottomNav() {
+            const nav = document.getElementById('bottom-nav') || document.querySelector('.bottom-nav') || document.querySelector('nav');
+            if (nav) nav.classList.remove('hidden');
+        }
+
     </script>
 </body>
 
