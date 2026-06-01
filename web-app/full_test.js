@@ -1,0 +1,8529 @@
+
+
+
+
+window.onerror = function(m, s, l, c, e) {
+    var div = document.createElement('div');
+    div.style.cssText = 'color:red; background:white; position:fixed; z-index:99999; top:0; left:0; padding:20px; font-size:20px; word-break:break-all;';
+    div.innerText = 'GLOBAL ERROR: ' + m + ' \n' + (e ? e.stack : '');
+    document.body.appendChild(div);
+};
+window.onunhandledrejection = function(e) {
+    var div = document.createElement('div');
+    div.style.cssText = 'color:orange; background:white; position:fixed; z-index:99999; top:100px; left:0; padding:20px; font-size:20px; word-break:break-all;';
+    div.innerText = 'PROMISE REJECTION: ' + (e.reason && e.reason.stack ? e.reason.stack : e.reason);
+    document.body.appendChild(div);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Image Compression Utility -->
+
+
+    <!-- Resource Functions -->
+
+
+
+
+    <!-- Ionicons -->
+
+
+    <!-- PDF.js -->
+
+
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Load theme immediately
+        const savedTheme = localStorage.getItem('kobi_atlas_theme') || 'default';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+        import { getAuth, signInAnonymously, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+        import { getFirestore, collection, query, where, getDocs, doc, setDoc, addDoc, updateDoc, getDoc, deleteDoc, orderBy, onSnapshot, writeBatch } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBKA2julrxpRhXTdU_8l5pSH73ERAjKtO4",
+            authDomain: "kobi-s-student-atlas.firebaseapp.com",
+            projectId: "kobi-s-student-atlas",
+            storageBucket: "kobi-s-student-atlas.firebasestorage.app",
+            messagingSenderId: "955486974004",
+            appId: "1:955486974004:web:be7d825c279d2e263c5a61"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Global state
+        let currentSemester = null;
+        let currentCourse = null;
+        let selectedSemesterType = 'current';
+        let entryMethod = 'manual';
+        let currentChatUser = null;
+        let currentViewingUser = null;
+
+        // Badge counting logic (Real-time)
+        let notifUnsubscribe = null;
+        let msgUnsubscribe = null;
+        let friendReqUnsubscribe = null;
+
+        window.startRealtimeListeners = function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            if (!uid) return;
+
+            // FIRST TIME SETUP CHECK
+            // NEW USER SETUP CHECK (Only if just signed up)
+            if (sessionStorage.getItem('is_new_signup') === 'true') {
+                sessionStorage.removeItem('is_new_signup');
+                window.location.replace('settings.html?mode=setup');
+                return;
+            }
+
+            const notifRef = collection(db, 'users', uid, 'notifications');
+            if (notifUnsubscribe) notifUnsubscribe();
+            if (msgUnsubscribe) msgUnsubscribe();
+            if (friendReqUnsubscribe) friendReqUnsubscribe();
+
+            try {
+                // Notifications Listener
+                const notifRef = collection(db, 'notifications');
+                const notifQuery = query(notifRef, where('userId', '==', uid), where('read', '==', false));
+                notifUnsubscribe = onSnapshot(notifQuery, (snapshot) => {
+                    const notifCount = snapshot.size;
+                    updateBadgeCounts(notifCount, null, null);
+                });
+
+                // Pending Friend Requests Listener
+                const friendReqRef = collection(db, 'friendRequests');
+                const friendReqQuery = query(friendReqRef, where('toUserId', '==', uid), where('status', '==', 'pending'));
+                friendReqUnsubscribe = onSnapshot(friendReqQuery, (snapshot) => {
+                    const friendReqCount = snapshot.size;
+                    updateBadgeCounts(null, friendReqCount, null);
+                });
+
+                // Messages Listener
+                const msgRef = collection(db, 'messages');
+                const msgQuery = query(msgRef, where('receiverId', '==', uid), where('read', '==', false));
+                msgUnsubscribe = onSnapshot(msgQuery, (snapshot) => {
+                    const msgCount = snapshot.size;
+                    updateBadgeCounts(null, null, msgCount);
+                });
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        let currentNotifCount = 0;
+        let currentFriendReqCount = 0;
+        let currentMsgCount = 0;
+
+        function updateBadgeCounts(notifCount, friendReqCount, msgCount) {
+            if (notifCount !== null) currentNotifCount = notifCount;
+            if (friendReqCount !== null) currentFriendReqCount = friendReqCount;
+            if (msgCount !== null) currentMsgCount = msgCount;
+
+            // Community badge sums everything (notifs + requests + messages)
+            const totalCommunityCount = currentNotifCount + currentFriendReqCount + currentMsgCount;
+
+            updateBadge('nav-community-badge', totalCommunityCount);
+            updateBadge('inner-message-badge', currentMsgCount);
+            updateBadge('notification-badge', currentNotifCount + currentFriendReqCount);
+        }
+
+        window.loadUnreadCounts = function () {
+            // Wrapper for backward compatibility if called elsewhere
+            // Real-time listeners handle updates automatically
+            startRealtimeListeners();
+        };
+
+        function updateBadge(elementId, count) {
+            const badge = document.getElementById(elementId);
+            if (badge) {
+                badge.textContent = count > 99 ? '99+' : count;
+                badge.classList.toggle('hidden', count === 0);
+            }
+        }
+
+        // Initialize immediately if user exists
+        if (localStorage.getItem('kobi_atlas_uid')) {
+            startRealtimeListeners();
+            // Force load all main data views to ensure availability
+            loadDashboard();
+            loadSchedule();
+            loadTasks();
+        }
+
+        // Utility functions
+        function showLoading(show) {
+            const loader = document.getElementById('loading-overlay');
+            if (loader) {
+                if (show) loader.classList.remove('hidden');
+                else loader.classList.add('hidden');
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        let currentActiveScreen = 'dashboard'; // Track active screen for pull-to-refresh
+        let autoRefreshInterval = null; // Auto-refresh timer
+
+        window.showScreen = function (screenId) {
+            // Clear any existing auto-refresh
+            if (autoRefreshInterval) { clearInterval(autoRefreshInterval); autoRefreshInterval = null; }
+
+            // Track current screen
+            currentActiveScreen = screenId;
+
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+
+            // Show target screen — handle both 'dashboard' and 'dashboard-screen' formats
+            const targetId = screenId.endsWith('-screen') ? screenId : `${screenId}-screen`;
+            const screen = document.getElementById(targetId);
+
+            if (screen) {
+                screen.classList.remove('hidden');
+
+                // Load data for the screen
+                switch (screenId) {
+                    case 'planner':
+                        window.loadSchedule();
+                        window.loadTasks();
+                        // Auto-refresh planner every 30s
+                        autoRefreshInterval = setInterval(() => {
+                            if (currentActiveScreen === 'planner') {
+                                window.loadSchedule();
+                                window.loadTasks();
+                            }
+                        }, 30000);
+                        break;
+                    case 'gpa':
+                        window.loadGPAView();
+                        break;
+                    case 'gpa-simulator':
+                        window.loadGPASimulator();
+                        break;
+                    case 'community':
+                        if (window.loadCommunityFeed) window.loadCommunityFeed();
+                        break;
+                    case 'dashboard':
+                        if (window.loadDashboard) window.loadDashboard();
+                        break;
+                }
+            } else {
+                console.warn(`Screen not found: ${screenId}`);
+            }
+
+            // Update bottom nav active state
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            const navMap = { 'dashboard': 'nav-home', 'planner': 'nav-planner', 'gpa': 'nav-gpa', 'gpa-simulator': 'nav-gpa', 'community': 'nav-community' };
+            const navId = navMap[screenId];
+            if (navId) document.getElementById(navId)?.classList.add('active');
+
+            window.scrollTo(0, 0);
+        };
+
+        window.closeModal = function (modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        };
+
+        window.logout = async function () {
+            if (!confirm('Are you sure you want to logout?')) return;
+
+            const forceExit = () => {
+                localStorage.removeItem('kobi_atlas_uid');
+                localStorage.removeItem('kobi_atlas_email');
+                localStorage.removeItem('kobi_atlas_pin');
+                localStorage.removeItem('kobi_atlas_theme');
+                localStorage.removeItem('kobi_atlas_setup_done');
+                window.location.replace('index.html');
+            };
+
+            try {
+                const signOutPromise = signOut(auth);
+                const timeoutPromise = new Promise(r => setTimeout(r, 500));
+                await Promise.race([signOutPromise, timeoutPromise]);
+            } catch (e) {
+                console.error('Sign out error', e);
+            } finally {
+                forceExit();
+            }
+        };
+
+        const OWNER_EMAILS = ['kobioguadinma@gmail.com'];
+        const ACHIEVEMENTS = [
+            { id: 'first_semester', title: 'Freshman', description: 'Completed your first semester', icon: 'school' },
+            { id: 'first_class', title: "First Class", description: 'Achieved a CGPA of 4.5 or higher', icon: 'ribbon' },
+            { id: 'socialite', title: 'Social Butterfly', description: 'Added 5 friends', icon: 'people' },
+            { id: 'scholar', title: 'Scholar', description: 'Added 10 courses', icon: 'book' },
+            { id: 'planner', title: 'Organized', description: 'Created 5 tasks', icon: 'calendar' },
+            { id: 'contributor', title: 'Contributor', description: 'Shared a resource', icon: 'share' },
+        ];
+        function isOwner(user) {
+            if (!user || !user.email) return false;
+            return OWNER_EMAILS.includes(user.email);
+        }
+
+        function getGradingConfig() {
+            try {
+                const saved = localStorage.getItem('kobi_atlas_grading_system');
+                if (saved) return JSON.parse(saved);
+            } catch (e) {
+                console.error('Error parsing grading config', e);
+            }
+            return { type: 'babcock' }; // Default
+        }
+
+        function getCAConfig() {
+            try {
+                const saved = localStorage.getItem('kobi_atlas_ca_system');
+                if (saved) return JSON.parse(saved);
+            } catch (e) {
+                console.error('Error parsing CA config', e);
+            }
+            return { type: 'babcock' };
+        }
+
+        function getGradeFromScore(score) {
+            const config = getGradingConfig();
+
+            if (config.type === 'babcock') {
+                if (score >= 80) return 'A';
+                if (score >= 60) return 'B';
+                if (score >= 50) return 'C';
+                if (score >= 45) return 'D';
+                if (score >= 40) return 'E';
+                return 'F';
+            }
+
+            if (config.type === 'nigerian') {
+                if (score >= 70) return 'A';
+                if (score >= 60) return 'B';
+                if (score >= 50) return 'C';
+                if (score >= 45) return 'D';
+                return 'F';
+            }
+
+            if (config.type === 'us') {
+                if (score >= 90) return 'A';
+                if (score >= 80) return 'B';
+                if (score >= 70) return 'C';
+                if (score >= 60) return 'D';
+                return 'F';
+            }
+
+            if (config.type === 'custom' && config.custom && Array.isArray(config.custom)) {
+                // Expect sorted desc
+                for (let g of config.custom) {
+                    if (score >= g.min) return g.label;
+                }
+                return 'F';
+            }
+
+            return 'F'; // Default fallback
+        }
+
+
+        function gradeToPoint(grade) {
+            if (!grade) return 0;
+            const config = getGradingConfig();
+            const g = grade.toString().toUpperCase();
+
+            // Default Babcock
+            if (config.type === 'babcock' || config.type === 'nigerian') {
+                const points = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, 'F': 0 };
+                return points[g] !== undefined ? points[g] : 0;
+            }
+
+            if (config.type === 'us') {
+                const points = {
+                    'A': 4.0, 'A-': 3.7,
+                    'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+                    'C+': 2.3, 'C': 2.0, 'C-': 1.7,
+                    'D+': 1.3, 'D': 1.0,
+                    'F': 0.0
+                };
+                return points[g] !== undefined ? points[g] : 0;
+            }
+
+            if (config.type === 'custom' && config.custom) {
+                const match = config.custom.find(gRow => gRow.label.toUpperCase() === g);
+                if (match) return parseFloat(match.gp);
+            }
+
+            // Fallback
+            const points = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1, 'F': 0 };
+            return points[g] !== undefined ? points[g] : 0;
+        }
+
+        function getAvailableGrades() {
+            const config = getGradingConfig();
+            if (config.type === 'us') {
+                return ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F'];
+            }
+            if (config.type === 'custom' && config.custom) {
+                return config.custom.map(g => g.label);
+            }
+            // Default 5.0
+            return ['A', 'B', 'C', 'D', 'E', 'F'];
+        }
+
+
+        function populateGradeDropdowns() {
+            const grades = getAvailableGrades();
+            const selects = ['course-target-grade', 'target-grade', 'course-manual-grade'];
+
+            selects.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const currentVal = el.value;
+                    el.innerHTML = grades.map(g => `<option value="${g}">${g}</option>`).join('');
+                    if (grades.includes(currentVal)) el.value = currentVal;
+                    // Default to A if empty and no match?
+                    if (!el.value) el.value = grades[0];
+                }
+            });
+        }
+
+        function calculateSemesterGPA(courses) {
+            if (!courses || courses.length === 0) return 0;
+            let totalQP    = 0;  // (U  GP)   Quality Points
+            let totalUnits = 0;  //  U
+
+            courses.forEach(course => {
+                const grade = course.grade || course.predictedGrade || course.targetGrade;
+                const u     = parseFloat(course.unitHours) || 0;
+                if (grade && u > 0) {
+                    totalQP    += u * gradeToPoint(grade); // QP = U  GP
+                    totalUnits += u;
+                }
+            });
+
+            // SGPA = (U  GP) / U
+            return totalUnits === 0 ? 0 : (totalQP / totalUnits).toFixed(2);
+        }
+
+        /**
+         * Compute accumulated quality points and credit units for a list of semesters.
+         * Rules (per spec):
+         *   QP per course = round(unitHours)  gradeToPoint(grade)   [whole numbers]
+         *   When a past semester has stored gpa+totalUnits:
+         *     QP = Math.round(gpa * totalUnits)  (because transcript CGPA is rounded)
+         *   CGPA = totalQP / totalUnits
+         */
+        function accumQP(sems) {
+            let qp = 0, units = 0;
+            sems.forEach(s => {
+                if (s.gpa != null && s.totalUnits) {
+                    // Use stored values  round QP because real QPs are integers
+                    const u = parseFloat(s.totalUnits);
+                    qp    += Math.round(parseFloat(s.gpa) * u);
+                    units += u;
+                } else if (s.courses && s.courses.length > 0) {
+                    s.courses.forEach(c => {
+                        const grade = c.grade || c.predictedGrade || c.targetGrade;
+                        const u     = parseFloat(c.unitHours) || 0;
+                        if (grade && u > 0) {
+                            qp    += u * gradeToPoint(grade);   // QP = U  GP
+                            units += u;
+                        }
+                    });
+                }
+            });
+            return { qp, units };
+        }
+
+
+
+        function calculateRequiredExam(caTotal, targetGrade) {
+            const config = getGradingConfig();
+            let minScore = 70;
+
+            if (config.type === 'babcock') {
+                const map = { 'A': 80, 'B': 60, 'C': 50, 'D': 45, 'E': 40 };
+                minScore = map[targetGrade] || 70;
+            } else if (config.type === 'nigerian') {
+                const map = { 'A': 70, 'B': 60, 'C': 50, 'D': 45, 'E': 40 };
+                minScore = map[targetGrade] || 70;
+            } else if (config.type === 'us') {
+                const map = { 'A': 90, 'A-': 90, 'B+': 87, 'B': 83, 'B-': 80, 'C+': 77, 'C': 73, 'C-': 70, 'D': 60 };
+                minScore = map[targetGrade] || 90;
+            } else if (config.type === 'custom' && config.custom) {
+                const match = config.custom.find(g => g.label === targetGrade);
+                minScore = match ? match.min : 70;
+            }
+
+
+            const required = minScore - caTotal;
+            return Math.max(0, Math.min(60, required));
+        }
+
+        function getCertainty(required) {
+            if (required <= 30) return 'High';
+            if (required <= 45) return 'Medium';
+            return 'Low';
+        }
+
+
+
+        window.toggleExcludeActive = function (isChecked) {
+            localStorage.setItem('excludeCurrentGPA', isChecked);
+            loadDashboard();
+        }
+
+
+        window.loadDashboardWidgets = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            if (!uid) return;
+
+            const widgetContainer = document.getElementById('dashboard-widgets');
+            if (!widgetContainer) return;
+
+            try {
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+                let currentSem = null;
+                snapshot.forEach(doc => {
+                    if (doc.data().type === 'current') currentSem = { id: doc.id, ...doc.data() };
+                });
+
+                if (!currentSem) {
+                    widgetContainer.innerHTML = '<span style="color: #999;">No active semester</span>';
+                    return;
+                }
+
+                // Collect all events
+                let allEvents = [];
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                const now = new Date();
+
+                // 1. Courses
+                if (currentSem.courses) {
+                    currentSem.courses.forEach(c => {
+                        const schedules = c.schedules || (c.schedule ? [c.schedule] : []);
+                        schedules.forEach(s => {
+                            if (s) {
+                                allEvents.push({
+                                    title: c.code,
+                                    ...s,
+                                    type: 'class'
+                                });
+                            }
+                        });
+                    });
+                }
+
+                // 2. Custom Events
+                if (currentSem.customEvents) {
+                    currentSem.customEvents.forEach(e => {
+                        allEvents.push({
+                            ...e,
+                            type: 'custom'
+                        });
+                    });
+                }
+
+                // Find next occurrence for each
+                const futureEvents = [];
+
+                allEvents.forEach(event => {
+                    if (!event.startTime) return;
+
+                    let nextDate = null;
+                    const [hours, minutes] = event.startTime.split(':').map(Number);
+
+                    // Helper to format time string
+                    const fmtTime = (h, m) => {
+                        const d = new Date(); d.setHours(h, m);
+                        return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+                    };
+                    event.formattedTime = fmtTime(hours, minutes);
+
+                    if (event.isRecurring) {
+                        // Ensure event.day is valid (capitalize first letter just in case)
+                        if (!event.day) return;
+                        const dayName = event.day.charAt(0).toUpperCase() + event.day.slice(1).toLowerCase();
+                        const eventDayIdx = days.indexOf(dayName);
+
+                        if (eventDayIdx === -1) return;
+
+                        nextDate = new Date(now);
+                        nextDate.setHours(hours, minutes, 0, 0);
+
+                        let dayDiff = eventDayIdx - now.getDay();
+                        // If day passed OR (day is today AND time passed)
+                        if (dayDiff < 0 || (dayDiff === 0 && now > nextDate)) {
+                            dayDiff += 7;
+                        }
+                        // Create the target date
+                        const target = new Date(now);
+                        target.setDate(now.getDate() + dayDiff);
+                        target.setHours(hours, minutes, 0, 0);
+                        nextDate = target;
+
+                    } else if (event.date) {
+                        nextDate = new Date(event.date);
+                        nextDate.setHours(hours, minutes, 0, 0);
+                        if (nextDate < now) return; // Passed
+                    }
+
+                    if (nextDate) {
+                        futureEvents.push({
+                            ...event,
+                            nextDate: nextDate
+                        });
+                    }
+                });
+
+                // Sort by date
+                futureEvents.sort((a, b) => a.nextDate - b.nextDate);
+
+                if (futureEvents.length > 0) {
+                    const next = futureEvents[0];
+                    const diffMs = next.nextDate - now;
+                    const diffMins = Math.floor(diffMs / 60000);
+                    const diffHours = Math.floor(diffMins / 60);
+                    const diffDays = Math.floor(diffHours / 24);
+
+                    let timeText = '';
+                    if (diffMins < 60) {
+                        timeText = `In ${diffMins} min${diffMins !== 1 ? 's' : ''}`;
+                    } else if (next.nextDate.getDate() === now.getDate()) {
+                        timeText = `Today, ${next.formattedTime}`;
+                    } else if (diffDays < 2) { // Roughly tomorrow
+                        // Check strictly if it's tomorrow's date
+                        const tom = new Date(now); tom.setDate(now.getDate() + 1);
+                        if (next.nextDate.getDate() === tom.getDate()) {
+                            timeText = `Bmro, ${next.formattedTime}`; // Bmro? shorthand for tomorrow if space tight? Let's use Tom.
+                            timeText = `Tom, ${next.formattedTime}`;
+                        } else {
+                            timeText = `${next.day ? next.day.substr(0, 3) : ''}, ${next.formattedTime}`;
+                        }
+                    } else {
+                        timeText = `${next.day ? next.day.substr(0, 3) : ''}, ${next.formattedTime}`;
+                    }
+
+                    if (diffDays >= 7) {
+                        // If it's more than a week away (rare for recurring, but possible for one-off)
+                        timeText = `${next.nextDate.toLocaleDateString()}, ${next.formattedTime}`;
+                    }
+
+                    widgetContainer.innerHTML = `
+                        <div style="font-weight: bold; color: var(--primary-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;">${next.title}</div>
+                        <div style="color: #ccc;">${timeText}</div>
+                    `;
+                } else {
+                    widgetContainer.innerHTML = '<span style="color: #999;">No upcoming events</span>';
+                }
+
+            } catch (e) {
+                console.error('Widget error', e);
+                widgetContainer.innerHTML = '';
+            }
+        };
+
+        // Dashboard functions
+        async function loadDashboard() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            if (!uid) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            populateGradeDropdowns();
+
+
+            // Legacy grading system redirect removed to support unified settings.html flow
+            // Grading system is handled via getGradingConfig() defaults or settings page.
+
+            console.log('2');const excludeCurrentGPA = localStorage.getItem('excludeCurrentGPA') === 'true';
+
+            showLoading(true);
+
+            try {
+                // Ensure anonymous authentication for Firestore access
+                if (!auth.currentUser) {
+                    await signInAnonymously(auth);
+                }
+
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+
+                const semesters = [];
+                snapshot.forEach(doc => {
+                    semesters.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort: Latest first (Descending timestamp/createdAt)
+                semesters.sort((a, b) => {
+                    const getT = (s) => s.timestamp?.seconds || s.timestamp || s.createdAt?.seconds || s.createdAt || 0;
+                    return getT(b) - getT(a);
+                });
+
+                console.log('3');// Separate by type
+                const pending = semesters.filter(s => s.type === 'pending');
+                const current = semesters.filter(s => s.type === 'current');
+                const past = semesters.filter(s => s.type === 'past');
+
+                const currentSemester = current[0];
+                const hasPredicted = currentSemester || pending.length > 0;
+
+                // -- CGPA Calculation (QP-based weighted average) --
+                // CGPA = Sum(U x GP) / Sum(U)
+                // Past sems with stored gpa+totalUnits: QP = Math.round(gpa * totalUnits)
+                // Sems with courses: QP = Sum(unitHours * gradeToPoint(grade))
+
+                function semAccum(sems) {
+                    let qp = 0, u = 0;
+                    sems.forEach(function(s) {
+                        if (s.gpa != null && s.totalUnits) {
+                            var su = parseFloat(s.totalUnits);
+                            qp += Math.round(parseFloat(s.gpa) * su);
+                            u  += su;
+                        } else if (s.courses) {
+                            s.courses.forEach(function(c) {
+                                var grade = c.grade || c.predictedGrade || c.targetGrade;
+                                var cu = parseFloat(c.unitHours) || 0;
+                                if (grade && cu > 0) { qp += cu * gradeToPoint(grade); u += cu; }
+                            });
+                        }
+                    });
+                    return { qp: qp, u: u };
+                }
+
+                var cAcc = semAccum(past);
+                var cgpa = cAcc.u > 0 ? (cAcc.qp / cAcc.u).toFixed(2) : '0.00';
+
+                var predictedPool = excludeCurrentGPA
+                    ? past.concat(pending)
+                    : past.concat(current).concat(pending);
+                var pAcc = semAccum(predictedPool);
+                var predictedCGPA = pAcc.u > 0 ? (pAcc.qp / pAcc.u).toFixed(2) : '0.00';
+
+                console.log('6');// Display stats
+                var statsGrid = document.getElementById('stats-grid');
+                statsGrid.innerHTML = '<div class="stat-card"><div class="stat-label">Current CGPA</div><div class="stat-value">' + cgpa + '</div></div>' +
+                    (hasPredicted ? '<div class="stat-card"><div class="stat-label">Predicted CGPA</div><div class="stat-value">' + predictedCGPA + '</div></div>' : '');
+
+                console.log('7');// Display semesters by type
+                displaySemesterSection('current-semester', 'Current Semester', current, 'current');
+                displaySemesterSection('pending-semesters', 'Pending Semesters', pending, 'pending');
+                displaySemesterSection('past-semesters', 'Past Semesters', past, 'past');
+
+                // Exclude-from-predicted toggle
+                var toggleChecked = excludeCurrentGPA ? 'checked' : '';
+                var toggleHTML = '<div style="background:var(--card-bg);color:var(--text-color);padding:16px;border-radius:12px;margin-top:15px;display:flex;align-items:center;justify-content:space-between;"><span style="font-size:16px;font-weight:500;">Exclude from Predicted</span><label class="switch" style="position:relative;display:inline-block;width:50px;height:28px;"><input type="checkbox" ' + toggleChecked + ' onchange="toggleExcludeActive(this.checked)" style="opacity:0;width:0;height:0;"><span class="slider round" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#ccc;transition:.4s;border-radius:34px;"></span><style>.slider.round:before{position:absolute;content:"";height:20px;width:20px;left:4px;bottom:4px;background-color:white;transition:.4s;border-radius:50%;}input:checked+.slider{background-color:var(--primary-color);}input:checked+.slider:before{transform:translateX(22px);}</style></label></div>';
+                var currentContainer = document.getElementById('current-semester');
+                if (currentContainer && current.length > 0) {
+                    currentContainer.insertAdjacentHTML('beforeend', toggleHTML);
+                }
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+
+            loadUnreadCounts();
+            if (window.loadDashboardWidgets) window.loadDashboardWidgets();
+            showLoading(false);
+        }
+
+        window.updateSemesterStatus = async function (semesterId, newType) {
+            if (!confirm(`Are you sure you want to mark this semester as ${newType}?`)) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+            try {
+                const semRef = doc(db, 'users', uid, 'semesters', semesterId);
+                await updateDoc(semRef, { type: newType });
+                showToast('Semester updated', 'success');
+                loadDashboard();
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        };
+
+
+
+
+        function displaySemesterSection(containerId, title, semesters, type) {
+            const container = document.getElementById(containerId);
+
+            if (semesters.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const html = `
+                <div class="section-title">${title}</div>
+                ${semesters.map(sem => {
+                const gpa = sem.gpa || calculateSemesterGPA(sem.courses || []);
+                const courseCount = sem.courses?.length || 0;
+                return `
+                        <div class="semester-card ${type}" onclick="viewSemester('${sem.id}')" style="position: relative;">
+                            <span class="badge ${type}">${type.toUpperCase()}</span>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: bold; font-size: 16px;">${sem.name}</div>
+                                    <div style="font-size: 14px; color: #999; margin-top: 4px;">${courseCount} courses</div>
+                                </div>
+                                <div style="text-align: right; padding-bottom: 0;">
+                                    <div style="font-size: 20px; font-weight: bold; color: #667eea;">
+                                        ${type === 'pending' || type === 'current' ? 'Predicted' : 'GPA'}: ${parseFloat(gpa).toFixed(2)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            }).join('')}
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Semester detail functions
+        window.viewSemester = async function (semesterId) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                const semDoc = await getDoc(doc(db, 'users', uid, 'semesters', semesterId));
+                if (!semDoc.exists()) {
+                    showToast('Semester not found', 'error');
+                    return;
+                }
+
+                currentSemester = { id: semDoc.id, ...semDoc.data() };
+
+                document.getElementById('semester-detail-title').textContent = currentSemester.name;
+                const gpa = currentSemester.gpa || calculateSemesterGPA(currentSemester.courses || []);
+                document.getElementById('semester-detail-gpa').textContent = `GPA: ${parseFloat(gpa).toFixed(2)}`;
+
+                window.getGradeColor = function (grade) {
+                    if (!grade || grade === '--') return '#667eea';
+
+                    // Get grading config to check if custom
+                    const config = getGradingConfig();
+
+                    if (config.type === 'custom' && config.custom && Array.isArray(config.custom)) {
+                        // For custom grading, assign colors based on position
+                        const gradeIndex = config.custom.findIndex(g => g.label === grade);
+
+                        if (gradeIndex === -1) return '#EF4444'; // Unknown grade = red
+
+                        // First grade = Green, Second = Yellow, Third = Gray, Rest check min value
+                        if (gradeIndex === 0) return '#10B981'; // Green
+                        if (gradeIndex === 1) return '#F59E0B'; // Yellow
+                        if (gradeIndex === 2) return '#6B7280'; // Gray
+
+                        // For remaining grades, check if below 50%
+                        const gradeData = config.custom[gradeIndex];
+                        return gradeData.min < 50 ? '#EF4444' : '#6B7280'; // Red if < 50%, else gray
+                    }
+
+                    // Standard grading (A, B, C, D, E, F)
+                    const g = grade.charAt(0).toUpperCase();
+                    if (g === 'A') return '#10B981'; // Green
+                    if (g === 'B') return '#F59E0B'; // Yellow/Amber
+                    if (g === 'C') return '#6B7280'; // Gray
+                    return '#EF4444'; // Red (D, E, F)
+                };
+
+                const courses = currentSemester.courses || [];
+                const coursesHTML = courses.length > 0 ?
+                    `<div class="courses-grid">
+                        ${courses.map((course, index) => {
+                        const grade = course.grade || course.predictedGrade || course.targetGrade || '--';
+                        const gradeColor = getGradeColor(grade);
+
+                        return `
+                            <div onclick="viewCourse(${index})" 
+                                style="background: #2a2a2a; border-radius: 12px; padding: 16px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: space-between; aspect-ratio: 1; border: 1px solid #333; transition: transform 0.2s; position: relative; overflow: hidden;"
+                                onmouseover="this.style.transform='scale(1.03)'; this.style.borderColor='${gradeColor}'"
+                                onmouseout="this.style.transform='scale(1)'; this.style.borderColor='#333'">
+                                
+                                <div style="width: 100%; display: flex; justify-content: space-between; align-items: flex-start; z-index: 2;">
+                                    <span style="font-size: 12px; color: #666; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 8px;">${course.unitHours}u</span>
+                                    <span style="font-size: 16px; font-weight: 800; color: ${gradeColor}; text-shadow: 0 1px 4px rgba(0,0,0,0.5);">${grade}</span>
+                                </div>
+
+                                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; z-index: 1;">
+                                    <ion-icon name="book" style="font-size: 42px; color: var(--primary-color); margin-bottom: 12px; opacity: 0.8;"></ion-icon>
+                                    <div style="font-weight: 700; font-size: 16px; color: white; margin-bottom: 4px;">${course.code}</div>
+                                    <div style="font-size: 12px; color: #999; text-align: center; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; width: 100%;">${course.name}</div>
+                                </div>
+                            </div>
+                            `;
+                    }).join('')}
+                    </div>`
+                    : '<p style="text-align: center; color: #999; padding: 40px;">No courses yet</p>';
+
+                document.getElementById('courses-list').innerHTML = coursesHTML;
+
+                // Handle Action Buttons
+                const actionsContainer = document.getElementById('semester-actions');
+                let actionsHTML = '';
+
+                // Common Actions
+                const addCourseBtn = `
+                    <button class="btn-action btn-action-primary" onclick="showAddCourseModal()">
+                        <ion-icon name="add-circle" style="margin-right: 8px; font-size: 20px;"></ion-icon>
+                        Add Course
+                    </button>
+                `;
+
+                const deleteSemBtn = `
+                    <button class="btn-action btn-action-danger" onclick="deleteSemester()">
+                        <ion-icon name="trash" style="margin-right: 8px; font-size: 18px;"></ion-icon>
+                        Delete Semester
+                    </button>
+                `;
+
+                if (currentSemester.type === 'current') {
+                    actionsHTML += `
+                        ${addCourseBtn}
+                        <button class="btn-action btn-action-graduate" onclick="showEndSemesterModal('${currentSemester.id}')">
+                            <ion-icon name="ribbon" style="margin-right: 8px; font-size: 20px;"></ion-icon>
+                            End Semester
+                        </button>
+                        <button class="btn-action btn-action-pending" onclick="updateSemesterStatus('${currentSemester.id}', 'pending')">
+                            <ion-icon name="hourglass" style="margin-right: 8px; font-size: 18px;"></ion-icon>
+                            Mark as Pending
+                        </button>
+                    `;
+                } else if (currentSemester.type === 'pending') {
+                    actionsHTML += `
+                        ${addCourseBtn}
+                        <button class="btn-action btn-action-graduate" onclick="showEndSemesterModal('${currentSemester.id}')">
+                            <ion-icon name="ribbon" style="margin-right: 8px; font-size: 20px;"></ion-icon>
+                            Enter Grades
+                        </button>
+                        <button class="btn-action btn-action-current" onclick="updateSemesterStatus('${currentSemester.id}', 'current')">
+                             <ion-icon name="play" style="margin-right: 8px; font-size: 18px;"></ion-icon>
+                             Mark as Current
+                        </button>
+                    `;
+                } else if (currentSemester.type === 'past') {
+                    actionsHTML += `
+                        ${addCourseBtn}
+                        <button class="btn-action btn-action-current" onclick="updateSemesterStatus('${currentSemester.id}', 'current')">
+                             <ion-icon name="refresh" style="margin-right: 8px; font-size: 18px;"></ion-icon>
+                             Reopen as Current
+                        </button>
+                        <button class="btn-action btn-action-pending" onclick="updateSemesterStatus('${currentSemester.id}', 'pending')">
+                            <ion-icon name="hourglass" style="margin-right: 8px; font-size: 18px;"></ion-icon>
+                            Mark as Pending
+                        </button>
+                    `;
+                }
+
+                // Add Delete button at the end
+                actionsHTML += deleteSemBtn;
+
+                actionsContainer.innerHTML = actionsHTML;
+
+                showScreen('semester-detail');
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+
+            showLoading(false);
+        };
+
+        // Course detail functions
+        window.toggleUseCA = function (isChecked) {
+            const manualContainer = document.getElementById('manual-grade-container');
+            const projectedContainer = document.getElementById('projected-grade-container');
+
+            if (isChecked) {
+                if (manualContainer) manualContainer.classList.add('hidden');
+                if (projectedContainer) projectedContainer.classList.remove('hidden');
+            } else {
+                if (manualContainer) manualContainer.classList.remove('hidden');
+                if (projectedContainer) projectedContainer.classList.add('hidden');
+            }
+            updateCourseGradeUI();
+        };
+
+        window.updateCourseGradeUI = function () {
+            const totalCAElement = document.getElementById('total-ca');
+            const totalCA = parseInt(totalCAElement.textContent.split('/')[0]) || 0;
+            const maxCA = parseInt(totalCAElement.dataset.max) || 40; // Get the actual max CA from the data attribute
+            const useCA = document.getElementById('use-ca-toggle').checked;
+
+            if (useCA) {
+                const examWeight = 100 - maxCA; // Dynamic exam weight based on CA system
+                const maxTotal = totalCA + examWeight;
+                const grade = getGradeFromScore(maxTotal);
+                document.getElementById('max-possible-score').textContent = `${maxTotal}/100`;
+                document.getElementById('projected-grade-display').textContent = grade;
+                document.getElementById('projected-grade-display').style.color = getGradeColor(grade);
+            }
+        };
+
+        window.viewCourse = function (courseIndex) {
+            currentCourse = { ...currentSemester.courses[courseIndex], index: courseIndex };
+
+            populateGradeDropdowns();
+
+            document.getElementById('course-detail-title').textContent = currentCourse.name;
+            document.getElementById('course-detail-code').textContent = currentCourse.code;
+
+            // Load CA Inputs Dynamically
+            const caConfig = getCAConfig();
+            const caInputsContainer = document.getElementById('ca-inputs-container');
+            const caScores = currentCourse.caScores || {};
+            // Track enabled state for each field (default true if not present)
+            const caEnabled = currentCourse.caEnabled || {};
+
+            let inputsHTML = '';
+            let totalMaxCA = 0;
+
+            const renderField = (label, key, max) => {
+                const val = caScores[key] || 0;
+                const isEnabled = caEnabled[key] !== false; // Default true
+                const dimStyle = isEnabled ? '' : 'opacity: 0.5;';
+
+                return `
+                    <div class="ca-score-row" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 8px; transition: opacity 0.2s; border: 1px solid rgba(255,255,255,0.1); ${dimStyle}">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <input type="checkbox" id="check-${key}" class="ca-enable-check" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary-color);" 
+                                data-key="${key}" ${isEnabled ? 'checked' : ''} onchange="toggleCAField(this)">
+                            
+                            <div style="display: flex; flex-direction: column;">
+                                <label for="check-${key}" style="font-weight: 500; cursor: pointer; font-size: 15px;">${label}</label>
+                                <span style="font-size: 11px; color: #999;">Max Score: ${max}</span>
+                            </div>
+                        </div>
+                        
+                        <input type="number" data-key="${key}" data-max="${max}" class="ca-score-input dynamic-ca-input" 
+                            min="0" max="${max}" value="${val}" ${isEnabled ? '' : 'disabled'}
+                            style="width: 70px; height: 36px; text-align: center; font-weight: bold; background: rgba(0,0,0,0.3); border: 1px solid #444; border-radius: 6px; color: white; font-size: 14px;"
+                            oninput="validateCAInput(this)"
+                            onblur="validateCAInput(this)"
+                            placeholder="0">
+                    </div>`;
+            };
+
+            if (caConfig.type === 'custom' && caConfig.custom) {
+                caConfig.custom.forEach((field) => {
+                    totalMaxCA += parseFloat(field.weight);
+                    inputsHTML += renderField(field.name, field.name, field.weight);
+                });
+            } else {
+                // Standard
+                totalMaxCA = 40;
+                const scores = [
+                    { label: 'Mid Semester', key: 'midSemester', max: 15 },
+                    { label: 'Assignment', key: 'assignment', max: 10 },
+                    { label: 'Quiz', key: 'quiz', max: 10 },
+                    { label: 'Attendance', key: 'attendance', max: 5 },
+                ];
+                scores.forEach(s => inputsHTML += renderField(s.label, s.key, s.max));
+            }
+
+            caInputsContainer.innerHTML = inputsHTML;
+            document.getElementById('total-ca').dataset.max = totalMaxCA;
+
+
+            // Logic for Use CA
+            const useCA = currentCourse.useCA !== false; // Default true
+            document.getElementById('use-ca-toggle').checked = useCA;
+
+            // Logic for Manual Grade
+            const manualSelect = document.getElementById('course-manual-grade');
+            const available = getAvailableGrades();
+            if (manualSelect.options.length === 0) populateGradeDropdowns();
+
+            // Set values
+            const currentGrade = currentCourse.grade || available[0];
+            manualSelect.value = currentGrade;
+
+            document.getElementById('course-units').textContent = currentCourse.unitHours || 0;
+
+
+            toggleUseCA(useCA);
+            updateCAScores();
+            showScreen('course-detail');
+        };
+
+
+        window.validateCAInput = function (input) {
+            let val = parseFloat(input.value);
+            const max = parseFloat(input.dataset.max);
+
+            if (isNaN(val)) {
+                // Allow empty during typing, but treat as 0 for calc
+                // Don't force 0 yet if user is just deleting
+                if (input.value === '') {
+                    // It's empty
+                } else {
+                    input.value = ''; // Invalid char
+                }
+            } else {
+                if (val < 0) {
+                    input.value = 0;
+                } else if (val > max) {
+                    input.value = max;
+                    showToast(`Max score for this field is ${max}`, 'info');
+                }
+            }
+            updateCAScores();
+        };
+
+        window.toggleCAField = function (checkbox) {
+            const key = checkbox.dataset.key;
+            // Use quotes for selector to handle keys with spaces if any (though keys usually camelCase)
+            const input = document.querySelector(`.dynamic-ca-input[data-key="${key}"]`);
+            const row = checkbox.closest('.ca-score-row');
+
+            if (checkbox.checked) {
+                input.disabled = false;
+                row.style.opacity = '1';
+                row.style.background = 'rgba(255,255,255,0.03)';
+            } else {
+                input.disabled = true;
+                row.style.opacity = '0.5';
+                row.style.background = 'transparent';
+            }
+            updateCAScores();
+        };
+
+        window.updateCAScores = function () {
+            let total = 0;
+            let currentMax = 0;
+
+            // Sum all ENABLED dynamic inputs
+            document.querySelectorAll('.dynamic-ca-input').forEach(inp => {
+                if (!inp.disabled) {
+                    total += parseFloat(inp.value) || 0;
+                    currentMax += parseFloat(inp.dataset.max) || 0;
+                }
+            });
+
+            // Show: Current Score / Max of Enabled Fields
+            document.getElementById('total-ca').textContent = `${total}/${currentMax}`;
+
+            // Store valid total for grade calc
+            document.getElementById('total-ca').dataset.validTotal = total;
+            document.getElementById('total-ca').dataset.validMax = currentMax;
+
+            updateCourseGradeUI();
+        };
+
+        window.updateCourseGradeUI = function () {
+            const totalElement = document.getElementById('total-ca');
+            const totalCA = parseFloat(totalElement.dataset.validTotal) || 0;
+            const validMaxCA = parseFloat(totalElement.dataset.validMax) || 0;
+            const totalMaxCA = parseFloat(totalElement.dataset.max) || 40;
+
+            const useCA = document.getElementById('use-ca-toggle').checked;
+
+            if (useCA) {
+                // Points accumulated so far vs Points possible so far
+                const passedCA = totalCA;
+                // Remaining points in the semester (Exams + Untaken CAs)
+                const remainingScore = 100 - validMaxCA;
+
+                // --- Header Section ---
+                let html = `<div style="background: rgba(255,255,255,0.02); border-radius: 12px; padding: 16px; border: 1px solid rgba(255,255,255,0.05);">`;
+
+                // Simplified "Score So Far" Header
+                html += `
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
+                        <div>
+                            <div style="font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Score So Far</div>
+                            <div style="font-size: 28px; font-weight: 800; color: white;">
+                                <span style="color: var(--primary-color)">${passedCA}</span> <span style="font-size: 16px; color: #555;">/ ${validMaxCA}</span>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                             <div style="font-size: 11px; color: #999; margin-bottom: 4px;">Remaining Points</div>
+                             <div style="font-size: 18px; font-weight: 600; color: #ccc;">${remainingScore}</div>
+                        </div>
+                    </div>
+                `;
+
+                // --- Grade Targets List ---
+                const grades = getAvailableGrades();
+
+                html += `<div style="display: flex; flex-direction: column; gap: 10px;">`;
+
+                grades.forEach(g => {
+                    let minScore = 0;
+                    const config = getGradingConfig();
+                    // Determine Min Score
+                    if (config.type === 'babcock') {
+                        const map = { 'A': 80, 'B': 60, 'C': 50, 'D': 45, 'E': 40 }; minScore = map[g] || 0;
+                    } else if (config.type === 'nigerian') {
+                        const map = { 'A': 70, 'B': 60, 'C': 50, 'D': 45, 'E': 40 }; minScore = map[g] || 0;
+                    } else if (config.type === 'us') {
+                        const map = { 'A': 90, 'B': 80, 'C': 70, 'D': 60 }; minScore = map[g.substring(0, 1)] || 90;
+                    } else if (config.type === 'custom' && config.custom) {
+                        const match = config.custom.find(r => r.label === g); minScore = match ? match.min : 0;
+                    } else {
+                        if (g === 'A') minScore = 70; else if (g === 'B') minScore = 60; else if (g === 'C') minScore = 50; else if (g === 'D') minScore = 45; else if (g === 'E') minScore = 40;
+                    }
+
+                    if (minScore === 0) return; // Skip F
+
+                    const needed = minScore - passedCA;
+                    let pctNeeded = 0;
+                    let statusLabel = '';
+                    let statusSub = '';
+                    let barColor = '#444';
+                    let barWidth = '0%';
+                    let labelColor = '#999';
+
+                    if (needed <= 0) {
+                        statusLabel = 'Secured';
+                        barColor = '#10B981'; // Green
+                        barWidth = '100%';
+                        labelColor = '#10B981';
+                        statusSub = 'Done';
+                    } else if (needed > remainingScore) {
+                        statusLabel = 'Impossible';
+                        barColor = '#333';
+                        barWidth = '0%';
+                        labelColor = '#EF4444'; // Red
+                        statusSub = `Need ${needed}`; // Impossible
+                    } else {
+                        statusLabel = `${needed} / ${remainingScore}`;
+                        pctNeeded = (needed / remainingScore) * 100;
+
+                        // Bar represents "How much of the remaining pie does this eat?"
+                        barWidth = `${pctNeeded}%`;
+
+                        if (pctNeeded > 90) { barColor = '#EF4444'; labelColor = '#EF4444'; } // Red - super hard
+                        else if (pctNeeded > 60) { barColor = '#F59E0B'; labelColor = '#F59E0B'; } // Yellow
+                        else { barColor = '#667eea'; labelColor = '#667eea'; } // Blue/Green
+
+                        statusSub = 'Needed';
+                    }
+
+                    html += `
+                        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 13px;">
+                            <div style="display: flex; align-items: center; gap: 10px; min-width: 80px;">
+                                <div style="background: rgba(255,255,255,0.1); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white;">${g}</div>
+                                <div style="color: #ccc; font-size: 12px;">${minScore}%</div>
+                            </div>
+                            
+                            <div style="flex: 1; margin: 0 16px;">
+                                <div style="height: 6px; width: 100%; background: rgba(255,255,255,0.05); border-radius: 3px; position: relative; overflow: hidden;">
+                                    <div style="height: 100%; width: ${barWidth}; background: ${barColor}; border-radius: 3px; transition: width 0.3s ease;"></div>
+                                </div>
+                            </div>
+                            
+                            <div style="text-align: right; min-width: 70px;">
+                                <div style="font-weight: 700; color: ${labelColor}; font-size: 14px;">${statusLabel}</div>
+                                <div style="font-size: 10px; color: #666;">${statusSub}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `</div></div>`; // Close card
+
+                document.getElementById('projected-grade-display').innerHTML = html;
+                document.getElementById('projected-grade-display').style.fontSize = '14px';
+
+                const maxPossible = document.getElementById('max-possible-score');
+                if (maxPossible && maxPossible.parentElement) maxPossible.parentElement.style.display = 'none';
+            }
+        };
+
+        window.saveCourseChanges = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                // Collect scores dynamically
+                const caScores = {};
+                const caEnabled = {};
+
+                document.querySelectorAll('.dynamic-ca-input').forEach(inp => {
+                    const key = inp.dataset.key;
+                    caScores[key] = parseFloat(inp.value) || 0;
+                    caEnabled[key] = !inp.disabled;
+                });
+
+                const useCA = document.getElementById('use-ca-toggle').checked;
+                // Calculate simplistic final grade for storage based on 'Projected' max?
+                // Or just keep '--'.
+                let finalGrade = '--';
+
+                if (!useCA) {
+                    finalGrade = document.getElementById('course-manual-grade').value || getAvailableGrades()[0];
+                }
+
+                // Update course in semester
+                currentSemester.courses[currentCourse.index] = {
+                    ...currentSemester.courses[currentCourse.index],
+                    caScores,
+                    caEnabled,
+                    useCA,
+                    grade: finalGrade,
+                    predictedGrade: finalGrade,
+                    targetGrade: null
+                };
+
+                // Recalculate semester GPA
+                const semesterGPA = parseFloat(calculateSemesterGPA(currentSemester.courses));
+                const totalUnits = currentSemester.courses.reduce((sum, c) => sum + (c.unitHours || 0), 0);
+
+                await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                    courses: currentSemester.courses,
+                    gpa: semesterGPA,
+                    totalUnits: totalUnits
+                });
+
+                showToast('Course updated successfully', 'success');
+                backToSemester();
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+            showLoading(false);
+        };
+
+        window.deleteCourse = async function () {
+            if (!confirm('Delete this course?')) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                currentSemester.courses.splice(currentCourse.index, 1);
+
+                // Recalculate semester GPA
+                const semesterGPA = parseFloat(calculateSemesterGPA(currentSemester.courses));
+                const totalUnits = currentSemester.courses.reduce((sum, c) => sum + (c.unitHours || 0), 0);
+
+                await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                    courses: currentSemester.courses,
+                    gpa: semesterGPA,
+                    totalUnits: totalUnits
+                });
+
+                showToast('Course deleted', 'success');
+                await viewSemester(currentSemester.id);
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+
+            showLoading(false);
+        };
+
+        // RESOURCE FUNCTIONS
+        window.loadResources = async function () {
+            if (!currentCourse || !currentCourse.code) return;
+
+            const normalizedCode = currentCourse.code.replace(/\s/g, '').toUpperCase();
+            const container = document.getElementById('resources-list-container');
+            container.innerHTML = '<div style="text-align: center; padding: 20px;"><ion-icon name="sync" class="spin" style="font-size: 24px; color: var(--primary-color);"></ion-icon></div>';
+
+            try {
+                const q = query(collection(db, 'resources'), where('courseCode', '==', normalizedCode));
+                const snapshot = await getDocs(q);
+                let resources = [];
+                snapshot.forEach(doc => resources.push({ id: doc.id, ...doc.data() }));
+
+                // Sort by votes desc
+                resources.sort((a, b) => b.votes - a.votes);
+
+                if (resources.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-container" style="text-align: center; padding: 20px;">
+                            <ion-icon name="folder-open-outline" style="font-size: 48px; color: var(--text-secondary); display: block; margin: 0 auto;"></ion-icon>
+                            <p style="color: var(--text-secondary); margin-top: 10px;">No resources yet.</p>
+                            <p style="color: var(--text-secondary); font-size: 14px;">Be the first to share notes or past questions!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = resources.map(res => {
+                    // Handle different types (support both old 'link' and new 'fileUrl')
+                    let link = res.link || res.fileUrl || res.fileData;
+                    let title = res.title || res.fileName || 'Untitled Resource';
+                    let type = res.type || 'link'; // 'link', 'file', 'image'
+                    let iconName = 'open-outline';
+                    let actionFn = '';
+                    let actionText = '';
+
+                    // Safe strings for onclick
+                    const safeLink = (link || '').replace(/'/g, "\\'");
+                    const safeName = (title || 'Document').replace(/'/g, "\\'");
+
+                    // Determine type-specific behavior
+                    if (type === 'image' || (link && /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(link))) {
+                        iconName = 'image-outline';
+                        actionFn = `event.stopPropagation(); window.openLightbox('${safeLink}')`;
+                        actionText = 'View Image';
+                    } else if (type === 'file' || res.fileUrl) {
+                        iconName = 'document-text-outline';
+                        actionFn = `event.stopPropagation(); window.previewResource('${safeLink}', '${safeName}', 'file')`;
+                        actionText = 'Preview File';
+                    } else {
+                        // Normal link
+                        iconName = 'globe-outline';
+                        actionFn = `event.stopPropagation(); window.open('${safeLink}', '_blank')`;
+                        actionText = 'Open Link';
+                    }
+
+                    return `
+                    <div class="stat-card" style="margin-bottom: 12px; text-align: left; cursor: pointer; transition: background 0.2s;" onclick="${actionFn}" onmouseover="this.style.background='#333'" onmouseout="this.style.background='var(--card-bg)'">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: bold; font-size: 16px; color: var(--primary-color); margin-bottom: 4px; display:flex; align-items:center; gap:8px;">
+                                    <ion-icon name="${iconName}"></ion-icon>
+                                    ${title}
+                                </div>
+                                ${res.description ? `<div style="font-size: 14px; margin-bottom: 6px;">${res.description}</div>` : ''}
+                                <div style="font-size: 12px; color: var(--text-secondary);">
+                                    By ${res.uploadedByName || 'Student'} • ${new Date(res.timestamp).toLocaleDateString()}
+                                </div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-left: 10px;">
+                                <button onclick="event.stopPropagation(); voteResource('${res.id}', 1)" style="background: none; border: none; cursor: pointer; padding: 4px;">
+                                    <ion-icon name="caret-up" style="font-size: 24px; color: var(--text-color);"></ion-icon>
+                                </button>
+                                <span style="font-weight: bold; font-size: 14px; color: var(--primary-color);">${res.votes || 0}</span>
+                                <button onclick="event.stopPropagation(); voteResource('${res.id}', -1)" style="background: none; border: none; cursor: pointer; padding: 4px;">
+                                    <ion-icon name="caret-down" style="font-size: 24px; color: var(--text-color);"></ion-icon>
+                                </button>
+                            </div>
+                        </div>
+                         <div style="display: flex; align-items: center; justify-content: flex-end; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-color); color: var(--primary-color); font-weight: 600; font-size: 14px;">
+                            <span style="margin-right: 5px;">${actionText}</span>
+                            <ion-icon name="arrow-forward-outline"></ion-icon>
+                        </div>
+                    </div>
+                `;
+                }).join('');
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        window.showAddResourceModal = function () {
+            if (typeof showResourceUploadModal === 'function') {
+                showResourceUploadModal();
+            } else {
+                const modal = document.getElementById('resource-upload-modal');
+                if (modal) modal.classList.add('show');
+            }
+
+            setTimeout(() => {
+                if (window.currentCourseView) {
+                    const parts = window.currentCourseView.split('#');
+                    const code = parts[0];
+                    const level = parts[1] || '100';
+
+                    if (document.getElementById('res-course-code')) document.getElementById('res-course-code').value = code;
+                    if (document.getElementById('res-level')) document.getElementById('res-level').value = level;
+                }
+            }, 100);
+        };
+
+        window.addResource = async function () {
+            const title = document.getElementById('res-title').value.trim();
+            const link = document.getElementById('res-link').value.trim();
+            const desc = document.getElementById('res-desc').value.trim();
+            const courseName = document.getElementById('res-course-name').value.trim();
+            const level = document.getElementById('res-level').value;
+            const courseCodeInput = document.getElementById('res-course-code').value.trim().toUpperCase();
+
+            if (!courseCodeInput) {
+                showToast('Please enter a course code', 'error');
+                return;
+            }
+
+            if (!title || !link) {
+                showToast('Please enter title and link', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const finalCode = courseCodeInput.replace(/\s/g, '');
+
+            showLoading(true);
+
+            try {
+                // Get user name (rough approximation since we might not have full user profile in memory)
+                // Actually we can fetch it or just use 'Student'
+                const userDoc = await getDoc(doc(db, 'users', uid));
+                const userData = userDoc.exists() ? userDoc.data() : {};
+                const userName = userData.username || userData.displayName || 'Student';
+
+                await addDoc(collection(db, 'resources'), {
+                    courseCode: normalizedCode,
+                    courseName: courseName,
+                    level: level,
+                    title,
+                    link,
+                    description: desc,
+                    uploadedBy: uid,
+                    uploadedByName: userName,
+                    votes: 0,
+                    timestamp: Date.now()
+                });
+
+                showToast('Resource added!', 'success');
+                closeModal('add-resource-modal');
+                document.getElementById('res-title').value = '';
+                document.getElementById('res-link').value = '';
+                document.getElementById('res-desc').value = '';
+                document.getElementById('res-course-name').value = '';
+                document.getElementById('res-level').value = '100'; // Reset level to default
+                loadResources();
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+            showLoading(false);
+        };
+
+        window.toggleAnnouncementEdit = function () {
+            document.getElementById('announcement-display').classList.toggle('hidden');
+            document.getElementById('announcement-editor').classList.toggle('hidden');
+        };
+
+        window.saveAnnouncement = async function () {
+            const text = document.getElementById('announcement-input').value.trim();
+            if (!text) return;
+
+            try {
+                await setDoc(doc(db, 'system', 'announcements'), {
+                    content: text,
+                    updatedAt: Date.now(),
+                    updatedBy: localStorage.getItem('kobi_atlas_email')
+                }, { merge: true });
+
+                document.getElementById('announcement-display').innerText = text;
+                showToast('Announcement updated', 'success');
+                window.toggleAnnouncementEdit();
+            } catch (e) {
+                console.error(e);
+                showToast('Failed to update announcement', 'error');
+            }
+        };
+
+        window.voteResource = async function (resourceId, value) {
+            try {
+                const ref = doc(db, 'resources', resourceId);
+                await updateDoc(ref, {
+                    votes: increment(value)
+                });
+                loadResources(); // Refresh to show new count
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        // Modal functions
+        window.showAddSemesterModal = function () {
+            document.getElementById('add-semester-modal').classList.add('show');
+        };
+
+        window.showAddCourseModal = function () {
+            populateGradeDropdowns();
+            document.getElementById('add-course-modal').classList.add('show');
+        };
+
+        // Duplicate closeModal removed from here to prevent conflicts/errors
+
+        window.switchEntryMethod = function (method) {
+            entryMethod = method;
+            document.getElementById('manual-entry').classList.toggle('hidden', method !== 'manual');
+            document.getElementById('quick-entry').classList.toggle('hidden', method !== 'quick');
+
+            // Update tab buttons
+            document.querySelectorAll('#add-semester-modal .tab-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', (i === 0 && method === 'manual') || (i === 1 && method === 'quick'));
+            });
+        };
+
+        window.selectType = function (type) {
+            selectedSemesterType = type;
+            ['current', 'pending', 'past'].forEach(t => {
+                document.getElementById(`type-${t}`).classList.toggle('active', t === type);
+            });
+        };
+
+        window.createSemester = async function () {
+            const name = document.getElementById('semester-name').value.trim();
+            if (!name) {
+                showToast('Please enter semester name', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                // FIXED: Validation - only one current semester allowed
+                if (selectedSemesterType === 'current') {
+                    console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
+                    const snapshot = await getDocs(semRef);
+                    const hasCurrent = snapshot.docs.some(doc => doc.data().type === 'current');
+
+                    if (hasCurrent) {
+                        showToast('A current semester already exists!', 'error');
+                        showLoading(false);
+                        return;
+                    }
+                }
+
+                const semRef = doc(collection(db, 'users', uid, 'semesters'));
+                await setDoc(semRef, {
+                    id: semRef.id,
+                    name,
+                    type: selectedSemesterType,
+                    courses: [],
+                    timestamp: Date.now()
+                });
+
+                showToast('Semester created!', 'success');
+                closeModal('add-semester-modal');
+                document.getElementById('semester-name').value = '';
+                loadDashboard();
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+
+            showLoading(false);
+        };
+
+        window.createQuickSemester = async function () {
+            const name = document.getElementById('quick-semester-name').value.trim();
+            const gpa = parseFloat(document.getElementById('quick-gpa').value);
+            const units = parseInt(document.getElementById('quick-units').value);
+
+            if (!name || !gpa || !units) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+
+            if (gpa < 0 || gpa > 5) {
+                showToast('GPA must be between 0 and 5', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                const semRef = doc(collection(db, 'users', uid, 'semesters'));
+                // FIXED: Quick add always creates 'past' type
+                await setDoc(semRef, {
+                    id: semRef.id,
+                    name,
+                    type: 'past',
+                    gpa,
+                    totalUnits: units,
+                    courses: [],
+                    timestamp: Date.now()
+                });
+
+                showToast('Semester created!', 'success');
+                closeModal('add-semester-modal');
+                document.getElementById('quick-semester-name').value = '';
+                document.getElementById('quick-gpa').value = '';
+                document.getElementById('quick-units').value = '';
+                loadDashboard();
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+
+            showLoading(false);
+        };
+
+        window.addCourse = async function () {
+            const name = document.getElementById('course-title').value.trim();
+            const code = document.getElementById('course-code').value.trim();
+            const unitHours = parseInt(document.getElementById('course-unit-hours').value);
+            const initialGrade = document.getElementById('course-target-grade').value;
+
+
+            if (!name || !code || !unitHours) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                // FIXED: Match Android data structure exactly with new logic
+                const newCourse = {
+                    id: `course_${Date.now()}`,
+                    name,
+                    code,
+                    unitHours,
+                    grade: initialGrade,
+                    predictedGrade: initialGrade,
+                    useCA: false, // Default to manual grade
+                    targetGrade: null, // Deprecated
+                    useCA: false, // Default to manual grade
+                    targetGrade: null, // Deprecated
+                    // difficulty removed
+                    caScores: {
+                        midSemester: 0,
+                        assignment: 0,
+                        quiz: 0,
+                        attendance: 0
+                    },
+                    schedule: null,
+                    examDate: null
+                };
+
+                currentSemester.courses = currentSemester.courses || [];
+                currentSemester.courses.push(newCourse);
+
+                // Recalculate semester GPA
+                const semesterGPA = parseFloat(calculateSemesterGPA(currentSemester.courses));
+                const totalUnits = currentSemester.courses.reduce((sum, c) => sum + (c.unitHours || 0), 0);
+
+                await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                    courses: currentSemester.courses,
+                    gpa: semesterGPA,
+                    totalUnits: totalUnits
+                });
+
+                showToast('Course added!', 'success');
+                closeModal('add-course-modal');
+                document.getElementById('course-title').value = '';
+                document.getElementById('course-code').value = '';
+                document.getElementById('course-unit-hours').value = '';
+                viewSemester(currentSemester.id);
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+
+            showLoading(false);
+        };
+
+        window.deleteSemester = async function () {
+            if (!confirm('Delete this semester and all its courses?')) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                await deleteDoc(doc(db, 'users', uid, 'semesters', currentSemester.id));
+                showToast('Semester deleted', 'success');
+                backToDashboard();
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+
+            showLoading(false);
+        };
+
+        // Navigation
+        // Navigation
+        window.switchCommunityTab = function (tab) {
+            document.getElementById('community-feed-container').classList.toggle('hidden', tab !== 'feed');
+            document.getElementById('community-messages-container').classList.toggle('hidden', tab !== 'messages');
+            document.getElementById('community-resources-container').classList.toggle('hidden', tab !== 'resources');
+
+            document.getElementById('comm-feed-tab').classList.toggle('active', tab === 'feed');
+            document.getElementById('comm-messages-tab').classList.toggle('active', tab === 'messages');
+            document.getElementById('comm-resources-tab').classList.toggle('active', tab === 'resources');
+
+            if (tab === 'messages') {
+                loadConversations();
+            } else if (tab === 'resources') {
+                loadResources();
+            }
+        };
+
+        // Load Conversations/Messages
+        window.loadConversations = async function () {
+            const messagesContent = document.getElementById('messages-content');
+            if (!messagesContent) return;
+
+            messagesContent.innerHTML = `
+                <div style="text-align: center; padding: 60px 20px;">
+                    <ion-icon name="chatbubbles-outline" style="font-size: 64px; color: #666; margin-bottom: 16px;"></ion-icon>
+                    <h3 style="color: var(--text-color); margin-bottom: 8px;">Messages Coming Soon</h3>
+                    <p style="color: #999; font-size: 14px;">Direct messaging feature is under development.</p>
+                </div>
+            `;
+        };
+
+        // (duplicate showScreen removed — see window.showScreen definition above)
+
+        window.backToDashboard = function () {
+            showScreen('dashboard');
+        };
+
+        window.backToSemester = function () {
+            viewSemester(currentSemester.id);
+        };
+
+        window.switchTab = function (tab) {
+            // Only info tab exists now, but keep function for potential future tabs or simplifiction
+            // Actually, we can just enforce 'info'
+
+            document.getElementById('course-info-tab').classList.remove('hidden');
+            // document.getElementById('course-resources-tab').classList.add('hidden'); // Element removed
+
+            document.querySelectorAll('#course-detail-screen .tab-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === 0);
+            });
+        };
+
+        window.showSettings = function () {
+            if (confirm('Logout?')) {
+                localStorage.clear();
+                location.reload();
+            }
+        };
+
+        // COMMUNITY FUNCTIONS
+        let allPosts = [];
+        let allResources = [];
+
+        window.showResourceUploadModal = function () {
+            // Reset form
+            document.getElementById('res-course-code').value = '';
+            document.getElementById('res-course-name').value = ''; // Added reset for course name
+            document.getElementById('res-level').value = '100'; // Added reset for level
+            document.getElementById('res-title').value = '';
+            document.getElementById('res-desc').value = '';
+            document.getElementById('res-link').value = '';
+            document.getElementById('res-image-file').value = '';
+            document.getElementById('res-file-input').value = '';
+            document.getElementById('res-image-preview').style.display = 'none';
+            document.getElementById('res-file-info').textContent = '';
+
+            // Reset resource type to link
+            selectedResourceType = 'link';
+            resourceImageData = null;
+            resourceFileData = null;
+            resourceFileName = null;
+            setResourceType('link');
+
+            document.getElementById('resource-upload-modal').classList.add('show');
+        };
+
+        window.loadResources = async function () {
+            showLoading(true);
+            try {
+                // Fetch Resources
+                const resQ = query(collection(db, 'resources'), orderBy('timestamp', 'desc'));
+                const folderQ = query(collection(db, 'folders'));
+
+                const [resSnap, folderSnap] = await Promise.all([getDocs(resQ), getDocs(folderQ)]);
+
+                allResources = [];
+                resSnap.forEach(doc => {
+                    allResources.push({ id: doc.id, ...doc.data() });
+                });
+
+                const allFolders = [];
+                folderSnap.forEach(doc => {
+                    allFolders.push({ id: doc.id, ...doc.data() });
+                });
+                window.allFoldersCache = allFolders;
+
+                renderResources(allResources);
+
+                // One-time migration trigger
+                if (window.migrateGST) window.migrateGST();
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        };
+
+        // State for resource navigation
+        window.currentCourseView = window.currentCourseView || null;
+        window.allResourcesCache = window.allResourcesCache || [];
+
+        // PDF Thumbnail Generator
+        window.renderPdfThumbnail = async function (url, canvasId) {
+            try {
+                if (!url) return;
+
+                // Optimize loading: Don't fetch the whole file, just what we need
+                const loadingTask = pdfjsLib.getDocument({
+                    url: url,
+                    disableAutoFetch: true,
+                    disableStream: true
+                });
+
+                const pdf = await loadingTask.promise;
+                const page = await pdf.getPage(1);
+
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return;
+
+                const viewport = page.getViewport({ scale: 0.6 });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                const renderContext = {
+                    canvasContext: canvas.getContext('2d'),
+                    viewport: viewport
+                };
+                await page.render(renderContext).promise;
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        window.handleFabClick = function () {
+            if (window.currentCourseView) {
+                showResourceUploadModal();
+            } else {
+                document.getElementById('create-folder-modal').classList.add('show');
+            }
+        };
+
+        window.createFolder = async function () {
+            const code = document.getElementById('folder-course-code').value.trim().toUpperCase();
+            const name = document.getElementById('folder-course-name').value.trim();
+            const level = document.getElementById('folder-level').value;
+
+            if (!code) return showToast('Enter course code', 'error');
+
+            showLoading(true);
+            try {
+                await addDoc(collection(db, 'folders'), {
+                    courseCode: code,
+                    courseName: name,
+                    level: level,
+                    createdAt: Date.now()
+                });
+
+                // Navigate to new empty folder
+                const key = `${code}#${level}`;
+                window.currentCourseView = key;
+
+                loadResources();
+                closeModal('create-folder-modal');
+
+                // Reset form
+                document.getElementById('folder-course-code').value = '';
+                document.getElementById('folder-course-name').value = '';
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        };
+
+        window.openEditFolderModal = function (code, level, name) {
+            document.getElementById('edit-folder-original-code').value = code;
+            document.getElementById('edit-folder-original-level').value = level;
+            document.getElementById('edit-folder-code').value = code;
+            document.getElementById('edit-folder-level').value = level;
+            document.getElementById('edit-folder-name').value = name || '';
+
+            document.getElementById('edit-folder-modal').classList.add('show');
+        };
+
+        window.deleteCurrentFolder = async function () {
+            // ... (keep existing implementation) ...
+            const code = document.getElementById('edit-folder-original-code').value;
+            const level = document.getElementById('edit-folder-original-level').value;
+
+            if (!confirm(`Are you sure you want to delete folder ${code}? This will delete ALL resources inside it.`)) return;
+
+            const currentUserEmail = localStorage.getItem('kobi_atlas_email');
+            if (!isOwner({ email: currentUserEmail })) {
+                showToast('Only admins can delete folders', 'error');
+                return;
+            }
+
+            showLoading(true);
+            try {
+                const batch = writeBatch(db);
+
+                // 1. Delete Folder Doc
+                // 1. Delete Folder Doc
+                const folderQ = query(collection(db, 'folders'), where('courseCode', '==', code));
+                const folderSnap = await getDocs(folderQ);
+                folderSnap.forEach(doc => {
+                    if (String(doc.data().level) === String(level)) batch.delete(doc.ref);
+                });
+
+                // 2. Delete Resources
+                const resQ = query(collection(db, 'resources'), where('courseCode', '==', code));
+                const resSnap = await getDocs(resQ);
+                resSnap.forEach(doc => {
+                    if (String(doc.data().level) === String(level)) batch.delete(doc.ref);
+                });
+
+                await batch.commit();
+
+                showToast('Folder deleted', 'success');
+                closeModal('edit-folder-modal');
+                window.currentCourseView = null; // Go back to grid
+                window.currentSubFolder = null; // Reset subfolder state
+
+                // Reload
+                setTimeout(() => {
+                    if (window.loadResources) window.loadResources();
+                }, 1000);
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        };
+
+        window.migrateGST = async function () {
+            console.log("Starting Migration...");
+            const batch = writeBatch(db);
+            let count = 0;
+
+            try {
+                // 1. Move Resources from BU-GST105 to BU-GST1052
+                const resQ = query(collection(db, 'resources'), where('courseCode', '==', 'BU-GST105'));
+                const resSnap = await getDocs(resQ);
+                resSnap.forEach(doc => {
+                    batch.update(doc.ref, { courseCode: 'BU-GST1052' });
+                    count++;
+                });
+
+                // 2. Move Folder(s)
+                const folQ = query(collection(db, 'folders'), where('courseCode', '==', 'BU-GST105'));
+                const folSnap = await getDocs(folQ);
+                folSnap.forEach(doc => {
+                    batch.update(doc.ref, { courseCode: 'BU-GST1052' });
+                    count++;
+                });
+
+                if (count > 0) {
+                    await batch.commit();
+                    console.log(`Migrated ${count} documents.`);
+                    showToast(`Migrated ${count} items to BU-GST1052`, 'success');
+                } else {
+                    console.log("No documents found to migrate.");
+                    showToast('Nothing to migrate', 'info');
+                }
+                return "DONE " + count;
+            } catch (e) {
+                console.error(e);
+                return "ERROR " + e.message;
+            }
+        };
+
+        window.batchUpdateFolder = async function () {
+            const oldCode = document.getElementById('edit-folder-original-code').value;
+            const oldLevel = document.getElementById('edit-folder-original-level').value;
+
+            const newCode = document.getElementById('edit-folder-code').value.trim().toUpperCase();
+            const newName = document.getElementById('edit-folder-name').value.trim();
+            const newLevel = document.getElementById('edit-folder-level').value;
+
+            if (!newCode) return showToast('Code is required', 'error');
+
+            const currentUserEmail = localStorage.getItem('kobi_atlas_email');
+            if (!isOwner({ email: currentUserEmail })) {
+                showToast('Only admins can update folders', 'error');
+                return;
+            }
+
+            showLoading(true);
+            try {
+                const batch = writeBatch(db);
+
+                // 1. Update Persistent Folders
+                // 1. Update Persistent Folders
+                const folderQ = query(collection(db, 'folders'), where('courseCode', '==', oldCode));
+                const folderSnap = await getDocs(folderQ);
+                folderSnap.forEach(doc => {
+                    if (String(doc.data().level) === String(oldLevel)) {
+                        batch.update(doc.ref, {
+                            courseCode: newCode,
+                            courseName: newName,
+                            level: newLevel
+                        });
+                    }
+                });
+
+                // 2. Update Resources
+                const resQ = query(collection(db, 'resources'), where('courseCode', '==', oldCode));
+                const resSnap = await getDocs(resQ);
+                resSnap.forEach(docSnap => {
+                    if (String(docSnap.data().level) === String(oldLevel)) {
+                        batch.update(docSnap.ref, {
+                            courseCode: newCode,
+                            courseName: newName,
+                            level: newLevel
+                        });
+                    }
+                });
+
+                await batch.commit();
+                showToast('Folder updated successfully', 'success');
+                closeModal('edit-folder-modal');
+
+                // Refresh - reset subfolder state and navigate to updated folder
+                window.currentSubFolder = null; // Reset subfolder
+                window.currentCourseView = `${newCode}#${newLevel}`;
+                // Reload resources to reflect changes (with delay for propagation)
+                setTimeout(() => {
+                    if (window.loadResources) window.loadResources();
+                }, 1000);
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+            showLoading(false);
+        };
+
+        // Selection State for Transfer Feature
+        window.isSelectionMode = false;
+        window.currentSubFolder = null; // Notes, Past Questions, Miscellaneous
+        window.currentInstitution = null; // Selected institution
+        window.currentCategoryFilter = 'All';
+        window.selectedResourceIds = new Set();
+        window.visibleResourceIds = [];
+
+        window.toggleSelectionMode = function () {
+            window.isSelectionMode = !window.isSelectionMode;
+            window.selectedResourceIds.clear();
+            window.renderResources();
+        };
+
+        window.toggleSelectResource = function (id) {
+            if (window.selectedResourceIds.has(id)) {
+                window.selectedResourceIds.delete(id);
+            } else {
+                window.selectedResourceIds.add(id);
+            }
+            window.renderResources(); // Re-render to update UI state
+        };
+
+        window.selectAllResources = function () {
+            const allIds = window.visibleResourceIds || [];
+            if (window.selectedResourceIds.size === allIds.length && allIds.length > 0) {
+                window.selectedResourceIds.clear();
+            } else {
+                allIds.forEach(id => window.selectedResourceIds.add(id));
+            }
+            window.renderResources();
+        };
+
+        window.openTransferModal = function () {
+            if (window.selectedResourceIds.size === 0) return showToast('No items selected', 'error');
+
+            const select = document.getElementById('transfer-dest-select');
+            if (select) {
+                select.innerHTML = '';
+                const folders = window.allFoldersCache || [];
+                // Sort
+                folders.sort((a, b) => (a.courseCode < b.courseCode ? -1 : 1));
+
+                folders.forEach(f => {
+                    const key = `${f.courseCode}#${f.level}`;
+                    if (key !== window.currentCourseView) {
+                        const opt = document.createElement('option');
+                        opt.value = key;
+                        opt.textContent = `${f.courseCode} (${f.level}) - ${f.courseName || ''}`;
+                        select.appendChild(opt);
+                    }
+                });
+            }
+
+            document.getElementById('transfer-modal').classList.add('show');
+        };
+
+        window.executeTransfer = async function (mode) {
+            const destKey = document.getElementById('transfer-dest-select').value;
+            if (!destKey) return showToast('Select a destination', 'error');
+            const [destCode, destLevel] = destKey.split('#');
+
+            showLoading(true);
+            try {
+                const batch = writeBatch(db);
+                const ids = Array.from(window.selectedResourceIds);
+                const resourcesToTransfer = window.allResourcesCache.filter(r => ids.includes(r.id));
+
+                resourcesToTransfer.forEach(res => {
+                    const ref = doc(db, 'resources', res.id);
+                    if (mode === 'move') {
+                        batch.update(ref, {
+                            courseCode: destCode,
+                            level: destLevel
+                        });
+                    } else {
+                        // Copy
+                        const newRef = doc(collection(db, 'resources'));
+                        const data = { ...res };
+                        delete data.id;
+                        data.courseCode = destCode;
+                        data.level = destLevel;
+                        data.timestamp = Date.now();
+                        batch.set(newRef, data);
+                    }
+                });
+
+                await batch.commit();
+
+                showToast(`Successfully ${mode === 'move' ? 'moved' : 'copied'} items`, 'success');
+                closeModal('transfer-modal');
+                window.toggleSelectionMode(); // off
+
+                // Reload
+                setTimeout(() => { if (window.loadResources) window.loadResources(); }, 1000);
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        };
+
+        // Filter Institution View
+        window.filterInstitutionView = function (selectedInst) {
+            const allInstitutionCards = document.querySelectorAll('#institution-list-container > div');
+
+            allInstitutionCards.forEach(card => {
+                if (!selectedInst || selectedInst === '') {
+                    // Show all
+                    card.style.display = 'flex';
+                } else {
+                    // Check if this card matches the selected institution
+                    const instName = card.querySelector('div > div:first-child').textContent;
+                    if (instName === selectedInst) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+        };
+
+        window.filterResourceCategory = function (category) {
+            window.currentCategoryFilter = category;
+
+            // Update button styles
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.style.background = 'var(--card-bg)';
+                btn.style.color = 'var(--text-color)';
+                btn.classList.remove('active');
+            });
+
+            event.target.style.background = 'var(--primary-color)';
+            event.target.style.color = 'white';
+            event.target.classList.add('active');
+
+            // Filter resources
+            if (category === 'All') {
+                renderResources(window.allResourcesCache || []);
+            } else {
+                const filtered = (window.allResourcesCache || []).filter(r => (r.category || 'Miscellaneous') === category);
+                renderResources(filtered);
+            }
+        };
+
+        // Institution Management
+        window.institutionsCache = [];
+
+        window.loadInstitutions = async function () {
+            try {
+                const institutionsRef = collection(db, 'institutions');
+                const snapshot = await getDocs(institutionsRef);
+                const institutions = [];
+                snapshot.forEach(doc => {
+                    institutions.push(doc.data().name);
+                });
+
+                // Ensure Babcock University is always included
+                if (!institutions.includes('Babcock University')) {
+                    institutions.unshift('Babcock University');
+                    // Save it to Firestore
+                    await addDoc(collection(db, 'institutions'), { name: 'Babcock University', createdAt: Date.now() });
+                }
+
+                window.institutionsCache = institutions.sort();
+                populateInstitutionDropdown();
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        function populateInstitutionDropdown() {
+            const select = document.getElementById('res-institution');
+            if (!select) return;
+
+            select.innerHTML = window.institutionsCache.map(inst =>
+                `<option value="${inst}">${inst}</option>`
+            ).join('') + '<option value="__ADD_NEW__">+ Add New Institution</option>';
+        }
+
+        window.handleInstitutionChange = function (value) {
+            const customInput = document.getElementById('res-institution-custom');
+            if (value === '__ADD_NEW__') {
+                customInput.style.display = 'block';
+                customInput.focus();
+            } else {
+                customInput.style.display = 'none';
+                customInput.value = '';
+            }
+        };
+
+        window.addNewInstitution = async function (institutionName) {
+            if (!institutionName || institutionName.trim() === '') return null;
+
+            const trimmed = institutionName.trim();
+
+            // Check if already exists
+            if (window.institutionsCache.includes(trimmed)) {
+                return trimmed;
+            }
+
+            try {
+                // Add to Firestore
+                await addDoc(collection(db, 'institutions'), {
+                    name: trimmed,
+                    createdAt: Date.now()
+                });
+
+                // Add to cache and refresh dropdown
+                window.institutionsCache.push(trimmed);
+                window.institutionsCache.sort();
+                populateInstitutionDropdown();
+
+                return trimmed;
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        // Export Resources Backup
+        window.exportResourcesBackup = async function () {
+            showLoading(true);
+            try {
+                // Fetch all resources
+                const resourcesRef = collection(db, 'resources');
+                const resourcesSnap = await getDocs(resourcesRef);
+                const resources = [];
+                resourcesSnap.forEach(doc => {
+                    resources.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Fetch all folders
+                const foldersRef = collection(db, 'folders');
+                const foldersSnap = await getDocs(foldersRef);
+                const folders = [];
+                foldersSnap.forEach(doc => {
+                    folders.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Fetch all institutions
+                const institutionsRef = collection(db, 'institutions');
+                const institutionsSnap = await getDocs(institutionsRef);
+                const institutions = [];
+                institutionsSnap.forEach(doc => {
+                    institutions.push(doc.data());
+                });
+
+                // Create backup object
+                const backup = {
+                    exportDate: new Date().toISOString(),
+                    version: '1.0',
+                    totalResources: resources.length,
+                    totalFolders: folders.length,
+                    totalInstitutions: institutions.length,
+                    resources: resources,
+                    folders: folders,
+                    institutions: institutions
+                };
+
+                // Convert to JSON and download
+                const jsonString = JSON.stringify(backup, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = url;
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+                a.download = `kobi-atlas-resources-backup-${timestamp}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showToast(`Backup exported: ${resources.length} resources, ${folders.length} folders`, 'success');
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        };
+
+        // Load Resources from Firestore
+        window.loadResources = async function () {
+            showLoading(true);
+            try {
+                // Fetch resources
+                const resourcesRef = collection(db, 'resources');
+                const resourcesSnap = await getDocs(resourcesRef);
+                const resources = [];
+                resourcesSnap.forEach(doc => {
+                    resources.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Fetch folders
+                const foldersRef = collection(db, 'folders');
+                const foldersSnap = await getDocs(foldersRef);
+                const folders = [];
+                foldersSnap.forEach(doc => {
+                    folders.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Store globally
+                window.allResourcesCache = resources;
+                window.allFoldersCache = folders;
+
+                // Render
+                renderResources(resources);
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        };
+
+        window.renderResources = function (resources) {
+            // Robust caching
+            if (typeof resources !== 'undefined') {
+                window.allResourcesCache = resources;
+            } else {
+                resources = window.allResourcesCache || [];
+            }
+
+            const folders = window.allFoldersCache || [];
+            const container = document.getElementById('resources-list');
+            const currentUid = localStorage.getItem('kobi_atlas_uid');
+            const currentUserEmail = localStorage.getItem('kobi_atlas_email');
+            const isOwner = currentUserEmail === 'kobioguadinma@gmail.com';
+            const isSelectMode = window.isSelectionMode;
+
+            // Toggle FAB visibility
+            const fab = document.querySelector('#community-resources-container .fab');
+            if (fab) fab.style.display = (isOwner && !isSelectMode) ? 'flex' : 'none';
+
+            if ((!resources || resources.length === 0) && (!folders || folders.length === 0) && !window.currentCourseView) {
+                container.innerHTML = '<div class="empty-container"><p class="empty-text">No resources found. Tap + to create a folder!</p></div>';
+                return;
+            }
+
+            // Group by course code AND level
+            const grouped = {};
+            resources.forEach(res => {
+                const level = res.level || 'Other';
+                const courseCode = res.courseCode || 'UNCATEGORIZED';
+                const key = `${courseCode}#${level}`;
+
+                if (!grouped[key]) grouped[key] = [];
+                grouped[key].push(res);
+            });
+
+            // VIEW: COURSE DETAILS (List of resources for specific course folder)
+            if (window.currentCourseView) {
+                const key = window.currentCourseView;
+                const [courseCode, level] = key.split('#');
+                const courseResources = grouped[key] || [];
+
+                const filteredResources = window.currentInstitution
+                    ? courseResources.filter(r =>
+                        (r.category || 'Miscellaneous') === window.currentSubFolder &&
+                        (r.institution || 'Babcock University') === window.currentInstitution
+                    )
+                    : window.currentSubFolder
+                        ? courseResources.filter(r => (r.category || 'Miscellaneous') === window.currentSubFolder)
+                        : courseResources;
+
+                window.visibleResourceIds = filteredResources.map(r => r.id);
+
+                // Get course name from persistent folder OR resources
+                const folderDoc = folders.find(f => f.courseCode === courseCode && f.level === level);
+                const courseName = folderDoc ? folderDoc.courseName : (courseResources[0] ? courseResources[0].courseName : '');
+                const safeName = (courseName || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+                // BACK NAVIGATION Logic
+                const handleBack = window.currentInstitution
+                    ? "window.currentInstitution = null; window.renderResources();"
+                    : window.currentSubFolder
+                        ? "window.currentSubFolder = null; window.renderResources();"
+                        : "window.currentCourseView = null; window.isSelectionMode=false; window.renderResources();";
+
+                // Header Controls
+                let controlsHtml = '';
+                // Only show controls if inside an institution view (deepest level)
+                if (window.currentInstitution && isOwner) {
+                    if (isSelectMode) {
+                        controlsHtml = `
+                        <div style="display:flex; align-items:center; gap: 8px; margin-left: auto;">
+                            <span style="font-size:12px; color:#aaa; margin-right:4px;">${window.selectedResourceIds.size} selected</span>
+                            <button onclick="selectAllResources()" style="background:#444; color:white; border:none; border-radius:4px; padding:4px 8px; cursor:pointer;">All</button>
+                            <button onclick="openTransferModal()" style="background:var(--primary-color); color:white; border:none; border-radius:4px; padding:4px 8px; cursor:pointer;">Transfer</button>
+                            <button onclick="toggleSelectionMode()" style="background:#d33; color:white; border:none; border-radius:4px; padding:4px 8px; cursor:pointer;">Cancel</button>
+                        </div>`;
+                    } else {
+                        controlsHtml = `
+                        <button onclick="toggleSelectionMode()" style="background:none; border:none; cursor:pointer; color:var(--primary-color); font-size:14px; margin-left:auto; display:flex; align-items:center;">
+                            <ion-icon name="checkbox-outline" style="font-size:18px; margin-right:4px;"></ion-icon> Transfer
+                        </button>`;
+                    }
+                }
+
+                const headerHtml = `
+                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                        <button onclick="${handleBack}" style="background: none; border: none; cursor: pointer; display: flex; align-items: center; color: var(--text-color); font-size: 16px; padding: 0;">
+                            <ion-icon name="arrow-back" style="font-size: 24px; margin-right: 8px;"></ion-icon>
+                            Back
+                        </button>
+                        <div style="margin-left: 16px;">
+                             <h2 style="margin: 0; font-size: 20px; display: flex; align-items: center;">
+                                ${courseCode} ${!window.currentSubFolder && !window.currentInstitution ? (isOwner ? `<ion-icon name="create-outline" onclick="openEditFolderModal('${courseCode}', '${level}', '${safeName}')" style="font-size: 18px; margin-left: 10px; cursor: pointer; color: #667eea; vertical-align: middle;"></ion-icon>` : '') : ''}
+                             </h2>
+                             <div style="font-size: 14px; color: #ccc; margin-top:2px;">${window.currentInstitution ? window.currentInstitution : (window.currentSubFolder ? window.currentSubFolder : courseName)}</div>
+                             ${window.currentInstitution ? `<div style="font-size:12px; color:#888;">${window.currentSubFolder} • ${courseCode} • ${level} Level</div>` : (window.currentSubFolder ? `<div style="font-size:12px; color:#888;">${courseCode} • ${level} Level</div>` : `<div style="font-size: 12px; color: #888;">${level} Level</div>`)}
+                        </div>
+                        ${controlsHtml}
+                    </div>
+                `;
+
+                // Sub-folder View vs Institution View vs Resource View
+                if (!window.currentSubFolder) {
+                    // TIER 2: RENDER 3 SUB-FOLDERS (Notes, Past Questions, Miscellaneous)
+                    const subFolders = ['Notes', 'Past Questions', 'Miscellaneous'];
+                    const folderIcons = { 'Notes': 'document-text', 'Past Questions': 'help-circle', 'Miscellaneous': 'folder-open' };
+
+                    const subFolderHtml = subFolders.map(cat => {
+                        const count = courseResources.filter(r => (r.category || 'Miscellaneous') === cat).length;
+                        return `
+                        <div onclick="window.currentSubFolder = '${cat}'; window.renderResources();" 
+                             style="background: #2a2a2a; border-radius: 12px; padding: 16px; cursor: pointer; display: flex; align-items: center; border: 1px solid #333; transition: transform 0.2s;"
+                             onmouseover="this.style.borderColor='var(--primary-color)'"
+                             onmouseout="this.style.borderColor='#333'">
+                            <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(var(--primary-rgb), 0.15); display: flex; align-items: center; justify-content: center; margin-right: 16px;">
+                                <ion-icon name="${folderIcons[cat]}" style="font-size: 24px; color: var(--primary-color);"></ion-icon>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: bold; font-size: 16px; color: white;">${cat}</div>
+                                <div style="font-size: 12px; color: #999;">${count} resources</div>
+                            </div>
+                            <ion-icon name="chevron-forward" style="color: #666;"></ion-icon>
+                        </div>
+                        `;
+                    }).join('');
+
+                    container.innerHTML = headerHtml + `<div style="display: flex; flex-direction: column; gap: 12px;">${subFolderHtml}</div>`;
+                    return;
+                } else if (!window.currentInstitution) {
+                    // TIER 3: RENDER INSTITUTIONS for selected category
+                    const categoryResources = courseResources.filter(r => (r.category || 'Miscellaneous') === window.currentSubFolder);
+
+                    // Group by institution
+                    const institutionGroups = {};
+                    categoryResources.forEach(r => {
+                        const inst = r.institution || 'Babcock University';
+                        if (!institutionGroups[inst]) institutionGroups[inst] = [];
+                        institutionGroups[inst].push(r);
+                    });
+
+                    const institutions = Object.keys(institutionGroups).sort();
+
+                    if (institutions.length === 0) {
+                        container.innerHTML = headerHtml + `<div style="text-align: center; padding: 40px; color: #999;"><p>No resources in this category yet.</p></div>`;
+                        return;
+                    }
+
+                    // Institution Filter Dropdown
+                    const filterHtml = `
+                        <div style="margin-bottom: 16px; padding: 0 4px;">
+                            <label style="display: block; font-size: 12px; color: #999; margin-bottom: 6px;">Filter by Institution:</label>
+                            <select id="institution-filter-select" onchange="filterInstitutionView(this.value)" 
+                                style="width: 100%; padding: 10px; background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 8px; font-size: 14px;">
+                                <option value="">All Institutions (${institutions.length})</option>
+                                ${institutions.map(inst => `<option value="${inst}">${inst} (${institutionGroups[inst].length})</option>`).join('')}
+                            </select>
+                        </div>
+                    `;
+
+                    const institutionHtml = institutions.map(inst => {
+                        const count = institutionGroups[inst].length;
+                        const safeInst = inst.replace(/'/g, "\\'");
+                        return `
+                        <div onclick="window.currentInstitution = '${safeInst}'; window.renderResources();" 
+                             style="background: #2a2a2a; border-radius: 12px; padding: 16px; cursor: pointer; display: flex; align-items: center; border: 1px solid #333; transition: transform 0.2s;"
+                             onmouseover="this.style.borderColor='var(--primary-color)'"
+                             onmouseout="this.style.borderColor='#333'">
+                            <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(var(--primary-rgb), 0.15); display: flex; align-items: center; justify-content: center; margin-right: 16px;">
+                                <ion-icon name="school" style="font-size: 24px; color: var(--primary-color);"></ion-icon>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: bold; font-size: 16px; color: white;">${inst}</div>
+                                <div style="font-size: 12px; color: #999;">${count} resources</div>
+                            </div>
+                            <ion-icon name="chevron-forward" style="color: #666;"></ion-icon>
+                        </div>
+                        `;
+                    }).join('');
+
+                    container.innerHTML = headerHtml + filterHtml + `<div style="display: flex; flex-direction: column; gap: 12px;" id="institution-list-container">${institutionHtml}</div>`;
+                    return;
+                }
+
+                // TIER 4: RESOURCE LIST VIEW (Filtered by category AND institution)
+                const pdfsToRender = [];
+                const courseResourcesList = filteredResources; // Using our filtered list
+
+                const resourcesHtml = courseResourcesList.map(res => {
+                    const isOwnerResource = res.uploadedBy === currentUid;
+
+                    // UPDATED LOGIC START: Robust variable resolution
+                    let link = res.link || res.fileUrl || res.fileData;
+                    let displayTitle = res.title || res.fileName || 'Untitled Resource';
+                    let fileName = res.fileName || displayTitle;
+                    let type = res.type || 'link';
+
+                    let previewBlock = '';
+                    let clickAction = '';
+
+                    const safeLink = (link || '').replace(/'/g, "\\'");
+                    const safeName = (fileName || 'Document').replace(/'/g, "\\'");
+                    const safeTitle = displayTitle.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+
+                    // Type Detection & Display
+                    if (type === 'image' || (link && /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(link))) {
+                        // Image
+                        previewBlock = `<img src="${link}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;">`;
+                        clickAction = `event.stopPropagation(); window.openLightbox('${safeLink}')`;
+                    } else if (type === 'file' || res.fileUrl) {
+                        // File
+                        const isPdf = fileName.toLowerCase().endsWith('.pdf');
+                        if (isPdf && link) {
+                            if (res.thumbnail) {
+                                // FAST PATH: Use pre-generated thumbnail
+                                previewBlock = `<img src="${res.thumbnail}" style="width: 100%; height: 100%; object-fit: contain; background: #fff;">`;
+                            } else {
+                                // SLOW PATH: Render using PDF.js
+                                const canvasId = `pdf-${res.id}`;
+                                pdfsToRender.push({ url: link, id: canvasId });
+                                previewBlock = `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;"><canvas id="${canvasId}" style="width:100%;height:100%;object-fit:contain;"></canvas></div>`;
+                            }
+                        } else {
+                            // Dynamic Icon for File Type
+                            const ext = fileName.split('.').pop().toLowerCase();
+                            let iconColor = 'var(--primary-color)';
+                            let iconName = 'document-text';
+
+                            if (['doc', 'docx'].includes(ext)) {
+                                iconColor = '#4285F4'; // Word Blue
+                            } else if (['xls', 'xlsx', 'csv'].includes(ext)) {
+                                iconColor = '#0F9D58'; // Excel Green
+                            } else if (['ppt', 'pptx'].includes(ext)) {
+                                iconColor = '#F4B400'; // PPT Orange
+                            }
+
+                            previewBlock = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: ${iconColor};">
+                                <ion-icon name="${iconName}" style="font-size: 48px; margin-bottom: 8px;"></ion-icon>
+                                <span style="font-size: 10px; opacity: 0.8; text-transform: uppercase;">${ext || 'FILE'}</span>
+                              </div>`;
+                        }
+                        clickAction = `event.stopPropagation(); window.previewResource('${safeLink}', '${safeName}', 'file')`;
+                    } else {
+                        // Link
+                        previewBlock = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #4fd1c5;">
+                            <ion-icon name="link" style="font-size: 48px; margin-bottom: 8px;"></ion-icon>
+                            <span style="font-size: 10px; opacity: 0.8;">LINK</span>
+                        </div>`;
+                        clickAction = `event.stopPropagation(); window.open('${safeLink}', '_blank')`;
+                    }
+                    // UPDATED LOGIC END
+
+                    // Selection Overlay
+                    let overlayHtml = '';
+                    if (isSelectMode) {
+                        const isSelected = window.selectedResourceIds.has(res.id);
+                        overlayHtml = `
+                        <div onclick="event.stopPropagation(); window.toggleSelectResource('${res.id}')"
+                    style="position:absolute; inset:0; z-index:20; cursor:pointer; background: ${isSelected ? 'rgba(var(--primary-rgb), 0.2)' : 'transparent'}; transition: background 0.2s;">
+                        <div style="position:absolute; top:8px; right:8px; width:24px; height:24px; border-radius:50%; background:${isSelected ? 'var(--primary-color)' : 'rgba(0,0,0,0.5)'}; border:2px solid white; display:flex; align-items:center; justify-content:center;">
+                            ${isSelected ? '<ion-icon name="checkmark" style="color:white;"></ion-icon>' : ''}
+                        </div>
+                        </div>`;
+                        clickAction = ''; // disable default click action in select mode
+                    }
+
+                    return `
+                        <div class="resource-card"
+                    style="background: #2a2a2a; border-radius: 12px; overflow: hidden; position: relative; border: ${isSelectMode && window.selectedResourceIds.has(res.id) ? '2px solid var(--primary-color)' : '1px solid #333'}; transition: all 0.2s ease; aspect-ratio: 0.75; display: flex; flex-direction: column;"
+                        >
+                        ${overlayHtml}
+                        <!-- Preview Area -->
+                        <div onclick="${!isSelectMode ? clickAction : ''}" style="flex: 1; overflow: hidden; background: #222; cursor: ${!isSelectMode ? 'pointer' : 'default'}; position: relative; display: flex; align-items: center; justify-content: center;">
+                            ${previewBlock}
+                        </div>
+
+                        <!--Footer Info-->
+                        <div style="padding: 12px; background: #2a2a2a; position: relative; z-index: 2;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                                <h3 style="margin: 0; font-size: 13px; line-height: 1.35; max-height: 5.4em; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; flex: 1; padding-right: 8px; color: #fff;" title="${safeTitle}">
+                                    ${displayTitle}
+                                </h3>
+                                ${isOwnerResource && !isSelectMode ?
+                            `<button onclick="event.stopPropagation(); deleteResource('${res.id}', '${res.uploadedBy}')" style="background: none; border: none; cursor: pointer; color: #dc3545; padding: 0; display: flex;"><ion-icon name="trash-outline"></ion-icon></button>`
+                            : ''}
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                <div style="font-size: 11px; color: #888;">
+                                    ${res.uploadedByName ? res.uploadedByName.split(' ')[0] : 'User'} <br>
+                                        ${new Date(res.timestamp).toLocaleDateString()}
+                                </div>
+
+                                <div style="display: flex; align-items: center; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 2px 6px;">
+                                    <ion-icon name="caret-up-outline" onclick="event.stopPropagation(); voteResource('${res.id}', 1)" style="font-size: 16px; cursor: pointer; color: var(--primary-color);"></ion-icon>
+                                    <span style="font-size: 12px; font-weight: bold; margin: 0 4px; min-width: 14px; text-align: center;">${res.votes || 0}</span>
+                                    <ion-icon name="caret-down-outline" onclick="event.stopPropagation(); voteResource('${res.id}', -1)" style="font-size: 16px; cursor: pointer; color: #888;"></ion-icon>
+                                </div>
+                            </div>
+                        </div>
+                    </div> `;
+                }).join('');
+
+                container.innerHTML = headerHtml + `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; padding-bottom: 24px;">
+                        ${resourcesHtml.length ? resourcesHtml : '<p style="grid-column: 1/-1; text-align: center; color: #999; padding: 20px;">No resources yet. Click + to add one.</p>'}
+                    </div>`;
+
+                // Add slide-in animation class
+                container.style.animation = 'fadeIn 0.3s ease-out';
+
+                // Render PDFs
+                if (pdfsToRender.length > 0) {
+                    setTimeout(() => {
+                        pdfsToRender.forEach(p => window.renderPdfThumbnail(p.url, p.id));
+                    }, 50);
+                }
+                return;
+            }
+
+            // VIEW: FOLDER GRID - Grouped by Level
+            const folderKeys = new Set();
+            // Add keys from Persistent Folders
+            folders.forEach(f => {
+                if (f.courseCode) folderKeys.add(`${f.courseCode}#${f.level}`)
+            });
+            // Add keys from Resources
+            Object.keys(grouped).forEach(k => folderKeys.add(k));
+
+            // Group folders by level
+            const foldersByLevel = {};
+            Array.from(folderKeys).forEach(key => {
+                const [code, level] = key.split('#');
+                if (!foldersByLevel[level]) foldersByLevel[level] = [];
+                foldersByLevel[level].push(key);
+            });
+
+            // Sort levels (100, 200, 300, etc.)
+            const sortedLevels = Object.keys(foldersByLevel).sort((a, b) => {
+                // Handle numeric levels
+                const numA = parseInt(a);
+                const numB = parseInt(b);
+                if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+                // Put "Other" at the end
+                if (a === 'Other') return 1;
+                if (b === 'Other') return -1;
+                return a.localeCompare(b);
+            });
+
+            let gridHtml = '';
+            sortedLevels.forEach(level => {
+                const levelFolders = foldersByLevel[level].sort();
+
+                // Level Header
+                gridHtml += `
+                    <div style="margin-top: 24px; margin-bottom: 12px;">
+                        <h3 style="font-size: 18px; font-weight: 600; color: var(--primary-color); margin: 0; padding-bottom: 8px; border-bottom: 2px solid var(--primary-color); display: inline-block;">
+                            ${level} Level
+                        </h3>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; padding: 8px 0; margin-bottom: 16px;">
+                `;
+
+                // Folder Cards for this level
+                levelFolders.forEach(key => {
+                    const [code, lvl] = key.split('#');
+                    const group = grouped[key] || [];
+                    const count = group.length;
+
+                    // Name resolution
+                    const folderDoc = folders.find(f => `${f.courseCode}#${f.level}` === key);
+                    const name = folderDoc ? folderDoc.courseName : (group[0]?.courseName || '');
+                    const safeKey = key.replace(/'/g, "\\'");
+
+                    gridHtml += `
+                        <div onclick="window.currentCourseView = '${safeKey}'; window.renderResources();" 
+                             style="background: #2a2a2a; border-radius: 12px; padding: 16px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-between: center; min-height: 190px; border: 1px solid #333; transition: transform 0.2s, background 0.2s;"
+                             onmouseover="this.style.transform='scale(1.03)'; this.style.borderColor='var(--primary-color)'"
+                             onmouseout="this.style.transform='scale(1)'; this.style.borderColor='#333'">
+                            <ion-icon name="folder" style="font-size: 48px; color: var(--primary-color); margin-bottom: 8px; flex-shrink: 0;"></ion-icon>
+                            <div style="font-weight: bold; font-size: 16px; text-align: center; color: white;">${code}</div>
+                            <div style="font-size: 13px; color: #ccc; margin-top: 6px; text-align: center; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.35; width: 100%; white-space: normal;">${name}</div>
+                            <div style="font-size: 12px; color: #666; margin-top: auto; padding-top: 10px;">${lvl} Level</div>
+                            <div style="font-size: 11px; color: #555; margin-top: 2px;">${count} item${count !== 1 ? 's' : ''}</div>
+                        </div>
+                    `;
+                });
+
+                gridHtml += `</div>`;
+            });
+
+            container.innerHTML = gridHtml;
+        };
+
+        window.filterResources = function (queryText) {
+            if (!queryText) {
+                renderResources(allResources);
+                return;
+            }
+            const lower = queryText.toLowerCase();
+            const filtered = allResources.filter(r =>
+                r.title.toLowerCase().includes(lower) ||
+                r.courseCode.toLowerCase().includes(lower) ||
+                (r.description && r.description.toLowerCase().includes(lower))
+            );
+            renderResources(filtered);
+        };
+
+        // Resource Management Variables
+        let selectedResourceType = 'link';
+        let resourceImageData = null;
+        let resourceFileData = null;
+        let resourceFileName = null;
+        let resourceFileObject = null; // Store actual File object for Cloudinary
+
+        window.setResourceType = function (type) {
+            selectedResourceType = type;
+
+            // Update button styles
+            document.getElementById('res-type-link').classList.toggle('btn-primary', type === 'link');
+            document.getElementById('res-type-link').classList.toggle('btn-secondary', type !== 'link');
+            document.getElementById('res-type-image').classList.toggle('btn-primary', type === 'image');
+            document.getElementById('res-type-image').classList.toggle('btn-secondary', type !== 'image');
+            document.getElementById('res-type-file').classList.toggle('btn-primary', type === 'file');
+            document.getElementById('res-type-file').classList.toggle('btn-secondary', type !== 'file');
+
+            // Show/hide appropriate containers
+            document.getElementById('res-link-container').classList.toggle('hidden', type !== 'link');
+            document.getElementById('res-image-container').classList.toggle('hidden', type !== 'image');
+            document.getElementById('res-file-container').classList.toggle('hidden', type !== 'file');
+        };
+
+        window.handleResourceImageSelect = async function (event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            try {
+                // Use compression utility - no need for manual size check
+                resourceImageData = await compressResourceImage(file);
+                document.getElementById('res-image-preview').src = resourceImageData;
+                document.getElementById('res-image-preview').style.display = 'block';
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        window.handleResourceFileSelect = function (event) {
+            const files = event.target.files;
+            if (!files || files.length === 0) return;
+
+            window.resourceFilesBatch = files;
+
+            if (files.length > 1) {
+                // Batch Mode
+                const totalSize = Array.from(files).reduce((acc, f) => acc + f.size, 0);
+                const sizeInMB = (totalSize / (1024 * 1024)).toFixed(2);
+                document.getElementById('res-file-info').textContent = `Batch Selected: ${files.length} files (${sizeInMB} MB Total)`;
+                document.getElementById('res-title').value = `Batch Upload (${files.length} items)`;
+            } else {
+                // Single Mode
+                const file = files[0];
+                const maxSize = 100 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    showToast('File size must be less than 100MB', 'error');
+                    event.target.value = '';
+                    return;
+                }
+
+                resourceFileName = file.name;
+                resourceFileObject = file;
+                if (!document.getElementById('res-title').value) {
+                    document.getElementById('res-title').value = file.name;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    resourceFileData = e.target.result;
+                    const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+                    document.getElementById('res-file-info').textContent = `Selected: ${file.name} (${sizeInMB} MB)`;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // Helper function to upload file to Catbox.moe via Local Proxy
+        async function uploadToCatbox(file) {
+            try {
+                console.log('Starting Upload via Proxy:', file.name);
+
+                const formData = new FormData();
+                formData.append('reqtype', 'fileupload');
+                formData.append('fileToUpload', file);
+
+                // Use local proxy server strictly (as requested)
+                const apiUrl = '/api/catbox';
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Upload failed: ' + response.statusText);
+                }
+
+                // Proxy returns JSON
+                const result = await response.json();
+
+                if (result.error) throw new Error(result.error);
+
+                console.log('Upload successful:', result.url);
+
+                return {
+                    url: result.url,
+                    fileName: result.fileName || file.name,
+                    bytes: result.size || file.size
+                };
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        }
+
+        window.previewResource = function (url, filename, type) {
+            if (!url) return;
+            filename = filename || 'Document';
+            const extension = filename.split('.').pop().toLowerCase();
+
+            if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(extension) || type === 'image') {
+                openLightbox(url);
+                return;
+            }
+
+            const isPdf = extension === 'pdf';
+            const isDoc = ['doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'].includes(extension);
+
+            if (isPdf || isDoc) {
+                const modal = document.getElementById('file-preview-modal');
+                const frame = document.getElementById('preview-frame');
+                const title = document.getElementById('preview-title');
+                const downloadBtn = document.getElementById('preview-download-btn');
+                const loader = document.getElementById('preview-loader');
+
+                // ENFORCE FULL SCREEN (Premium Focus Mode)
+                const modalContent = modal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.style.width = '100%';
+                    modalContent.style.height = '100%';
+                    modalContent.style.maxWidth = 'none';
+                    modalContent.style.borderRadius = '0';
+                    modalContent.style.margin = '0';
+                }
+
+                // INJECT POP-OUT BLOCKER (Visual Mask)
+                const frameContainer = frame.parentElement;
+                let blocker = document.getElementById('popout-blocker');
+                if (!blocker) {
+                    blocker = document.createElement('div');
+                    blocker.id = 'popout-blocker';
+                    blocker.style.position = 'absolute';
+                    blocker.style.top = '0';
+                    blocker.style.right = '0';
+                    blocker.style.width = '80px';
+                    blocker.style.height = '60px'; // Covers the top-right corner
+                    blocker.style.zIndex = '100';
+                    blocker.style.backgroundColor = '#2a2a2a'; // Match App Theme (Dark)
+                    blocker.style.cursor = 'default';
+                    frameContainer.appendChild(blocker);
+                } else {
+                    blocker.style.display = 'block';
+                }
+
+                // DISABLE POPOUT / NEW TABS (Security)
+                frame.setAttribute('sandbox', 'allow-forms allow-scripts allow-same-origin');
+
+                title.textContent = filename;
+
+                // Hide download button (Premium Feature)
+                if (downloadBtn) downloadBtn.style.display = 'none';
+
+                // Clear and show loader
+                frame.src = 'about:blank';
+                loader.style.display = 'flex';
+                frame.onload = () => { loader.style.display = 'none'; };
+
+                // Use Google Docs Viewer for consistency
+                frame.src = `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+
+                modal.classList.add('show');
+            } else {
+                showToast('Preview not available. Downloads are a Premium feature.', 'warning');
+            }
+        };
+
+        window.downloadFile = async function (url, filename) {
+            showToast('Downloads are a Premium feature.', 'warning');
+            return;
+        };
+
+        window.showResourceUploadModal = function () {
+            loadInstitutions(); // Load institutions when modal opens
+            document.getElementById('resource-upload-modal').classList.add('show');
+        };
+
+        window.uploadResource = async function () {
+            const currentUserEmail = localStorage.getItem('kobi_atlas_email');
+            if (!isOwner({ email: currentUserEmail })) {
+                showToast('Only admins can upload resources', 'error');
+                return;
+            }
+            const key = window.currentCourseView;
+            if (!key) {
+                showToast('Please open a folder first.', 'error');
+                return;
+            }
+            const [courseCode, level] = key.split('#');
+
+            // Inherit course name if possible
+            let courseName = '';
+            if (window.allResourcesCache) {
+                const match = window.allResourcesCache.find(r => r.courseCode === courseCode && r.level === level);
+                if (match && match.courseName) courseName = match.courseName;
+            }
+
+            const title = document.getElementById('res-title').value.trim();
+            const description = document.getElementById('res-desc').value.trim();
+
+            if (!title) {
+                showToast('Please enter a title', 'error');
+                return;
+            }
+
+            // Validate based on type
+            if (selectedResourceType === 'link') {
+                const link = document.getElementById('res-link').value.trim();
+                if (!link) {
+                    showToast('Please enter a link', 'error');
+                    return;
+                }
+            } else if (selectedResourceType === 'image' && !resourceImageData) {
+                showToast('Please select an image', 'error');
+                return;
+            } else if (selectedResourceType === 'file' && !resourceFileData && (!window.resourceFilesBatch || window.resourceFilesBatch.length === 0)) {
+                showToast('Please select a file', 'error');
+                return;
+            }
+
+            showLoading(true);
+            try {
+                const uid = localStorage.getItem('kobi_atlas_uid');
+                const userDoc = await getDoc(doc(db, 'users', uid));
+                const userData = userDoc.data() || {};
+
+                // Get institution
+                let institution = document.getElementById('res-institution').value;
+                if (institution === '__ADD_NEW__') {
+                    const customInst = document.getElementById('res-institution-custom').value.trim();
+                    if (!customInst) {
+                        showToast('Please enter an institution name', 'error');
+                        showLoading(false);
+                        return;
+                    }
+                    institution = await addNewInstitution(customInst);
+                    if (!institution) {
+                        showToast('Failed to add institution', 'error');
+                        showLoading(false);
+                        return;
+                    }
+                }
+
+                // BATCH UPLOAD LOGIC
+                if (selectedResourceType === 'file' && window.resourceFilesBatch && window.resourceFilesBatch.length > 1) {
+                    const files = window.resourceFilesBatch;
+                    showToast(`Starting batch upload of ${files.length} files...`, 'info');
+                    let successCount = 0;
+                    const category = document.getElementById('res-category').value || 'Miscellaneous';
+
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        try {
+                            showToast(`Uploading ${i + 1}/${files.length}: ${file.name}...`, 'info');
+                            const catboxResult = await uploadToCatbox(file);
+
+                            const batchData = {
+                                courseCode,
+                                courseName,
+                                level,
+                                title: file.name,
+                                description: description || 'Batch Upload',
+                                category: category,
+                                institution: institution || 'Babcock University',
+                                uploadedBy: uid,
+                                uploadedByName: userData.username || userData.displayName || 'Student',
+                                uploadedByProfilePicture: userData.profilePicture || null,
+                                timestamp: Date.now(),
+                                votes: 0,
+                                type: 'file',
+                                fileUrl: catboxResult.url,
+                                fileName: file.name,
+                                fileSize: (catboxResult.bytes / (1024 * 1024)).toFixed(2) + ' MB'
+                            };
+
+                            await addDoc(collection(db, 'resources'), batchData);
+                            successCount++;
+                        } catch (err) {
+                            console.error(`Batch upload error for ${file.name}:`, err);
+                        }
+                    }
+
+                    showToast(`Batch completed: ${successCount} uploaded.`, 'success');
+                    closeModal('resource-upload-modal');
+                    loadResources();
+                    showLoading(false);
+                    return;
+                }
+
+                const resourceData = {
+                    courseCode,
+                    courseName,
+                    level,
+                    title,
+                    description,
+                    category: document.getElementById('res-category').value || 'Miscellaneous',
+                    institution: institution || 'Babcock University',
+                    uploadedBy: uid,
+                    uploadedByName: userData.username || userData.displayName || 'Student',
+                    uploadedByProfilePicture: userData.profilePicture || null,
+                    timestamp: Date.now(),
+                    votes: 0,
+                    type: selectedResourceType
+                };
+
+                if (selectedResourceType === 'link') {
+                    resourceData.link = document.getElementById('res-link').value.trim();
+                } else if (selectedResourceType === 'image') {
+                    resourceData.imageData = resourceImageData;
+                } else if (selectedResourceType === 'file') {
+                    // Upload file to Catbox
+                    showToast('Uploading file to cloud storage...', 'info');
+
+                    const catboxResult = await uploadToCatbox(resourceFileObject);
+
+                    resourceData.fileUrl = catboxResult.url;
+                    resourceData.fileName = resourceFileName;
+                    resourceData.fileSize = (catboxResult.bytes / (1024 * 1024)).toFixed(2) + ' MB';
+                    // Don't store fileData (base64) anymore - just the Catbox URL
+                }
+
+                await addDoc(collection(db, 'resources'), resourceData);
+
+                showToast('Resource uploaded!', 'success');
+                closeModal('resource-upload-modal');
+
+                // Reset form
+                document.getElementById('res-title').value = '';
+                document.getElementById('res-desc').value = '';
+                document.getElementById('res-link').value = '';
+                document.getElementById('res-image-file').value = '';
+                document.getElementById('res-file-input').value = '';
+                document.getElementById('res-image-preview').style.display = 'none';
+                document.getElementById('res-file-info').textContent = '';
+                resourceImageData = null;
+                resourceFileData = null;
+                resourceFileName = null;
+                resourceFileObject = null;
+                setResourceType('link'); // Reset to link
+
+                loadResources();
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } else {
+                    showToast('Failed to upload', 'error');
+                }
+            } finally {
+                showLoading(false);
+            }
+        };
+
+        window.deleteResource = async function (resourceId, uploaderId) {
+            const currentUserEmail = localStorage.getItem('kobi_atlas_email');
+            if (!isOwner({ email: currentUserEmail })) {
+                showToast('Only admins can delete resources', 'error');
+                return;
+            }
+
+            if (!confirm('Delete this resource?')) return;
+
+            showLoading(true);
+            try {
+                await deleteDoc(doc(db, 'resources', resourceId));
+                showToast('Resource deleted', 'success');
+                loadResources();
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        };
+
+        window.voteResource = async function (id, value) {
+            try {
+                // Optimistic update
+                const idx = allResources.findIndex(r => r.id === id);
+                if (idx !== -1) {
+                    allResources[idx].votes = (allResources[idx].votes || 0) + value;
+                    renderResources(allResources); // Re-render only filtered? Ideally filterResources(document.getElementById('resource-search-input').value)
+                }
+
+                const resRef = doc(db, 'resources', id);
+                await updateDoc(resRef, {
+                    votes: increment(value)
+                });
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now.getTime() - date.getTime();
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        async function loadCommunityFeed() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            // Only show full loading if we don't have posts or explicit refresh? 
+            // For now, let's show it to be safe as per requirements.
+            // If it causes flashing on likes, we can optimize later.
+            // Actually, for likes, we might want to avoid it, but let's stick to the prompt.
+            // But wait, the 'toggleLike' function calls loadCommunityFeed(). Flashing overlay on every like is bad UX.
+            // Let's check if the feed is already populated? 
+            // No, the requirement is "whenever data is being fetched". 
+            // I'll add it.
+
+            const isRefresing = document.getElementById('posts-feed').children.length > 0;
+            if (!isRefresing) showLoading(true);
+
+            const currentUserEmail = localStorage.getItem('kobi_atlas_email');
+            const isOwnerUser = isOwner({ email: currentUserEmail });
+
+            try {
+                const postsRef = collection(db, 'posts');
+                const q = query(postsRef, orderBy('timestamp', 'desc'));
+                const snapshot = await getDocs(q);
+
+                allPosts = [];
+                for (const docSnap of snapshot.docs) {
+                    const postData = { id: docSnap.id, ...docSnap.data() };
+
+                    // Check if post is deleted
+                    if (postData.deleted) continue;
+
+                    // Check if author still exists
+                    const authorDoc = await getDoc(doc(db, 'users', postData.authorId));
+                    if (!authorDoc.exists()) continue; // Skip posts by deleted users
+
+                    allPosts.push({ ...postData, authorEmail: authorDoc.data().email });
+                }
+
+                const feedHTML = allPosts.length > 0 ? allPosts.map(post => {
+                    const isLiked = post.likes?.includes(uid) || false;
+                    const canDelete = post.authorId === uid || isOwnerUser;
+                    const likeCount = post.likes?.length || 0;
+                    const replyCount = post.replies?.length || 0;
+
+                    return `
+                        <div class="stat-card" style="margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                                <div style="display: flex; gap: 12px; align-items: center; flex: 1;">
+                                    <div style="cursor: pointer;" onclick="viewUserProfile('${post.authorId}')">
+                                        ${post.profilePicture ?
+                            `<img src="${post.profilePicture}" style="width: 40px; height: 40px; border-radius: 20px; object-fit: cover;">` :
+                            `<div style="width: 40px; height: 40px; border-radius: 20px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${post.username?.[0]?.toUpperCase() || 'U'}</div>`
+                        }
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px;" onclick="viewUserProfile('${post.authorId}')">
+                                            ${post.username || 'Anonymous'}
+                                            ${isOwner({ email: post.authorEmail }) ? '<ion-icon name="shield-checkmark" style="color: #FFD700; font-size: 14px; margin-left: 4px;"></ion-icon>' : ''}
+                                        </div>
+                                        <div style="font-size: 12px; color: #999;">${formatTime(post.timestamp)}</div>
+                                    </div>
+                                </div>
+                                ${canDelete ? `
+                                    <button onclick="deletePost('${post.id}')" style="background: none; border: none; cursor: pointer; padding: 4px;">
+                                        <ion-icon name="trash-outline" style="font-size: 20px; color: #dc3545;"></ion-icon>
+                                    </button>
+                                ` : ''}
+                            </div>
+                            
+                            ${post.contentText ? `<p style="margin-bottom: 12px;">${post.contentText}</p>` : ''}
+                            
+                            ${post.contentImage ? `
+                                <div style="cursor: pointer;" onclick="openLightbox('${post.contentImage}')">
+                                    <img src="${post.contentImage}" style="width: 100%; border-radius: 8px; margin-bottom: 12px; height: auto; max-height: 400px; object-fit: contain; background: rgba(0,0,0,0.05);">
+                                </div>
+                            ` : ''}
+                            
+                            ${post.contentLink ? `
+                                <a href="${post.contentLink}" target="_blank" style="color: #667eea; text-decoration: none; display: block; margin-bottom: 12px;">
+                                    🔗 ${post.contentLink}
+                                </a>
+                            ` : ''}
+                            
+                            <div style="display: flex; gap: 16px; padding-top: 12px; border-top: 1px solid #333;">
+                                <button onclick="toggleLike('${post.id}', ${isLiked})" style="background: ${isLiked ? 'rgba(220, 53, 69, 0.1)' : 'none'}; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 6px;">
+                                    <ion-icon name="${isLiked ? 'heart' : 'heart-outline'}" style="font-size: 20px; color: ${isLiked ? '#dc3545' : '#999'};"></ion-icon>
+                                    <span style="color: ${isLiked ? '#dc3545' : '#999'};">${likeCount}</span>
+                                </button>
+                                <button onclick="openPostDetail('${post.id}')" style="background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 6px;">
+                                    <ion-icon name="chatbubble-outline" style="font-size: 20px; color: #999;"></ion-icon>
+                                    <span style="color: #999;">${replyCount}</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('') : '<div class="empty-container"><p class="empty-text">No posts yet. Be the first to share something!</p></div>';
+
+                // Fetch System Announcement
+                let announcementText = 'Welcome to the Kobi\'s Atlas community!';
+                try {
+                    const annSnapshot = await getDoc(doc(db, 'system', 'announcements'));
+                    if (annSnapshot.exists()) {
+                        announcementText = annSnapshot.data().content || announcementText;
+                    }
+                } catch (e) {
+                    console.log('Announcement fetch error', e);
+                }
+
+                const currentUserEmail = localStorage.getItem('kobi_atlas_email');
+                const isCurrentUserOwner = currentUserEmail === 'kobioguadinma@gmail.com';
+                const editControls = isCurrentUserOwner ? `<button onclick="window.toggleAnnouncementEdit()" style="margin-left:auto; background:none; border:none; color:#667eea; cursor:pointer; font-size:12px; font-weight:bold;">Edit</button>` : '';
+
+                const pinnedMsg = `<div class="stat-card" style="padding:0; background: var(--card-bg); border-left:4px solid var(--primary-color); overflow:hidden; width: 94%; margin: 0 auto 16px auto; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                    <div style="padding:12px 16px; border-bottom:1px solid var(--border-color);">
+                        <div style="display:flex; align-items:center; margin-bottom:6px;">
+                             <ion-icon name="megaphone" style="font-size:18px; color:var(--primary-color); margin-right:8px;"></ion-icon>
+                             <span style="font-weight:bold; color:var(--text-color); font-size:14px;">Important Announcements</span>
+                             ${editControls}
+                        </div>
+                        <div id="announcement-display" style="font-size:15px; color:var(--text-color); line-height:1.6; white-space: pre-wrap; font-weight: 500;">${announcementText}</div>
+                        
+                        <div id="announcement-editor" class="hidden" style="margin-top:8px;">
+                            <textarea id="announcement-input" style="width:100%; background:var(--input-bg); color:var(--text-color); border:1px solid var(--border-color); border-radius:8px; padding:8px; font-family:inherit; font-size:13px;" rows="3">${announcementText}</textarea>
+                            <div style="display:flex; gap:8px; margin-top:8px;">
+                                <button onclick="window.saveAnnouncement()" class="btn btn-primary" style="padding:4px 10px; font-size:11px;">Save</button>
+                                <button onclick="window.toggleAnnouncementEdit()" class="btn btn-secondary" style="padding:4px 10px; font-size:11px;">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="padding:10px 16px; background:var(--bg-color);">
+                        <!-- Contact Links (Compact) -->
+                        <div style="text-align:center; font-size:11px; color:var(--text-secondary); margin-bottom:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Contact Me</div>
+                        <div style="display:flex; justify-content: center; gap: 16px; align-items:flex-start; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; flex-wrap: wrap;">
+                            
+                            <!-- WhatsApp -->
+                            <a href="https://wa.me/qr/P4ICHKKDGZI7A1" target="_blank" style="color:var(--text-secondary); text-decoration:none; display:flex; flex-direction:column; align-items:center; font-size:10px; gap:4px; width: 60px;">
+                                <div class="contact-icon" style="background:var(--card-bg); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text-color); border: 1px solid var(--border-color);">
+                                    <ion-icon name="logo-whatsapp" style="font-size:20px;"></ion-icon>
+                                </div>
+                                WhatsApp
+                            </a>
+
+                            <!-- Instagram -->
+                            <a href="https://www.instagram.com/kobiogua?igsh=MWYydHpwdXF6M2pncg%3D%3D&utm_source=qr" target="_blank" style="color:var(--text-secondary); text-decoration:none; display:flex; flex-direction:column; align-items:center; font-size:10px; gap:4px; width: 60px;">
+                                <div class="contact-icon" style="background:var(--card-bg); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text-color); border: 1px solid var(--border-color);">
+                                    <ion-icon name="logo-instagram" style="font-size:20px;"></ion-icon>
+                                </div>
+                                Instagram
+                            </a>
+
+                            <!-- Snapchat -->
+                            <a href="https://snapchat.com/t/tBKzgnh7" target="_blank" style="color:var(--text-secondary); text-decoration:none; display:flex; flex-direction:column; align-items:center; font-size:10px; gap:4px; width: 60px;">
+                                <div class="contact-icon" style="background:var(--card-bg); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text-color); border: 1px solid var(--border-color);">
+                                    <ion-icon name="logo-snapchat" style="font-size:20px;"></ion-icon>
+                                </div>
+                                Snapchat
+                            </a>
+
+                            <!-- TikTok -->
+                            <a href="https://www.tiktok.com/@kobiogua" target="_blank" style="color:var(--text-secondary); text-decoration:none; display:flex; flex-direction:column; align-items:center; font-size:10px; gap:4px; width: 60px;">
+                                <div class="contact-icon" style="background:var(--card-bg); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text-color); border: 1px solid var(--border-color);">
+                                    <ion-icon name="logo-tiktok" style="font-size:20px;"></ion-icon>
+                                </div>
+                                TikTok
+                            </a>
+
+                             <!-- Email -->
+                            <a href="mailto:kobioguadinma@gmail.com" style="color:var(--text-secondary); text-decoration:none; display:flex; flex-direction:column; align-items:center; font-size:10px; gap:4px; width: 60px;">
+                                <div class="contact-icon" style="background:var(--card-bg); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text-color); border: 1px solid var(--border-color);">
+                                    <ion-icon name="mail" style="font-size:20px;"></ion-icon>
+                                </div>
+                                Email
+                            </a>
+
+                            <!-- Call -->
+                            <a href="tel:+2348105930668" style="color:var(--text-secondary); text-decoration:none; display:flex; flex-direction:column; align-items:center; font-size:10px; gap:4px; width: 60px;">
+                                <div class="contact-icon" style="background:var(--card-bg); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text-color); border: 1px solid var(--border-color);">
+                                    <ion-icon name="call" style="font-size:20px;"></ion-icon>
+                                </div>
+                                Call
+                            </a>
+
+                        </div>
+
+                        <!-- Enhanced WhatsApp CTA (Compact) -->
+                        <a href="https://chat.whatsapp.com/I6QDP1DrQ3l8NHtm8RsQyV" target="_blank" 
+                           style="display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%); color:white; padding:10px; border-radius:10px; text-decoration:none; box-shadow:0 3px 10px rgba(0,0,0,0.2); transition: transform 0.2s; position:relative; overflow:hidden; max-width: 280px; width: 90%; margin: 0 auto;"
+                           onmouseover="this.style.transform='translateY(-2px) scale(1.02)'" 
+                           onmouseout="this.style.transform='translateY(0) scale(1)'">
+                            <ion-icon name="logo-whatsapp" style="font-size:24px; margin-right:10px;"></ion-icon>
+                            <div style="text-align:left;">
+                                <div style="font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">Join WhatsApp Group</div>
+                                <div style="font-size:10px; font-weight:normal; opacity:0.9;">Click to connect with the community!</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>`;
+
+                const createPostBtn = `
+                    <div style="background: var(--card-bg); padding: 14px 20px; border-radius: 16px; margin-bottom: 24px; display: flex; align-items: center; gap: 16px; cursor: pointer; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: all 0.2s; width: 98%; margin-left: auto; margin-right: auto;" onclick="showCreatePostModal()" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                         <div style="min-width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                             <ion-icon name="create" style="font-size: 22px;"></ion-icon>
+                        </div>
+                        <div style="color: var(--text-color); font-size: 15px; font-weight: 600;">Say something to everyone...</div>
+                    </div>
+                `;
+
+                document.getElementById('posts-feed').innerHTML = pinnedMsg + createPostBtn + feedHTML;
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                if (!isRefresing) showLoading(false);
+            }
+        }
+
+        window.showCreatePostModal = function () {
+            document.getElementById('create-post-modal').classList.add('show');
+        };
+
+        // Image upload handler with inline compression fallback
+        let uploadedImageBase64 = null;
+
+        // Inline compression function as fallback
+        function compressImageInline(file, maxWidth, quality) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > maxWidth) {
+                            height = (height * maxWidth) / width;
+                            width = maxWidth;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', quality));
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        window.handleImageUpload = async function (input, previewId) {
+            const file = input.files[0];
+            if (file) {
+                try {
+                    console.log('BRUTE-FORCE compression starting for:', file.name, file.size);
+
+                    // BRUTE FORCE: Manual canvas compression - 400px @ 0.5 quality
+                    uploadedImageBase64 = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const img = new Image();
+                            img.onload = () => {
+                                const canvas = document.createElement('canvas');
+                                let width = img.width;
+                                let height = img.height;
+                                const maxSize = 400;
+
+                                if (width > height) {
+                                    if (width > maxSize) {
+                                        height *= maxSize / width;
+                                        width = maxSize;
+                                    }
+                                } else {
+                                    if (height > maxSize) {
+                                        width *= maxSize / height;
+                                        height = maxSize;
+                                    }
+                                }
+
+                                canvas.width = width;
+                                canvas.height = height;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(img, 0, 0, width, height);
+
+                                resolve(canvas.toDataURL('image/jpeg', 0.5));
+                            };
+                            img.onerror = () => reject(new Error('Image load failed'));
+                            img.src = e.target.result;
+                        };
+                        reader.onerror = () => reject(new Error('File read failed'));
+                        reader.readAsDataURL(file);
+                    });
+
+                    console.log('Compression complete, final size:', uploadedImageBase64.length, 'characters');
+                    const preview = document.getElementById(previewId);
+                    preview.src = uploadedImageBase64;
+                    preview.style.display = 'block';
+                } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+            }
+        };
+
+        window.createPost = async function () {
+            const content = document.getElementById('post-content').value.trim();
+            const link = document.getElementById('post-link').value.trim();
+
+            if (!content && !uploadedImageBase64 && !link) {
+                showToast('Please add some content to your post', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+
+            try {
+                // Get user data
+                const userDoc = await getDoc(doc(db, 'users', uid));
+                const userData = userDoc.data() || {};
+
+                const postRef = doc(collection(db, 'posts'));
+                await setDoc(postRef, {
+                    id: postRef.id,
+                    authorId: uid,
+                    username: userData.username || userData.displayName || 'Anonymous',
+                    profilePicture: userData.profilePicture || null,
+                    contentText: content || null,
+                    contentImage: uploadedImageBase64 || null,
+                    contentLink: link || null,
+                    timestamp: Date.now(),
+                    likes: [],
+                    replies: []
+                });
+
+                showToast('Post created!', 'success');
+                closeModal('create-post-modal');
+                document.getElementById('post-content').value = '';
+                document.getElementById('post-image').value = '';
+                document.getElementById('post-link').value = '';
+                document.getElementById('post-image-preview').style.display = 'none';
+                uploadedImageBase64 = null;
+                loadCommunityFeed();
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        window.toggleLike = async function (postId, isLiked) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const postRef = doc(db, 'posts', postId);
+                const postDoc = await getDoc(postRef);
+                const postData = postDoc.data();
+
+                let likes = postData.likes || [];
+
+                if (isLiked) {
+                    likes = likes.filter(id => id !== uid);
+                } else {
+                    likes.push(uid);
+                }
+
+                await updateDoc(postRef, { likes });
+                loadCommunityFeed();
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        window.deletePost = async function (postId) {
+            if (!confirm('Delete this post?')) return;
+
+            try {
+                await deleteDoc(doc(db, 'posts', postId));
+                showToast('Post deleted', 'success');
+                loadCommunityFeed();
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        // POST DETAIL FUNCTIONS
+        let currentPost = null;
+        let currentReplies = [];
+
+        window.openPostDetail = async function (postId) {
+            try {
+                // Get post
+                const postDoc = await getDoc(doc(db, 'posts', postId));
+                if (!postDoc.exists()) {
+                    showToast('Post not found', 'error');
+                    return;
+                }
+
+                currentPost = { id: postDoc.id, ...postDoc.data() };
+
+                // Get replies - use where only, then sort in JS to avoid composite index
+                const repliesRef = collection(db, 'replies');
+                const q = query(repliesRef, where('postId', '==', postId));
+                const snapshot = await getDocs(q);
+
+                currentReplies = [];
+                snapshot.forEach(doc => {
+                    currentReplies.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort by timestamp in JavaScript
+                currentReplies.sort((a, b) => a.timestamp - b.timestamp);
+
+                // Render post detail
+                const uid = localStorage.getItem('kobi_atlas_uid');
+                const currentUserEmail = localStorage.getItem('kobi_atlas_email');
+                const isOwnerUser = isOwner({ email: currentUserEmail });
+
+                const isLiked = currentPost.likes?.includes(uid) || false;
+                const canDelete = currentPost.authorId === uid || isOwnerUser;
+                const likeCount = currentPost.likes?.length || 0;
+
+                const postHTML = `
+                    <div style="padding: 16px; background: #2a2a2a; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                            <div style="display: flex; gap: 12px; align-items: center; flex: 1;">
+                                ${currentPost.profilePicture ?
+                        `<img src="${currentPost.profilePicture}" style="width: 40px; height: 40px; border-radius: 20px; object-fit: cover;">` :
+                        `<div style="width: 40px; height: 40px; border-radius: 20px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${currentPost.username?.[0]?.toUpperCase() || 'U'}</div>`
+                    }
+                                <div>
+                                    <div style="font-weight: bold;">${currentPost.username || 'Anonymous'}</div>
+                                    <div style="font-size: 12px; color: #999;">${formatTime(currentPost.timestamp)}</div>
+                                </div>
+                            </div>
+                            ${canDelete ? `
+                                <button onclick="deletePostFromDetail('${currentPost.id}')" style="background: none; border: none; cursor: pointer; padding: 4px;">
+                                    <ion-icon name="trash-outline" style="font-size: 20px; color: #dc3545;"></ion-icon>
+                                </button>
+                            ` : ''}
+                        </div>
+                        
+                        ${currentPost.contentText ? `<p style="margin-bottom: 12px;">${currentPost.contentText}</p>` : ''}
+                        
+                        ${currentPost.contentImage ? `
+                            <img src="${currentPost.contentImage}" style="width: 100%; border-radius: 8px; margin-bottom: 12px; max-height: 400px; object-fit: cover;">
+                        ` : ''}
+                        
+                        <div style="display: flex; gap: 16px; padding-top: 12px; border-top: 1px solid #333;">
+                            <button onclick="toggleLikeInDetail('${currentPost.id}', ${isLiked})" style="background: ${isLiked ? 'rgba(220, 53, 69, 0.1)' : 'none'}; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 6px;">
+                                <ion-icon name="${isLiked ? 'heart' : 'heart-outline'}" style="font-size: 20px; color: ${isLiked ? '#dc3545' : '#999'};"></ion-icon>
+                                <span style="color: ${isLiked ? '#dc3545' : '#999'};">${likeCount}</span>
+                            </button>
+                            <div style="display: flex; align-items: center; gap: 6px; padding: 8px 12px;">
+                                <ion-icon name="chatbubble-outline" style="font-size: 20px; color: #999;"></ion-icon>
+                                <span style="color: #999;">${currentReplies.length}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('post-detail-content').innerHTML = postHTML;
+                document.getElementById('replies-count').textContent = currentReplies.length;
+
+                // Render replies
+                renderReplies();
+
+                // Show modal
+                document.getElementById('post-detail-modal').classList.add('show');
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        function renderReplies() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const currentUserEmail = localStorage.getItem('kobi_atlas_email');
+            const isOwnerUser = isOwner({ email: currentUserEmail });
+
+            const repliesHTML = currentReplies.length > 0 ? currentReplies.map(reply => {
+                const isLiked = reply.likes?.includes(uid) || false;
+                const canDelete = reply.authorId === uid || isOwnerUser;
+                const likeCount = reply.likes?.length || 0;
+
+                return `
+                    <div style="padding: 12px; background: #2a2a2a; border-radius: 8px; margin-bottom: 10px;">
+                        <div style="display: flex; gap: 12px; margin-bottom: 8px;">
+                            ${reply.profilePicture ?
+                        `<img src="${reply.profilePicture}" style="width: 32px; height: 32px; border-radius: 16px; object-fit: cover;">` :
+                        `<div style="width: 32px; height: 32px; border-radius: 16px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px;">${reply.username?.[0]?.toUpperCase() || 'U'}</div>`
+                    }
+                            <div style="flex: 1;">
+                                <div style="font-weight: bold; font-size: 14px;">${reply.username || 'Anonymous'}</div>
+                                <div style="font-size: 11px; color: #999;">${formatTime(reply.timestamp)}</div>
+                            </div>
+                            ${canDelete ? `
+                                <button onclick="deleteReply('${reply.id}')" style="background: none; border: none; cursor: pointer; padding: 4px;">
+                                    <ion-icon name="trash-outline" style="font-size: 16px; color: #dc3545;"></ion-icon>
+                                </button>
+                            ` : ''}
+                        </div>
+                        
+                        <p style="font-size: 14px; margin-bottom: 8px;">${reply.contentText}</p>
+                        
+                        ${reply.contentImage ? `
+                            <img src="${reply.contentImage}" style="width: 100%; border-radius: 8px; margin-bottom: 8px; max-height: 200px; object-fit: cover;">
+                        ` : ''}
+                        
+                        <button onclick="toggleReplyLike('${reply.id}', ${isLiked})" style="background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 4px;">
+                            <ion-icon name="${isLiked ? 'heart' : 'heart-outline'}" style="font-size: 16px; color: ${isLiked ? '#dc3545' : '#999'};"></ion-icon>
+                            <span style="color: ${isLiked ? '#dc3545' : '#999'}; font-size: 13px;">${likeCount}</span>
+                        </button>
+                    </div>
+                `;
+            }).join('') : '<p style="text-align: center; color: #999; padding: 20px;">No replies yet. Be the first to reply!</p>';
+
+            document.getElementById('replies-list').innerHTML = repliesHTML;
+        }
+
+        window.createReply = async function () {
+            const content = document.getElementById('reply-input').value.trim();
+
+            if (!content) {
+                showToast('Please enter a reply', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                // Get user data
+                const userDoc = await getDoc(doc(db, 'users', uid));
+                const userData = userDoc.data() || {};
+
+                const replyRef = doc(collection(db, 'replies'));
+                await setDoc(replyRef, {
+                    id: replyRef.id,
+                    postId: currentPost.id,
+                    authorId: uid,
+                    username: userData.username || userData.displayName || 'Anonymous',
+                    profilePicture: userData.profilePicture || null,
+                    contentText: content,
+                    contentImage: null,
+                    timestamp: Date.now(),
+                    likes: []
+                });
+
+                // Update post replies array
+                const postRef = doc(db, 'posts', currentPost.id);
+                const postDoc = await getDoc(postRef);
+                const postData = postDoc.data();
+                const replies = postData.replies || [];
+                replies.push(replyRef.id);
+                await updateDoc(postRef, { replies });
+
+                showToast('Reply added!', 'success');
+                document.getElementById('reply-input').value = '';
+
+                // Reload post detail
+                openPostDetail(currentPost.id);
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        window.toggleLikeInDetail = async function (postId, isLiked) {
+            await toggleLike(postId, isLiked);
+            openPostDetail(postId);
+        };
+
+        window.toggleReplyLike = async function (replyId, isLiked) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const replyRef = doc(db, 'replies', replyId);
+                const replyDoc = await getDoc(replyRef);
+                const replyData = replyDoc.data();
+
+                let likes = replyData.likes || [];
+
+                if (isLiked) {
+                    likes = likes.filter(id => id !== uid);
+                } else {
+                    likes.push(uid);
+                }
+
+                await updateDoc(replyRef, { likes });
+                openPostDetail(currentPost.id);
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        window.deleteReply = async function (replyId) {
+            if (!confirm('Delete this reply?')) return;
+
+            try {
+                // Delete reply document
+                await deleteDoc(doc(db, 'replies', replyId));
+
+                // Update post replies array
+                const postRef = doc(db, 'posts', currentPost.id);
+                const postDoc = await getDoc(postRef);
+                const postData = postDoc.data();
+                const replies = (postData.replies || []).filter(id => id !== replyId);
+                await updateDoc(postRef, { replies });
+
+                showToast('Reply deleted', 'success');
+                openPostDetail(currentPost.id);
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        window.deletePostFromDetail = async function (postId) {
+            if (!confirm('Delete this post?')) return;
+
+            try {
+                await deleteDoc(doc(db, 'posts', postId));
+                showToast('Post deleted', 'success');
+                closeModal('post-detail-modal');
+                loadCommunityFeed();
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        // GPA VIEW FUNCTIONS
+        let currentGPATab = 'current';
+
+        window.switchGPATab = function (tab) {
+            currentGPATab = tab;
+            document.getElementById('gpa-current-tab').classList.toggle('active', tab === 'current');
+            document.getElementById('gpa-predicted-tab').classList.toggle('active', tab === 'predicted');
+            loadGPAView();
+        };
+
+        function getDegreeClassification(gpa) {
+            if (gpa >= 4.50) return { label: 'First Class', color: '#FFD700', icon: 'star', isFirstClass: true };
+            if (gpa >= 3.50) return { label: 'Second Class (Upper Division)', color: '#4CAF50', icon: 'checkmark-circle' };
+            if (gpa >= 2.40) return { label: 'Second Class (Lower Division)', color: '#FF9800', icon: 'remove-circle' };
+            if (gpa >= 1.50) return { label: 'Third Class', color: '#9E9E9E', icon: 'ellipse' };
+            return { label: 'Fail', color: '#F44336', icon: 'alert-circle' };
+        }
+
+        async function loadGPAView() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+
+                const semesters = [];
+                snapshot.forEach(doc => {
+                    semesters.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort by timestamp
+                semesters.sort((a, b) => a.timestamp - b.timestamp);
+
+                // Get exclude setting
+                const excludeCurrent = localStorage.getItem('excludeCurrentGPA') === 'true';
+
+                // Get relevant semesters based on tab and exclude setting
+                let relevantSemesters;
+                if (currentGPATab === 'current') {
+                    relevantSemesters = semesters.filter(s => s.type === 'past');
+                } else {
+                    // Predicted tab - respect exclude toggle
+                    relevantSemesters = excludeCurrent
+                        ? semesters.filter(s => s.type !== 'current')
+                        : semesters;
+                }
+
+                //  Aggregate stats (spec-compliant) 
+                // CGPA = (U  GP) / U  using accumQP helper
+                const { qp: totalPoints, units: totalUnits } = accumQP(relevantSemesters);
+                const gpa = totalUnits > 0 ? (totalPoints / totalUnits).toFixed(2) : '0.00';
+                const classification = getDegreeClassification(parseFloat(gpa));
+
+                // Update classification
+                document.getElementById('classification-icon').setAttribute('name', classification.icon);
+                document.getElementById('classification-icon').style.color = classification.color;
+                document.getElementById('classification-label').textContent = classification.label;
+                document.getElementById('classification-label').style.color = classification.color;
+
+                // Update stats
+                document.getElementById('gpa-main-value').textContent = gpa;
+                document.getElementById('gpa-main-label').textContent = currentGPATab === 'current' ? 'Cumulative GPA' : 'Predicted GPA';
+                document.getElementById('gpa-credits').textContent = totalUnits;
+                document.getElementById('gpa-semesters').textContent = relevantSemesters.length;
+
+                // Calculate trend
+                if (currentGPATab === 'predicted' && semesters.length > 0) {
+                    // On Predicted tab: Compare Predicted CGPA vs Current CGPA
+                    const pastSemesters = semesters.filter(s => s.type === 'past');
+
+                    // Calculate current CGPA (past only) using accumQP
+                    const { qp: currentPoints, units: currentUnits } = accumQP(pastSemesters);
+                    const currentCGPA = currentUnits > 0 ? currentPoints / currentUnits : 0;
+                    const predictedCGPA = parseFloat(gpa);
+
+                    const diff = predictedCGPA - currentCGPA;
+
+                    const trendIcon = document.getElementById('trend-icon');
+                    const trendValue = document.getElementById('trend-value');
+
+                    if (diff > 0.01) {
+                        trendIcon.setAttribute('name', 'trending-up');
+                        trendIcon.style.color = '#4CAF50';
+                        trendValue.textContent = '↑';
+                    } else if (diff < -0.01) {
+                        trendIcon.setAttribute('name', 'trending-down');
+                        trendIcon.style.color = '#F44336';
+                        trendValue.textContent = '↓';
+                    } else {
+                        trendIcon.setAttribute('name', 'remove');
+                        trendIcon.style.color = '#999';
+                        trendValue.textContent = '→';
+                    }
+                } else if (relevantSemesters.length >= 2) {
+                    // On Current tab: Compare last two semesters
+                    const lastSem = relevantSemesters[relevantSemesters.length - 1];
+                    const prevSem = relevantSemesters[relevantSemesters.length - 2];
+
+                    // Get GPA for each semester (handle Quick Add semesters)
+                    const lastGPA = lastSem.gpa || parseFloat(calculateSemesterGPA(lastSem.courses || []));
+                    const prevGPA = prevSem.gpa || parseFloat(calculateSemesterGPA(prevSem.courses || []));
+
+                    const diff = lastGPA - prevGPA;
+
+                    const trendIcon = document.getElementById('trend-icon');
+                    const trendValue = document.getElementById('trend-value');
+
+                    if (diff > 0.01) {
+                        trendIcon.setAttribute('name', 'trending-up');
+                        trendIcon.style.color = '#4CAF50';
+                        trendValue.textContent = '↑';
+                    } else if (diff < -0.01) {
+                        trendIcon.setAttribute('name', 'trending-down');
+                        trendIcon.style.color = '#F44336';
+                        trendValue.textContent = '↓';
+                    } else {
+                        trendIcon.setAttribute('name', 'remove');
+                        trendIcon.style.color = '#999';
+                        trendValue.textContent = '→';
+                    }
+                }
+
+                // Render GPA Chart (improved)
+                const gradingConfig = getGradingConfig();
+                let maxScale = 5.0; // Default
+                if (gradingConfig.type === 'us') maxScale = 4.0;
+                else if (gradingConfig.type === 'custom' && gradingConfig.custom) {
+                    // Find max GP in custom config
+                    maxScale = Math.max(...gradingConfig.custom.map(g => parseFloat(g.gp)));
+                }
+
+                document.getElementById('gpa-chart').style.justifyContent = relevantSemesters.length > 4 ? 'flex-start' : 'center';
+
+                const chartHTML = relevantSemesters.map(sem => {
+                    let val = sem.gpa;
+                    if (val === undefined || val === null || val === '') {
+                        val = calculateSemesterGPA(sem.courses || []);
+                    }
+                    const semGPA = parseFloat(val) || 0;
+
+                    // Dynamic height based on maxScale
+                    let height = (semGPA / maxScale) * 155;
+
+                    // Safety clamps
+                    if (height < 0) height = 0;
+                    if (height > 160) height = 160;
+
+                    const color = sem.type === 'past' ? '#667eea' : '#00d4ff';
+                    const displayGPA = semGPA.toFixed(2);
+
+                    // Hide text if bar is too short
+                    const textStyle = height < 20 ? 'display: none;' : 'font-size: 11px; color: white; font-weight: bold;';
+
+                    return `
+                        <div style="display: flex; flex-direction: column; align-items: center; min-width: 55px; flex: 0 0 auto; width: 65px;">
+                            <div style="width: 100%; display: flex; align-items: flex-end; justify-content: center; flex: 1; padding-bottom: 8px;">
+                                <div style="width: 80%; background: ${color}; height: ${height}px; border-radius: 8px 8px 0 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 8px; transition: height 0.5s;">
+                                    <span style="${textStyle} line-height: 1.2;">${displayGPA}</span>
+                                </div>
+                            </div>
+                            <!-- Fixed height label container for baseline alignment -->
+            <div style="height: 45px; width: 100%; display: flex; align-items: flex-start; justify-content: center;">
+                <span style="font-size: 10px; color: var(--text-secondary); line-height: 1.3; text-align: center; white-space: normal; width: 100%; word-break: keep-all;">${sem.name.replace('Level', 'Lvl')}</span>
+            </div>
+                        </div >
+                `;
+                }).join('');
+                document.getElementById('gpa-chart').innerHTML = chartHTML;
+
+                // Find best and worst semesters
+                if (relevantSemesters.length > 0) {
+                    const semestersWithGPA = relevantSemesters.map(s => ({
+                        ...s,
+                        gpa: s.gpa || parseFloat(calculateSemesterGPA(s.courses || []))
+                    }));
+
+                    const best = semestersWithGPA.reduce((max, s) => s.gpa > max.gpa ? s : max);
+                    const worst = semestersWithGPA.reduce((min, s) => s.gpa < min.gpa ? s : min);
+
+                    document.getElementById('best-semester').innerHTML = `Best Semester: <strong>${best.name}</strong> (${best.gpa.toFixed(2)})`;
+                    document.getElementById('worst-semester').innerHTML = `Lowest Semester: <strong>${worst.name}</strong> (${worst.gpa.toFixed(2)})`;
+                }
+
+                // Grade Distribution
+                const distribution = {};
+                relevantSemesters.forEach(sem => {
+                    sem.courses?.forEach(course => {
+                        // Use grade if available (past), otherwise predicted/target (current)
+                        let rawGrade = course.grade || course.predictedGrade || course.targetGrade;
+
+                        if (rawGrade) {
+                            const grade = rawGrade.toString().trim().toUpperCase();
+                            distribution[grade] = (distribution[grade] || 0) + 1;
+                        }
+                    });
+                });
+
+                // Update distribution title
+                const distTitle = document.getElementById('grade-distribution-title');
+                if (distTitle) {
+                    distTitle.textContent = currentGPATab === 'current'
+                        ? 'Grade Distribution (Graded Courses)'
+                        : 'Grade Distribution (Predicted)';
+                }
+
+
+                const total = Object.values(distribution).reduce((a, b) => a + b, 0);
+                if (total > 0) {
+                    const distHTML = ['A', 'B', 'C', 'D', 'E', 'F'].map(grade => {
+                        const count = distribution[grade] || 0;
+                        if (count === 0) return '';
+                        const percentage = (count / total) * 100;
+                        return `
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                <span style="width: 20px; font-weight: bold;">${grade}</span>
+                                <div style="flex: 1; background: #333; height: 20px; border-radius: 4px; overflow: hidden;">
+                                    <div style="width: ${percentage}%; background: #667eea; height: 100%;"></div>
+                                </div>
+                                <span style="width: 30px; text-align: right; font-size: 12px; color: #999;">${count}</span>
+                            </div>
+                `;
+                    }).join('');
+                    document.getElementById('distribution-content').innerHTML = distHTML;
+                    document.getElementById('grade-distribution').style.display = 'block';
+                } else {
+                    document.getElementById('grade-distribution').style.display = 'none';
+                }
+
+                // Semester Breakdown
+                const breakdownHTML = [...relevantSemesters].reverse().map(sem => {
+                    const semGPA = sem.gpa || parseFloat(calculateSemesterGPA(sem.courses || []));
+                    const credits = sem.totalUnits || sem.courses?.reduce((sum, c) => sum + (c.unitHours || 0), 0) || 0;
+                    const courseCount = sem.courses?.length || 0;
+
+                    // Determine badge color based on GPA
+                    const classification = getDegreeClassification(semGPA);
+                    const badgeColor = classification.color;
+
+                    // Special styling for First Class
+                    let badgeStyle = `background: ${badgeColor}22; color: ${badgeColor}; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; border: 1px solid ${badgeColor}44; `;
+
+                    if (classification.isFirstClass) {
+                        badgeStyle = `
+            background: linear-gradient(135deg, ${badgeColor}33, ${badgeColor}11);
+            color: ${badgeColor};
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 14px;
+            border: 1px solid ${badgeColor}66;
+            box-shadow: 0 0 10px ${badgeColor}33;
+            text-shadow: 0 0 5px ${badgeColor}66;
+            `;
+                    }
+
+                    return `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; margin-bottom: 12px; background: rgba(255,255,255,0.05); border-radius: 12px; cursor: pointer; transition: background 0.2s;" onclick="viewSemester('${sem.id}')" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                            <div style="margin-left: 4px; text-align: left;">
+                                <div style="font-weight: bold; font-size: 16px; margin-bottom: 4px; text-align: left;">${sem.name}</div>
+                                <div style="font-size: 13px; color: #999; text-align: left;">${courseCount} courses • ${credits} credits</div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="${badgeStyle}">
+                                    ${semGPA.toFixed(2)}
+                                </div>
+                                <ion-icon name="chevron-forward" style="color: #666; font-size: 20px;"></ion-icon>
+                            </div>
+                        </div>
+                `;
+                }).join('');
+                document.getElementById('semester-breakdown').innerHTML = breakdownHTML || '<p style="text-align: center; color: #999; padding: 20px;">No semesters yet</p>';
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        };
+
+        // PLANNER FUNCTIONS
+        let currentPlannerTab = 'schedule';
+        let allTasks = [];
+        const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+        window.switchPlannerTab = function (tab) {
+            currentPlannerTab = tab;
+            document.getElementById('schedule-tab').classList.toggle('hidden', tab !== 'schedule');
+            document.getElementById('tasks-tab').classList.toggle('hidden', tab !== 'tasks');
+            document.getElementById('schedule-tab-btn').classList.toggle('active', tab === 'schedule');
+            document.getElementById('tasks-tab-btn').classList.toggle('active', tab === 'tasks');
+
+            if (tab === 'schedule') {
+                loadSchedule();
+            } else {
+                loadTasks();
+            }
+        };
+
+        async function loadSchedule() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+
+                const semesters = [];
+                snapshot.forEach(doc => {
+                    semesters.push({ id: doc.id, ...doc.data() });
+                });
+
+                const currentSemester = semesters.find(s => s.type === 'current');
+                const courses = currentSemester?.courses || [];
+                const customEvents = currentSemester?.customEvents || [];
+
+                const scheduleContent = document.getElementById('schedule-content');
+
+                const hasAnySchedule = courses.some(c => (c.schedules && c.schedules.length > 0) || c.schedule) || customEvents.length > 0;
+
+                if (!hasAnySchedule) {
+                    scheduleContent.innerHTML = `
+                <div class="empty-container">
+                            <ion-icon name="calendar-outline" size="large" style="font-size: 64px; color: #666;"></ion-icon>
+                            <p class="empty-text">No schedule details added yet.<br>Tap + to add class times or events.</p>
+                        </div>
+                `;
+                    showLoading(false);
+                    return;
+                }
+
+                // Group by day
+                let html = '';
+                const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                const today = DAYS[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1];
+                const now = new Date();
+                const nowTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+                const todayDateStr = now.toISOString().split('T')[0];
+
+                DAYS.forEach(day => {
+                    let dayItems = [];
+
+                    // 1. Course Schedules
+                    courses.forEach(c => {
+                        const schedules = c.schedules || (c.schedule ? [c.schedule] : []);
+                        schedules.forEach(s => {
+                            if (s.day === day) {
+                                dayItems.push({
+                                    type: 'course',
+                                    title: c.name,
+                                    subtitle: c.code,
+                                    isRecurring: true, // Course events default to recurring
+                                    ...s,
+                                    courseId: c.id
+                                });
+                            }
+                        });
+                    });
+
+                    // 2. Custom Events
+                    customEvents.forEach(e => {
+                        let eventDay = e.day;
+                        if (!e.isRecurring && e.date) { // One-time event
+                            const d = new Date(e.date);
+                            const eventDayIndex = d.getDay();
+                            eventDay = DAYS[eventDayIndex === 0 ? 6 : eventDayIndex - 1];
+                        }
+
+                        if (eventDay === day) {
+                            dayItems.push({
+                                type: 'custom',
+                                title: e.title,
+                                subtitle: 'Personal Event',
+                                ...e,
+                                courseId: ''
+                            });
+                        }
+                    });
+
+                    // Sort by time
+                    dayItems.sort((a, b) => (a.startTime || '').localeCompare(b.startTime || ''));
+
+                    if (dayItems.length > 0) {
+                        html += `
+                <div class="day-section">
+                    <div class="day-title" style="${day === today ? 'color: var(--primary-color); font-weight: 900;' : ''}">${day === today ? day + ' (Today)' : day}</div>
+                                ${dayItems.map(item => {
+                            let isDimmed = false;
+                            // Grey out if one-time and passed date
+                            if (!item.isRecurring) {
+                                if (item.date < todayDateStr) isDimmed = true;
+                                else if (item.date === todayDateStr && item.endTime <= nowTime) isDimmed = true;
+                            }
+
+                            const editArgs = `'${item.id}', '${item.courseId || ''}', '${item.day || ''}', '${item.startTime}', '${item.title.replace(/'/g, "\\'")}', '${item.isRecurring}', '${item.date || ''}', '${item.endTime}', '${item.venue || ''}'`;
+
+                            return `
+                                    <div class="schedule-card" style="${isDimmed ? 'opacity: 0.5; order: 1;' : ''}">
+                                        <div class="time-container">
+                                            <div class="time-text">${item.startTime}</div>
+                                            <div class="time-line"></div>
+                                            <div class="time-text" style="color: #999;">${item.endTime}</div>
+                                        </div>
+                                        <div class="details-container">
+                                            <div class="course-code">${item.subtitle || ''}</div>
+                                            <div class="course-name">
+                                                ${item.title}
+                                                ${item.isRecurring ? '<ion-icon name="refresh" style="font-size: 12px; margin-left: 4px; color: #999;"></ion-icon>' : ''}
+                                            </div>
+                                            ${item.venue ? `
+                                                <div class="venue-container">
+                                                    <ion-icon name="location-outline" style="font-size: 14px; color: #999;"></ion-icon>
+                                                    <span class="venue-text">${item.venue}</span>
+                                                </div>
+                                            ` : ''}
+                                            ${!item.isRecurring && item.date ? `<div style="font-size: 10px; color: #666; margin-top: 2px;">${new Date(item.date).toLocaleDateString()}</div>` : ''}
+                                        </div>
+                                        <div style="display: flex; flex-direction: column; gap: 8px; margin-left: 10px;">
+                                            <button onclick="openEditScheduleModal(${editArgs}); event.stopPropagation();" style="background: none; border: none; cursor: pointer; padding: 4px;">
+                                                <ion-icon name="create-outline" style="font-size: 20px; color: var(--primary-color);"></ion-icon>
+                                            </button>
+                                            <button onclick="deleteScheduleItem('${item.id}', '${item.type}', '${item.courseId || ''}'); event.stopPropagation();" style="background: none; border: none; cursor: pointer; padding: 4px;">
+                                                <ion-icon name="trash-outline" style="font-size: 20px; color: #dc3545;"></ion-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                        }).join('')
+                            }
+                            </div>
+                `;
+                    }
+                });
+
+                scheduleContent.innerHTML = html;
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        };
+
+        async function loadTasks() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                // CHANGED: Use root 'tasks' collection to match mobile
+                const tasksRef = collection(db, 'tasks');
+                const q = query(tasksRef, where('userId', '==', uid));
+                const snapshot = await getDocs(q);
+
+                allTasks = [];
+                snapshot.forEach(doc => {
+                    allTasks.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort by due date
+                allTasks.sort((a, b) => a.dueDate - b.dueDate);
+
+                const tasksContent = document.getElementById('tasks-content');
+
+                if (allTasks.length === 0) {
+                    tasksContent.innerHTML = `
+                <div class="empty-container">
+                            <ion-icon name="checkbox-outline" size="large" style="font-size: 64px; color: #666;"></ion-icon>
+                            <p class="empty-text">No tasks yet. Tap + to add one!</p>
+                        </div>
+                `;
+                    return;
+                }
+
+                const html = allTasks.map(task => `
+                <div class="task-card" style="${task.isCompleted ? 'opacity: 0.5;' : ''}">
+                        <button class="checkbox" onclick="toggleTask('${task.id}', ${task.isCompleted})">
+                            <ion-icon 
+                                name="${task.isCompleted ? 'checkmark-circle' : 'ellipse-outline'}" 
+                                style="font-size: 24px; color: ${task.isCompleted ? '#667eea' : '#999'};">
+                            </ion-icon>
+                        </button>
+                        <div class="task-content">
+                            <div class="task-title" style="${task.isCompleted ? 'text-decoration: line-through;' : ''}">${task.title}</div>
+                            <div class="task-meta">
+                                ${task.courseName ? `<span class="task-course">${task.courseName} • </span>` : ''}
+                                <span class="task-date">Due: ${new Date(task.dueDate).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                         <div style="display: flex; gap: 8px;">
+                            <button class="delete-task-button" onclick="editTask('${task.id}')" style="color: #667eea;" ${task.isCompleted ? 'disabled' : ''}>
+                                <ion-icon name="create-outline" style="font-size: 20px;"></ion-icon>
+                            </button>
+                            <button class="delete-task-button" onclick="deleteTaskItem('${task.id}')">
+                                <ion-icon name="trash-outline" style="font-size: 20px; color: #dc3545;"></ion-icon>
+                            </button>
+                        </div>
+                    </div >
+                `).join('');
+
+                tasksContent.innerHTML = html;
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        };
+
+        // GPA SIMULATOR
+        window.loadGPASimulator = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const container = document.getElementById('gpa-simulator-content');
+            if (!container) return;
+
+            container.innerHTML = `<div style="text-align:center;padding:40px;"><div class="spinner" style="margin:0 auto;"></div><p style="margin-top:16px;color:#999;">Loading courses...</p></div>`;
+
+            try {
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+
+                // Separate semesters by type
+                let pastSems = [], activeSems = [];
+                snapshot.forEach(doc => {
+                    const s = { id: doc.id, ...doc.data() };
+                    if (s.type === 'past') pastSems.push(s);
+                    else if (s.type === 'current' || s.type === 'pending') activeSems.push(s);
+                });
+
+                // --- BASELINE: weighted sum for all PAST semesters ---
+                // Formula: Σ(grade_points × unit_hours) across all past courses
+                // CGPA = pastWeightedPoints / pastTotalUnits
+                let pastWeightedPoints = 0, pastTotalUnits = 0;
+                // Use accumQP helper  round stored QPs per spec
+                const { qp: pastWeightedPoints, units: pastTotalUnits } = accumQP(pastSems);
+
+                // Filter active semesters to only those with courses
+                activeSems = activeSems.filter(s => s.courses && s.courses.length > 0);
+
+                if (activeSems.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-container" style="padding:60px 20px;text-align:center;">
+                            <ion-icon name="school-outline" style="font-size:64px;color:#666;"></ion-icon>
+                            <p class="empty-text" style="margin-top:16px;">No current or pending semesters with courses found.<br>Add courses to a current or pending semester first.</p>
+                        </div>`;
+                    return;
+                }
+
+                const grades = getAvailableGrades();
+
+                // Build flat indexed course list for grade selects
+                const allCourseRows = [];
+                activeSems.forEach((sem, si) => {
+                    sem.courses.forEach((course, ci) => {
+                        allCourseRows.push({ si, ci, course });
+                    });
+                });
+
+                const pastBaseCGPA = pastTotalUnits > 0
+                    ? (pastWeightedPoints / pastTotalUnits).toFixed(2) + ' CGPA · ' + pastTotalUnits + ' past units'
+                    : 'No past semesters yet';
+
+                let html = `<div style="padding:16px;">
+                    <div class="stat-card" id="sim-result-card" style="margin-bottom:20px;background:linear-gradient(135deg,var(--primary-color) 0%,#764ba2 100%);padding:20px;">
+                        <div style="font-size:11px;color:rgba(255,255,255,0.75);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Projected CGPA</div>
+                        <div id="sim-cgpa" style="font-size:52px;font-weight:800;color:white;line-height:1;">--</div>
+                        <div id="sim-class" style="font-size:14px;color:rgba(255,255,255,0.9);margin-top:6px;">Assign grades below</div>
+                        <div id="sim-breakdown" style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:6px;"></div>
+                        <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:6px;">Baseline: ${pastBaseCGPA}</div>
+                    </div>`;
+
+                activeSems.forEach((sem, si) => {
+                    const typeLabel = sem.type === 'current' ? 'CURRENT' : 'PENDING';
+                    const typeColor = sem.type === 'current' ? '#667eea' : '#f59e0b';
+                    const semUnits = sem.courses.reduce((a, c) => a + (parseFloat(c.unitHours) || 0), 0);
+
+                    html += `
+                    <div style="margin-bottom:20px;">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                            <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;background:${typeColor}22;color:${typeColor};border:1px solid ${typeColor}44;flex-shrink:0;">${typeLabel}</span>
+                            <div>
+                                <div style="font-weight:700;font-size:15px;">${sem.name || 'Unnamed Semester'}</div>
+                                <div style="font-size:12px;color:#999;">${sem.courses.length} courses · ${semUnits} total units</div>
+                            </div>
+                        </div>
+                        <div id="sim-sem-gpa-${si}" style="font-size:12px;color:var(--primary-color);margin-bottom:10px;font-weight:600;min-height:16px;"></div>`;
+
+                    sem.courses.forEach((course, ci) => {
+                        const globalIndex = allCourseRows.findIndex(r => r.si === si && r.ci === ci);
+                        const existingGrade = course.grade || course.predictedGrade || course.targetGrade || '';
+                        const units = parseFloat(course.unitHours) || 0;
+                        html += `
+                        <div style="background:var(--card-bg);padding:14px 16px;border-radius:12px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--border-color);">
+                            <div style="flex:1;min-width:0;">
+                                <div style="font-weight:700;font-size:15px;">${course.code || 'N/A'}</div>
+                                <div style="font-size:13px;color:#999;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${course.name || ''}</div>
+                                <div style="font-size:12px;color:var(--primary-color);margin-top:4px;">${units} unit${units === 1 ? '' : 's'}</div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
+                                <label style="font-size:10px;color:#999;text-transform:uppercase;letter-spacing:0.5px;">Grade</label>
+                                <select id="sim-grade-${globalIndex}"
+                                    data-units="${units}"
+                                    data-sem-index="${si}"
+                                    onchange="window.recalcSimulator()"
+                                    style="width:72px;padding:8px 4px;border-radius:8px;background:var(--card-bg);color:var(--text-color);border:2px solid var(--primary-color);font-size:16px;font-weight:700;text-align:center;">
+                                    <option value="">--</option>
+                                    ${grades.map(g => `<option value="${g}" ${g === existingGrade ? 'selected' : ''}>${g}</option>`).join('')}
+                                </select>
+                            </div>
+                        </div>`;
+                    });
+
+                    html += `</div>`;
+                });
+
+                html += `
+                    <button onclick="window.resetSimulator()" class="btn btn-secondary" style="width:100%;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:6px;">
+                        <ion-icon name="refresh-outline"></ion-icon> Reset All Grades
+                    </button>
+                </div>`;
+
+                container.innerHTML = html;
+
+                // Store state for recalc
+                window._simPastPoints = pastWeightedPoints;
+                window._simPastUnits  = pastTotalUnits;
+                window._simTotalRows  = allCourseRows.length;
+                window._simSemCount   = activeSems.length;
+
+                window.recalcSimulator();
+
+            } catch (err) {
+                console.error('GPA Simulator error:', err);
+                container.innerHTML = `<div class="empty-container"><p class="empty-text">Error loading simulator. Please try again.</p></div>`;
+            }
+        };
+
+        window.recalcSimulator = function () {
+            const totalRows  = window._simTotalRows || 0;
+            const semCount   = window._simSemCount  || 0;
+            const pastPoints = window._simPastPoints || 0;
+            const pastUnits  = window._simPastUnits  || 0;
+
+            // Accumulate per-course weighted grade points
+            let simTotalPoints = 0, simTotalUnits = 0, simAssigned = 0;
+            // Per-semester accumulators
+            const semData = {}; // si -> {points, units, assigned, totalCourses}
+
+            for (let i = 0; i < totalRows; i++) {
+                const sel = document.getElementById(`sim-grade-${i}`);
+                if (!sel) continue;
+
+                const grade = sel.value;
+                const units = parseFloat(sel.dataset.units) || 0;
+                const si    = parseInt(sel.dataset.semIndex, 10);
+
+                if (!semData[si]) semData[si] = { points: 0, units: 0, assigned: 0, totalCourses: 0 };
+                semData[si].totalCourses++;
+
+                if (grade && units > 0) {
+                    const gp = gradeToPoint(grade);
+                    // Weighted sum: grade_points × credit_units
+                    simTotalPoints += gp * units;
+                    simTotalUnits  += units;
+                    simAssigned++;
+                    semData[si].points += gp * units;
+                    semData[si].units  += units;
+                    semData[si].assigned++;
+                }
+            }
+
+            // Projected CGPA formula:
+            // = (Σ past_gpa×past_units  +  Σ sim_grade_points×sim_units)
+            //   ─────────────────────────────────────────────────────────
+            //              past_units + sim_units
+            const projPoints = pastPoints + simTotalPoints;
+            const projUnits  = pastUnits  + simTotalUnits;
+            const cgpa = projUnits > 0 ? (projPoints / projUnits).toFixed(2) : '--';
+
+            const cgpaEl  = document.getElementById('sim-cgpa');
+            const classEl = document.getElementById('sim-class');
+            const breakEl = document.getElementById('sim-breakdown');
+
+            if (cgpaEl) cgpaEl.textContent = cgpa;
+
+            if (classEl) {
+                if (simAssigned === 0) {
+                    classEl.textContent = 'Assign grades below';
+                } else {
+                    const cls = getDegreeClassification(parseFloat(cgpa));
+                    classEl.textContent = cls.label;
+                }
+            }
+
+            if (breakEl) {
+                if (simAssigned > 0) {
+                    // Semester GPA = simulated weighted points / simulated units (no past baseline)
+                    const semGPA = simTotalUnits > 0 ? (simTotalPoints / simTotalUnits).toFixed(2) : '0.00';
+                    breakEl.textContent = `Sim Semester GPA: ${semGPA} · ${simAssigned}/${totalRows} courses graded · ${simTotalUnits} units`;
+                } else {
+                    breakEl.textContent = '';
+                }
+            }
+
+            // Per-semester GPA labels
+            for (let si = 0; si < semCount; si++) {
+                const el = document.getElementById(`sim-sem-gpa-${si}`);
+                if (!el) continue;
+                const d = semData[si];
+                if (!d || d.assigned === 0) {
+                    el.textContent = '';
+                } else {
+                    const sgpa = d.units > 0 ? (d.points / d.units).toFixed(2) : '0.00';
+                    el.textContent = `Simulated GPA: ${sgpa}  (${d.assigned}/${d.totalCourses} courses · ${d.units} units)`;
+                }
+            }
+        };
+
+        window.resetSimulator = function () {
+            const n = window._simTotalRows || 0;
+            for (let i = 0; i < n; i++) {
+                const sel = document.getElementById(`sim-grade-${i}`);
+                if (sel) sel.value = '';
+            }
+            window.recalcSimulator();
+        };
+
+        window.toggleScheduleDateInput = function () {
+            const isRecurring = document.getElementById('schedule-recurring').checked;
+            if (isRecurring) {
+                document.getElementById('schedule-day-container').classList.remove('hidden');
+                document.getElementById('schedule-date-container').classList.add('hidden');
+            } else {
+                document.getElementById('schedule-day-container').classList.add('hidden');
+                document.getElementById('schedule-date-container').classList.remove('hidden');
+            }
+        };
+
+        window.showAddScheduleModal = async function () {
+            // Reset form
+            document.getElementById('schedule-title').value = '';
+            document.getElementById('schedule-recurring').checked = true;
+            toggleScheduleDateInput();
+
+            document.getElementById('edit-schedule-id').value = '';
+            document.getElementById('edit-schedule-course-id').value = '';
+            document.getElementById('edit-schedule-original-start').value = '';
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+
+                const semesters = [];
+                snapshot.forEach(doc => {
+                    semesters.push({ id: doc.id, ...doc.data() });
+                });
+
+                const currentSemester = semesters.find(s => s.type === 'current');
+                const courses = currentSemester?.courses || [];
+
+                const select = document.getElementById('schedule-course-select');
+                let options = '<option value="">No Course / Personal</option>';
+
+                if (courses.length > 0) {
+                    options += courses.map(c => `<option value="${c.id}">${c.code} - ${c.name}</option>`).join('');
+                }
+
+                select.innerHTML = options;
+
+                document.getElementById('add-schedule-modal').classList.add('show');
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        window.saveSchedule = async function () {
+            const courseId = document.getElementById('schedule-course-select').value;
+            const day = document.getElementById('schedule-day').value;
+            const startTime = document.getElementById('schedule-start-time').value;
+            const endTime = document.getElementById('schedule-end-time').value;
+            const venue = document.getElementById('schedule-venue').value;
+
+            if (!courseId) {
+                showToast('Please select a course', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+
+                const semesters = [];
+                snapshot.forEach(doc => semesters.push({ id: doc.id, ...doc.data() }));
+
+                const currentSemester = semesters.find(s => s.type === 'current');
+
+                if (!currentSemester) {
+                    showToast('No current semester found', 'error');
+                    showLoading(false);
+                    return;
+                }
+
+                const courseIndex = currentSemester.courses.findIndex(c => c.id === courseId);
+                if (courseIndex === -1) {
+                    showToast('Course not found', 'error');
+                    showLoading(false);
+                    return;
+                }
+
+                const newSchedule = {
+                    day,
+                    startTime,
+                    endTime,
+                    venue: venue || undefined
+                };
+
+                const existingSchedules = currentSemester.courses[courseIndex].schedules || (currentSemester.courses[courseIndex].schedule ? [currentSemester.courses[courseIndex].schedule] : []) || [];
+
+                // Avoid duplicates
+                const isDuplicate = existingSchedules.some(s => s.day === newSchedule.day && s.startTime === newSchedule.startTime);
+                if (isDuplicate) {
+                    showToast('Class time already exists', 'error');
+                    showLoading(false);
+                    return;
+                }
+
+                const updatedSchedules = [...existingSchedules, newSchedule];
+                currentSemester.courses[courseIndex].schedules = updatedSchedules;
+                currentSemester.courses[courseIndex].schedule = newSchedule; // Sync legacy
+
+                await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                    courses: currentSemester.courses
+                });
+
+                showToast('Schedule added!', 'success');
+                closeModal('add-schedule-modal');
+                loadSchedule();
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+
+            showLoading(false);
+        };
+
+        window.deleteScheduleItem = async function (courseId, day, startTime) {
+            if (!confirm('Delete this class time?')) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                // Find course in current semester
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+                let currentSemester = null;
+                snapshot.forEach(doc => {
+                    if (doc.data().type === 'current') currentSemester = { id: doc.id, ...doc.data() };
+                });
+
+                if (currentSemester) {
+                    const courses = currentSemester.courses;
+                    const idx = courses.findIndex(c => c.id === courseId);
+                    if (idx !== -1) {
+                        let schedules = courses[idx].schedules || (courses[idx].schedule ? [courses[idx].schedule] : []) || [];
+
+                        // Filter out specific schedule
+                        if (day && startTime) {
+                            schedules = schedules.filter(s => s.day !== day || s.startTime !== startTime);
+                        } else {
+                            schedules = [];
+                        }
+
+                        courses[idx].schedules = schedules;
+                        courses[idx].schedule = schedules.length > 0 ? schedules[0] : null;
+
+                        await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                            courses
+                        });
+                        showToast('Class cancelled', 'success');
+                        loadSchedule();
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+                showToast('Error removing schedule', 'error');
+            } finally {
+                showLoading(false);
+            }
+        };
+
+        window.showAddTaskModal = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+
+                const semesters = [];
+                snapshot.forEach(doc => {
+                    semesters.push({ id: doc.id, ...doc.data() });
+                });
+
+                const currentSemester = semesters.find(s => s.type === 'current');
+                const courses = currentSemester?.courses || [];
+
+                const select = document.getElementById('task-course-select');
+                select.innerHTML = '<option value="">None</option>' +
+                    courses.map(c => `< option value = "${c.id}" > ${c.code} - ${c.name}</option > `).join('');
+
+                document.getElementById('task-id').value = ''; // Reset ID
+                // Set default due date to tomorrow
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                document.getElementById('task-due-date').value = tomorrow.toISOString().split('T')[0];
+                document.getElementById('task-title').value = '';
+                document.getElementById('task-description').value = '';
+
+                document.getElementById('add-task-modal').classList.add('show');
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        window.editTask = async function (taskId) {
+            const task = allTasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            await window.showAddTaskModal();
+
+            document.getElementById('task-id').value = taskId;
+            document.getElementById('task-title').value = task.title;
+            document.getElementById('task-course-select').value = task.courseId || '';
+            document.getElementById('task-type').value = task.type || 'assignment';
+            document.getElementById('task-due-date').value = new Date(task.dueDate).toISOString().split('T')[0];
+            document.getElementById('task-description').value = task.description || '';
+
+            document.querySelector('#add-task-modal h2').textContent = 'Edit Task';
+        };
+
+        window.addTask = async function () {
+            const title = document.getElementById('task-title').value.trim();
+            const courseId = document.getElementById('task-course-select').value;
+            const type = document.getElementById('task-type').value;
+            const dueDate = document.getElementById('task-due-date').value;
+            const description = document.getElementById('task-description').value.trim();
+
+            if (!title || !dueDate) {
+                showToast('Please enter title and due date', 'error');
+                return;
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                // Get course name if selected
+                // Get course name if selected
+                let courseName = null;
+                if (courseId) {
+                    console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
+                    const snapshot = await getDocs(semRef);
+
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        if (data.type === 'current') {
+                            const course = data.courses?.find(c => c.id === courseId);
+                            if (course) {
+                                courseName = course.name;
+                            }
+                        }
+                    });
+                }
+
+                const taskId = document.getElementById('task-id').value;
+
+                const taskData = {
+                    title,
+                    courseId: courseId || null,
+                    courseName: courseName || null,
+                    type,
+                    dueDate: new Date(dueDate).getTime(),
+                    description: description || null
+                };
+
+                if (taskId) {
+                    // Update
+                    console.log('Updating task:', taskId);
+                    await updateDoc(doc(db, 'tasks', taskId), taskData);
+                    showToast('Task updated!', 'success');
+                } else {
+                    // Create
+                    const taskRef = doc(collection(db, 'tasks'));
+                    console.log('Creating new task:', taskRef.id);
+                    await setDoc(taskRef, {
+                        id: taskRef.id,
+                        userId: uid,
+                        ...taskData,
+                        isCompleted: false,
+                        createdAt: Date.now()
+                    });
+                    showToast('Task added!', 'success');
+                }
+
+                closeModal('add-task-modal');
+                document.getElementById('task-id').value = '';
+                document.getElementById('task-title').value = '';
+                document.getElementById('task-description').value = '';
+                loadTasks();
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+
+            showLoading(false);
+        };
+
+        window.toggleTask = async function (taskId, currentStatus) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                await updateDoc(doc(db, 'tasks', taskId), {
+                    isCompleted: !currentStatus
+                });
+
+                loadTasks();
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        window.deleteTaskItem = async function (taskId) {
+            if (!confirm('Delete this task?')) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                await deleteDoc(doc(db, 'tasks', taskId));
+                showToast('Task deleted', 'success');
+                loadTasks();
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+
+            showLoading(false);
+        };
+
+
+        // Resources Lock Logic
+        // Resources Lock Logic
+        window.resourcesUnlocked = false;
+
+        window.checkResourcesPasscode = function () {
+            const input = document.getElementById('resources-passcode');
+            const errorMsg = document.getElementById('lock-error-msg');
+            const overlay = document.getElementById('resources-lock-overlay');
+            const container = document.getElementById('community-resources-container');
+
+            if (input.value === 'ATLASRES2008') {
+                window.resourcesUnlocked = true;
+                unlockResourcesUI();
+                input.value = '';
+                errorMsg.style.display = 'none';
+            } else {
+                errorMsg.style.display = 'block';
+                input.classList.add('shake');
+                setTimeout(() => input.classList.remove('shake'), 500);
+            }
+        };
+
+        function unlockResourcesUI() {
+            const overlay = document.getElementById('resources-lock-overlay');
+            const container = document.getElementById('community-resources-container');
+
+            if (overlay && container) {
+                overlay.style.display = 'none';
+                container.style.filter = 'none';
+                container.style.pointerEvents = 'auto';
+                container.style.userSelect = 'auto';
+            }
+        }
+
+        // Check lock status on load/tab switch
+        // Check lock status on load/tab switch
+        window.checkResourcesLock = function () {
+            const isUnlocked = window.resourcesUnlocked === true;
+            const container = document.getElementById('community-resources-container');
+            const overlay = document.getElementById('resources-lock-overlay');
+
+            // Special case: If we are not on the resources tab, the container is hidden anyway.
+            // We only need to apply the blur/overlay logic when the tab is active.
+
+            if (isUnlocked) {
+                unlockResourcesUI();
+            } else {
+                if (overlay) overlay.style.display = 'flex';
+                if (container) {
+                    container.style.filter = 'blur(5px)';
+                    container.style.pointerEvents = 'none';
+                    container.style.userSelect = 'none';
+                }
+            }
+        };
+
+
+        // USER SEARCH & PROFILE FUNCTIONS
+        let allUsers = [];
+
+        window.showUserFriends = async function (userId) {
+            showLoading(true);
+            try {
+                const friendsRef = collection(db, 'friends');
+                const q = query(friendsRef, where('userId', '==', userId));
+                const snapshot = await getDocs(q);
+
+                const friendIds = [];
+                snapshot.forEach(doc => friendIds.push(doc.data().friendId));
+
+                const friends = [];
+                for (const fid of friendIds) {
+                    const docSnap = await getDoc(doc(db, 'users', fid));
+                    if (docSnap.exists()) friends.push({ id: docSnap.id, ...docSnap.data() });
+                }
+
+                const modal = document.getElementById('user-search-modal');
+                if (modal.querySelector('h2')) modal.querySelector('h2').textContent = 'Friends';
+                renderUsers(friends);
+                modal.classList.add('show');
+            } catch (e) {
+                alert('DASHBOARD ERROR: ' + e.message + ' \n' + e.stack);
+                console.error(e);
+                showToast('Error loading friends', 'error');
+            } finally {
+                showLoading(false);
+            }
+        };
+
+        window.showUserSearch = async function () {
+            const modal = document.getElementById('user-search-modal');
+            if (modal.querySelector('h2')) modal.querySelector('h2').textContent = 'Find Users';
+            modal.classList.add('show');
+            document.getElementById('user-search-input').focus();
+            await loadAllUsers();
+        };
+
+        async function loadAllUsers() {
+            showLoading(true);
+            try {
+                const usersRef = collection(db, 'users');
+                const snapshot = await getDocs(usersRef);
+
+                allUsers = [];
+                snapshot.forEach(doc => {
+                    allUsers.push({ id: doc.id, ...doc.data() });
+                });
+
+                renderUsers(allUsers);
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        }
+
+        window.searchUsers = function () {
+            const searchTerm = document.getElementById('user-search-input').value.toLowerCase();
+            const filtered = allUsers.filter(u =>
+                u.username?.toLowerCase().includes(searchTerm) ||
+                u.email?.toLowerCase().includes(searchTerm)
+            );
+            renderUsers(filtered);
+        };
+
+        function renderUsers(users) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const html = users.length > 0 ? users.map(user => {
+                if (user.id === uid) return ''; // Don't show current user
+
+                const isOnline = user.lastActive && (Date.now() - user.lastActive < 300000); // 5 min
+
+                return `
+                <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #2a2a2a; border-radius: 8px; margin-bottom: 10px; cursor: pointer;" onclick="viewUserProfile('${user.id}')">
+                        <div style="position: relative;">
+                            ${user.profilePicture ?
+                        `<img src="${user.profilePicture}" style="width: 50px; height: 50px; border-radius: 25px; object-fit: cover;">` :
+                        `<div style="width: 50px; height: 50px; border-radius: 25px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 20px;">${user.username?.[0]?.toUpperCase() || 'U'}</div>`
+                    }
+                            ${isOnline ? '<div style="position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; background: #4CAF50; border: 2px solid #1a1a1a; border-radius: 50%;"></div>' : ''}
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: bold;">${user.username || 'Anonymous'}</div>
+                            <div style="font-size: 12px; color: #999;">${user.email || ''}</div>
+                        </div>
+                        <ion-icon name="chevron-forward" style="color: #999;"></ion-icon>
+                    </div >
+                `;
+            }).join('') : '<p style="text-align: center; color: #999; padding: 20px;">No users found</p>';
+
+            document.getElementById('users-list').innerHTML = html;
+        }
+
+        window.viewUserProfile = async function (userId) {
+            showLoading(true);
+            try {
+                const userDoc = await getDoc(doc(db, 'users', userId));
+                if (!userDoc.exists()) {
+                    showToast('User not found', 'error');
+                    return;
+                }
+
+                currentViewingUser = { id: userDoc.id, ...userDoc.data() };
+                const uid = localStorage.getItem('kobi_atlas_uid');
+                const isOwnProfile = userId === uid;
+
+                // Check friend status
+                const friendsRef = collection(db, 'friends');
+                const q1 = query(friendsRef, where('userId', '==', uid), where('friendId', '==', userId));
+                const q2 = query(friendsRef, where('userId', '==', userId), where('friendId', '==', uid));
+                const [snap1, snap2] = await Promise.all([getDocs(q1), getDocs(q2)]);
+
+                const isFriend = !snap1.empty || !snap2.empty;
+
+                // Check pending request
+                const requestsRef = collection(db, 'friendRequests');
+                const q3 = query(requestsRef, where('fromUserId', '==', uid), where('toUserId', '==', userId), where('status', '==', 'pending'));
+                const snap3 = await getDocs(q3);
+                const hasPendingRequest = !snap3.empty;
+
+                // Get user's posts (Filter locally to avoid Index requirements)
+                const postsRef = collection(db, 'posts');
+                const postsQuery = query(postsRef, where('authorId', '==', userId));
+                const postsSnap = await getDocs(postsQuery);
+                const userPosts = [];
+                postsSnap.forEach(doc => userPosts.push({ id: doc.id, ...doc.data() }));
+
+                // Sort by timestamp desc
+                userPosts.sort((a, b) => b.timestamp - a.timestamp);
+
+                const joinDate = currentViewingUser.createdAt ? new Date(currentViewingUser.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Unknown';
+                const lastSeen = currentViewingUser.lastActive ? formatTime(currentViewingUser.lastActive) : 'Never';
+                const isOnline = currentViewingUser.lastActive && (Date.now() - currentViewingUser.lastActive < 300000);
+                const friendCount = currentViewingUser.friends?.length || 0;
+
+                const html = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    ${currentViewingUser.profilePicture ?
+                        `<img src="${currentViewingUser.profilePicture}" style="width: 100px; height: 100px; border-radius: 50px; object-fit: cover; margin-bottom: 10px;">` :
+                        `<div style="width: 100px; height: 100px; border-radius: 50px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 40px; margin: 0 auto 10px;">${currentViewingUser.username?.[0]?.toUpperCase() || 'U'}</div>`
+                    }
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <h2 style="margin: 10px 0;">${currentViewingUser.username || 'Anonymous'}</h2>
+                            ${isOwner(currentViewingUser) ? '<ion-icon name="shield-checkmark" style="color: #FFD700; font-size: 20px;"></ion-icon>' : ''}
+                        </div>
+                        <p style="color: #999;">${currentViewingUser.email || ''}</p>
+                    </div >
+                    
+                    < !--Stats Grid-- >
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
+                        <div style="text-align: center; padding: 12px; background: #2a2a2a; border-radius: 8px;">
+                            <div style="font-size: 20px; font-weight: bold;">${userPosts.length}</div>
+                            <div style="font-size: 12px; color: #999;">Posts</div>
+                        </div>
+                        <div style="text-align: center; padding: 12px; background: #2a2a2a; border-radius: 8px; cursor: pointer;" onclick="showUserFriends('${currentViewingUser.id}')">
+                            <div style="font-size: 20px; font-weight: bold;">${friendCount}</div>
+                            <div style="font-size: 12px; color: #999;">Friends</div>
+                        </div>
+                        <div style="text-align: center; padding: 12px; background: #2a2a2a; border-radius: 8px;">
+                            <div style="font-size: 14px; font-weight: bold; color: ${isOnline ? '#4CAF50' : '#999'};">${lastSeen}</div>
+                            <div style="font-size: 12px; color: #999;">Last Seen</div>
+                        </div>
+                    </div>
+
+                    <!--Achievements -->
+                    <div style="padding: 16px; background: #2a2a2a; border-radius: 8px; margin-bottom: 16px;">
+                        <h3 style="margin: 0 0 12px 0;">Achievements</h3>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            ${ACHIEVEMENTS.map(ach => {
+                        const isUnlocked = currentViewingUser.achievements && currentViewingUser.achievements.includes(ach.id);
+                        return `
+                                    <div style="width: calc(33.33% - 6px); text-align: center; opacity: ${isUnlocked ? 1 : 0.3};">
+                                        <div style="width: 40px; height: 40px; border-radius: 20px; background: ${isUnlocked ? 'var(--primary-color)' : '#444'}; display: flex; align-items: center; justify-content: center; margin: 0 auto 4px;">
+                                            <ion-icon name="${ach.icon}" style="color: white; font-size: 20px;"></ion-icon>
+                                        </div>
+                                        <div style="font-size: 10px; color: var(--text-color);">${ach.title}</div>
+                                    </div>
+                                `;
+                    }).join('')}
+                        </div>
+                    </div>
+                    
+                    <!--Action Buttons-->
+                ${!isOwnProfile ? `
+                        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                            ${isFriend ? `
+                                <button class="btn btn-primary" style="flex: 1;" onclick="openChat('${userId}')">
+                                    <ion-icon name="chatbubble" style="margin-right: 6px;"></ion-icon>
+                                    Message
+                                </button>
+                                <button class="btn btn-secondary" onclick="unfriend('${userId}')">Unfriend</button>
+                            ` : hasPendingRequest ? `
+                                <button class="btn btn-primary" style="flex: 1;" onclick="openChat('${userId}')">
+                                    <ion-icon name="chatbubble" style="margin-right: 6px;"></ion-icon>
+                                    Message
+                                </button>
+                                <button class="btn btn-secondary" style="flex: 1;" disabled>Request Sent</button>
+                            ` : `
+                                <button class="btn btn-primary" style="flex: 1;" onclick="openChat('${userId}')">
+                                    <ion-icon name="chatbubble" style="margin-right: 6px;"></ion-icon>
+                                    Message
+                                </button>
+                                <button class="btn btn-secondary" style="flex: 1;" onclick="sendFriendRequest('${userId}')">
+                                    <ion-icon name="person-add" style="margin-right: 6px;"></ion-icon>
+                                    Add Friend
+                                </button>
+                            `}
+                        </div>
+                    ` : ''
+                    }
+                    
+                    < !--About Me-- >
+                ${currentViewingUser.bio || currentViewingUser.aboutMe ? `
+                        <div style="padding: 16px; background: #2a2a2a; border-radius: 8px; margin-bottom: 16px;">
+                            <h3 style="margin: 0 0 10px 0;">About Me</h3>
+                            <p style="margin: 0; color: #ccc; line-height: 1.5;">${currentViewingUser.bio || currentViewingUser.aboutMe}</p>
+                        </div>
+                    ` : ''
+                    }
+                    
+                    < !--Information -->
+                    <div style="padding: 16px; background: #2a2a2a; border-radius: 8px; margin-bottom: 16px;">
+                        <h3 style="margin: 0 0 12px 0;">Information</h3>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                            <ion-icon name="mail-outline" style="color: #999;"></ion-icon>
+                            <span style="color: #999;">${currentViewingUser.email || 'No email'}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <ion-icon name="calendar-outline" style="color: #999;"></ion-icon>
+                            <span style="color: #999;">Joined ${joinDate}</span>
+                        </div>
+                    </div>
+                    
+                    <!--Recent Posts-- >
+                <div style="padding: 16px; background: #2a2a2a; border-radius: 8px;">
+                    <h3 style="margin: 0 0 12px 0;">Recent Posts (${userPosts.length})</h3>
+                    ${userPosts.length > 0 ? userPosts.slice(0, 5).map(post => `
+                            <div style="padding: 12px; background: #1a1a1a; border-radius: 8px; margin-bottom: 8px; cursor: pointer;" onclick="closeModal('user-profile-modal'); openPostDetail('${post.id}')">
+                                <p style="margin: 0 0 8px 0; line-height: 1.4;">${(post.contentText || 'No text').substring(0, 100)}${(post.contentText || '').length > 100 ? '...' : ''}</p>
+                                <div style="display: flex; gap: 16px; font-size: 12px; color: #999;">
+                                    <span><ion-icon name="heart"></ion-icon> ${post.likes?.length || 0}</span>
+                                    <span><ion-icon name="chatbubble"></ion-icon> ${post.replies?.length || 0}</span>
+                                    <span>${formatTime(post.timestamp)}</span>
+                                </div>
+                            </div>
+                        `).join('') : '<p style="text-align: center; color: #999; padding: 20px;">No posts yet</p>'}
+                </div>
+            `;
+
+                document.getElementById('user-profile-content').innerHTML = html;
+                closeModal('user-search-modal');
+                document.getElementById('user-profile-modal').classList.add('show');
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        };
+
+        window.sendFriendRequest = async function (toUserId) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const userDoc = await getDoc(doc(db, 'users', uid));
+                const userData = userDoc.data() || {};
+
+                const requestRef = doc(collection(db, 'friendRequests'));
+                await setDoc(requestRef, {
+                    id: requestRef.id,
+                    fromUserId: uid,
+                    toUserId: toUserId,
+                    fromUsername: userData.username || userData.displayName || 'Anonymous',
+                    fromProfilePicture: userData.profilePicture || null,
+                    status: 'pending',
+                    timestamp: Date.now()
+                });
+
+                showToast('Friend request sent!', 'success');
+                viewUserProfile(toUserId); // Refresh profile
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        window.unfriend = async function (friendId) {
+            if (!confirm('Remove this friend?')) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const friendsRef = collection(db, 'friends');
+                const q1 = query(friendsRef, where('userId', '==', uid), where('friendId', '==', friendId));
+                const q2 = query(friendsRef, where('userId', '==', friendId), where('friendId', '==', uid));
+
+                const [snap1, snap2] = await Promise.all([getDocs(q1), getDocs(q2)]);
+
+                const deletePromises = [];
+                snap1.forEach(doc => deletePromises.push(deleteDoc(doc.ref)));
+                snap2.forEach(doc => deletePromises.push(deleteDoc(doc.ref)));
+
+                await Promise.all(deletePromises);
+
+                showToast('Friend removed', 'success');
+                viewUserProfile(friendId); // Refresh profile
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        // NOTIFICATIONS FUNCTIONS
+        window.showNotifications = async function () {
+            document.getElementById('notifications-modal').classList.add('show');
+            await loadNotifications();
+        };
+
+        async function loadNotifications() {
+            showLoading(true);
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                // Get generic notifications
+                const notifRef = collection(db, 'notifications');
+                const notifQuery = query(notifRef, where('userId', '==', uid), where('read', '==', false));
+                const notifSnapshot = await getDocs(notifQuery);
+
+                const genericNotifications = [];
+                for (const docSnap of notifSnapshot.docs) {
+                    const data = docSnap.data();
+                    let extraData = {};
+
+                    // If it's a "friend_accepted" notification, fetch the user who accepted
+                    if (data.type === 'friend_accepted' && data.fromUserId) {
+                        try {
+                            const userDoc = await getDoc(doc(db, 'users', data.fromUserId));
+                            if (userDoc.exists()) {
+                                const uData = userDoc.data();
+                                extraData = {
+                                    username: uData.username || 'Someone',
+                                    profilePicture: uData.profilePicture
+                                };
+                            }
+                        } catch (e) {
+                            console.error('Error fetching user for notification', e);
+                        }
+                    }
+
+                    genericNotifications.push({
+                        id: docSnap.id,
+                        type: data.type || 'generic',
+                        fromUserId: data.fromUserId,
+                        timestamp: data.timestamp || Date.now(),
+                        message: data.message || 'New notification',
+                        referenceId: data.referenceId, // postId, replyId etc.
+                        ...extraData
+                    });
+                }
+
+                // Get friend requests
+                const requestsRef = collection(db, 'friendRequests');
+                const q = query(requestsRef, where('toUserId', '==', uid), where('status', '==', 'pending'));
+                const snapshot = await getDocs(q);
+
+                const friendRequests = [];
+                for (const docSnap of snapshot.docs) {
+                    const data = docSnap.data();
+
+                    // Fetch the actual user data to avoid "undefined"
+                    const userDoc = await getDoc(doc(db, 'users', data.fromUserId));
+                    if (!userDoc.exists()) continue;
+
+                    const userData = userDoc.data();
+                    friendRequests.push({
+                        id: docSnap.id,
+                        type: 'friend_request',
+                        fromUserId: data.fromUserId,
+                        fromUsername: userData.username || userData.displayName || 'Anonymous',
+                        fromProfilePicture: userData.profilePicture || null,
+                        timestamp: data.timestamp
+                    });
+                }
+
+                // Merge and sort
+                const notifications = [...friendRequests, ...genericNotifications];
+                notifications.sort((a, b) => b.timestamp - a.timestamp);
+
+                const html = notifications.length > 0 ? notifications.map(notif => {
+                    if (notif.type === 'friend_request') {
+                        return `
+                < div style = "display: flex; align-items: center; gap: 12px; padding: 12px; background: #2a2a2a; border-radius: 8px; margin-bottom: 10px;" >
+                                <div style="cursor: pointer;" onclick="viewUserProfile('${notif.fromUserId}')">
+                                    ${notif.fromProfilePicture ?
+                                `<img src="${notif.fromProfilePicture}" style="width: 40px; height: 40px; border-radius: 20px; object-fit: cover;">` :
+                                `<div style="width: 40px; height: 40px; border-radius: 20px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${notif.fromUsername?.[0]?.toUpperCase() || 'U'}</div>`
+                            }
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: bold; cursor: pointer;" onclick="viewUserProfile('${notif.fromUserId}')">${notif.fromUsername}</div>
+                                    <div style="font-size: 12px; color: #999;">sent you a friend request</div>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; width: auto;" onclick="acceptFriendRequest('${notif.id}', '${notif.fromUserId}')">Accept</button>
+                                    <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px; width: auto;" onclick="rejectFriendRequest('${notif.id}')">Reject</button>
+                                </div>
+                            </div>
+                `;
+                    } else if (notif.type === 'friend_accepted') {
+                        // Friend accepted notification
+                        return `
+                <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #2a2a2a; border-radius: 8px; margin-bottom: 10px;">
+                                <div style="cursor: pointer;" onclick="viewUserProfile('${notif.fromUserId}')">
+                                    ${notif.profilePicture ?
+                                `<img src="${notif.profilePicture}" style="width: 40px; height: 40px; border-radius: 20px; object-fit: cover;">` :
+                                `<div style="width: 40px; height: 40px; border-radius: 20px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${notif.username?.[0]?.toUpperCase() || 'U'}</div>`
+                            }
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-size: 14px;"><strong>${notif.username || 'Someone'}</strong> accepted your friend request</div>
+                                    <div style="font-size: 10px; color: #999; margin-top: 4px;">${formatTime(notif.timestamp)}</div>
+                                </div>
+                                <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 10px; width: auto; min-width: 60px;" onclick="markNotificationRead('${notif.id}')">Dismiss</button>
+                            </div>
+                `;
+                    } else {
+                        // Generic notification
+                        return `
+                <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #2a2a2a; border-radius: 8px; margin-bottom: 10px;">
+                                <div style="flex: 1;">
+                                    <div style="font-size: 14px;">${notif.message}</div>
+                                    <div style="font-size: 10px; color: #999; margin-top: 4px;">${formatTime(notif.timestamp)}</div>
+                                </div>
+                                <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 10px; width: auto; min-width: 60px;" onclick="markNotificationRead('${notif.id}')">Dismiss</button>
+                            </div>
+                `;
+                    }
+                }).join('') : '<p style="text-align: center; color: #999; padding: 20px;">No notifications</p>';
+
+                document.getElementById('notifications-list').innerHTML = html;
+
+                // Update badge
+                const badge = document.getElementById('notification-badge');
+                if (notifications.length > 0) {
+                    badge.textContent = notifications.length;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        }
+        window.markNotificationRead = async function (notifId) {
+            try {
+                await updateDoc(doc(db, 'notifications', notifId), { read: true });
+                loadNotifications(); // Reload list
+                loadUnreadCounts(); // Update badges
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        window.acceptFriendRequest = async function (requestId, fromUserId) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                // Get sender data first for the notification
+                const userDoc = await getDoc(doc(db, 'users', fromUserId));
+                const userData = userDoc.data() || {};
+
+                // Create friend relationship (both ways)
+                const friend1Ref = doc(collection(db, 'friends'));
+                await setDoc(friend1Ref, {
+                    userId: uid,
+                    friendId: fromUserId,
+                    timestamp: Date.now()
+                });
+
+                const friend2Ref = doc(collection(db, 'friends'));
+                await setDoc(friend2Ref, {
+                    userId: fromUserId,
+                    friendId: uid,
+                    timestamp: Date.now()
+                });
+
+                // Update request status
+                await updateDoc(doc(db, 'friendRequests', requestId), {
+                    status: 'accepted'
+                });
+
+                // Create a notification for the sender (fromUserId)
+                const notificationRef = doc(collection(db, 'notifications'));
+                await setDoc(notificationRef, {
+                    id: notificationRef.id,
+                    userId: fromUserId, // The user receiving the notification
+                    fromUserId: uid, // The user who accepted the request (current user)
+                    type: 'friend_accepted',
+                    message: `${localStorage.getItem('kobi_atlas_username') || 'Someone'} accepted your friend request`,
+                    read: false,
+                    timestamp: Date.now()
+                });
+
+                showToast('Friend request accepted!', 'success');
+                loadNotifications();
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        window.rejectFriendRequest = async function (requestId) {
+            try {
+                await updateDoc(doc(db, 'friendRequests', requestId), {
+                    status: 'rejected'
+                });
+
+                showToast('Friend request rejected', 'success');
+                loadNotifications();
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        // MESSAGES FUNCTIONS
+        window.showMessages = async function () {
+            document.getElementById('messages-modal').classList.add('show');
+            await loadConversations();
+        };
+
+        async function loadConversations() {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                const messagesRef = collection(db, 'messages');
+
+                // Get all messages where user is sender or receiver (NO FRIENDS REQUIREMENT!)
+                const q1 = query(messagesRef, where('senderId', '==', uid));
+                const q2 = query(messagesRef, where('receiverId', '==', uid));
+
+                const [snapshot1, snapshot2] = await Promise.all([getDocs(q1), getDocs(q2)]);
+
+                // Collect all unique user IDs and messages by user
+                const userIds = new Set();
+                const messagesByUser = new Map();
+
+                snapshot1.forEach(doc => {
+                    const data = doc.data();
+                    if (data.deleted) return; // Skip deleted
+
+                    userIds.add(data.receiverId);
+                    if (!messagesByUser.has(data.receiverId)) {
+                        messagesByUser.set(data.receiverId, []);
+                    }
+                    messagesByUser.get(data.receiverId).push(data);
+                });
+
+                snapshot2.forEach(doc => {
+                    const data = doc.data();
+                    if (data.deleted) return; // Skip deleted
+
+                    userIds.add(data.senderId);
+                    if (!messagesByUser.has(data.senderId)) {
+                        messagesByUser.set(data.senderId, []);
+                    }
+                    messagesByUser.get(data.senderId).push(data);
+                });
+
+                // Fetch user details and create conversations
+                const conversations = [];
+
+                for (const userId of userIds) {
+                    const userDoc = await getDoc(doc(db, 'users', userId));
+                    if (!userDoc.exists()) continue; // Skip deleted users
+
+                    const userData = userDoc.data();
+                    const userMessages = messagesByUser.get(userId) || [];
+
+                    // Sort by timestamp descending
+                    userMessages.sort((a, b) => b.timestamp - a.timestamp);
+
+                    const lastMsg = userMessages[0];
+                    const unread = userMessages.filter(msg => msg.senderId != uid && (msg.read !== true && msg.read !== 'true')).length;
+
+                    conversations.push({
+                        friendId: userId,
+                        username: userData.username || 'Anonymous',
+                        profilePicture: userData.profilePicture,
+                        lastMessage: lastMsg?.text || 'No messages yet',
+                        timestamp: lastMsg?.timestamp || 0,
+                        unreadCount: unread,
+                        isOnline: userData.lastActive && (Date.now() - userData.lastActive < 300000)
+                    });
+                }
+
+                console.log('Loaded conversations:', conversations.length);
+                const unreadMessages = conversations.filter(c => c.unreadCount > 0);
+                const readMessages = conversations.filter(c => c.unreadCount === 0);
+
+                let html = '';
+
+                if (conversations.length === 0) {
+                    html = `
+                <div style="text-align: center; padding: 60px 20px;">
+                            <ion-icon name="chatbubbles-outline" style="font-size: 64px; color: #666;"></ion-icon>
+                            <p style="font-size: 20px; font-weight: 600; margin: 16px 0 8px 0;">No messages found.</p>
+                            <p style="font-size: 14px; color: #999; margin-bottom: 24px;">Start a conversation by searching for users</p>
+                            <button class="btn btn-primary" onclick="showUserSearch()">Find Users</button>
+                        </div>
+                `;
+                } else {
+                    if (unreadMessages.length > 0) {
+                        html += `
+                <div style="padding: 8px 12px; margin-bottom: 8px; color: var(--primary-color); font-weight: bold; font-size: 12px; text-transform: uppercase;"> Unread(${unreadMessages.length})</div>
+                    `;
+                        html += unreadMessages.map(conv => renderConversationItem(conv)).join('');
+                    }
+
+                    if (readMessages.length > 0) {
+                        html += `
+                    <div style="padding: 8px 12px; margin-top: 16px; margin-bottom: 8px; color: #999; font-weight: bold; font-size: 12px; text-transform: uppercase;"> Read Messages</div>
+                        `;
+                        html += readMessages.map(conv => renderConversationItem(conv)).join('');
+                    }
+                }
+
+                document.getElementById('conversations-list').innerHTML = html;
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        };
+
+        // Auto-refresh conversations when messages tab is visible
+        window.startMessagesAutoRefresh = function() {
+            if (autoRefreshInterval) { clearInterval(autoRefreshInterval); autoRefreshInterval = null; }
+            window.loadConversations();
+            autoRefreshInterval = setInterval(() => {
+                if (currentActiveScreen === 'community' && document.getElementById('community-messages-container') && !document.getElementById('community-messages-container').classList.contains('hidden')) {
+                    window.loadConversations();
+                }
+            }, 30000);
+        };
+
+        function renderConversationItem(conv) {
+            return `
+                        <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: ${conv.unreadCount > 0 ? 'rgba(102, 126, 234, 0.15)' : '#2a2a2a'}; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border: ${conv.unreadCount > 0 ? '2px solid var(--primary-color)' : '1px solid rgba(0,0,0,0.05)'}; position: relative;" onclick="openChat('${conv.friendId}')">
+                            ${conv.unreadCount > 0 ? `
+                            <div style="position: absolute; left: 4px; top: 50%; margin-top: -4px; width: 8px; height: 8px; border-radius: 4px; background: var(--primary-color);"></div>
+                        ` : ''
+                }
+                        <div style="position: relative;">
+                            ${conv.profilePicture ?
+                    `<img src="${conv.profilePicture}" style="width: 50px; height: 50px; border-radius: 25px; object-fit: cover;">` :
+                    `<div style="width: 50px; height: 50px; border-radius: 25px; background: #667eea; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 20px;">${conv.username?.[0]?.toUpperCase() || 'U'}</div>`
+                }
+                            ${conv.isOnline ? '<div style="position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; border-radius: 7px; background: #4CAF50; border: 2px solid #1a1a1a;"></div>' : ''}
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <div style="font-weight: ${conv.unreadCount > 0 ? '900' : '600'}; font-size: 16px;">${conv.username}</div>
+                                <div style="font-size: 12px; color: ${conv.unreadCount > 0 ? 'var(--primary-color)' : '#999'}; font-weight: ${conv.unreadCount > 0 ? 'bold' : 'normal'};">${conv.timestamp ? formatTime(conv.timestamp) : ''}</div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="font-size: 14px; color: ${conv.unreadCount > 0 ? '#fff' : '#999'}; ${conv.unreadCount > 0 ? 'font-weight: 700;' : ''} flex: 1;">${conv.lastMessage.substring(0, 50)}${conv.lastMessage.length > 50 ? '...' : ''}</div>
+                                ${conv.unreadCount > 0 ? `
+                                    <div style="min-width: 20px; height: 20px; border-radius: 10px; background: #007AFF; display: flex; align-items: center; justify-content: center; padding: 0 6px; margin-left: 8px;">
+                                        <span style="color: white; font-size: 11px; font-weight: bold;">${conv.unreadCount}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+            `;
+        }
+
+        window.openChat = async function (friendId) {
+            showLoading(true);
+            try {
+                const friendDoc = await getDoc(doc(db, 'users', friendId));
+                const friendData = friendDoc.data() || {};
+
+                currentChatUser = { id: friendId, ...friendData };
+
+                document.getElementById('chat-username').textContent = friendData.username || 'Chat';
+
+                closeModal('user-profile-modal');
+                closeModal('messages-modal');
+                document.getElementById('chat-modal').classList.add('show');
+
+                await loadMessages(friendId);
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        };
+
+        async function loadMessages(friendId) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const messagesRef = collection(db, 'messages');
+                const q1 = query(messagesRef, where('senderId', '==', uid), where('receiverId', '==', friendId));
+                const q2 = query(messagesRef, where('senderId', '==', friendId), where('receiverId', '==', uid));
+
+                const [snap1, snap2] = await Promise.all([getDocs(q1), getDocs(q2)]);
+
+                const messages = [];
+                snap1.forEach(doc => {
+                    const data = doc.data();
+                    if (!data.deleted) {
+                        messages.push({ id: doc.id, ...data });
+                    }
+                });
+                const batch = writeBatch(db);
+                let updateCount = 0;
+
+                snap2.forEach(doc => {
+                    const data = doc.data();
+                    if (!data.deleted) {
+                        messages.push({ id: doc.id, ...data });
+
+                        if (!data.read) {
+                            batch.update(doc.ref, { read: true });
+                            updateCount++;
+                        }
+                    }
+                });
+
+                if (updateCount > 0) {
+                    try {
+                        await batch.commit();
+                        loadConversations();
+                    } catch (e) {
+                        console.error("Error marking read:", e);
+                    }
+                }
+
+                messages.sort((a, b) => a.timestamp - b.timestamp);
+
+                const html = messages.length > 0 ? messages.map(msg => {
+                    const isMine = msg.senderId === uid;
+                    return `
+                <div style="display: flex; justify-content: ${isMine ? 'flex-end' : 'flex-start'}; margin-bottom: 10px;">
+                    <div style="max-width: 70%; padding: 10px 14px; background: ${isMine ? '#667eea' : '#2a2a2a'}; border-radius: 12px; ${isMine ? 'border-bottom-right-radius: 4px;' : 'border-bottom-left-radius: 4px;'}">
+                        <div>${msg.text}</div>
+                        <div style="font-size: 10px; color: ${isMine ? 'rgba(255,255,255,0.7)' : '#999'}; margin-top: 4px;">${formatTime(msg.timestamp)}</div>
+                    </div>
+                    </div>
+                `;
+                }).join('') : '<p style="text-align: center; color: #999; padding: 20px;">No messages yet. Say hi!</p>';
+
+                document.getElementById('messages-list').innerHTML = html;
+                document.getElementById('messages-list').scrollTop = document.getElementById('messages-list').scrollHeight;
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        window.sendMessage = async function () {
+            const text = document.getElementById('message-input').value.trim();
+            if (!text || !currentChatUser) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const messagesRef = collection(db, 'messages');
+                await addDoc(messagesRef, {
+                    senderId: uid,
+                    receiverId: currentChatUser.id,
+                    text: text,
+                    timestamp: Date.now(),
+                    read: false
+                });
+
+                document.getElementById('message-input').value = '';
+                await loadMessages(currentChatUser.id);
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        // PROFILE SETTINGS FUNCTIONS
+        window.showProfileSettings = function () {
+            document.getElementById('settings-modal').classList.add('show');
+        };
+
+        window.showEditProfile = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+
+            try {
+                const userDoc = await getDoc(doc(db, 'users', uid));
+                const userData = userDoc.data() || {};
+
+                document.getElementById('profile-username').value = userData.username || '';
+                document.getElementById('profile-bio').value = userData.bio || '';
+
+                if (userData.profilePicture) {
+                    document.getElementById('profile-picture-preview').src = userData.profilePicture;
+                    document.getElementById('profile-picture-preview').style.display = 'block';
+                    // Don't set uploadedImageBase64 - only set it when user selects NEW image
+                }
+
+
+                document.getElementById('profile-settings-modal').classList.add('show');
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
+        };
+
+        window.saveProfile = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const username = document.getElementById('profile-username').value.trim();
+            const bio = document.getElementById('profile-bio').value.trim();
+
+            if (!username) {
+                showToast('Username is required', 'error');
+                return;
+            }
+
+            try {
+                // DEFINITIVE FIX: Manual, brute-force re-compression
+                const fileInput = document.getElementById('profile-picture-input');
+                let finalProfilePicture = null; // Default to null - don't update if no new image
+
+                if (fileInput && fileInput.files[0]) {
+                    const file = fileInput.files[0];
+                    console.log('Starting BRUTE-FORCE compression for:', file.name);
+
+                    try {
+                        finalProfilePicture = await new Promise((resolve, reject) => {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                const img = new Image();
+                                img.onload = () => {
+                                    const canvas = document.createElement('canvas');
+                                    let width = img.width;
+                                    let height = img.height;
+                                    const maxSize = 400; // User demanded 400x400
+
+                                    if (width > height) {
+                                        if (width > maxSize) {
+                                            height *= maxSize / width;
+                                            width = maxSize;
+                                        }
+                                    } else {
+                                        if (height > maxSize) {
+                                            width *= maxSize / height;
+                                            height = maxSize;
+                                        }
+                                    }
+
+                                    canvas.width = width;
+                                    canvas.height = height;
+                                    const ctx = canvas.getContext('2d');
+                                    ctx.drawImage(img, 0, 0, width, height);
+
+                                    // 0.5 quality is a good balance
+                                    resolve(canvas.toDataURL('image/jpeg', 0.5));
+                                };
+                                img.onerror = () => reject(new Error('Image load failed'));
+                                img.src = e.target.result;
+                            };
+                            reader.onerror = () => reject(new Error('File read failed'));
+                            reader.readAsDataURL(file);
+                        });
+                        console.log('Final compressed size:', finalProfilePicture.length);
+                    } catch (compError) {
+                        console.error('Compression failed:', compError);
+                        showToast('Failed to compress image', 'error');
+                        return;
+                    }
+                } else if (uploadedImageBase64) {
+                    // User didn't select new image, but uploadedImageBase64 was set from preview
+                    // Use it only if it's already small (from handleImageUpload compression)
+                    finalProfilePicture = uploadedImageBase64;
+                }
+
+
+                // FAIL SAFE: If image is still too large (>800KB), ABORT SAVE
+                if (finalProfilePicture && finalProfilePicture.length > 800000) {
+                    showToast('Image cannot be compressed enough. Please use a smaller image.', 'error');
+                    console.error('ABORTING SAVE: Image size ' + finalProfilePicture.length + ' is over limit');
+                    return;
+                }
+
+                const userRef = doc(db, 'users', uid);
+                const updateData = {
+                    username: username,
+                    bio: bio,
+                    lastActive: Date.now()
+                };
+
+                // Only update profile picture if a new one was selected
+                if (finalProfilePicture !== null) {
+                    updateData.profilePicture = finalProfilePicture;
+                }
+
+                await updateDoc(userRef, updateData);
+
+
+                showToast('Profile updated!', 'success');
+                closeModal('profile-settings-modal');
+                uploadedImageBase64 = null;
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } else {
+                    showToast('Error saving profile', 'error');
+                }
+            }
+        };
+
+        // LOGOUT FUNCTION
+        window.logout = function () {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('kobi_atlas_uid');
+                localStorage.removeItem('kobi_atlas_pin');
+                window.location.reload();
+            }
+        };
+
+        // CHANGE PIN - Now handled by dedicated change-pin.html page
+
+        window.saveScheduleV2 = async function () {
+            const courseId = document.getElementById('schedule-course-select').value;
+            const title = document.getElementById('schedule-title').value.trim();
+            const isRecurring = document.getElementById('schedule-recurring').checked;
+
+            // Edit checks
+            const isEdit = document.getElementById('edit-schedule-id').value !== '';
+
+            // Validation - either course OR title must be filled
+            if (!courseId && !title) {
+                showToast('Please select a course or enter a title', 'error');
+                return;
+            }
+
+
+            const startTime = document.getElementById('schedule-start-time').value;
+            const endTime = document.getElementById('schedule-end-time').value;
+            const venue = document.getElementById('schedule-venue').value;
+
+            if (!startTime || !endTime) {
+                showToast('Please set times', 'error');
+                return;
+            }
+
+            let day = '';
+            let date = '';
+
+            if (isRecurring) {
+                day = document.getElementById('schedule-day').value;
+                if (!day) return;
+            } else {
+                date = document.getElementById('schedule-date').value;
+                if (!date) {
+                    showToast('Please select a date', 'error');
+                    return;
+                }
+                const d = new Date(date);
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                day = days[d.getDay()];
+            }
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+
+                let currentSemester = null;
+                snapshot.forEach(doc => {
+                    const data = { id: doc.id, ...doc.data() };
+                    if (data.type === 'current') {
+                        currentSemester = data;
+                    }
+                });
+
+                if (!currentSemester) {
+                    showToast('No current semester found', 'error');
+                    showLoading(false);
+                    return;
+                }
+
+                // Handle switching courses/types (Delete old reference if changed)
+                const originalId = document.getElementById('edit-schedule-id').value;
+                const originalCourseId = document.getElementById('edit-schedule-course-id').value;
+
+                if (isEdit && (originalCourseId !== courseId)) {
+                    // Course changed, delete from original location first
+                    if (originalCourseId) {
+                        // Was in a course
+                        const oldCourseIndex = currentSemester.courses.findIndex(c => c.id === originalCourseId);
+                        if (oldCourseIndex !== -1) {
+                            let oldSchedules = currentSemester.courses[oldCourseIndex].schedules || [];
+                            // Remove the schedule with originalId
+                            const updatedOldSchedules = oldSchedules.filter(s => s.id !== originalId);
+                            currentSemester.courses[oldCourseIndex].schedules = updatedOldSchedules;
+                            if (currentSemester.courses[oldCourseIndex].schedule && currentSemester.courses[oldCourseIndex].schedule.id === originalId) {
+                                currentSemester.courses[oldCourseIndex].schedule = updatedOldSchedules[0] || null;
+                            }
+                        }
+                    } else {
+                        // Was custom event
+                        let customEvents = currentSemester.customEvents || [];
+                        currentSemester.customEvents = customEvents.filter(e => e.id !== originalId);
+                    }
+                    // We don't save yet, we simply modified the local object 'currentSemester'
+                    // The save below will persist everything (since we update the whole courses/customEvents arrays)
+                    // Actually, we must ensure we save BOTH changes if we split the update calls.
+                    // Better strategy: Update the local 'currentSemester' object completely, then save once if possible,
+                    // or just rely on the existing update calls but make sure we didn't miss the cleanup.
+
+                    // Let's do the cleanup update first to ensure consistency
+                    if (originalCourseId) {
+                        // Clean up old course
+                        await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                            courses: currentSemester.courses
+                        });
+                    } else {
+                        // Clean up custom events
+                        await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                            customEvents: currentSemester.customEvents || []
+                        });
+                    }
+                }
+
+
+                // PROCEED TO SAVE NEW/UPDATED ENTRY (in new location)
+
+                const newScheduleItem = {
+                    id: isEdit ? originalId : Date.now().toString(),
+                    title: courseId ? '' : title,
+                    isRecurring,
+                    day,
+                    date: isRecurring ? null : date,
+                    startTime,
+                    endTime,
+                    venue: venue || null
+                };
+
+
+                // COURSE Event
+                if (courseId) {
+                    const courses = currentSemester.courses;
+                    const idx = courses.findIndex(c => c.id === courseId);
+                    if (idx === -1) {
+                        showToast('Course not found', 'error');
+                        showLoading(false);
+                        return;
+                    }
+
+                    let schedules = courses[idx].schedules || (courses[idx].schedule ? [courses[idx].schedule] : []) || [];
+
+                    // If editing AND same course (or we just moved it here), we treat as update/add
+                    // If we moved it here, it's effectively a "new" add to this course, but keeping ID
+
+                    // Check if ID exists in this course
+                    const existingIdx = schedules.findIndex(s => s.id === newScheduleItem.id);
+
+                    if (existingIdx !== -1) {
+                        // Update existing in this course
+                        schedules[existingIdx] = newScheduleItem;
+                    } else {
+                        // New to this course (Add)
+                        // Check conflicts
+                        if (schedules.some(s => s.day === newScheduleItem.day && s.startTime === newScheduleItem.startTime)) {
+                            showToast('Time slot occupied', 'error');
+                            showLoading(false);
+                            return;
+                        }
+                        schedules.push(newScheduleItem);
+                    }
+
+                    courses[idx].schedules = schedules;
+                    if (schedules.length > 0) courses[idx].schedule = schedules[0]; // legacy sync
+
+                    await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                        courses: currentSemester.courses
+                    });
+                }
+                // CUSTOM Event
+                else {
+                    let customEvents = currentSemester.customEvents || [];
+                    const existingIdx = customEvents.findIndex(e => e.id === newScheduleItem.id);
+
+                    if (existingIdx !== -1) {
+                        customEvents[existingIdx] = newScheduleItem;
+                    } else {
+                        customEvents.push(newScheduleItem);
+                    }
+
+                    await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                        customEvents: customEvents
+                    });
+                }
+
+                showToast('Schedule saved!', 'success');
+                closeModal('add-schedule-modal');
+                if (window.loadSchedule) window.loadSchedule();
+                if (window.loadDashboard) window.loadDashboard();
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        };
+
+        // --- OVERRIDES AND NEW FUNCTIONS ---
+
+
+
+        window.openEditScheduleModal = function (id, courseId, day, startTime, title, isRecurring, date, endTime, venue) {
+            document.getElementById('add-schedule-modal').classList.add('show');
+            const isRec = (String(isRecurring) === 'true');
+
+            document.getElementById('schedule-course-select').value = courseId || '';
+            document.getElementById('schedule-title').value = title || '';
+            document.getElementById('schedule-recurring').checked = isRec;
+
+            if (isRec) {
+                document.getElementById('schedule-day-container').classList.remove('hidden');
+                document.getElementById('schedule-date-container').classList.add('hidden');
+                if (day && day !== 'undefined' && day !== 'null') document.getElementById('schedule-day').value = day;
+            } else {
+                document.getElementById('schedule-day-container').classList.add('hidden');
+                document.getElementById('schedule-date-container').classList.remove('hidden');
+                if (date && date !== 'undefined' && date !== 'null') document.getElementById('schedule-date').value = date;
+            }
+
+            document.getElementById('schedule-start-time').value = startTime;
+            document.getElementById('schedule-end-time').value = endTime || '';
+            document.getElementById('schedule-venue').value = venue || '';
+
+
+            document.getElementById('edit-schedule-id').value = id;
+            document.getElementById('edit-schedule-course-id').value = courseId || '';
+        };
+
+        window.deleteScheduleItem = async function (itemId, itemType, courseId) {
+            if (!confirm('Delete this schedule item?')) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+
+            try {
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+                let currentSemester = null;
+
+                snapshot.forEach(doc => {
+                    const data = { id: doc.id, ...doc.data() };
+                    if (data.type === 'current') {
+                        currentSemester = data;
+                    }
+                });
+
+                if (!currentSemester) {
+                    showToast('No current semester found', 'error');
+                    showLoading(false);
+                    return;
+                }
+
+                if (itemType === 'course' && courseId) {
+                    // Delete from course schedules
+                    const courses = currentSemester.courses;
+                    const courseIndex = courses.findIndex(c => c.id === courseId);
+
+                    if (courseIndex !== -1) {
+                        let schedules = courses[courseIndex].schedules || [];
+                        schedules = schedules.filter(s => s.id !== itemId);
+                        courses[courseIndex].schedules = schedules;
+
+                        await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                            courses: courses
+                        });
+                    }
+                } else {
+                    // Delete from custom events
+                    let customEvents = currentSemester.customEvents || [];
+                    customEvents = customEvents.filter(e => e.id !== itemId);
+
+                    await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+                        customEvents: customEvents
+                    });
+                }
+
+                showToast('Schedule deleted', 'success');
+                if (window.loadSchedule) window.loadSchedule();
+
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
+                showLoading(false);
+            }
+        };
+
+        window.loadDashboardWidgets = async function () {
+            const container = document.getElementById('dashboard-widgets');
+            if (!container) return;
+
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const now = new Date();
+            const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const today = DAYS[now.getDay()];
+            const nowTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            const todayDate = now.toISOString().split('T')[0];
+
+            let nextEvent = null;
+            let nextTask = null;
+
+            try {
+                // 1. Get Next Event (Today)
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+                let currentSemester = null;
+                snapshot.forEach(doc => { if (doc.data().type === 'current') currentSemester = doc.data(); });
+
+                if (currentSemester) {
+                    const candidates = [];
+                    // Courses
+                    (currentSemester.courses || []).forEach(c => {
+                        (c.schedules || (c.schedule ? [c.schedule] : [])).forEach(s => {
+                            if (s.day === today && s.startTime > nowTime) {
+                                candidates.push({ ...s, title: c.name + ' (' + c.code + ')' });
+                            }
+                        });
+                    });
+                    // Custom
+                    (currentSemester.customEvents || []).forEach(e => {
+                        let isToday = false;
+                        if (e.isRecurring && e.day === today) isToday = true;
+                        if (!e.isRecurring && e.date === todayDate) isToday = true;
+
+                        if (isToday && e.startTime > nowTime) {
+                            candidates.push(e);
+                        }
+                    });
+
+                    if (candidates.length > 0) {
+                        candidates.sort((a, b) => a.startTime.localeCompare(b.startTime));
+                        nextEvent = candidates[0];
+                    }
+                }
+
+                // 2. Get Next Task
+                const tasksRef = collection(db, 'users', uid, 'tasks');
+                const taskSnap = await getDocs(query(tasksRef, where('isCompleted', '==', false)));
+                let tasks = [];
+                taskSnap.forEach(d => tasks.push(d.data()));
+
+                tasks = tasks.filter(t => {
+                    let dStr = '';
+                    if (typeof t.dueDate === 'number') dStr = new Date(t.dueDate).toISOString().split('T')[0];
+                    else dStr = t.dueDate;
+                    return dStr >= todayDate;
+                });
+
+                tasks.sort((a, b) => {
+                    let da = typeof a.dueDate === 'number' ? a.dueDate : new Date(a.dueDate).getTime();
+                    let db = typeof b.dueDate === 'number' ? b.dueDate : new Date(b.dueDate).getTime();
+                    return da - db;
+                });
+
+                if (tasks.length > 0) nextTask = tasks[0];
+
+                // Render
+                let html = '';
+                if (nextEvent) {
+                    html += `<div style="margin-bottom: 4px;"> Next Event: <strong>${nextEvent.startTime} - ${nextEvent.title}</strong></div>`;
+                }
+
+                if (nextTask) {
+                    let dDisplay = '';
+                    if (typeof nextTask.dueDate === 'number') dDisplay = new Date(nextTask.dueDate).toLocaleDateString();
+                    else dDisplay = nextTask.dueDate;
+                    html += `<div> Next Task: <strong>${nextTask.title}</strong> (${dDisplay})</div>`;
+                }
+
+                container.innerHTML = html;
+
+            } catch (e) { console.error('Widget error', e); }
+        };
+
+        window.showEndSemesterModal = async function (semesterId) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            showLoading(true);
+            try {
+                // If a specific ID is provided, fetch it. Otherwise fallback to current (legacy support if needed)
+                let currentSemester = null;
+
+                if (semesterId) {
+                    const docSnap = await getDoc(doc(db, 'users', uid, 'semesters', semesterId));
+                    if (docSnap.exists()) {
+                        currentSemester = { id: docSnap.id, ...docSnap.data() };
+                    }
+                } else {
+                    console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
+                    const snapshot = await getDocs(semRef);
+                    snapshot.forEach(doc => { if (doc.data().type === 'current') currentSemester = { id: doc.id, ...doc.data() }; });
+                }
+
+                if (!currentSemester) {
+                    showToast('No active semester to end', 'error');
+                    showLoading(false);
+                    return;
+                }
+
+                // Build Modal HTML
+                let html = `
+                <h3 style="margin-bottom: 15px;">Complete Semester: ${currentSemester.name}</h3>
+                    
+                    <!--Input Mode Toggle-->
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px; background: #2a2a2a; border-radius: 8px; padding: 4px;">
+                        <button type="button" id="score-mode-btn" class="btn btn-primary" onclick="setEndSemesterInputMode('score')" style="flex: 1; padding: 8px; font-size: 12px;">Enter Scores</button>
+                        <button type="button" id="grade-mode-btn" class="btn btn-secondary" onclick="setEndSemesterInputMode('grade')" style="flex: 1; padding: 8px; font-size: 12px;">Enter Grades</button>
+                    </div>
+                    
+                    <p id="input-mode-description" style="margin-bottom: 20px; color: #666;">Enter your final scores (0-100) for each course to calculate your GPA.</p>
+                    <form id="end-semester-form">
+                `;
+
+                currentSemester.courses.forEach(course => {
+                    html += `
+                        <div class="form-group">
+                            <label>${course.code} - ${course.name}</label>
+                            <div id="score-input-${course.id}" class="score-input-container">
+                                <input type="number" class="course-score-input" data-id="${course.id}" placeholder="Score (0-100)" min="0" max="100">
+                            </div>
+                            <div id="grade-input-${course.id}" class="grade-input-container" style="display: none;">
+                                <div style="display: flex; gap: 8px;">
+                                    ${['A', 'B', 'C', 'D', 'E', 'F'].map(grade => `
+                                        <button type="button" class="grade-btn" data-course-id="${course.id}" data-grade="${grade}" onclick="selectGrade('${course.id}', '${grade}')" style="flex: 1; padding: 10px; border: 1px solid #444; background: #1a1a1a; color: #fff; border-radius: 6px; cursor: pointer; font-weight: bold;">
+                                            ${grade}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('generated-modal')" style="flex: 1;">Cancel</button>
+                            <button type="button" class="btn btn-primary" onclick="confirmEndSemester('${currentSemester.id}')" style="flex: 1;">Complete Semester</button>
+                        </div>
+                    </form>
+            `;
+
+                // Show in a generic modal container (assuming one exists or reusing 'resource-upload-modal' by clearing it, or creating one)
+                // Let's create a dynamic modal div if it doesn't exist
+                let modal = document.getElementById('generated-modal');
+                if (!modal) {
+                    modal = document.createElement('div');
+                    modal.id = 'generated-modal';
+                    modal.className = 'modal';
+                    modal.innerHTML = '<div class="modal-content"><div id="generated-modal-body"></div></div>';
+                    document.body.appendChild(modal);
+                }
+                document.getElementById('generated-modal-body').innerHTML = html;
+                modal.classList.add('show');
+
+            } catch (e) { console.error(e); }
+            finally { showLoading(false); }
+        };
+
+        // End Semester Input Mode Management
+        let endSemesterInputMode = 'score';
+        const selectedGrades = {};
+
+        window.setEndSemesterInputMode = function (mode) {
+            endSemesterInputMode = mode;
+
+            // Update button styles
+            const scoreBtn = document.getElementById('score-mode-btn');
+            const gradeBtn = document.getElementById('grade-mode-btn');
+
+            if (scoreBtn && gradeBtn) {
+                if (mode === 'score') {
+                    scoreBtn.classList.remove('btn-secondary');
+                    scoreBtn.classList.add('btn-primary');
+                    gradeBtn.classList.remove('btn-primary');
+                    gradeBtn.classList.add('btn-secondary');
+                } else {
+                    gradeBtn.classList.remove('btn-secondary');
+                    gradeBtn.classList.add('btn-primary');
+                    scoreBtn.classList.remove('btn-primary');
+                    scoreBtn.classList.add('btn-secondary');
+                }
+            }
+
+            // Update description
+            const description = document.getElementById('input-mode-description');
+            if (description) {
+                description.textContent = mode === 'score'
+                    ? 'Enter your final scores (0-100) for each course to calculate your GPA.'
+                    : 'Select letter grades (A-F) for each course.';
+            }
+
+            // Toggle input containers
+            const scoreContainers = document.querySelectorAll('.score-input-container');
+            const gradeContainers = document.querySelectorAll('.grade-input-container');
+
+            scoreContainers.forEach(container => {
+                container.style.display = mode === 'score' ? 'block' : 'none';
+            });
+
+            gradeContainers.forEach(container => {
+                container.style.display = mode === 'grade' ? 'block' : 'none';
+            });
+        };
+
+        window.selectGrade = function (courseId, grade) {
+            selectedGrades[courseId] = grade;
+
+            // Update button styles
+            const buttons = document.querySelectorAll(`[data-course-id="${courseId}"]`);
+            buttons.forEach(btn => {
+                if (btn.dataset.grade === grade) {
+                    btn.style.background = '#667eea';
+                    btn.style.borderColor = '#667eea';
+                } else {
+                    btn.style.background = '#1a1a1a';
+                    btn.style.borderColor = '#444';
+                }
+            });
+        };
+
+        window.confirmEndSemester = async function (semId) {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const scores = {};
+
+            // Collect data based on input mode
+            if (endSemesterInputMode === 'score') {
+                const inputs = document.querySelectorAll('.course-score-input');
+                for (let input of inputs) {
+                    if (!input.value) {
+                        showToast('Please enter all scores', 'error');
+                        return;
+                    }
+                    if (input.value < 0 || input.value > 100) {
+                        showToast('Scores must be 0-100', 'error');
+                        return;
+                    }
+                    scores[input.dataset.id] = parseInt(input.value);
+                }
+            } else {
+                // Grade mode - check selectedGrades
+                const semDocRef = doc(db, 'users', uid, 'semesters', semId);
+                const semDoc = await getDoc(semDocRef);
+                const semester = semDoc.data();
+
+                for (let course of semester.courses) {
+                    if (!selectedGrades[course.id]) {
+                        showToast('Please select a grade for all courses', 'error');
+                        return;
+                    }
+                    scores[course.id] = selectedGrades[course.id];
+                }
+            }
+
+            showLoading(true);
+            try {
+                // Fetch again to ensure fresh data
+                const semDocRef = doc(db, 'users', uid, 'semesters', semId);
+                const semDoc = await getDoc(semDocRef);
+                const semester = semDoc.data();
+
+                // Calculate Grades
+                let totalPoints = 0;
+                let totalUnits = 0;
+
+                semester.courses = semester.courses.map(c => {
+                    let grade = 'F';
+                    let points = 0;
+                    let finalScore;
+
+                    if (endSemesterInputMode === 'score') {
+                        const score = scores[c.id];
+                        finalScore = score;
+
+                        if (score >= 70) { grade = 'A'; points = 5; }
+                        else if (score >= 60) { grade = 'B'; points = 4; }
+                        else if (score >= 50) { grade = 'C'; points = 3; }
+                        else if (score >= 45) { grade = 'D'; points = 2; }
+                        else if (score >= 40) { grade = 'E'; points = 1; }
+                    } else {
+                        // Grade mode
+                        grade = scores[c.id];
+
+                        if (grade === 'A') points = 5;
+                        else if (grade === 'B') points = 4;
+                        else if (grade === 'C') points = 3;
+                        else if (grade === 'D') points = 2;
+                        else if (grade === 'E') points = 1;
+                        else points = 0;
+                    }
+
+                    totalPoints += (points * c.unitHours);
+                    totalUnits += c.unitHours;
+
+                    return { ...c, finalScore, grade: grade };
+                });
+
+                const gpa = totalUnits > 0 ? (totalPoints / totalUnits).toFixed(2) : 0.0;
+
+                await updateDoc(semDocRef, {
+                    courses: semester.courses,
+                    gpa: parseFloat(gpa),
+                    type: 'past'
+                });
+
+                closeModal('generated-modal');
+                showToast('Semester completed! GPA: ' + gpa, 'success');
+                window.loadDashboard();
+
+            } catch (e) {
+                console.error(e);
+                showToast('Error completing semester', 'error');
+            } finally {
+                showLoading(false);
+            }
+        };
+
+
+        window.switchCommunityTab = function (tab) {
+            // Clear any messages auto-refresh when switching tabs
+            if (window._msgRefreshInterval) {
+                clearInterval(window._msgRefreshInterval);
+                window._msgRefreshInterval = null;
+            }
+
+            // Update Tab Buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`comm-${tab}-tab`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            // Get Containers
+            const feedContainer = document.getElementById('community-feed-container');
+            const resourcesWrapper = document.getElementById('community-resources-wrapper');
+            const messagesContainer = document.getElementById('community-messages-container');
+
+            // Hide All
+            if (feedContainer) feedContainer.classList.add('hidden');
+            if (resourcesWrapper) resourcesWrapper.classList.add('hidden'); // Hides overlay + content
+            if (messagesContainer) messagesContainer.classList.add('hidden');
+
+            // Show Selected
+            if (tab === 'feed') {
+                if (feedContainer) feedContainer.classList.remove('hidden');
+                if (window.loadCommunityFeed) window.loadCommunityFeed();
+            } else if (tab === 'resources') {
+                if (resourcesWrapper) resourcesWrapper.classList.remove('hidden');
+
+                // Check lock status
+                if (window.checkResourcesLock) window.checkResourcesLock();
+
+                // Ensure inner container is technically visible (for blur effect to be visible when locked)
+                const innerContainer = document.getElementById('community-resources-container');
+                if (innerContainer) innerContainer.classList.remove('hidden');
+
+                if (window.loadResources) window.loadResources();
+            } else if (tab === 'messages') {
+                if (messagesContainer) messagesContainer.classList.remove('hidden');
+                if (window.loadConversations) window.loadConversations();
+
+                // Auto-refresh messages every 30 seconds while tab is active
+                window._msgRefreshInterval = setInterval(() => {
+                    const msgContainer = document.getElementById('community-messages-container');
+                    if (msgContainer && !msgContainer.classList.contains('hidden')) {
+                        if (window.loadConversations) window.loadConversations();
+                    } else {
+                        clearInterval(window._msgRefreshInterval);
+                        window._msgRefreshInterval = null;
+                    }
+                }, 30000);
+            }
+        };
+
+
+        // Expose loading functions to window for refresh buttons
+        window.loadDashboard = loadDashboard;
+        window.loadSchedule = loadSchedule;
+        window.loadTasks = loadTasks;
+        window.loadGPAView = loadGPAView;
+        window.loadCommunityFeed = loadCommunityFeed;
+        window.loadConversations = loadConversations;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const email = localStorage.getItem('kobi_atlas_email');
+
+            if (uid && email) {
+                // User is logged in, load dashboard
+                loadDashboard();
+            } else {
+                // Not logged in, redirect to login page
+                window.location.href = 'index.html';
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Zoom functionality
+        let currentZoom = 1;
+
+        function openLightbox(imageSrc) {
+            currentZoom = 1; // Reset zoom when opening
+            document.getElementById('lightbox-image').src = imageSrc;
+            document.getElementById('image-lightbox').classList.add('show');
+            applyZoom();
+        }
+
+        function closeLightbox() {
+            document.getElementById('image-lightbox').classList.remove('show');
+            currentZoom = 1;
+        }
+
+        function zoomIn() {
+            currentZoom = Math.min(currentZoom + 0.25, 3);
+            applyZoom();
+        }
+
+        function zoomOut() {
+            currentZoom = Math.max(currentZoom - 0.25, 0.5);
+            applyZoom();
+        }
+
+        function resetZoom() {
+            currentZoom = 1;
+            applyZoom();
+        }
+
+        function applyZoom() {
+            const img = document.getElementById('lightbox-image');
+            img.style.transform = `scale(${currentZoom})`;
+        }
+
+        // Mouse wheel zoom
+        document.addEventListener('DOMContentLoaded', function () {
+            const lightboxImage = document.getElementById('lightbox-image');
+            lightboxImage.addEventListener('wheel', function (e) {
+                if (document.getElementById('image-lightbox').classList.contains('show')) {
+                    e.preventDefault();
+                    if (e.deltaY < 0) {
+                        zoomIn();
+                    } else {
+                        zoomOut();
+                    }
+                }
+            });
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

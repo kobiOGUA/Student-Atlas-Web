@@ -855,28 +855,15 @@
 
 
 
-
             <div id="course-info-tab">
-                <!-- Custom CA Management Header -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h3 style="margin: 0;">CA Scores</h3>
-                    <button onclick="addCourseCAField()" style="background: linear-gradient(135deg, var(--primary-color), #764ba2); border: none; color: white; padding: 7px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
-                        <ion-icon name="add-circle-outline" style="font-size: 16px;"></ion-icon> Add Assessment
-                    </button>
-                </div>
-                <p id="ca-empty-hint" style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">No assessments yet. Tap <strong>Add Assessment</strong> to define your CA structure (e.g. Mid Sem 15, Quiz 10…). The remaining marks become your Exam score.</p>
+                <h3 style="margin-bottom: 16px;">CA Scores</h3>
                 <div id="ca-inputs-container">
                     <!-- Dynamic CA Inputs -->
                 </div>
-                <div class="ca-score-row" style="border-bottom: 2px solid #667eea; margin-top: 4px;">
+                <div class="ca-score-row" style="border-bottom: 2px solid #667eea;">
                     <span><strong>Total CA:</strong></span>
-                    <span id="total-ca" style="font-weight: bold; color: #667eea;">0/0</span>
+                    <span id="total-ca" style="font-weight: bold; color: #667eea;">0/40</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding: 8px 12px; background: rgba(102,126,234,0.08); border-radius: 8px;">
-                    <span style="font-size: 13px; color: var(--text-secondary);">Exam Score (auto)</span>
-                    <span id="exam-remaining" style="font-weight: 700; font-size: 16px; color: var(--primary-color);">100 / 100</span>
-                </div>
-
 
                 <h3 style="margin: 24px 0 16px 0;">Grade Calculation</h3>
 
@@ -1200,8 +1187,8 @@
 
             <div class="tab-buttons" style="margin-bottom: 20px;">
                 <button class="tab-btn active" id="comm-feed-tab" onclick="switchCommunityTab('feed')">Feed</button>
-                <button class="tab-btn" id="comm-groups-tab"
-                    onclick="switchCommunityTab('groups')">Study Groups</button>
+                <button class="tab-btn" id="comm-resources-tab"
+                    onclick="switchCommunityTab('resources')">Resources</button>
                 <button class="tab-btn" id="comm-messages-tab" onclick="switchCommunityTab('messages')">
                     Messages
                     <span id="inner-message-badge" class="badge current hidden"
@@ -1223,62 +1210,58 @@
                 <div id="conversations-list"></div>
             </div>
 
-            <!-- Study Groups Tab Container -->
-            <div id="community-groups-wrapper" class="hidden" style="padding-bottom: 80px; position: relative;">
-                <!-- Group List View -->
-                <div id="groups-list-view">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                        <h3 style="margin: 0; font-size: 18px;">Study Groups</h3>
+            <div id="community-resources-wrapper" class="hidden" style="position: relative;">
+                <div id="resources-lock-overlay"
+                    style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; border-radius: 12px; height: 100%; min-height: 400px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🚧</div>
+                    <h2 style="margin: 0 0 8px 0; font-size: 20px;">Kobi isn't quite done with this yet! 🤫</h2>
+                    <p style="color: #ccc; margin: 0 0 24px 0; max-width: 300px;">
+                        Access to resources beta can be unlocked temporarily with a passcode.
+                    </p>
+                    <div style="display: flex; gap: 8px; max-width: 300px; width: 100%;">
+                        <input type="password" id="resources-passcode" placeholder="Enter Passcode"
+                            style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #222; color: white;"
+                            onkeypress="if(event.key === 'Enter') checkResourcesPasscode()">
+                        <button class="btn-primary" onclick="checkResourcesPasscode()"
+                            style="padding: 10px 16px; border-radius: 8px;">Unlock</button>
                     </div>
-                    <input type="text" id="group-search-input" placeholder="🔍 Search by name, course, level..." oninput="filterGroups(this.value)" style="margin-bottom: 12px;">
-                    <!-- Level Filter Chips -->
-                    <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:12px; -webkit-overflow-scrolling:touch;">
-                        <button onclick="setGroupLevelFilter(null, this)" class="filter-btn active-filter" id="gf-all" style="padding:6px 14px;border-radius:20px;border:1px solid var(--primary-color);background:var(--primary-color);color:white;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0;">All</button>
-                        <button onclick="setGroupLevelFilter(100, this)" class="filter-btn" id="gf-100" style="padding:6px 14px;border-radius:20px;border:1px solid #444;background:transparent;color:#ccc;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0;">100L</button>
-                        <button onclick="setGroupLevelFilter(200, this)" class="filter-btn" id="gf-200" style="padding:6px 14px;border-radius:20px;border:1px solid #444;background:transparent;color:#ccc;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0;">200L</button>
-                        <button onclick="setGroupLevelFilter(300, this)" class="filter-btn" id="gf-300" style="padding:6px 14px;border-radius:20px;border:1px solid #444;background:transparent;color:#ccc;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0;">300L</button>
-                        <button onclick="setGroupLevelFilter(400, this)" class="filter-btn" id="gf-400" style="padding:6px 14px;border-radius:20px;border:1px solid #444;background:transparent;color:#ccc;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0;">400L</button>
-                        <button onclick="setGroupLevelFilter(500, this)" class="filter-btn" id="gf-500" style="padding:6px 14px;border-radius:20px;border:1px solid #444;background:transparent;color:#ccc;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0;">500L</button>
-                        <button onclick="setGroupLevelFilter(600, this)" class="filter-btn" id="gf-600" style="padding:6px 14px;border-radius:20px;border:1px solid #444;background:transparent;color:#ccc;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0;">600L</button>
-                    </div>
-                    <div id="groups-list"><div style="text-align:center;padding:40px;color:#999;"><ion-icon name="people-outline" style="font-size:48px;"></ion-icon><p>No study groups yet. Create one!</p></div></div>
+                    <p id="lock-error-msg" style="color: #ef4444; font-size: 13px; margin-top: 12px; display: none;">
+                        Incorrect passcode</p>
                 </div>
-                <!-- FAB to create group -->
-                <button class="fab" onclick="showCreateGroupModal()" title="Create Study Group">
-                    <ion-icon name="add"></ion-icon>
-                </button>
 
-                <!-- Group Detail View -->
-                <div id="groups-detail-view" class="hidden">
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                        <button onclick="showGroupsList()" style="background: var(--card-bg); border: none; color: var(--text-color); padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 14px;">
-                            <ion-icon name="arrow-back-outline"></ion-icon> Back
-                        </button>
-                        <h3 id="group-detail-name" style="margin: 0; font-size: 18px; flex: 1;"></h3>
-                        <button id="group-join-btn" onclick="toggleGroupMembership()" class="btn btn-primary" style="width: auto; padding: 8px 16px; font-size: 13px;">Join</button>
-                    </div>
-                    <div id="group-detail-info" style="background: var(--card-bg); padding: 12px; border-radius: 10px; margin-bottom: 16px; font-size: 13px; color: var(--text-secondary);"></div>
-                    <!-- Group Posts -->
-                    <h4 style="margin: 0 0 12px 0;">Group Posts</h4>
-                    <div id="group-posts-list" style="margin-bottom: 16px; min-height: 100px;"></div>
-                    <!-- Post Input -->
-                    <div id="group-post-input-area" style="background: var(--card-bg); border-radius: 12px; padding: 12px; display: none;">
-                        <textarea id="group-post-text" placeholder="Write a post or share something..." rows="3" style="margin-bottom: 10px;"></textarea>
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <label for="group-post-file" style="cursor: pointer; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px 12px; font-size: 13px; display: flex; align-items: center; gap: 6px;">
-                                <ion-icon name="attach-outline"></ion-icon> Attach File
-                            </label>
-                            <input type="file" id="group-post-file" style="display: none;" onchange="handleGroupFileSelect(event)">
-                            <span id="group-file-name" style="font-size: 12px; color: var(--text-secondary); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
-                            <button onclick="submitGroupPost()" class="btn btn-primary" style="width: auto; padding: 8px 16px;">Post</button>
+                <div id="community-resources-container" class="hidden"
+                    style="filter: blur(5px); pointer-events: none; user-select: none;">
+                    <div class="search-bar" style="margin-bottom: 20px;">
+                        <input type="text" id="resource-search-input" placeholder="Search resources (code, title)..."
+                            oninput="filterResources(this.value)">
+                        <div
+                            style="display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch;">
+
+                            <button onclick="exportResourcesBackup()" class="filter-btn"
+                                style="font-size: 12px; padding: 6px 16px; border-radius: 20px; border: 1px solid #28a745; background: #28a745; color: white; flex-shrink: 0; transition: all 0.2s; margin-left: auto;">
+                                <ion-icon name="download-outline"
+                                    style="vertical-align: middle; margin-right: 4px;"></ion-icon>Export Backup
+                            </button>
                         </div>
-                        <div id="group-upload-progress" style="display: none; margin-top: 8px; font-size: 12px; color: var(--primary-color);">Uploading file...</div>
                     </div>
-                    <div id="group-not-member-msg" style="text-align: center; padding: 16px; color: var(--text-secondary); font-size: 13px;">Join this group to post and share files.</div>
+
+                    <div id="resources-list" style="padding-bottom: 80px;">
+                        <!-- Resources will be loaded here -->
+                    </div>
+
+                    <button class="fab" onclick="handleFabClick()">
+                        <ion-icon name="add"></ion-icon>
+                    </button>
                 </div>
             </div>
 
-            <!-- duplicate community-messages-container removed -->
+            <div id="community-messages-container" class="hidden">
+                <div style="padding: 20px;">
+                    <div id="messages-content" style="min-height: 400px;">
+                        <!-- Messages will be loaded here -->
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Create Post Modal -->
@@ -1573,26 +1556,6 @@
 
                 <button class="btn btn-primary" onclick="saveScheduleV2()">Save Schedule</button>
                 <button class="btn btn-secondary" onclick="closeModal('add-schedule-modal')">Cancel</button>
-            </div>
-        </div>
-
-        <!-- Add Custom CA Assessment Modal -->
-        <div id="add-ca-modal" class="modal">
-            <div class="modal-content" style="max-width: 400px;">
-                <div class="modal-header">
-                    <h2 style="margin: 0; font-size: 18px;">Add Assessment</h2>
-                    <button class="close-btn" onclick="closeModal('add-ca-modal')">&times;</button>
-                </div>
-                <div style="padding-top: 15px;">
-                    <label style="display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px;">Assessment Name</label>
-                    <input type="text" id="ca-modal-name" placeholder="e.g. Mid Semester, Quiz 1, Attendance" style="margin-bottom: 15px;">
-                    
-                    <label id="ca-modal-max-label" style="display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px;">Max Marks (Remaining: 100)</label>
-                    <input type="number" id="ca-modal-max" placeholder="e.g. 15" min="1" max="100" style="margin-bottom: 15px;">
-
-                    <button class="btn btn-primary" onclick="submitCAFieldModal()" style="width: 100%; margin-top: 10px;">Add Assessment</button>
-                    <button class="btn btn-secondary" onclick="closeModal('add-ca-modal')" style="width: 100%; margin-top: 8px;">Cancel</button>
-                </div>
             </div>
         </div>
 
@@ -2689,108 +2652,84 @@
             document.getElementById('course-detail-title').textContent = currentCourse.name;
             document.getElementById('course-detail-code').textContent = currentCourse.code;
 
-            // Render custom CA fields for THIS course
-            renderCourseCAFields();
+            // Load CA Inputs Dynamically
+            const caConfig = getCAConfig();
+            const caInputsContainer = document.getElementById('ca-inputs-container');
+            const caScores = currentCourse.caScores || {};
+            // Track enabled state for each field (default true if not present)
+            const caEnabled = currentCourse.caEnabled || {};
 
-            // Logic for Use CA toggle
-            const useCA = currentCourse.useCA !== false;
+            let inputsHTML = '';
+            let totalMaxCA = 0;
+
+            const renderField = (label, key, max) => {
+                const val = caScores[key] || 0;
+                const isEnabled = caEnabled[key] !== false; // Default true
+                const dimStyle = isEnabled ? '' : 'opacity: 0.5;';
+
+                return `
+                    <div class="ca-score-row" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 8px; transition: opacity 0.2s; border: 1px solid rgba(255,255,255,0.1); ${dimStyle}">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <input type="checkbox" id="check-${key}" class="ca-enable-check" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary-color);" 
+                                data-key="${key}" ${isEnabled ? 'checked' : ''} onchange="toggleCAField(this)">
+                            
+                            <div style="display: flex; flex-direction: column;">
+                                <label for="check-${key}" style="font-weight: 500; cursor: pointer; font-size: 15px;">${label}</label>
+                                <span style="font-size: 11px; color: #999;">Max Score: ${max}</span>
+                            </div>
+                        </div>
+                        
+                        <input type="number" data-key="${key}" data-max="${max}" class="ca-score-input dynamic-ca-input" 
+                            min="0" max="${max}" value="${val}" ${isEnabled ? '' : 'disabled'}
+                            style="width: 70px; height: 36px; text-align: center; font-weight: bold; background: rgba(0,0,0,0.3); border: 1px solid #444; border-radius: 6px; color: white; font-size: 14px;"
+                            oninput="validateCAInput(this)"
+                            onblur="validateCAInput(this)"
+                            placeholder="0">
+                    </div>`;
+            };
+
+            if (caConfig.type === 'custom' && caConfig.custom) {
+                caConfig.custom.forEach((field) => {
+                    totalMaxCA += parseFloat(field.weight);
+                    inputsHTML += renderField(field.name, field.name, field.weight);
+                });
+            } else {
+                // Standard
+                totalMaxCA = 40;
+                const scores = [
+                    { label: 'Mid Semester', key: 'midSemester', max: 15 },
+                    { label: 'Assignment', key: 'assignment', max: 10 },
+                    { label: 'Quiz', key: 'quiz', max: 10 },
+                    { label: 'Attendance', key: 'attendance', max: 5 },
+                ];
+                scores.forEach(s => inputsHTML += renderField(s.label, s.key, s.max));
+            }
+
+            caInputsContainer.innerHTML = inputsHTML;
+            document.getElementById('total-ca').dataset.max = totalMaxCA;
+
+
+            // Logic for Use CA
+            const useCA = currentCourse.useCA !== false; // Default true
             document.getElementById('use-ca-toggle').checked = useCA;
 
+            // Logic for Manual Grade
             const manualSelect = document.getElementById('course-manual-grade');
-            if (manualSelect.options.length === 0) populateGradeDropdowns();
             const available = getAvailableGrades();
+            if (manualSelect.options.length === 0) populateGradeDropdowns();
+
+            // Set values
             const currentGrade = currentCourse.grade || available[0];
             manualSelect.value = currentGrade;
 
             document.getElementById('course-units').textContent = currentCourse.unitHours || 0;
+
 
             toggleUseCA(useCA);
             updateCAScores();
             showScreen('course-detail');
         };
 
-        // Render the per-course CA fields from currentCourse.customCA
-        window.renderCourseCAFields = function () {
-            const container = document.getElementById('ca-inputs-container');
-            const hint = document.getElementById('ca-empty-hint');
-            const fields = currentCourse.customCA || [];
-
-            if (fields.length === 0) {
-                container.innerHTML = '';
-                if (hint) hint.style.display = 'block';
-            } else {
-                if (hint) hint.style.display = 'none';
-                container.innerHTML = fields.map((f, i) => `
-                    <div class="ca-score-row" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.08);" data-index="${i}">
-                        <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
-                            <input type="checkbox" class="ca-enable-check" data-index="${i}" ${f.enabled !== false ? 'checked' : ''} onchange="toggleCourseCAField(${i}, this.checked)" style="width:18px; height:18px; cursor:pointer; accent-color:var(--primary-color); flex-shrink:0;">
-                            <div style="flex:1;">
-                                <div style="font-weight:600; font-size:14px;">${f.name}</div>
-                                <div style="font-size:11px; color:#999;">Max: ${f.max}</div>
-                            </div>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <input type="number" class="dynamic-ca-input" data-index="${i}" data-max="${f.max}"
-                                value="${f.score || 0}" min="0" max="${f.max}"
-                                ${f.enabled !== false ? '' : 'disabled'}
-                                oninput="validateCAInput(this)"
-                                style="width:65px; padding:6px; border-radius:6px; border:1px solid #444; background:rgba(0,0,0,0.3); color:white; font-size:14px; font-weight:700; text-align:center;">
-                            <button onclick="removeCourseCAField(${i})" style="background:none; border:none; color:#EF4444; cursor:pointer; padding:4px; font-size:18px;" title="Remove">×</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            updateCAScores();
-        };
-
-        // Add a new CA field for this course
-        window.addCourseCAField = function () {
-            if (!currentCourse.customCA) currentCourse.customCA = [];
-            const totalUsed = currentCourse.customCA.reduce((s, f) => s + (parseFloat(f.max) || 0), 0);
-            const remaining = 100 - totalUsed;
-            if (remaining <= 0) { showToast('CA already totals 100. Remove a field first.', 'error'); return; }
-
-            // Reset inputs
-            document.getElementById('ca-modal-name').value = '';
-            document.getElementById('ca-modal-max').value = '';
-            document.getElementById('ca-modal-max-label').innerText = `Max Marks (Remaining: ${remaining})`;
-            document.getElementById('ca-modal-max').max = remaining;
-
-            // Show Modal
-            document.getElementById('add-ca-modal').classList.add('show');
-        };
-
-        // Submit the custom CA field modal
-        window.submitCAFieldModal = function () {
-            if (!currentCourse.customCA) currentCourse.customCA = [];
-            const totalUsed = currentCourse.customCA.reduce((s, f) => s + (parseFloat(f.max) || 0), 0);
-            const remaining = 100 - totalUsed;
-
-            const name = document.getElementById('ca-modal-name').value.trim();
-            const maxVal = parseFloat(document.getElementById('ca-modal-max').value);
-
-            if (!name) { showToast('Please enter an assessment name', 'error'); return; }
-            if (isNaN(maxVal) || maxVal <= 0) { showToast('Please enter a valid max score', 'error'); return; }
-            if (maxVal > remaining) { showToast(`Max score cannot exceed ${remaining} remaining`, 'error'); return; }
-
-            currentCourse.customCA.push({ name: name, max: maxVal, score: 0, enabled: true });
-            renderCourseCAFields();
-            closeModal('add-ca-modal');
-        };
-
-        // Remove a CA field
-        window.removeCourseCAField = function (index) {
-            if (!currentCourse.customCA) return;
-            currentCourse.customCA.splice(index, 1);
-            renderCourseCAFields();
-        };
-
-        // Toggle enabled state of a CA field
-        window.toggleCourseCAField = function (index, enabled) {
-            if (!currentCourse.customCA) return;
-            currentCourse.customCA[index].enabled = enabled;
-            renderCourseCAFields();
-        };
 
         window.validateCAInput = function (input) {
             let val = parseFloat(input.value);
@@ -2836,35 +2775,21 @@
         window.updateCAScores = function () {
             let total = 0;
             let currentMax = 0;
-            let totalDefinedMax = 0;
 
-            // Sync scores back into currentCourse.customCA and sum enabled fields
+            // Sum all ENABLED dynamic inputs
             document.querySelectorAll('.dynamic-ca-input').forEach(inp => {
-                const idx = parseInt(inp.dataset.index);
-                const score = parseFloat(inp.value) || 0;
-                if (!isNaN(idx) && currentCourse && currentCourse.customCA && currentCourse.customCA[idx]) {
-                    currentCourse.customCA[idx].score = score;
-                }
-                const fieldMax = parseFloat(inp.dataset.max) || 0;
-                totalDefinedMax += fieldMax;
                 if (!inp.disabled) {
-                    total += score;
-                    currentMax += fieldMax;
+                    total += parseFloat(inp.value) || 0;
+                    currentMax += parseFloat(inp.dataset.max) || 0;
                 }
             });
 
             // Show: Current Score / Max of Enabled Fields
             document.getElementById('total-ca').textContent = `${total}/${currentMax}`;
 
-            // Update exam-remaining: exam = 100 - totalDefinedMax (all CA max, not just enabled)
-            const examMax = Math.max(0, 100 - totalDefinedMax);
-            const examEl = document.getElementById('exam-remaining');
-            if (examEl) examEl.textContent = `${examMax} / ${examMax}`;
-
             // Store valid total for grade calc
             document.getElementById('total-ca').dataset.validTotal = total;
             document.getElementById('total-ca').dataset.validMax = currentMax;
-            document.getElementById('total-ca').dataset.examMax = examMax;
 
             updateCourseGradeUI();
         };
@@ -2873,9 +2798,7 @@
             const totalElement = document.getElementById('total-ca');
             const totalCA = parseFloat(totalElement.dataset.validTotal) || 0;
             const validMaxCA = parseFloat(totalElement.dataset.validMax) || 0;
-            // examMax is the remaining marks after CA definitions (auto exam weight)
-            const examMax = parseFloat(totalElement.dataset.examMax);
-            const totalMaxCA = isNaN(examMax) ? 40 : (100 - examMax); // total CA defined max
+            const totalMaxCA = parseFloat(totalElement.dataset.max) || 40;
 
             const useCA = document.getElementById('use-ca-toggle').checked;
 
@@ -2997,10 +2920,19 @@
             showLoading(true);
 
             try {
-                // Ensure latest scores are synced into currentCourse.customCA
-                updateCAScores();
+                // Collect scores dynamically
+                const caScores = {};
+                const caEnabled = {};
+
+                document.querySelectorAll('.dynamic-ca-input').forEach(inp => {
+                    const key = inp.dataset.key;
+                    caScores[key] = parseFloat(inp.value) || 0;
+                    caEnabled[key] = !inp.disabled;
+                });
 
                 const useCA = document.getElementById('use-ca-toggle').checked;
+                // Calculate simplistic final grade for storage based on 'Projected' max?
+                // Or just keep '--'.
                 let finalGrade = '--';
 
                 if (!useCA) {
@@ -3010,7 +2942,8 @@
                 // Update course in semester
                 currentSemester.courses[currentCourse.index] = {
                     ...currentSemester.courses[currentCourse.index],
-                    customCA: currentCourse.customCA || [],
+                    caScores,
+                    caEnabled,
                     useCA,
                     grade: finalGrade,
                     predictedGrade: finalGrade,
@@ -3035,7 +2968,6 @@
             }
             showLoading(false);
         };
-
 
         window.deleteCourse = async function () {
             if (!confirm('Delete this course?')) return;
@@ -3482,11 +3414,87 @@
 
         // Navigation
         // Navigation
-        // NOTE: switchCommunityTab is fully implemented at the bottom (line ~8284); this early stub is removed.
-        // NOTE: loadConversations stub removed — the real function is defined later and exposed to window.
+        window.switchCommunityTab = function (tab) {
+            document.getElementById('community-feed-container').classList.toggle('hidden', tab !== 'feed');
+            document.getElementById('community-messages-container').classList.toggle('hidden', tab !== 'messages');
+            document.getElementById('community-resources-container').classList.toggle('hidden', tab !== 'resources');
 
-        // NOTE: The main showScreen is defined earlier (line ~1852) and handles all screens including gpa-simulator.
-        // This duplicate is intentionally removed to avoid conflicts.
+            document.getElementById('comm-feed-tab').classList.toggle('active', tab === 'feed');
+            document.getElementById('comm-messages-tab').classList.toggle('active', tab === 'messages');
+            document.getElementById('comm-resources-tab').classList.toggle('active', tab === 'resources');
+
+            if (tab === 'messages') {
+                loadConversations();
+            } else if (tab === 'resources') {
+                loadResources();
+            }
+        };
+
+        // Load Conversations/Messages
+        window.loadConversations = async function () {
+            const messagesContent = document.getElementById('messages-content');
+            if (!messagesContent) return;
+
+            messagesContent.innerHTML = `
+                <div style="text-align: center; padding: 60px 20px;">
+                    <ion-icon name="chatbubbles-outline" style="font-size: 64px; color: #666; margin-bottom: 16px;"></ion-icon>
+                    <h3 style="color: var(--text-color); margin-bottom: 8px;">Messages Coming Soon</h3>
+                    <p style="color: #999; font-size: 14px;">Direct messaging feature is under development.</p>
+                </div>
+            `;
+        };
+
+        window.showScreen = function (screenName) {
+            if (screenName === 'messages') {
+                showScreen('community');
+                switchCommunityTab('messages');
+                return;
+            }
+
+            ['dashboard-screen', 'semester-detail-screen', 'course-detail-screen', 'planner-screen', 'gpa-screen', 'community-screen'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            document.getElementById(`${screenName}-screen`).classList.remove('hidden');
+
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Map screen names to nav items
+            const navMap = {
+                'dashboard': 0,
+                'planner': 1,
+                'gpa': 2,
+                'community': 3
+            };
+
+            if (navMap[screenName] !== undefined) {
+                document.querySelectorAll('.nav-item')[navMap[screenName]].classList.add('active');
+            }
+
+            if (screenName === 'dashboard') {
+                loadDashboard();
+            } else if (screenName === 'planner') {
+                loadSchedule();
+                loadTasks();
+            } else if (screenName === 'gpa') {
+                loadGPAView();
+            } else if (screenName === 'community') {
+                loadCommunityFeed();
+                // Default to feed usually, but if we just switched to messages via recursion, verify.
+                // Actually, if we just call loadCommunityFeed, it's fine.
+                // switchCommunityTab('feed'); // Optional: Force feed tab on main nav click? 
+                // Let's decide to NOT force feed tab so state persists if user switches back and forth within session
+                // But if 'messages' was requested, it was handled above.
+                if (!document.getElementById('community-messages-container').classList.contains('hidden')) {
+                    loadConversations();
+                } else if (!document.getElementById('community-resources-container').classList.contains('hidden')) {
+                    loadResources();
+                }
+            }
+        };
 
         window.backToDashboard = function () {
             showScreen('dashboard');
@@ -3509,7 +3517,10 @@
         };
 
         window.showSettings = function () {
-            window.location.href = 'settings.html';
+            if (confirm('Logout?')) {
+                localStorage.clear();
+                location.reload();
+            }
         };
 
         // COMMUNITY FUNCTIONS
@@ -5720,133 +5731,67 @@
             }
         };
 
-        window.renderTrueSimulator = function () {
+                window.renderTrueSimulator = function() {
             const container = document.getElementById('sim-courses-container');
             if (!container) return;
-
+            
             if (!window.trueSimCourses || window.trueSimCourses.length === 0) {
                 container.innerHTML = `
-                    <div style="text-align:center; padding:40px 20px; background:var(--card-bg,#1e1e1e); border-radius:16px; border:2px dashed #333;">
+                    <div style="text-align:center; padding:40px 20px; background:var(--card-bg, #1e1e1e); border-radius:16px; border:2px dashed #333;">
                         <ion-icon name="book-outline" style="font-size:48px; color:#555; margin-bottom:12px;"></ion-icon>
-                        <div style="color:var(--text-color,white); font-weight:600; margin-bottom:4px;">No courses found</div>
-                        <div style="color:#999; font-size:13px;">Add courses to your semesters first.</div>
+                        <div style="color:var(--text-color, white); font-weight:600; margin-bottom:4px;">No courses found in database</div>
+                        <div style="color:#999; font-size:13px; margin-bottom:16px;">You don't have any actual courses to simulate. Please add courses to your semesters first.</div>
                     </div>`;
-                window.calcTrueSimulation();
-                return;
-            }
-
-            const availGrades = getAvailableGrades();
-
-            // Restore saved selections from localStorage
-            let savedSim = {};
-            try { savedSim = JSON.parse(localStorage.getItem('kobi_sim_selections') || '{}'); } catch(e){}
-
-            container.innerHTML = window.trueSimCourses.map((c, i) => {
-                // Restore saved state
-                const key = c.id || c.name;
-                if (savedSim[key]) {
-                    c.grade = savedSim[key].grade || c.grade;
-                    c.released = savedSim[key].released !== undefined ? savedSim[key].released : c.released;
-                    c.units = savedSim[key].units || c.units;
-                }
-
-                const gradeOptions = availGrades.map(g =>
-                    `<option value="${g}" ${c.grade === g ? 'selected' : ''}>${g}</option>`).join('');
-                const gpColor = (() => {
-                    const pt = gradeToPoint(c.grade);
-                    if (pt >= 4.5) return '#10B981';
-                    if (pt >= 3.5) return '#667eea';
-                    if (pt >= 2.5) return '#F59E0B';
-                    return '#EF4444';
-                })();
-
-                return `
-                <div style="
-                    background: var(--card-bg,#1e1e1e);
-                    border-radius: 14px;
-                    padding: 14px 16px;
-                    border: 1px solid ${c.released ? '#333' : '#1a1a1a'};
-                    display: flex;
-                    align-items: center;
-                    gap: 14px;
-                    opacity: ${c.released ? '1' : '0.45'};
-                    transition: all 0.2s;
-                    margin-bottom: 10px;
-                ">
-                    <!-- Toggle -->
-                    <label class="switch" style="position:relative;display:inline-block;width:40px;height:22px;flex-shrink:0;">
-                        <input type="checkbox" ${c.released ? 'checked' : ''}
-                            onchange="window.updateTrueSim(${i}, 'released', this.checked)"
-                            style="opacity:0;width:0;height:0;">
-                        <span class="slider round" style="
-                            position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;
-                            background:${c.released ? 'var(--primary-color,#667eea)' : '#444'};
-                            transition:.3s;border-radius:34px;
-                        "></span>
-                    </label>
-
-                    <!-- Course info -->
-                    <div style="flex:1;min-width:0;">
-                        <div style="font-weight:700;font-size:14px;color:${c.released ? 'white' : '#666'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.name}</div>
-                        <div style="font-size:11px;color:#666;margin-top:2px;">${c.units} credit${c.units !== 1 ? 's' : ''}</div>
-                    </div>
-
-                    <!-- Units input -->
-                    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-                        <div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:0.5px;">Credits</div>
-                        <input type="number" value="${c.units}" min="1" max="12" step="1"
-                            onchange="window.updateTrueSim(${i}, 'units', this.value)"
-                            style="width:46px;padding:6px 4px;border-radius:8px;border:1px solid #333;background:#111;color:${c.released ? 'white' : '#555'};font-size:13px;font-weight:700;text-align:center;outline:none;"
-                            ${c.released ? '' : 'disabled'}>
-                    </div>
-
-                    <!-- Grade badge + select -->
-                    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-                        <div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:0.5px;">Grade</div>
-                        <div style="position:relative;">
-                            <select onchange="window.updateTrueSim(${i}, 'grade', this.value)"
-                                style="
-                                    appearance:none;-webkit-appearance:none;
-                                    padding:6px 24px 6px 10px;
-                                    border-radius:8px;
-                                    border:1px solid ${gpColor};
-                                    background:#111;
-                                    color:${gpColor};
-                                    font-size:14px;
-                                    font-weight:800;
-                                    outline:none;
-                                    cursor:pointer;
-                                    min-width:54px;
-                                "
-                                ${c.released ? '' : 'disabled'}>
-                                ${gradeOptions}
-                            </select>
-                            <ion-icon name="chevron-down" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:12px;color:${gpColor};pointer-events:none;"></ion-icon>
+            } else {
+                container.innerHTML = `<div class="courses-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px;">` + window.trueSimCourses.map((c, i) => {
+                    const bg = c.released ? 'var(--card-bg, #1e1e1e)' : '#121212';
+                    const opacity = c.released ? '1' : '0.5';
+                    const inputBg = c.released ? '#2a2a2a' : '#121212';
+                    const inputBorder = c.released ? '#444' : '#222';
+                    const textCol = c.released ? 'var(--text-color, white)' : '#666';
+                    
+                    return `
+                    <div style="background: ${bg}; border-radius: 12px; padding: 16px; border: 1px solid ${inputBorder}; transition: 0.3s; opacity: ${opacity}; display: flex; flex-direction: column; justify-content: space-between;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+                            <label class="switch" style="position: relative; display: inline-block; width: 40px; height: 22px;">
+                                <input type="checkbox" ${c.released ? 'checked' : ''} onchange="window.updateTrueSim(${i}, 'released', this.checked)" style="opacity: 0; width: 0; height: 0;">
+                                <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: ${c.released ? 'var(--primary-color, #667eea)' : '#444'}; transition: .4s; border-radius: 34px;"></span>
+                            </label>
+                        </div>
+                        
+                        <div style="margin-bottom:12px; text-align:center;">
+                            <input type="text" value="${c.name}" onchange="window.updateTrueSim(${i}, 'name', this.value)" style="width:100%; font-weight:700; font-size:15px; color:${textCol}; background:transparent; border:none; text-align:center; border-bottom:1px solid ${c.released ? '#444' : 'transparent'}; outline:none; transition:0.2s;" placeholder="Course name" ${c.released ? '' : 'readonly'}>
+                        </div>
+                        
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <div style="flex:1;">
+                                <div style="font-size:10px; color:#999; font-weight:600; margin-bottom:4px; text-transform:uppercase; text-align:center;">Credits</div>
+                                <input type="number" value="${c.units}" min="1" step="1" onchange="window.updateTrueSim(${i}, 'units', this.value)" style="width:100%; padding:6px; border-radius:8px; border:1px solid ${inputBorder}; font-size:14px; font-weight:600; color:${textCol}; background:${inputBg}; outline:none; text-align:center;" ${c.released ? '' : 'disabled'}>
+                            </div>
+                            <div style="flex:1;">
+                                <div style="font-size:10px; color:#999; font-weight:600; margin-bottom:4px; text-transform:uppercase; text-align:center;">Grade</div>
+                                <select onchange="window.updateTrueSim(${i}, 'grade', this.value)" style="width:100%; padding:6px; border-radius:8px; border:1px solid ${inputBorder}; font-size:14px; font-weight:600; color:${textCol}; background:${inputBg}; outline:none; -webkit-appearance: none; text-align:center;" ${c.released ? '' : 'disabled'}>
+                                    <option value="A" ${c.grade === 'A' ? 'selected' : ''}>A (5)</option>
+                                    <option value="B" ${c.grade === 'B' ? 'selected' : ''}>B (4)</option>
+                                    <option value="C" ${c.grade === 'C' ? 'selected' : ''}>C (3)</option>
+                                    <option value="D" ${c.grade === 'D' ? 'selected' : ''}>D (2)</option>
+                                    <option value="E" ${c.grade === 'E' ? 'selected' : ''}>E (1)</option>
+                                    <option value="F" ${c.grade === 'F' ? 'selected' : ''}>F (0)</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                </div>`;
-            }).join('');
-
+                `;}).join('') + `</div>`;
+            }
             window.calcTrueSimulation();
         };
 
-        window.updateTrueSim = function (index, field, value) {
+        window.updateTrueSim = function(index, field, value) {
             if (field === 'units') value = parseFloat(value) || 0;
-            if (field === 'released') value = !!value;
             window.trueSimCourses[index][field] = value;
-
-            // Autosave to localStorage
-            const saved = {};
-            window.trueSimCourses.forEach(c => {
-                const key = c.id || c.name;
-                saved[key] = { grade: c.grade, released: c.released, units: c.units };
-            });
-            try { localStorage.setItem('kobi_sim_selections', JSON.stringify(saved)); } catch(e){}
-
             if (field === 'released') {
-                window.renderTrueSimulator();
+                window.renderTrueSimulator(); 
             } else {
-                // Update just the CGPA calc without full re-render
                 window.calcTrueSimulation();
             }
         };
@@ -7440,9 +7385,6 @@
             }
         }
 
-        // Expose real loadConversations to window (overrides any earlier stub)
-        window.loadConversations = loadConversations;
-
         function renderConversationItem(conv) {
             return `
                         <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: ${conv.unreadCount > 0 ? 'rgba(102, 126, 234, 0.15)' : '#2a2a2a'}; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border: ${conv.unreadCount > 0 ? '2px solid var(--primary-color)' : '1px solid rgba(0,0,0,0.05)'}; position: relative;" onclick="openChat('${conv.friendId}')">
@@ -8347,391 +8289,31 @@
 
             // Get Containers
             const feedContainer = document.getElementById('community-feed-container');
-            const groupsWrapper = document.getElementById('community-groups-wrapper');
+            const resourcesWrapper = document.getElementById('community-resources-wrapper');
             const messagesContainer = document.getElementById('community-messages-container');
 
             // Hide All
             if (feedContainer) feedContainer.classList.add('hidden');
-            if (groupsWrapper) groupsWrapper.classList.add('hidden');
+            if (resourcesWrapper) resourcesWrapper.classList.add('hidden'); // Hides overlay + content
             if (messagesContainer) messagesContainer.classList.add('hidden');
 
             // Show Selected
             if (tab === 'feed') {
                 if (feedContainer) feedContainer.classList.remove('hidden');
-            } else if (tab === 'groups') {
-                if (groupsWrapper) groupsWrapper.classList.remove('hidden');
-                window.loadStudyGroups();
+            } else if (tab === 'resources') {
+                if (resourcesWrapper) resourcesWrapper.classList.remove('hidden');
+
+                // Check lock status
+                if (window.checkResourcesLock) window.checkResourcesLock();
+
+                // Ensure inner container is technically visible (for blur effect to be visible when locked)
+                const innerContainer = document.getElementById('community-resources-container');
+                if (innerContainer) innerContainer.classList.remove('hidden');
+
+                if (window.loadResources) window.loadResources();
             } else if (tab === 'messages') {
                 if (messagesContainer) messagesContainer.classList.remove('hidden');
                 if (window.loadConversations) window.loadConversations();
-            }
-        };
-
-        // ─────────────────────────────────────────────────────────
-        //  STUDY GROUPS MODULE
-        // ─────────────────────────────────────────────────────────
-        let allStudyGroups = [];
-        let currentGroupId = null;
-
-        window.loadStudyGroups = async function () {
-            const listEl = document.getElementById('groups-list');
-            if (!listEl) return;
-            listEl.innerHTML = `<div style="text-align:center;padding:30px;"><ion-icon name="sync" class="spin" style="font-size:32px;color:#667eea;"></ion-icon><p style="color:#999;margin-top:12px;">Loading groups...</p></div>`;
-            try {
-                const snap = await getDocs(query(collection(db, 'studyGroups'), orderBy('createdAt', 'desc')));
-                allStudyGroups = [];
-                snap.forEach(d => allStudyGroups.push({ id: d.id, ...d.data() }));
-                window.renderStudyGroups(allStudyGroups);
-            } catch (e) {
-                console.error('Load groups error', e);
-                listEl.innerHTML = `<div style="color:#EF4444;padding:20px;text-align:center;">Error loading groups.</div>`;
-            }
-        };
-
-        window.filterGroups = function (searchQuery) {
-            const q = (searchQuery || document.getElementById('group-search-input')?.value || '').toLowerCase();
-            const levelFilter = window._groupLevelFilter || null;
-            let filtered = allStudyGroups.filter(g => {
-                const matchText = !q || g.name.toLowerCase().includes(q) ||
-                    (g.description || '').toLowerCase().includes(q) ||
-                    (g.courseCode || '').toLowerCase().includes(q) ||
-                    (g.courseName || '').toLowerCase().includes(q);
-                const matchLevel = !levelFilter || (g.levelMin <= levelFilter && g.levelMax >= levelFilter);
-                return matchText && matchLevel;
-            });
-            window.renderStudyGroups(filtered);
-        };
-
-        window.setGroupLevelFilter = function (level, btn) {
-            window._groupLevelFilter = level;
-            // Update chip styles
-            document.querySelectorAll('#groups-list-view .filter-btn').forEach(b => {
-                b.style.background = 'transparent';
-                b.style.color = '#ccc';
-                b.style.borderColor = '#444';
-            });
-            if (btn) {
-                btn.style.background = 'var(--primary-color)';
-                btn.style.color = 'white';
-                btn.style.borderColor = 'var(--primary-color)';
-            }
-            window.filterGroups();
-        };
-
-        window.renderStudyGroups = function (groups) {
-            const listEl = document.getElementById('groups-list');
-            if (!listEl) return;
-            const uid = localStorage.getItem('kobi_atlas_uid');
-            if (!groups || groups.length === 0) {
-                listEl.innerHTML = `<div style="text-align:center;padding:40px;color:#999;"><ion-icon name="people-outline" style="font-size:48px;"></ion-icon><p>No groups found. Create one!</p></div>`;
-                return;
-            }
-            listEl.innerHTML = groups.map(g => {
-                const isMember = (g.members || []).includes(uid);
-                const memberCount = (g.members || []).length;
-                const levelRange = g.levelMin === g.levelMax ? `${g.levelMin}L` : `${g.levelMin}L–${g.levelMax}L`;
-                return `
-                <div onclick="window.openGroupDetail('${g.id}')" style="background:var(--card-bg);border-radius:12px;padding:16px;margin-bottom:12px;cursor:pointer;border:1px solid var(--border-color);transition:0.2s;" onmouseover="this.style.borderColor='var(--primary-color)'" onmouseout="this.style.borderColor='var(--border-color)'">
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
-                        <div>
-                            <div style="font-weight:700;font-size:16px;">${g.name}</div>
-                            <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${levelRange}${g.courseCode ? ' · ' + g.courseCode : ''}${g.courseName ? ' – ' + g.courseName : ''}</div>
-                        </div>
-                        <span style="background:${isMember ? 'rgba(102,126,234,0.2)' : 'rgba(255,255,255,0.05)'};color:${isMember ? 'var(--primary-color)' : '#999'};border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;flex-shrink:0;">${isMember ? 'Member' : 'Join'}</span>
-                    </div>
-                    ${g.description ? `<div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">${g.description}</div>` : ''}
-                    <div style="font-size:12px;color:#666;"><ion-icon name="people-outline" style="vertical-align:middle;margin-right:4px;"></ion-icon>${memberCount} member${memberCount !== 1 ? 's' : ''}</div>
-                </div>`;
-            }).join('');
-        };
-
-        window.showCreateGroupModal = function () {
-            const modal = document.createElement('div');
-            modal.id = 'create-group-modal';
-            modal.className = 'modal show';
-            modal.innerHTML = `
-            <div class="modal-content" style="max-width:480px;">
-                <div class="modal-header">
-                    <h3>Create Study Group</h3>
-                    <button class="close-btn" onclick="document.getElementById('create-group-modal').remove()">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>Group Name *</label>
-                        <input type="text" id="sg-name" placeholder="e.g. CSC201 Study Squad" maxlength="60">
-                    </div>
-                    <div class="form-group">
-                        <label>Description (optional)</label>
-                        <textarea id="sg-desc" rows="2" placeholder="What's this group about?"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Level Range *</label>
-                        <div style="display:flex;gap:10px;align-items:center;">
-                            <select id="sg-level-min" style="flex:1;padding:10px;border-radius:8px;background:var(--input-bg,#1a1a1a);color:var(--text-color);border:1px solid var(--border-color);">
-                                <option value="100">100</option><option value="200">200</option><option value="300">300</option>
-                                <option value="400">400</option><option value="500">500</option><option value="600">600</option>
-                            </select>
-                            <span style="color:#999;">to</span>
-                            <select id="sg-level-max" style="flex:1;padding:10px;border-radius:8px;background:var(--input-bg,#1a1a1a);color:var(--text-color);border:1px solid var(--border-color);">
-                                <option value="100">100</option><option value="200">200</option><option value="300">300</option>
-                                <option value="400">400</option><option value="500">500</option><option value="600" selected>600</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Course Code (optional)</label>
-                        <input type="text" id="sg-code" placeholder="e.g. CSC201" oninput="this.value=this.value.toUpperCase()">
-                    </div>
-                    <div class="form-group">
-                        <label>Course Name (optional)</label>
-                        <input type="text" id="sg-course-name" placeholder="e.g. Data Structures">
-                    </div>
-                    <button class="btn btn-primary" onclick="window.createStudyGroup()" style="width:100%;margin-top:8px;">Create Group</button>
-                </div>
-            </div>`;
-            document.body.appendChild(modal);
-        };
-
-        window.createStudyGroup = async function () {
-            const name = document.getElementById('sg-name')?.value.trim();
-            if (!name) { showToast('Group name is required', 'error'); return; }
-            const uid = localStorage.getItem('kobi_atlas_uid');
-            const username = localStorage.getItem('kobi_atlas_username') || 'Anonymous';
-            try {
-                const groupData = {
-                    name,
-                    description: document.getElementById('sg-desc')?.value.trim() || '',
-                    levelMin: parseInt(document.getElementById('sg-level-min')?.value) || 100,
-                    levelMax: parseInt(document.getElementById('sg-level-max')?.value) || 600,
-                    courseCode: document.getElementById('sg-code')?.value.trim() || '',
-                    courseName: document.getElementById('sg-course-name')?.value.trim() || '',
-                    createdBy: uid,
-                    createdByName: username,
-                    members: [uid],
-                    createdAt: Date.now(),
-                    postCount: 0
-                };
-                const docRef = await addDoc(collection(db, 'studyGroups'), groupData);
-                document.getElementById('create-group-modal')?.remove();
-                showToast('Study group created!', 'success');
-                window.loadStudyGroups();
-                window.openGroupDetail(docRef.id);
-            } catch (e) {
-                console.error('Create group error', e);
-                showToast('Error creating group: ' + e.message, 'error');
-            }
-        };
-
-        window.openGroupDetail = async function (groupId) {
-            currentGroupId = groupId;
-            const uid = localStorage.getItem('kobi_atlas_uid');
-            document.getElementById('groups-list-view').classList.add('hidden');
-            document.getElementById('groups-detail-view').classList.remove('hidden');
-            document.getElementById('group-detail-name').textContent = 'Loading...';
-            document.getElementById('group-posts-list').innerHTML = `<div style="text-align:center;padding:30px;color:#999;">Loading...</div>`;
-            try {
-                const groupDoc = await getDoc(doc(db, 'studyGroups', groupId));
-                if (!groupDoc.exists()) { showToast('Group not found', 'error'); return; }
-                const g = { id: groupDoc.id, ...groupDoc.data() };
-                const isMember = (g.members || []).includes(uid);
-                const levelRange = g.levelMin === g.levelMax ? `${g.levelMin}L` : `${g.levelMin}L–${g.levelMax}L`;
-
-                document.getElementById('group-detail-name').textContent = g.name;
-                document.getElementById('group-detail-info').innerHTML = `
-                    <div><strong>Level:</strong> ${levelRange}</div>
-                    ${g.courseCode ? `<div><strong>Course:</strong> ${g.courseCode}${g.courseName ? ' – ' + g.courseName : ''}</div>` : ''}
-                    ${g.description ? `<div style="margin-top:6px;">${g.description}</div>` : ''}
-                    <div style="margin-top:6px;color:#666;font-size:12px;">${(g.members || []).length} member${(g.members || []).length !== 1 ? 's' : ''} · Created by ${g.createdByName || 'Unknown'}</div>
-                `;
-
-                const joinBtn = document.getElementById('group-join-btn');
-                joinBtn.textContent = isMember ? 'Leave' : 'Join';
-                joinBtn.style.background = isMember ? '#dc3545' : '';
-
-                // Show/hide post input area
-                document.getElementById('group-post-input-area').style.display = isMember ? 'block' : 'none';
-                document.getElementById('group-not-member-msg').style.display = isMember ? 'none' : 'block';
-
-                // Load posts
-                const postsSnap = await getDocs(query(collection(db, 'studyGroups', groupId, 'posts'), orderBy('timestamp', 'desc')));
-                const posts = [];
-                postsSnap.forEach(d => posts.push({ id: d.id, ...d.data() }));
-
-                if (posts.length === 0) {
-                    document.getElementById('group-posts-list').innerHTML = `<div style="text-align:center;padding:30px;color:#999;font-size:13px;">No posts yet. Be the first!</div>`;
-                } else {
-                    document.getElementById('group-posts-list').innerHTML = posts.map(p => {
-                        const isOwn = p.authorId === uid;
-                        const time = p.timestamp ? new Date(p.timestamp).toLocaleString() : '';
-                        return `
-                        <div style="background:var(--card-bg);border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid var(--border-color);">
-                            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-                                <strong style="font-size:14px;">${p.authorName || 'Anonymous'}</strong>
-                                <div style="display:flex;gap:8px;align-items:center;">
-                                    <span style="font-size:11px;color:#666;">${time}</span>
-                                    ${isOwn ? `<button onclick="deleteGroupPost('${groupId}','${p.id}')" style="background:none;border:none;color:#EF4444;cursor:pointer;font-size:18px;padding:0;" title="Delete">×</button>` : ''}
-                                </div>
-                            </div>
-                            ${p.text ? `<div style="font-size:14px;color:var(--text-color);margin-bottom:8px;">${p.text}</div>` : ''}
-                            ${p.fileUrl ? renderGroupFile(p.fileUrl, p.fileName, p.fileType) : ''}
-                        </div>`;
-                    }).join('');
-                }
-            } catch (e) {
-                console.error('Open group error', e);
-                document.getElementById('group-posts-list').innerHTML = `<div style="color:#EF4444;padding:20px;">Error loading group.</div>`;
-            }
-        };
-
-        function renderGroupFile(url, name, type) {
-            if (!url) return '';
-            const isImage = (type || '').startsWith('image/') || /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
-            if (isImage) {
-                return `<img src="${url}" alt="${name || 'image'}" style="max-width:100%;border-radius:8px;cursor:pointer;" onclick="openLightbox('${url}')">`;
-            }
-            return `<a href="${url}" target="_blank" style="display:flex;align-items:center;gap:8px;padding:10px;background:rgba(255,255,255,0.05);border-radius:8px;color:var(--primary-color);text-decoration:none;font-size:13px;">
-                <ion-icon name="document-outline" style="font-size:20px;flex-shrink:0;"></ion-icon>
-                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${name || 'Download file'}</span>
-            </a>`;
-        }
-
-        window.showGroupsList = function () {
-            currentGroupId = null;
-            document.getElementById('groups-list-view').classList.remove('hidden');
-            document.getElementById('groups-detail-view').classList.add('hidden');
-            // Reset post input
-            const fileNameEl = document.getElementById('group-file-name');
-            if (fileNameEl) fileNameEl.textContent = '';
-            window._groupFileData = null;
-            window._groupFileName = null;
-            window._groupFileType = null;
-        };
-
-        window.toggleGroupMembership = async function () {
-            if (!currentGroupId) return;
-            const uid = localStorage.getItem('kobi_atlas_uid');
-            try {
-                const groupRef = doc(db, 'studyGroups', currentGroupId);
-                const groupDoc = await getDoc(groupRef);
-                if (!groupDoc.exists()) return;
-                const members = groupDoc.data().members || [];
-                const isMember = members.includes(uid);
-                if (isMember) {
-                    await updateDoc(groupRef, { members: members.filter(m => m !== uid) });
-                    showToast('Left group', 'success');
-                } else {
-                    await updateDoc(groupRef, { members: [...members, uid] });
-                    showToast('Joined group!', 'success');
-                }
-                window.openGroupDetail(currentGroupId);
-            } catch (e) {
-                console.error('Toggle membership error', e);
-                showToast('Error: ' + e.message, 'error');
-            }
-        };
-
-        window.handleGroupFileSelect = async function (event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const fileNameEl = document.getElementById('group-file-name');
-            if (fileNameEl) fileNameEl.textContent = file.name;
-            window._groupFileName = file.name;
-            window._groupFileType = file.type;
-
-            if (file.type.startsWith('image/')) {
-                // Compress image
-                const compressed = await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = e => {
-                        const img = new Image();
-                        img.onload = () => {
-                            const canvas = document.createElement('canvas');
-                            let w = img.width, h = img.height;
-                            const maxDim = 1200;
-                            if (w > maxDim) { h = h * maxDim / w; w = maxDim; }
-                            if (h > maxDim) { w = w * maxDim / h; h = maxDim; }
-                            canvas.width = w; canvas.height = h;
-                            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                            canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.75);
-                        };
-                        img.onerror = reject;
-                        img.src = e.target.result;
-                    };
-                    reader.onerror = reject;
-                    reader.readAsDataURL(file);
-                });
-                window._groupFileData = compressed;
-            } else {
-                window._groupFileData = file;
-            }
-        };
-
-        window.submitGroupPost = async function () {
-            if (!currentGroupId) return;
-            const uid = localStorage.getItem('kobi_atlas_uid');
-            const username = localStorage.getItem('kobi_atlas_username') || 'Anonymous';
-            const text = document.getElementById('group-post-text')?.value.trim() || '';
-            const fileData = window._groupFileData;
-
-            if (!text && !fileData) { showToast('Write something or attach a file', 'error'); return; }
-
-            const progressEl = document.getElementById('group-upload-progress');
-            if (progressEl) progressEl.style.display = 'block';
-            showLoading(true);
-
-            try {
-                let fileUrl = null;
-                let fileName = window._groupFileName || null;
-                let fileType = window._groupFileType || null;
-
-                if (fileData) {
-                    // Upload via Catbox proxy (same as resources upload)
-                    const formData = new FormData();
-                    formData.append('reqtype', 'fileupload');
-                    formData.append('fileToUpload', fileData, fileName);
-                    const res = await fetch('/api/catbox', { method: 'POST', body: formData });
-                    if (!res.ok) throw new Error('Upload failed: ' + res.statusText);
-                    const result = await res.json();
-                    if (result.error) throw new Error(result.error);
-                    fileUrl = result.url;
-                }
-
-                await addDoc(collection(db, 'studyGroups', currentGroupId, 'posts'), {
-                    text,
-                    fileUrl,
-                    fileName,
-                    fileType,
-                    authorId: uid,
-                    authorName: username,
-                    timestamp: Date.now()
-                });
-
-                // Reset post form
-                if (document.getElementById('group-post-text')) document.getElementById('group-post-text').value = '';
-                if (document.getElementById('group-file-name')) document.getElementById('group-file-name').textContent = '';
-                if (document.getElementById('group-post-file')) document.getElementById('group-post-file').value = '';
-                window._groupFileData = null; window._groupFileName = null; window._groupFileType = null;
-
-                await updateDoc(doc(db, 'studyGroups', currentGroupId), { postCount: (await getDoc(doc(db, 'studyGroups', currentGroupId))).data().postCount + 1 || 1 });
-                showToast('Posted!', 'success');
-                window.openGroupDetail(currentGroupId);
-            } catch (e) {
-                console.error('Post error', e);
-                showToast('Error posting: ' + e.message, 'error');
-            } finally {
-                if (progressEl) progressEl.style.display = 'none';
-                showLoading(false);
-            }
-        };
-
-        window.deleteGroupPost = async function (groupId, postId) {
-            if (!confirm('Delete this post?')) return;
-            try {
-                await deleteDoc(doc(db, 'studyGroups', groupId, 'posts', postId));
-                showToast('Post deleted', 'success');
-                window.openGroupDetail(groupId);
-            } catch (e) {
-                showToast('Error deleting post', 'error');
             }
         };
 
@@ -8749,7 +8331,6 @@
             }
         });
     </script>
-
     <!-- Resource Upload Modal -->
     <div id="resource-upload-modal" class="modal">
         <div class="modal-content">

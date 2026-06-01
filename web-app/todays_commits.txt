@@ -1,9 +1,0 @@
-2026-02-13 12:21:58 +0100 | 142a5369 | Fix planner blackout issue (handle empty filtered schedule)
-2026-02-13 10:37:55 +0100 | 053d861f | Remove AI features for performance optimization
-2026-02-13 10:25:38 +0100 | 0967bf56 | Configure AI API Key
-2026-02-13 10:21:41 +0100 | 22bf86b9 | Add AI Chatbot (Gemini) integration with Settings
-2026-02-13 10:16:42 +0100 | 0f0e8433 | Fix loading issues, optimize dashboard and settings
-2026-02-13 07:05:44 +0100 | b90c7770 | Optimize settings loading and improve mobile watermark
-2026-02-13 07:02:38 +0100 | d515ce70 | Optimize dashboard schedule and tasks with caching
-2026-02-13 06:56:21 +0100 | d0d7d85c | Optimize loading and fix resources lock overlay
-2026-02-13 06:41:13 +0100 | be83edd9 | def 1

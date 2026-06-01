@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBKA2julrxpRhXTdU_8l5pSH73ERAjKtO4",
+            authDomain: "kobi-s-student-atlas.firebaseapp.com",
+            projectId: "kobi-s-student-atlas",
+            storageBucket: "kobi-s-student-atlas.firebasestorage.app",
+            messagingSenderId: "955486974004",
+            appId: "1:955486974004:web:be7d825c279d2e263c5a61"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function dump() {
+            try {
+                const uid = localStorage.getItem('kobi_atlas_uid');
+                const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+                const sems = [];
+                snapshot.forEach(d => sems.push({id: d.id, ...d.data()}));
+                
+                await fetch('/log', { method: 'POST', body: JSON.stringify(sems, null, 2) });
+                document.body.innerHTML = "Done! Please return to my chat.";
+                // Let's also redirect them back to dashboard_fixed.html so they don't get stuck.
+                setTimeout(() => window.location.href = 'dashboard_fixed.html', 1500);
+            } catch(e) {
+                await fetch('/log', { method: 'POST', body: "Error: " + e.message });
+            }
+        }
+        dump();
+    </script>
+</head>
+<body>Loading...</body>
+</html>

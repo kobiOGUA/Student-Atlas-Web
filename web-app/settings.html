@@ -375,11 +375,26 @@
         <div class="header-title">Settings</div>
     </div>
 
+    <!-- Loading Overlay -->
+    <div id="loading-overlay"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+        <div style="text-align: center; color: white;">
+            <div
+                style="border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid white; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px;">
+            </div>
+            <div>Loading settings...</div>
+        </div>
+    </div>
+    <style>
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
 
-    100% {
-    transform: rotate(360deg);
-    }
-    }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 
     <!-- Toast Container -->
@@ -540,12 +555,6 @@
             <ion-icon name="log-out-outline" style="margin-right: 8px;"></ion-icon>
             Logout
         </a>
-
-        <button onclick="confirmDeleteAccount()" class="logout-button"
-            style="background: transparent; border: 1px solid #ef4444; color: #ef4444; margin-top: 12px; margin-bottom: 40px;">
-            <ion-icon name="trash-outline" style="margin-right: 8px;"></ion-icon>
-            Delete Account
-        </button>
     </div>
 
     <script>
@@ -661,13 +670,7 @@
 
         // Load Settings on Start
         window.addEventListener('DOMContentLoaded', async () => {
-            // Show loading overlay
             const loadingOverlay = document.getElementById('loading-overlay');
-            if (loadingOverlay) {
-                loadingOverlay.style.display = 'flex';
-                // Safety timeout
-                setTimeout(() => { if (loadingOverlay) loadingOverlay.style.display = 'none'; }, 3000);
-            }
 
             // FAST EXIT: If in setup mode but already done locally, redirect immediately
             const urlParams = new URLSearchParams(window.location.search);
@@ -676,101 +679,15 @@
                 return;
             }
 
-            let isSettingsFound = false;
+            // --- STEP 1: Load from localStorage immediately (fast path) ---
+            const savedGrading = localStorage.getItem('kobi_atlas_grading_system');
+            if (savedGrading) try { gradingSystem = JSON.parse(savedGrading); } catch (e) {}
+            const savedCA = localStorage.getItem('kobi_atlas_ca_system');
+            if (savedCA) try { caSystem = JSON.parse(savedCA); } catch (e) {}
 
-            if (!uid) {
-                // Not logged in?
-            } else {
-                // Authenticate with Firebase before accessing Firestore
-                try {
-                    await firebase.auth().signInAnonymously();
-                } catch (authError) {
-                    console.error('Authentication error:', authError);
-                }
-
-                // Load Settings and Profile
-                try {
-                    // Cache First Strategy
-                    const cachedProfile = localStorage.getItem('kobi_atlas_user_profile');
-                    if (cachedProfile) {
-                        const userData = JSON.parse(cachedProfile);
-                        renderAdminButton(userData);
-                    }
-
-                    // Background fetch
-                    db.collection('users').doc(uid).get().then(userProfileDoc => {
-                        if (userProfileDoc.exists) {
-                            const userData = userProfileDoc.data();
-                            localStorage.setItem('kobi_atlas_user_profile', JSON.stringify(userData));
-                            renderAdminButton(userData);
-                        }
-                    });
-
-                    // Academic Data
-                    // Try Local Storage First
-                    const localGrading = localStorage.getItem('kobi_atlas_grading_system');
-                    const localCA = localStorage.getItem('kobi_atlas_ca_system');
-                    if (localGrading) gradingSystem = JSON.parse(localGrading);
-                    if (localCA) caSystem = JSON.parse(localCA);
-
-                    // Then update from Cloud
-                    const docRef = db.collection('users').doc(uid).collection('settings').doc('academic');
-                    docRef.get().then(docSnap => {
-                        if (docSnap.exists) {
-                            const data = docSnap.data();
-                            if (data.gradingSystem) {
-                                gradingSystem = data.gradingSystem;
-                                localStorage.setItem('kobi_atlas_grading_system', JSON.stringify(gradingSystem));
-                            }
-                            if (data.caSystem) {
-                                caSystem = data.caSystem;
-                                localStorage.setItem('kobi_atlas_ca_system', JSON.stringify(caSystem));
-                            }
-                            // Re-render only if needed, but for settings page inputs usually init once.
-                            // We might need to refresh UI if user is actively editing.
-                            // For V1, local first is enough speed up.
-                        }
-                    });
-
-                } catch (e) {
-                    console.error('Error fetching data:', e);
-                }
-            }
-
-            // Hide loading overlay immediately if we have cached data or fallback defaults
-            if (loadingOverlay) loadingOverlay.style.display = 'none';
-
-            function renderAdminButton(userData) {
-                // Check for Admin Status - Only kobioguadinma@gmail.com
-                if (userData.email === 'kobioguadinma@gmail.com') {
-                    const navButtons = document.getElementById('profile-nav-buttons');
-                    if (navButtons && !document.getElementById('admin-btn')) {
-                        const adminBtn = document.createElement('button');
-                        adminBtn.id = 'admin-btn';
-                        adminBtn.className = 'button';
-                        adminBtn.onclick = () => window.location.href = 'admin.html';
-                        adminBtn.innerHTML = `
-                        <ion-icon name="shield-checkmark" style="color: #FFD700;"></ion-icon>
-                        <span style="font-weight: bold; color: #FFD700;">Admin Panel</span>
-                        `;
-                        navButtons.insertBefore(adminBtn, navButtons.firstChild);
-                    }
-                }
-            }
-
-            // Fallback load from locals
-            if (!gradingSystem.type) {
-                const savedGrading = localStorage.getItem('kobi_atlas_grading_system');
-                if (savedGrading) try { gradingSystem = JSON.parse(savedGrading); } catch (e) { }
-            }
-            if (!caSystem.type) {
-                const savedCA = localStorage.getItem('kobi_atlas_ca_system');
-                if (savedCA) try { caSystem = JSON.parse(savedCA); } catch (e) { }
-            }
-
-            // Grading UI
+            // Apply UI from local data right away
             const gradSelect = document.getElementById('grading-system-select');
-            if (gradSelect) {
+            if (gradSelect && gradingSystem.type) {
                 gradSelect.value = gradingSystem.type;
                 if (gradingSystem.type === 'custom' && gradingSystem.custom) {
                     document.getElementById('custom-grades-list').innerHTML = '';
@@ -778,10 +695,8 @@
                 }
                 updateGradingUI();
             }
-
-            // CA UI
             const caSelect = document.getElementById('ca-system-select');
-            if (caSelect) {
+            if (caSelect && caSystem.type) {
                 caSelect.value = caSystem.type;
                 if (caSystem.type === 'custom' && caSystem.custom) {
                     document.getElementById('custom-ca-list').innerHTML = '';
@@ -791,81 +706,101 @@
                 calculateCA();
             }
 
-            // SETUP MODE LOGIC
-            // urlParams defined at top of function
-            if (urlParams.get('mode') === 'setup') {
-                // 100% NEW USER CHECK: If settings exist, kick out of setup
-                if (isSettingsFound) {
-                    localStorage.setItem('kobi_atlas_setup_done', 'true');
-                    window.location.href = 'dashboard.html';
-                    return;
-                }
+            // Hide loading overlay immediately after applying local data
+            if (loadingOverlay) loadingOverlay.style.display = 'none';
 
+            // SETUP MODE LOGIC (handle before Firebase sync)
+            if (urlParams.get('mode') === 'setup') {
                 document.querySelector('.header-title').textContent = 'Welcome / Setup';
                 const backBtn = document.querySelector('.back-button');
                 if (backBtn) backBtn.style.display = 'none';
-
-                // Show profile fields, hide navigation buttons
                 const profileFields = document.getElementById('profile-fields');
                 const profileNavButtons = document.getElementById('profile-nav-buttons');
                 if (profileFields) profileFields.style.display = 'block';
                 if (profileNavButtons) profileNavButtons.style.display = 'none';
-
-                // Hide unrelated sections
                 document.querySelectorAll('.section').forEach(sec => {
-                    const t = sec.querySelector('.section-title').textContent;
-                    if (t === 'Account' || t === 'Theme' || t === 'About') {
-                        sec.style.display = 'none';
-                    }
+                    if (!sec.id || sec.id === 'profile-section') return;
                 });
+                const saveBtn = document.getElementById('save-settings-btn');
+                if (saveBtn) {
+                    saveBtn.textContent = 'Save & Continue';
+                    saveBtn.onclick = async function () {
+                        await performSaveSettings();
+                        localStorage.setItem('kobi_atlas_setup_done', 'true');
+                        window.location.href = 'dashboard.html';
+                    };
+                }
+            }
 
-                // Ensure Profile and Academic are visible and ordered
-                const profileSec = document.getElementById('profile-section');
-                const academicSec = document.getElementById('grading-system-select')?.closest('.section');
+            // --- STEP 2: Sync from Firebase in background (won't block UI) ---
+            if (!uid) return;
 
-                if (profileSec && academicSec) {
-                    // Profile first
-                    profileSec.parentElement.prepend(academicSec);
-                    profileSec.parentElement.prepend(profileSec);
-
-                    const hint = document.createElement('div');
-                    hint.style.cssText = 'background: rgba(102, 126, 234, 0.1); border-left: 4px solid var(--primary-color); padding: 12px; margin-bottom: 20px; font-size: 14px; border-radius: 4px;';
-                    hint.textContent = 'Please set up your Profile and Academic Configuration (Grading/CA) below.';
-                    profileSec.insertAdjacentElement('beforebegin', hint);
+            try {
+                if (!firebase.auth().currentUser) {
+                    await Promise.race([
+                        firebase.auth().signInAnonymously(),
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('Auth timeout')), 5000))
+                    ]);
                 }
 
-                // Add Continue Button
-                const content = document.querySelector('.content');
-                const continueBtn = document.createElement('button');
-                continueBtn.type = 'button'; // Prevent form submission
-                continueBtn.className = 'button';
-                continueBtn.textContent = 'Finish Setup & Go to Dashboard';
-                continueBtn.style.cssText = 'background: var(--primary-color); color: white; justify-content: center; font-weight: bold; margin-top: 30px; padding: 16px; width: 100%; border-radius: 8px; border: none; font-size: 16px; cursor: pointer;';
-                continueBtn.onclick = async function (event) {
-                    if (event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    // alert removed
-                    const success = await window.performSaveSettings(); // Calls the unified save
-                    if (success) {
-                        localStorage.setItem('kobi_atlas_setup_done', 'true');
-                        // Wait for toast to be visible before redirect
-                        setTimeout(() => {
-                            window.location.href = 'dashboard.html';
-                        }, 1500);
-                    }
-                };
-                content.appendChild(continueBtn);
+                const docRef = firebase.firestore().collection('users').doc(uid).collection('settings').doc('academic');
+                const docSnap = await docRef.get();
 
-                const logoutBtn = document.querySelector('.logout-button');
-                if (logoutBtn) logoutBtn.style.display = 'none';
+                if (docSnap.exists) {
+                    const data = docSnap.data();
+                    let changed = false;
 
-                // Hide the regular Save Changes button in setup mode
-                const saveBtn = document.getElementById('save-settings-btn');
-                if (saveBtn) saveBtn.style.display = 'none';
+                    if (data.gradingSystem) {
+                        gradingSystem = data.gradingSystem;
+                        localStorage.setItem('kobi_atlas_grading_system', JSON.stringify(gradingSystem));
+                        changed = true;
+                    }
+                    if (data.caSystem) {
+                        caSystem = data.caSystem;
+                        localStorage.setItem('kobi_atlas_ca_system', JSON.stringify(caSystem));
+                        changed = true;
+                    }
+
+                    // Update UI with Firebase data if different from local
+                    if (changed) {
+                        if (gradSelect) gradSelect.value = gradingSystem.type;
+                        if (caSelect) caSelect.value = caSystem.type;
+                        updateGradingUI();
+                        updateCAUI();
+                        calculateCA();
+                    }
+                }
+
+                // Admin check (background)
+                const userProfileDoc = await firebase.firestore().collection('users').doc(uid).get();
+                if (userProfileDoc.exists && userProfileDoc.data().isAdmin) {
+                    const navButtons = document.getElementById('profile-nav-buttons');
+                    if (navButtons && !document.getElementById('admin-btn')) {
+                        const adminBtn = document.createElement('button');
+                        adminBtn.id = 'admin-btn';
+                        adminBtn.className = 'button';
+                        adminBtn.onclick = () => window.location.href = 'admin.html';
+                        adminBtn.innerHTML = `
+                            <ion-icon name="shield-checkmark" style="color: #FFD700;"></ion-icon>
+                            <span style="font-weight: bold; color: #FFD700;">Admin Panel</span>
+                        `;
+                        navButtons.insertBefore(adminBtn, navButtons.firstChild);
+                    }
+                }
+
+                // Setup mode: if settings exist, it's not a new user
+                if (urlParams.get('mode') === 'setup' && docSnap.exists) {
+                    localStorage.setItem('kobi_atlas_setup_done', 'true');
+                    window.location.href = 'dashboard.html';
+                }
+
+            } catch (e) {
+                console.warn('Background Firebase sync failed (using local data):', e.message);
             }
-            // --- THEME LOGIC (Merged) ---
+        });
+
+        // --- THEME LOGIC (runs on load) ---
+        document.addEventListener('DOMContentLoaded', () => {
             let currentTheme = localStorage.getItem('kobi_atlas_theme') || 'default';
             if (currentTheme === 'dark') currentTheme = 'default';
 
@@ -882,9 +817,6 @@
                 themeOptions[index].classList.add('active');
                 themeOptions[index].querySelector('.checkmark').style.display = 'block';
             }
-
-            // Hide loading overlay after everything is loaded
-            if (loadingOverlay) loadingOverlay.style.display = 'none';
         });
 
         window.updateGradingUI = function () {
@@ -1115,72 +1047,6 @@
                 forceLogout();
             }
         };
-
-        async function confirmDeleteAccount() {
-            if (confirm("Are you ABSOLUTELY sure you want to delete your account?\n\nThis action cannot be undone. All your data, grades, and schedule will be permanently lost.")) {
-                const enteredText = prompt("To confirm deletion, please type 'DELETE' below:");
-                if (enteredText === "DELETE") {
-                    await performDeleteAccount();
-                } else if (enteredText !== null) {
-                    alert("Incorrect confirmation text. Account deletion cancelled.");
-                }
-            }
-        }
-
-        async function performDeleteAccount() {
-            const uid = localStorage.getItem('kobi_atlas_uid');
-            if (!uid) {
-                alert("No user ID found. Redirecting to login.");
-                window.location.href = 'index.html';
-                return;
-            }
-
-            // Show loading overlay
-            const loadingOverlay = document.getElementById('loading-overlay');
-            if (loadingOverlay) {
-                loadingOverlay.style.display = 'flex';
-                // Customize loading text if possible, otherwise use generic
-            }
-
-            try {
-                // 1. Delete Firestore User Document
-                // Note: This only deletes the top-level document. Subcollections remain.
-                // A true "delete everything" requires recursive deletion logic or Cloud Functions.
-                // For this client-side implementation, we'll accept this limitation or try to delete known subcollections first.
-
-                // Attempt direct doc delete
-                await db.collection('users').doc(uid).delete();
-
-                // 2. Delete Authentication Account
-                const user = firebase.auth().currentUser;
-                if (user) {
-                    await user.delete();
-                } else {
-                    // If user object not readily available or requires re-auth
-                    throw new Error("Could not access user authentication session. Please re-login.");
-                }
-
-                // 3. Clear Local Storage
-                localStorage.clear();
-
-                // 4. Success & Redirect
-                alert("Your account has been deleted.");
-                window.location.href = 'index.html';
-
-            } catch (error) {
-                console.error("Delete Account Error:", error);
-                if (error.code === 'auth/requires-recent-login') {
-                    alert("For security reasons, this operation requires a recent login. Please log out, log back in, and try again immediately.");
-                } else {
-                    alert("Failed to delete account completely: " + error.message);
-                }
-                // Even on error, if we deleted some data, maybe we should logout? 
-                // Let's keep them logged in to retry unless it was a partial success that broke state.
-                if (loadingOverlay) loadingOverlay.style.display = 'none';
-            }
-        }
-        
-        }); // Close DOMContentLoaded defined at start of script
     </script>
 </body>
 

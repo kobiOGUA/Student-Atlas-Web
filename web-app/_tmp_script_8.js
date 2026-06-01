@@ -1,1754 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Kobi's Atlas v1.1</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-
-    <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Kobi's Atlas">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#667eea">
-
-    <!-- CryptoJS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-
-    <!-- Image Compression Utility -->
-    <script src="js/imageCompression.js"></script>
-
-    <!-- Resource Functions -->
-    <script src="resource-functions.js"></script>
-
-
-
-    <!-- Ionicons -->
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-
-    <!-- PDF.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    </script>
-
-    <style>
-        :root {
-            --bg-color: #1a1a1a;
-            --card-bg: #2a2a2a;
-            --text-color: #ffffff;
-            --text-secondary: #999999;
-            --primary-color: #667eea;
-            --border-color: #444444;
-            --nav-bg: #1a1a1a;
-            --modal-bg: #1a1a1a;
-        }
-
-        /* Themes */
-        [data-theme="dark"] {
-            --bg-color: #1a1a1a;
-            --card-bg: #2a2a2a;
-            --text-color: #ffffff;
-            --text-secondary: #999999;
-            --primary-color: #667eea;
-            --border-color: #444444;
-            --nav-bg: #1a1a1a;
-            --modal-bg: #1a1a1a;
-        }
-
-        [data-theme="light"] {
-            --bg-color: #f5f5f5;
-            --card-bg: #ffffff;
-            --text-color: #000000;
-            --text-secondary: #666666;
-            --primary-color: #667eea;
-            --border-color: #dddddd;
-            --nav-bg: #ffffff;
-            --modal-bg: #ffffff;
-        }
-
-        [data-theme="blue"] {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --text-secondary: #94a3b8;
-            --primary-color: #3b82f6;
-            --border-color: #334155;
-            --nav-bg: #0f172a;
-            --modal-bg: #1e293b;
-        }
-
-        [data-theme="lightPink"] {
-            --bg-color: #fff0f5;
-            --card-bg: #ffffff;
-            --text-color: #4a4a4a;
-            --text-secondary: #888888;
-            --primary-color: #ff69b4;
-            --border-color: #ffc0cb;
-            --nav-bg: #ffffff;
-            --modal-bg: #ffffff;
-        }
-
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-color);
-            color: var(--text-color);
-        }
-
-        .screen {
-            padding: 20px;
-            min-height: 100vh;
-            padding-bottom: 80px;
-        }
-
-        .header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            padding-top: calc(env(safe-area-inset-top) + 20px);
-            /* Respect Notch */
-            margin: -20px -20px 20px -20px;
-            border-radius: 0 0 20px 20px;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            padding: 16px;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        .section-title {
-            font-size: 18px;
-            margin: 24px 0 12px 0;
-            color: var(--text-color);
-        }
-
-        .semester-card {
-            background: var(--card-bg);
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: transform 0.2s;
-            border: 2px solid transparent;
-            position: relative;
-        }
-
-        .course-card {
-            background: var(--card-bg);
-            padding: 24px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            cursor: pointer;
-            min-height: 80px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            font-size: 1.1em;
-        }
-
-        .course-card:hover {
-            background: var(--border-color);
-            /* Slightly lighter/darker on hover */
-        }
-
-        .modal-content {
-            background: var(--modal-bg);
-            border-radius: 12px;
-            padding: 24px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            color: var(--text-color);
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 16px;
-            margin-bottom: 16px;
-            background: var(--card-bg);
-            color: var(--text-color);
-        }
-
-        .btn-secondary {
-            background: var(--card-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            background: var(--card-bg);
-            color: var(--text-secondary);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--nav-bg);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            /* Compact padding */
-            padding-left: 10%;
-            /* Desktop: 80% width */
-            padding-right: 10%;
-            z-index: 1000;
-            padding-bottom: max(6px, env(safe-area-inset-bottom));
-            /* Dynamic safe area */
-        }
-
-        @media (max-width: 768px) {
-            .bottom-nav {
-                padding-left: 12px;
-                padding-right: 12px;
-            }
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 4px 0;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            flex: 1;
-            /* Distribute space evenly */
-            max-width: 80px;
-            /* Prevent them from getting too wide on desktop */
-        }
-
-        .nav-item ion-icon {
-            font-size: 28px;
-            margin-bottom: 4px;
-        }
-
-        .nav-item.active {
-            color: var(--primary-color);
-        }
-
-        .fab {
-            position: fixed;
-            bottom: calc(80px + env(safe-area-inset-bottom));
-            /* Lift above navbar + safe area */
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            border-radius: 30px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
-            border: none;
-            color: white;
-            font-size: 32px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            line-height: 0;
-        }
-
-        .fab ion-icon {
-            display: block;
-            pointer-events: none;
-        }
-
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            overflow-y: auto;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
-            color: white;
-            padding: 16px;
-            margin: -24px -24px 20px -24px;
-            border-radius: 12px 12px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Fix for Messages Modal on Mobile (Push down to avoid notch) */
-        #messages-modal .modal-header {
-            padding-top: max(16px, env(safe-area-inset-top) + 20px);
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 28px;
-            cursor: pointer;
-            padding: 0;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
-            transition: background 0.2s;
-        }
-
-        .close-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Toggle Switch */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 26px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #444;
-            transition: 0.3s;
-            border-radius: 26px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.3s;
-            border-radius: 50%;
-        }
-
-        input:checked+.slider {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
-        }
-
-        input:checked+.slider:before {
-            transform: translateX(24px);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Reactive Icons */
-        .contact-icon {
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .contact-icon:hover {
-            transform: scale(1.2);
-            z-index: 10;
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
-            color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-secondary:hover {
-            background: linear-gradient(135deg, #5a6268 0%, #4e555b 100%);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            color: white;
-            box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3);
-        }
-
-        .btn-danger:hover {
-            background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
-        }
-
-        .tab-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .ca-score-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .ca-score-input {
-            width: 80px;
-            text-align: right;
-            margin: 0;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-        }
-
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid white;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        #toast-container {
-            position: fixed;
-            top: max(20px, env(safe-area-inset-top) + 20px);
-            right: 20px;
-            z-index: 10001;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            pointer-events: none;
-        }
-
-        .toast {
-            background: var(--card-bg);
-            color: white;
-            padding: 16px 24px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            pointer-events: auto;
-            animation: slideInRight 0.3s ease forwards;
-        }
-
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .toast.error {
-            background: #dc3545;
-        }
-
-        .toast.success {
-            background: #28a745;
-        }
-
-        .badge {
-            background: var(--primary-color);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 8px;
-        }
-
-        .badge.pending {
-            background: #00d4ff;
-        }
-
-        .badge.current {
-            background: var(--primary-color);
-        }
-
-        .badge.past {
-            background: #666;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        .nav-badge {
-            position: absolute;
-            top: 2px;
-            right: 14px;
-            background: #FF3B30;
-            color: white;
-            border-radius: 10px;
-            min-width: 16px;
-            height: 16px;
-            font-size: 10px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 4px;
-            z-index: 1001;
-        }
-
-        /* Add other missing classes */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .stat-value {
-            font-size: 32px;
-            font-weight: bold;
-            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Reformatted Chat Modal to be full screen ALWAYS */
-        .chat-modal-content {
-            max-width: 100% !important;
-            width: 100% !important;
-            height: 100% !important;
-            border-radius: 0 !important;
-            max-height: none !important;
-            margin: 0 !important;
-            position: fixed !important;
-            top: 0;
-            left: 0;
-        }
-
-        .day-section {
-            margin-bottom: 24px;
-        }
-
-        .day-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 12px;
-        }
-
-        .schedule-card,
-        .task-card {
-            background: var(--card-bg);
-            padding: 14px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            display: flex;
-            gap: 12px;
-        }
-
-        .course-code {
-            font-size: 12px;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-
-        .course-name {
-            font-size: 16px;
-            font-weight: 600;
-            margin-top: 2px;
-        }
-
-        .time-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 60px;
-        }
-
-        .time-text {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .time-line {
-            width: 2px;
-            flex: 1;
-            background: #444;
-            margin: 4px 0;
-            min-height: 20px;
-        }
-
-        .details-container {
-            flex: 1;
-        }
-
-        .venue-container {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-top: 6px;
-        }
-
-        .venue-text {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .checkbox {
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-        }
-
-        .task-title {
-            font-size: 16px;
-            color: var(--text-color);
-            font-weight: 600;
-        }
-
-        .task-date {
-            color: var(--text-secondary);
-        }
-
-        .delete-task-button {
-            background: none;
-            border: none;
-            padding: 8px;
-            cursor: pointer;
-        }
-
-        .empty-container {
-            text-align: center;
-            padding: 60px 20px;
-        }
-
-        .empty-text {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-top: 16px;
-        }
-
-        .btn-action {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: none;
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            width: 100%;
-        }
-
-        .btn-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            filter: brightness(1.1);
-        }
-
-        .btn-action:active {
-            transform: translateY(0);
-        }
-
-        .btn-action-primary {
-            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
-        }
-
-        .btn-action-graduate {
-            background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
-        }
-
-        .btn-action-pending {
-            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
-        }
-
-        .btn-action-current {
-            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-        }
-
-        .btn-action-danger {
-            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
-        }
-    </style>
-    <script>
-        // Load theme immediately
-        const savedTheme = localStorage.getItem('kobi_atlas_theme') || 'default';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-    </script>
-</head>
-
-<body>
-    <div id="app">
-        <div id="loading-overlay" class="loading hidden">
-            <div class="spinner"></div>
-        </div>
-        <!-- Dashboard Screen -->
-        <div id="dashboard-screen" class="screen">
-            <div class="header"
-                style="display: flex; justify-content: space-between; align-items: center; padding-right: 20px;">
-                <div>
-                    <h2 style="margin: 0;">Kobi's Atlas v1.1</h2>
-                    <p style="margin: 5px 0 0 0; opacity: 0.9;">Academic Overview</p>
-                </div>
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div id="dashboard-widgets" style="text-align: right; font-size: 11px; max-width: 400px;"></div>
-                    <button onclick="loadDashboard()"
-                        style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;"
-                        title="Refresh">
-                        <ion-icon name="refresh-outline" style="font-size: 20px;"></ion-icon>
-                    </button>
-                </div>
-            </div>
-
-            <div class="stats-grid" id="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Current CGPA</div>
-                    <div class="stat-value" id="cgpa-value">--</div>
-                </div>
-            </div>
-
-            <div id="current-semester"></div>
-            <div id="pending-semesters"></div>
-            <div id="past-semesters"></div>
-
-            <button class="fab" onclick="showAddSemesterModal()">+</button>
-        </div>
-
-        <!-- Semester Detail Screen -->
-        <div id="semester-detail-screen" class="screen hidden">
-            <div class="header">
-                <button onclick="backToDashboard()"
-                    style="background:none;border:none;color:white;font-size:24px;cursor:pointer;">←</button>
-                <h2 id="semester-detail-title" style="margin: 10px 0 0 0;"></h2>
-                <p id="semester-detail-gpa" style="margin: 5px 0 0 0; opacity: 0.9;"></p>
-            </div>
-
-            <div id="courses-list"></div>
-
-            <div id="courses-list"></div>
-
-            <div id="semester-actions"
-                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 20px;">
-            </div>
-        </div>
-
-        <!-- Course Detail Screen -->
-        <div id="course-detail-screen" class="screen hidden">
-            <div class="header">
-                <button onclick="backToSemester()"
-                    style="background:none;border:none;color:white;font-size:24px;cursor:pointer;">←</button>
-                <h2 id="course-detail-title" style="margin: 10px 0 0 0;"></h2>
-                <p id="course-detail-code" style="margin: 5px 0 0 0; opacity: 0.9;"></p>
-            </div>
-
-
-
-
-            <div id="course-info-tab">
-                <!-- Custom CA Management Header -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h3 style="margin: 0;">CA Scores</h3>
-                    <button onclick="addCourseCAField()" style="background: linear-gradient(135deg, var(--primary-color), #764ba2); border: none; color: white; padding: 7px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
-                        <ion-icon name="add-circle-outline" style="font-size: 16px;"></ion-icon> Add Assessment
-                    </button>
-                </div>
-                <p id="ca-empty-hint" style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">No assessments yet. Tap <strong>Add Assessment</strong> to define your CA structure (e.g. Mid Sem 15, Quiz 10…). The remaining marks become your Exam score.</p>
-                <div id="ca-inputs-container">
-                    <!-- Dynamic CA Inputs -->
-                </div>
-                <div class="ca-score-row" style="border-bottom: 2px solid #667eea; margin-top: 4px;">
-                    <span><strong>Total CA:</strong></span>
-                    <span id="total-ca" style="font-weight: bold; color: #667eea;">0/0</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding: 8px 12px; background: rgba(102,126,234,0.08); border-radius: 8px;">
-                    <span style="font-size: 13px; color: var(--text-secondary);">Exam Score (auto)</span>
-                    <span id="exam-remaining" style="font-weight: 700; font-size: 16px; color: var(--primary-color);">100 / 100</span>
-                </div>
-
-
-                <h3 style="margin: 24px 0 16px 0;">Grade Calculation</h3>
-
-                <div
-                    style="background: var(--card-bg); padding: 12px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border-color);">
-                    <span style="font-weight: 500;">Use CA for Grade</span>
-                    <label class="switch">
-                        <input type="checkbox" id="use-ca-toggle" onchange="toggleUseCA(this.checked)">
-                        <span class="slider round"></span>
-                        <style>
-                            input:checked+.slider {
-                                background-color: var(--primary-color);
-                            }
-                        </style>
-                    </label>
-                </div>
-
-                <div id="manual-grade-container" class="ca-score-row hidden">
-                    <span>Grade:</span>
-                    <select id="course-manual-grade" style="width: 100px; margin: 0;">
-                        <!-- Populated dynamically -->
-                    </select>
-                </div>
-
-                <div id="projected-grade-container" class="hidden" style="margin-top: 20px;">
-                    <div id="projected-grade-display"></div>
-                </div>
-
-                <h3 style="margin: 24px 0 16px 0;">Course Info</h3>
-                <div class="ca-score-row">
-                    <span>Unit Hours:</span>
-                    <span id="course-units">--</span>
-                </div>
-
-
-                <button class="btn btn-primary" onclick="saveCourseChanges()" style="margin-top: 24px;">Save
-                    Changes</button>
-                <button class="btn btn-danger" onclick="deleteCourse()">Delete Course</button>
-            </div>
-
-
-        </div>
-
-        <!-- Planner Screen -->
-        <div id="planner-screen" class="screen hidden">
-            <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
-                <h2 style="margin: 0;">Planner</h2>
-                <button onclick="loadSchedule(); loadTasks();"
-                    style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;"
-                    title="Refresh">
-                    <ion-icon name="refresh-outline" style="font-size: 20px;"></ion-icon>
-                </button>
-            </div>
-
-            <!-- Tabs -->
-            <div class="tab-buttons" style="margin-bottom: 20px;">
-                <button class="tab-btn active" id="schedule-tab-btn"
-                    onclick="switchPlannerTab('schedule')">Schedule</button>
-                <button class="tab-btn" id="tasks-tab-btn" onclick="switchPlannerTab('tasks')">Tasks</button>
-            </div>
-
-
-            <!-- Schedule Tab -->
-            <div id="schedule-tab">
-                <div id="schedule-content"></div>
-                <button class="fab" onclick="showAddScheduleModal()">+</button>
-            </div>
-
-            <!-- Tasks Tab -->
-            <div id="tasks-tab" class="hidden">
-                <div id="tasks-content"></div>
-                <button class="fab" onclick="showAddTaskModal()">+</button>
-            </div>
-        </div>
-
-        <!-- GPA View Screen -->
-        <div id="gpa-screen" class="screen hidden">
-            <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
-                <h2 style="margin: 0;">GPA Overview</h2>
-                <button onclick="loadGPAView();"
-                    style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;"
-                    title="Refresh">
-                    <ion-icon name="refresh-outline" style="font-size: 20px;"></ion-icon>
-                </button>
-            </div>
-
-            <!-- Tabs -->
-            <div class="tab-buttons" style="margin-bottom: 20px;">
-                <button class="tab-btn active" id="gpa-current-tab" onclick="switchGPATab('current')">Current
-                    (Real)</button>
-                <button class="tab-btn" id="gpa-predicted-tab" onclick="switchGPATab('predicted')">Predicted</button>
-                
-            </div>
-
-            <!-- SIMULATOR PROMO BUTTON -->
-            <button onclick="showScreen('gpa-simulator')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 16px 24px; border-radius: 16px; font-weight: bold; font-size: 16px; border: none; box-shadow: 0 4px 15px rgba(102,126,234,0.4); display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 24px; cursor: pointer; transition: transform 0.2s;">
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <div style="background:rgba(255,255,255,0.2); width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center;">
-                        <ion-icon name="flask" style="font-size:24px;"></ion-icon>
-                    </div>
-                    <div style="text-align:left;">
-                        <div style="font-size:16px; font-weight:800; margin-bottom:2px;">GPA Simulator</div>
-                        <div style="font-size:12px; font-weight:500; opacity:0.9;">Mix &amp; match course grades</div>
-                    </div>
-                </div>
-                <ion-icon name="chevron-forward-outline" style="font-size:24px; opacity:0.8;"></ion-icon>
-            </button>
-
-
-            <!-- Degree Classification -->
-            <div id="classification-card" class="stat-card"
-                style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
-                <ion-icon id="classification-icon" name="star" style="font-size: 36px; color: #FFD700;"></ion-icon>
-                <div style="flex: 1;">
-                    <div style="font-size: 12px; color: #999; margin-bottom: 4px;">Current Standing</div>
-                    <div id="classification-label" style="font-size: 18px; font-weight: bold; color: #FFD700;">
-                        First
-                        Class</div>
-                </div>
-            </div>
-
-            <!-- Stats Grid -->
-            <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 20px;">
-                <div class="stat-card">
-                    <ion-icon name="school" style="font-size: 32px; color: #667eea; margin-bottom: 8px;"></ion-icon>
-                    <div class="stat-value" id="gpa-main-value">--</div>
-                    <div class="stat-label" id="gpa-main-label">Cumulative GPA</div>
-                </div>
-                <div class="stat-card">
-                    <ion-icon name="book" style="font-size: 32px; color: #667eea; margin-bottom: 8px;"></ion-icon>
-                    <div class="stat-value" id="gpa-credits">--</div>
-                    <div class="stat-label">Total Credits</div>
-                </div>
-                <div class="stat-card">
-                    <ion-icon name="calendar" style="font-size: 32px; color: #667eea; margin-bottom: 8px;"></ion-icon>
-                    <div class="stat-value" id="gpa-semesters">--</div>
-                    <div class="stat-label">Semesters</div>
-                </div>
-                <div class="stat-card">
-                    <ion-icon id="trend-icon" name="remove"
-                        style="font-size: 32px; color: #999; margin-bottom: 8px;"></ion-icon>
-                    <div class="stat-value" id="trend-value">→</div>
-                    <div class="stat-label">Trend</div>
-                </div>
-            </div>
-
-            <!-- GPA Chart -->
-            <div class="stat-card" style="margin-bottom: 20px;">
-                <h3 style="margin-bottom: 16px;">GPA Trend</h3>
-                <div id="gpa-chart"
-                    style="display: flex; align-items: flex-end; justify-content: flex-start; gap: 16px; height: 250px; overflow-x: auto; padding-bottom: 10px; padding-left: 5px; scrollbar-width: thin; padding-top: 20px;">
-                </div>
-            </div>
-
-            <!-- Insights -->
-            <div class="stat-card" style="margin-bottom: 20px;">
-                <h3 style="margin-bottom: 16px;">Insights</h3>
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                    <ion-icon name="trophy" style="font-size: 20px; color: #FFD700;"></ion-icon>
-                    <span id="best-semester">Best Semester: --</span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <ion-icon name="alert-circle" style="font-size: 20px; color: #FF9800;"></ion-icon>
-                    <span id="worst-semester">Lowest Semester: --</span>
-                </div>
-            </div>
-
-            <!-- Grade Distribution -->
-            <div id="grade-distribution" class="stat-card" style="margin-bottom: 20px;">
-                <h3 id="grade-distribution-title" style="margin-bottom: 16px;">Grade Distribution (Graded Courses)</h3>
-                <div id="distribution-content"></div>
-            </div>
-
-            <!-- Semester Breakdown -->
-            <div class="stat-card" style="margin-bottom: 20px;">
-                <h3 style="margin-bottom: 16px; text-align: center;">Semester Breakdown</h3>
-                <div id="semester-breakdown"></div>
-            </div>
-        </div>
-
-        
-        
-        
-        <!-- GPA Simulator Screen -->
-        <div id="gpa-simulator-screen" class="screen hidden" style="background: var(--bg-color, #121212); min-height: 100vh;">
-            <div class="header" style="display: flex; justify-content: space-between; align-items: center; background: var(--card-bg, #1e1e1e); padding: 16px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 10;">
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <button onclick="showScreen('gpa')" style="background:var(--bg-color, #121212); border:none; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text-color, #ffffff); cursor:pointer;">
-                        <ion-icon name="arrow-back-outline" style="font-size:20px;"></ion-icon>
-                    </button>
-                    <h2 style="margin: 0; font-size:18px; color:var(--text-color, #ffffff);">CGPA Simulator</h2>
-                </div>
-                <button onclick="window.loadGPASimulator();" style="background: #f3f4f6; border: none; width:36px; height:36px; border-radius: 50%; color: #667eea; cursor: pointer; display: flex; align-items: center; justify-content:center;">
-                    <ion-icon name="refresh-outline" style="font-size: 20px;"></ion-icon>
-                </button>
-            </div>
-
-            <div style="padding: 20px;">
-                <!-- Hero Card -->
-                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; padding: 24px; color: white; box-shadow: 0 10px 25px rgba(118, 75, 162, 0.3); margin-bottom: 24px; position: relative; overflow: hidden;">
-                    <!-- Decorative circle -->
-                    <div style="position:absolute; top:-20px; right:-20px; width:100px; height:100px; border-radius:50%; background:rgba(255,255,255,0.1);"></div>
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                        <div>
-                            <div style="font-size: 13px; opacity: 0.9; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Simulated CGPA</div>
-                            <div style="display: flex; align-items: baseline; gap: 8px;">
-                                <div id="simulated-cgpa-main" style="font-size: 48px; font-weight: 800; line-height: 1;">0.00</div>
-                                <div id="simulated-cgpa-diff" style="font-size: 16px; font-weight: 600; padding: 4px 8px; border-radius: 8px; background: rgba(255,255,255,0.2); backdrop-filter: blur(4px);">+0.00</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: space-between;">
-                        <div>
-                            <div style="font-size: 11px; opacity: 0.8; margin-bottom: 2px;">BASELINE CGPA</div>
-                            <div id="sim-base-cgpa" style="font-size: 16px; font-weight: 600;">0.00</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 11px; opacity: 0.8; margin-bottom: 2px;">TOTAL CREDITS</div>
-                            <div id="sim-total-credits" style="font-size: 16px; font-weight: 600;">0</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 11px; opacity: 0.8; margin-bottom: 2px;">SEMESTER GPA</div>
-                            <div id="sim-sgpa" style="font-size: 16px; font-weight: 600;">0.00</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
-                    <h3 style="margin:0; font-size:16px; color:var(--text-color, #ffffff);">Courses to Simulate</h3>
-                    
-                </div>
-                <p style="font-size:13px; color:#6B7280; margin-bottom:16px; line-height:1.5;">Toggle courses ON to include them in the simulation. Adjust anticipated grades to see their impact on your CGPA.</p>
-                
-                <div id="sim-courses-container" style="display:flex; flex-direction:column; gap:12px; padding-bottom:100px;">
-                    <!-- Courses loaded here -->
-                </div>
-            </div>
-        </div>
-
-        <style>
-            /* Custom iOS style toggle switch */
-            .sim-toggle {
-                position: relative;
-                display: inline-block;
-                width: 44px;
-                height: 24px;
-            }
-            .sim-toggle input {
-                opacity: 0;
-                width: 0;
-                height: 0;
-            }
-            .sim-slider {
-                position: absolute;
-                cursor: pointer;
-                top: 0; left: 0; right: 0; bottom: 0;
-                background-color: #cbd5e1;
-                transition: .3s;
-                border-radius: 24px;
-            }
-            .sim-slider:before {
-                position: absolute;
-                content: "";
-                height: 20px;
-                width: 20px;
-                left: 2px;
-                bottom: 2px;
-                background-color: white;
-                transition: .3s;
-                border-radius: 50%;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            }
-            .sim-toggle input:checked + .sim-slider {
-                background-color: #10B981;
-            }
-            .sim-toggle input:checked + .sim-slider:before {
-                transform: translateX(20px);
-            }
-            
-            .sim-course-card {
-                background: white;
-                border-radius: 16px;
-                padding: 16px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                border: 1px solid #f3f4f6;
-            }
-            .sim-course-card.disabled {
-                opacity: 0.6;
-                background: #f9fafb;
-            }
-        </style>
-
-        <!-- Community Screen -->
-        <div id="community-screen" class="screen hidden">
-            <div class="header">
-                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                    <h2 style="margin: 0;">Community</h2>
-                    <div style="display: flex; gap: 16px; align-items: center;">
-                        <button onclick="showUserSearch()" style="background: none; border: none; cursor: pointer;">
-                            <ion-icon name="search-outline" style="font-size: 24px; color: white;"></ion-icon>
-                        </button>
-                        <button onclick="showCreatePostModal()" style="display: none;">
-                            <ion-icon name="add-outline" style="font-size: 24px; color: white;"></ion-icon>
-                        </button>
-                        <button onclick="showNotifications()"
-                            style="background: none; border: none; cursor: pointer; position: relative;">
-                            <ion-icon name="notifications-outline" style="font-size: 24px; color: white;"></ion-icon>
-                            <span id="notification-badge" class="hidden"
-                                style="position: absolute; top: -4px; right: -4px; background: #FF3B30; color: white; border-radius: 10px; min-width: 18px; height: 18px; font-size: 10px; font-weight: bold; display: flex; align-items: center; justify-content: center; padding: 0 4px;">0</span>
-                        </button>
-                        <button onclick="showProfileSettings()"
-                            style="background: none; border: none; cursor: pointer;">
-                            <ion-icon name="person-circle-outline" style="font-size: 24px; color: white;"></ion-icon>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-buttons" style="margin-bottom: 20px;">
-                <button class="tab-btn active" id="comm-feed-tab" onclick="switchCommunityTab('feed')">Feed</button>
-                <button class="tab-btn" id="comm-groups-tab"
-                    onclick="switchCommunityTab('groups')">Study Groups</button>
-                <button class="tab-btn" id="comm-messages-tab" onclick="switchCommunityTab('messages')">
-                    Messages
-                    <span id="inner-message-badge" class="badge current hidden"
-                        style="margin-left: 8px; font-size: 10px; padding: 2px 6px;">0</span>
-                </button>
-            </div>
-
-            <div id="community-feed-container">
-                <div id="posts-feed"></div>
-            </div>
-
-            <div id="community-messages-container" class="hidden">
-                <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
-                    <button class="btn btn-primary" onclick="showUserSearch()"
-                        style="width: auto; padding: 8px 16px; font-size: 14px;">
-                        <ion-icon name="create-outline" style="margin-right: 5px;"></ion-icon> New Message
-                    </button>
-                </div>
-                <div id="conversations-list"></div>
-            </div>
-
-            <!-- Study Groups Tab Container -->
-            <div id="community-groups-wrapper" class="hidden" style="padding-bottom: 80px; position: relative;">
-                <!-- Group List View -->
-                <div id="groups-list-view">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                        <h3 style="margin: 0; font-size: 18px;">Study Groups</h3>
-                    </div>
-                    <input type="text" id="group-search-input" placeholder="🔍 Search by name, course, level..." oninput="filterGroups(this.value)" style="margin-bottom: 12px;">
-                    <!-- Level Filter Chips -->
-                    <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:12px; -webkit-overflow-scrolling:touch;">
-                        <button onclick="setGroupLevelFilter(null, this)" class="filter-btn active-filter" id="gf-all" style="padding:6px 14px;border-radius:20px;border:1px solid var(--primary-color);background:var(--primary-color);color:white;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0;">All</button>
-                        <button onclick="setGroupLevelFilter(100, this)" class="filter-btn" id="gf-100" style="padding:6px 14px;border-radius:20px;border:1px solid #444;background:transparent;color:#ccc;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0;">100L</button>
-                        <button onclick="setGroupLevelFilter(200, this)" class="filter-btn" id="gf-200" style="padding:6px 14px;border-radius:20px;border:1px solid #444;background:transparent;color:#ccc;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0;">200L</button>
-                        <button onclick="setGroupLevelFilter(300, this)" class="filter-btn" id="gf-300" style="padding:6px 14px;border-radius:20px;border:1px solid #444;background:transparent;color:#ccc;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0;">300L</button>
-                        <button onclick="setGroupLevelFilter(400, this)" class="filter-btn" id="gf-400" style="padding:6px 14px;border-radius:20px;border:1px solid #444;background:transparent;color:#ccc;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0;">400L</button>
-                        <button onclick="setGroupLevelFilter(500, this)" class="filter-btn" id="gf-500" style="padding:6px 14px;border-radius:20px;border:1px solid #444;background:transparent;color:#ccc;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0;">500L</button>
-                        <button onclick="setGroupLevelFilter(600, this)" class="filter-btn" id="gf-600" style="padding:6px 14px;border-radius:20px;border:1px solid #444;background:transparent;color:#ccc;font-size:12px;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0;">600L</button>
-                    </div>
-                    <div id="groups-list"><div style="text-align:center;padding:40px;color:#999;"><ion-icon name="people-outline" style="font-size:48px;"></ion-icon><p>No study groups yet. Create one!</p></div></div>
-                </div>
-                <!-- FAB to create group -->
-                <button class="fab" onclick="showCreateGroupModal()" title="Create Study Group">
-                    <ion-icon name="add"></ion-icon>
-                </button>
-
-                <!-- Group Detail View -->
-                <div id="groups-detail-view" class="hidden">
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                        <button onclick="showGroupsList()" style="background: var(--card-bg); border: none; color: var(--text-color); padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 14px;">
-                            <ion-icon name="arrow-back-outline"></ion-icon> Back
-                        </button>
-                        <h3 id="group-detail-name" style="margin: 0; font-size: 18px; flex: 1;"></h3>
-                        <button id="group-join-btn" onclick="toggleGroupMembership()" class="btn btn-primary" style="width: auto; padding: 8px 16px; font-size: 13px;">Join</button>
-                    </div>
-                    <div id="group-detail-info" style="background: var(--card-bg); padding: 12px; border-radius: 10px; margin-bottom: 16px; font-size: 13px; color: var(--text-secondary);"></div>
-                    <!-- Group Posts -->
-                    <h4 style="margin: 0 0 12px 0;">Group Posts</h4>
-                    <div id="group-posts-list" style="margin-bottom: 16px; min-height: 100px;"></div>
-                    <!-- Post Input -->
-                    <div id="group-post-input-area" style="background: var(--card-bg); border-radius: 12px; padding: 12px; display: none;">
-                        <textarea id="group-post-text" placeholder="Write a post or share something..." rows="3" style="margin-bottom: 10px;"></textarea>
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <label for="group-post-file" style="cursor: pointer; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px 12px; font-size: 13px; display: flex; align-items: center; gap: 6px;">
-                                <ion-icon name="attach-outline"></ion-icon> Attach File
-                            </label>
-                            <input type="file" id="group-post-file" style="display: none;" onchange="handleGroupFileSelect(event)">
-                            <span id="group-file-name" style="font-size: 12px; color: var(--text-secondary); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
-                            <button onclick="submitGroupPost()" class="btn btn-primary" style="width: auto; padding: 8px 16px;">Post</button>
-                        </div>
-                        <div id="group-upload-progress" style="display: none; margin-top: 8px; font-size: 12px; color: var(--primary-color);">Uploading file...</div>
-                    </div>
-                    <div id="group-not-member-msg" style="text-align: center; padding: 16px; color: var(--text-secondary); font-size: 13px;">Join this group to post and share files.</div>
-                </div>
-            </div>
-
-            <!-- duplicate community-messages-container removed -->
-        </div>
-
-        <!-- Create Post Modal -->
-        <div id="create-post-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Create Post</h2>
-                    <button class="close-btn" onclick="closeModal('create-post-modal')">&times;</button>
-                </div>
-
-                <label>What's on your mind?</label>
-                <textarea id="post-content" placeholder="Share something with the community..." rows="4"></textarea>
-
-                <label>Image (Optional)</label>
-                <input type="file" id="post-image" accept="image/*"
-                    onchange="handleImageUpload(this, 'post-image-preview')">
-                <img id="post-image-preview"
-                    style="display: none; width: 100%; max-height: 200px; object-fit: contain; margin-top: 10px; border-radius: 8px;">
-
-                <label>Link (Optional)</label>
-                <input type="text" id="post-link" placeholder="https://...">
-
-                <button class="btn btn-primary" onclick="createPost()">Post</button>
-                <button class="btn btn-secondary" onclick="closeModal('create-post-modal')">Cancel</button>
-            </div>
-        </div>
-
-        <!-- Post Detail Modal -->
-        <div id="post-detail-modal" class="modal">
-            <div class="modal-content" style="max-width: 600px;">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Post</h2>
-                    <button onclick="closeModal('post-detail-modal')"
-                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
-                </div>
-
-                <!-- Post Content -->
-                <div id="post-detail-content"></div>
-
-                <!-- Reply Input -->
-                <div style="margin: 20px 0; padding: 16px; background: #2a2a2a; border-radius: 8px;">
-                    <textarea id="reply-input" placeholder="Write a reply..." rows="3"
-                        style="margin-bottom: 12px;"></textarea>
-                    <button class="btn btn-primary" onclick="createReply()">Reply</button>
-                </div>
-
-                <!-- Replies Section -->
-                <div>
-                    <h3 style="margin-bottom: 16px;">Replies (<span id="replies-count">0</span>)</h3>
-                    <div id="replies-list"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- User Search Modal -->
-        <div id="user-search-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Search Users</h2>
-                    <button onclick="closeModal('user-search-modal')"
-                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
-                </div>
-
-                <input type="text" id="user-search-input" placeholder="Search by username or email..."
-                    style="margin-bottom: 20px;" oninput="searchUsers()">
-
-                <div id="users-list"></div>
-            </div>
-        </div>
-
-        <!-- User Profile Modal -->
-        <div id="user-profile-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Profile</h2>
-                    <button onclick="closeModal('user-profile-modal')"
-                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
-                </div>
-
-                <div id="user-profile-content"></div>
-            </div>
-        </div>
-
-        <!-- Notifications Modal -->
-        <div id="notifications-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Notifications</h2>
-                    <button onclick="closeModal('notifications-modal')"
-                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
-                </div>
-
-                <div id="notifications-list"></div>
-            </div>
-        </div>
-
-        <!-- Chat Modal -->
-        <div id="chat-modal" class="modal">
-            <div class="modal-content chat-modal-content"
-                style="display: flex; flex-direction: column; height: 95vh; padding: 0;">
-                <div class="modal-header"
-                    style="margin: 0; padding: 16px; padding-top: max(16px, env(safe-area-inset-top) + 20px); border-radius: 12px 12px 0 0;">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <ion-icon name="arrow-back" style="font-size: 24px; cursor: pointer;"
-                            onclick="closeModal('chat-modal')"></ion-icon>
-                        <h2 style="margin: 0; font-size: 18px;" id="chat-username">Chat</h2>
-                    </div>
-                </div>
-
-                <div id="messages-list"
-                    style="flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px;">
-                </div>
-
-                <div
-                    style="padding: 12px; padding-bottom: max(12px, env(safe-area-inset-bottom) + 20px); background: var(--modal-bg); border-top: 1px solid var(--border-color); display: flex; gap: 10px; border-radius: 0 0 12px 12px;">
-                    <input type="text" id="message-input" placeholder="Type a message..."
-                        style="flex: 1; margin: 0; border-radius: 20px;"
-                        onkeypress="if(event.key==='Enter') sendMessage()">
-                    <button class="btn btn-primary"
-                        style="width: auto; margin: 0; padding: 0 20px; border-radius: 20px;" onclick="sendMessage()">
-                        <ion-icon name="send"></ion-icon>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Profile Settings Modal -->
-        <div id="profile-settings-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Edit Profile</h2>
-                    <button onclick="closeModal('profile-settings-modal')"
-                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
-                </div>
-
-                <label>Profile Picture</label>
-                <input type="file" id="profile-picture-input" accept="image/*"
-                    onchange="handleImageUpload(this, 'profile-picture-preview')">
-                <img id="profile-picture-preview"
-                    style="display: none; width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin: 10px 0;">
-
-                <label>Username</label>
-                <input type="text" id="profile-username" placeholder="Username">
-
-                <label>Bio</label>
-                <textarea id="profile-bio" placeholder="Tell us about yourself..." rows="3"></textarea>
-
-                <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
-                <button class="btn btn-secondary" onclick="closeModal('profile-settings-modal')">Cancel</button>
-            </div>
-        </div>
-
-        <!-- Settings Modal -->
-        <div id="settings-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Settings</h2>
-                    <button onclick="closeModal('settings-modal')"
-                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
-                </div>
-
-                <div style="margin-bottom: 24px;">
-                    <h3 style="margin: 0 0 12px 0; color: #999; font-size: 14px; text-transform: uppercase;">
-                        Account
-                    </h3>
-                    <button class="btn btn-primary"
-                        style="width: 100%; margin-bottom: 10px; justify-content: flex-start;"
-                        onclick="closeModal('settings-modal'); document.getElementById('profile-settings-modal').classList.add('show');">
-                        <ion-icon name="person-outline" style="margin-right: 8px;"></ion-icon>
-                        Edit Profile
-                    </button>
-                    <button class="btn btn-primary"
-                        style="width: 100%; margin-bottom: 10px; justify-content: flex-start;"
-                        onclick="window.location.href='change-pin.html'">
-                        <ion-icon name="key-outline" style="margin-right: 8px;"></ion-icon>
-                        Change PIN
-                    </button>
-                </div>
-
-                <div style="margin-bottom: 24px;">
-                    <h3 style="margin: 0 0 12px 0; color: #999; font-size: 14px; text-transform: uppercase;">
-                        About</h3>
-                    <div style="padding: 16px; background: #2a2a2a; border-radius: 8px;">
-                        <h4 style="margin: 0 0 8px 0; color: white;">Kobi's Atlas</h4>
-                        <p style="margin: 4px 0; color: #999; font-size: 14px;">Version 1.0.0</p>
-                        <p style="margin: 4px 0; color: #999; font-size: 14px;">By Kobi Oguadinma</p>
-                        <p style="margin: 4px 0; color: #999; font-size: 14px;">Babcock University</p>
-                        <p style="margin: 12px 0 0 0; color: #ccc; font-size: 13px; line-height: 1.5;">An
-                            academic
-                            companion for tracking courses, calculating GPA, and predicting grades.</p>
-                        <p
-                            style="margin: 12px 0 0 0; color: #ccc; font-size: 13px; line-height: 1.5; font-style: italic;">
-                            Kobi's Atlas was an individual project by Kobi Oguadinma, a second-year Software
-                            Engineering student at Babcock University. He frequently calculated his predicted
-                            grades
-                            manually and wanted a mobile app to automate this process.</p>
-                        <p style="margin: 12px 0 0 0; color: #ff9800; font-size: 12px; font-style: italic;">
-                            Currently
-                            supports Babcock University grading system. Other systems will be available in
-                            future
-                            updates.</p>
-                    </div>
-                </div>
-
-                <button class="btn" style="width: 100%; background: #dc3545; color: white;" onclick="logout()">
-                    <ion-icon name="log-out-outline" style="margin-right: 8px;"></ion-icon>
-                    Logout
-                </button>
-            </div>
-        </div>
-
-        <!-- Change PIN Modal -->
-        <div id="change-pin-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Change PIN</h2>
-                    <button onclick="closeModal('change-pin-modal')"
-                        style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">×</button>
-                </div>
-
-                <label>Current PIN</label>
-                <input type="password" id="current-pin" placeholder="Enter current PIN" maxlength="4" pattern="[0-9]*"
-                    inputmode="numeric">
-
-                <label>New PIN</label>
-                <input type="password" id="new-pin" placeholder="Enter new PIN (4 digits)" maxlength="4"
-                    pattern="[0-9]*" inputmode="numeric">
-
-                <label>Confirm New PIN</label>
-                <input type="password" id="confirm-pin" placeholder="Confirm new PIN" maxlength="4" pattern="[0-9]*"
-                    inputmode="numeric">
-
-                <button class="btn btn-primary" onclick="changePIN()">Change PIN</button>
-                <button class="btn btn-secondary" onclick="closeModal('change-pin-modal')">Cancel</button>
-            </div>
-        </div>
-
-        <!-- Add Schedule Modal -->
-        <div id="add-schedule-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Add Schedule</h2>
-                    <button class="close-btn" onclick="closeModal('add-schedule-modal')">&times;</button>
-                </div>
-
-                <label>Title (Optional if Course selected)</label>
-                <input type="text" id="schedule-title" placeholder="Event Title or Course Name">
-
-                <label>Course (Optional)</label>
-                <select id="schedule-course-select">
-                    <option value="">No Course / Personal</option>
-                </select>
-
-                <div style="display: flex; align-items: center; justify-content: space-between; margin: 12px 0;">
-                    <label style="margin: 0;">Recurring Event?</label>
-                    <label class="switch">
-                        <input type="checkbox" id="schedule-recurring" checked onchange="toggleScheduleDateInput()">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-
-                <div id="schedule-day-container">
-                    <label>Day</label>
-                    <select id="schedule-day">
-                        <option value="Monday">Monday</option>
-                        <option value="Tuesday">Tuesday</option>
-                        <option value="Wednesday">Wednesday</option>
-                        <option value="Thursday">Thursday</option>
-                        <option value="Friday">Friday</option>
-                        <option value="Saturday">Saturday</option>
-                        <option value="Sunday">Sunday</option>
-                    </select>
-                </div>
-
-                <div id="schedule-date-container" class="hidden">
-                    <label>Date</label>
-                    <input type="date" id="schedule-date">
-                </div>
-
-                <label>Start Time</label>
-                <input type="time" id="schedule-start-time" value="08:00">
-
-                <label>End Time</label>
-                <input type="time" id="schedule-end-time" value="09:00">
-
-                <label>Venue (Optional)</label>
-                <input type="text" id="schedule-venue" placeholder="e.g., LT1, Lab 3">
-
-                <input type="hidden" id="edit-schedule-id">
-                <input type="hidden" id="edit-schedule-course-id">
-                <input type="hidden" id="edit-schedule-original-start">
-
-                <button class="btn btn-primary" onclick="saveScheduleV2()">Save Schedule</button>
-                <button class="btn btn-secondary" onclick="closeModal('add-schedule-modal')">Cancel</button>
-            </div>
-        </div>
-
-        <!-- Add Custom CA Assessment Modal -->
-        <div id="add-ca-modal" class="modal">
-            <div class="modal-content" style="max-width: 400px;">
-                <div class="modal-header">
-                    <h2 style="margin: 0; font-size: 18px;">Add Assessment</h2>
-                    <button class="close-btn" onclick="closeModal('add-ca-modal')">&times;</button>
-                </div>
-                <div style="padding-top: 15px;">
-                    <label style="display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px;">Assessment Name</label>
-                    <input type="text" id="ca-modal-name" placeholder="e.g. Mid Semester, Quiz 1, Attendance" style="margin-bottom: 15px;">
-                    
-                    <label id="ca-modal-max-label" style="display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px;">Max Marks (Remaining: 100)</label>
-                    <input type="number" id="ca-modal-max" placeholder="e.g. 15" min="1" max="100" style="margin-bottom: 15px;">
-
-                    <button class="btn btn-primary" onclick="submitCAFieldModal()" style="width: 100%; margin-top: 10px;">Add Assessment</button>
-                    <button class="btn btn-secondary" onclick="closeModal('add-ca-modal')" style="width: 100%; margin-top: 8px;">Cancel</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Task Modal -->
-        <div id="add-task-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Add Task</h2>
-                    <button class="close-btn" onclick="closeModal('add-task-modal')">&times;</button>
-                </div>
-
-                <label>Task Title</label>
-                <input type="text" id="task-title" placeholder="e.g., Complete Assignment 1">
-                <input type="hidden" id="task-id">
-
-                <label>Course (Optional)</label>
-                <select id="task-course-select">
-                    <option value="">None</option>
-                </select>
-
-                <label>Type</label>
-                <select id="task-type">
-                    <option value="assignment">Assignment</option>
-                    <option value="exam">Exam</option>
-                    <option value="study">Study</option>
-                    <option value="other">Other</option>
-                </select>
-
-                <label>Due Date</label>
-                <input type="date" id="task-due-date">
-
-                <label>Description (Optional)</label>
-                <textarea id="task-description" placeholder="Add details..." rows="3"></textarea>
-
-                <button class="btn btn-primary" onclick="addTask()">Add Task</button>
-                <button class="btn btn-secondary" onclick="closeModal('add-task-modal')">Cancel</button>
-            </div>
-        </div>
-
-        <!-- Add Semester Modal -->
-        <div id="add-semester-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Add Semester</h2>
-                    <button class="close-btn" onclick="closeModal('add-semester-modal')">&times;</button>
-                </div>
-
-                <label>Entry Method</label>
-                <div class="tab-buttons">
-                    <button class="tab-btn active" onclick="switchEntryMethod('manual')">Manual Course
-                        Entry</button>
-                    <button class="tab-btn" onclick="switchEntryMethod('quick')">Quick Add (GPA)</button>
-                </div>
-
-                <div id="manual-entry">
-                    <label>Semester Name</label>
-                    <input type="text" id="semester-name" placeholder="e.g., 200 Level 1st Semester">
-
-                    <label>Semester Type</label>
-                    <div class="tab-buttons">
-                        <button class="tab-btn active" id="type-current"
-                            onclick="selectType('current')">Current</button>
-                        <button class="tab-btn" id="type-pending" onclick="selectType('pending')">Pending</button>
-                        <button class="tab-btn" id="type-past" onclick="selectType('past')">Past</button>
-                    </div>
-
-                    <button class="btn btn-primary" onclick="createSemester()">Create Semester</button>
-                    <button class="btn btn-secondary" onclick="closeModal('add-semester-modal')">Cancel</button>
-                </div>
-
-                <div id="quick-entry" class="hidden">
-                    <label>Semester Name</label>
-                    <input type="text" id="quick-semester-name" placeholder="e.g., 100 Level">
-
-                    <label>GPA</label>
-                    <input type="number" id="quick-gpa" placeholder="0.00 - 5.00" step="0.01">
-
-                    <label>Total Units</label>
-                    <input type="number" id="quick-units" placeholder="Total units taken">
-
-                    <button class="btn btn-primary" onclick="createQuickSemester()">Create Semester</button>
-                    <button class="btn btn-secondary" onclick="closeModal('add-semester-modal')">Cancel</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Course Modal -->
-        <div id="add-course-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 style="margin: 0;">Add Course</h2>
-                    <button class="close-btn" onclick="closeModal('add-course-modal')">&times;</button>
-                </div>
-
-                <label>Course Title</label>
-                <input type="text" id="course-title" placeholder="e.g., Discrete Structures">
-
-                <label>Course Code</label>
-                <input type="text" id="course-code" placeholder="e.g., CSC203">
-
-                <label>Unit Hours</label>
-                <input type="number" id="course-unit-hours" placeholder="e.g., 2" min="1" max="6">
-
-                <label>Grade</label>
-                <select id="course-target-grade">
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="C">C</option>
-                </select>
-
-
-
-                <button class="btn btn-primary" onclick="addCourse()">Add Course</button>
-                <button class="btn btn-secondary" onclick="closeModal('add-course-modal')">Cancel</button>
-            </div>
-        </div>
-
-        <!-- Bottom Navigation -->
-        <div class="bottom-nav">
-            <button class="nav-item active" onclick="showScreen('dashboard')">
-                <ion-icon name="home"></ion-icon>
-                <span style="font-size: 11px;">Home</span>
-            </button>
-            <button class="nav-item" onclick="showScreen('planner')">
-                <ion-icon name="calendar"></ion-icon>
-                <span style="font-size: 11px;">Planner</span>
-            </button>
-            <button class="nav-item" onclick="showScreen('gpa')">
-                <ion-icon name="stats-chart"></ion-icon>
-                <span style="font-size: 11px;">GPA</span>
-            </button>
-            <button class="nav-item" onclick="showScreen('community')" style="position: relative;">
-                <ion-icon name="people"></ion-icon>
-                <span style="font-size: 11px;">Community</span>
-                <span id="nav-community-badge" class="nav-badge hidden">0</span>
-            </button>
-            <button class="nav-item" onclick="window.location.href='settings.html'">
-                <ion-icon name="settings"></ion-icon>
-                <span style="font-size: 11px;">Settings</span>
-            </button>
-        </div>
-
-    </div>
-
-    <style>
-        select,
-        option {
-            background-color: #2a2a2a !important;
-            color: white !important;
-        }
-    </style>
-
-    <div id="toast-container"></div>
-
-    <!-- Firebase & App Logic -->
-    <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
         import { getAuth, signInAnonymously, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
         import { getFirestore, collection, query, where, getDocs, doc, setDoc, addDoc, updateDoc, getDoc, deleteDoc, orderBy, onSnapshot, writeBatch } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -1821,9 +71,7 @@
                     updateBadgeCounts(null, null, msgCount);
                 });
 
-            } catch (error) {
-                console.error('Error starting listeners:', error);
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         let currentNotifCount = 0;
@@ -1885,16 +133,19 @@
         }
 
         let currentActiveScreen = 'dashboard'; // Track active screen for pull-to-refresh
+        let autoRefreshInterval = null; // Auto-refresh timer
 
         window.showScreen = function (screenId) {
+            // Clear any existing auto-refresh
+            if (autoRefreshInterval) { clearInterval(autoRefreshInterval); autoRefreshInterval = null; }
+
             // Track current screen
             currentActiveScreen = screenId;
 
             // Hide all screens
             document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
 
-            // Show target screen
-            // Handle both "dashboard" and "dashboard-screen" formats
+            // Show target screen — handle both 'dashboard' and 'dashboard-screen' formats
             const targetId = screenId.endsWith('-screen') ? screenId : `${screenId}-screen`;
             const screen = document.getElementById(targetId);
 
@@ -1904,31 +155,38 @@
                 // Load data for the screen
                 switch (screenId) {
                     case 'planner':
-                        if (window.loadSchedule) window.loadSchedule();
-                        if (window.loadTasks) window.loadTasks();
+                        window.loadSchedule();
+                        window.loadTasks();
+                        // Auto-refresh planner every 30s
+                        autoRefreshInterval = setInterval(() => {
+                            if (currentActiveScreen === 'planner') {
+                                window.loadSchedule();
+                                window.loadTasks();
+                            }
+                        }, 30000);
                         break;
                     case 'gpa':
-                        if (window.loadGPAView) window.loadGPAView();
+                        window.loadGPAView();
                         break;
                     case 'gpa-simulator':
-                        if (window.loadGPASimulator) window.loadGPASimulator();
+                        window.loadGPASimulator();
                         break;
                     case 'community':
                         if (window.loadCommunityFeed) window.loadCommunityFeed();
                         break;
-                    // Dashboard loads on page load, no need to reload here
+                    case 'dashboard':
+                        if (window.loadDashboard) window.loadDashboard();
+                        break;
                 }
             } else {
                 console.warn(`Screen not found: ${screenId}`);
             }
 
-            // Update bottom nav
+            // Update bottom nav active state
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            // This is a simple heuristic; might need adjustment if nav onclicks change
-            const navItem = Array.from(document.querySelectorAll('.nav-item')).find(item =>
-                item.getAttribute('onclick')?.includes(`'${screenId}'`)
-            );
-            if (navItem) navItem.classList.add('active');
+            const navMap = { 'dashboard': 'nav-home', 'planner': 'nav-planner', 'gpa': 'nav-gpa', 'gpa-simulator': 'nav-gpa', 'community': 'nav-community' };
+            const navId = navMap[screenId];
+            if (navId) document.getElementById(navId)?.classList.add('active');
 
             window.scrollTo(0, 0);
         };
@@ -2100,33 +358,35 @@
 
         function calculateSemesterGPA(courses) {
             if (!courses || courses.length === 0) return 0;
-            let totalQP    = 0;
-            let totalUnits = 0;
+            let totalQP    = 0;  // (U  GP)   Quality Points
+            let totalUnits = 0;  //  U
 
             courses.forEach(course => {
                 const grade = course.grade || course.predictedGrade || course.targetGrade;
                 const u     = parseFloat(course.unitHours) || 0;
                 if (grade && u > 0) {
-                    totalQP    += u * gradeToPoint(grade);
+                    totalQP    += u * gradeToPoint(grade); // QP = U  GP
                     totalUnits += u;
                 }
             });
 
+            // SGPA = (U  GP) / U
             return totalUnits === 0 ? 0 : (totalQP / totalUnits).toFixed(2);
         }
 
         /**
          * Compute accumulated quality points and credit units for a list of semesters.
          * Rules (per spec):
-         *   QP per course = round(unitHours) * gradeToPoint(grade)
+         *   QP per course = round(unitHours)  gradeToPoint(grade)   [whole numbers]
          *   When a past semester has stored gpa+totalUnits:
-         *     QP = Math.round(gpa * totalUnits)
+         *     QP = Math.round(gpa * totalUnits)  (because transcript CGPA is rounded)
          *   CGPA = totalQP / totalUnits
          */
         function accumQP(sems) {
             let qp = 0, units = 0;
             sems.forEach(s => {
                 if (s.gpa != null && s.totalUnits) {
+                    // Use stored values  round QP because real QPs are integers
                     const u = parseFloat(s.totalUnits);
                     qp    += Math.round(parseFloat(s.gpa) * u);
                     units += u;
@@ -2135,7 +395,7 @@
                         const grade = c.grade || c.predictedGrade || c.targetGrade;
                         const u     = parseFloat(c.unitHours) || 0;
                         if (grade && u > 0) {
-                            qp    += u * gradeToPoint(grade);
+                            qp    += u * gradeToPoint(grade);   // QP = U  GP
                             units += u;
                         }
                     });
@@ -2191,7 +451,7 @@
             if (!widgetContainer) return;
 
             try {
-                const semRef = collection(db, 'users', uid, 'semesters');
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
                 const snapshot = await getDocs(semRef);
                 let currentSem = null;
                 snapshot.forEach(doc => {
@@ -2347,7 +607,7 @@
             // Legacy grading system redirect removed to support unified settings.html flow
             // Grading system is handled via getGradingConfig() defaults or settings page.
 
-            const excludeCurrentGPA = localStorage.getItem('excludeCurrentGPA') === 'true';
+            console.log('2');const excludeCurrentGPA = localStorage.getItem('excludeCurrentGPA') === 'true';
 
             showLoading(true);
 
@@ -2357,7 +617,7 @@
                     await signInAnonymously(auth);
                 }
 
-                const semRef = collection(db, 'users', uid, 'semesters');
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
                 const snapshot = await getDocs(semRef);
 
                 const semesters = [];
@@ -2371,7 +631,7 @@
                     return getT(b) - getT(a);
                 });
 
-                // Separate by type
+                console.log('3');// Separate by type
                 const pending = semesters.filter(s => s.type === 'pending');
                 const current = semesters.filter(s => s.type === 'current');
                 const past = semesters.filter(s => s.type === 'past');
@@ -2379,61 +639,57 @@
                 const currentSemester = current[0];
                 const hasPredicted = currentSemester || pending.length > 0;
 
-                // ── CGPA Calculation (spec-compliant) ──────────────────────────────
-                const { qp: cqp, units: cu } = accumQP(past);
-                const cgpa = cu > 0 ? (cqp / cu).toFixed(2) : '0.00';
+                // -- CGPA Calculation (QP-based weighted average) --
+                // CGPA = Sum(U x GP) / Sum(U)
+                // Past sems with stored gpa+totalUnits: QP = Math.round(gpa * totalUnits)
+                // Sems with courses: QP = Sum(unitHours * gradeToPoint(grade))
 
-                const predictedPool = excludeCurrentGPA
-                    ? [...past, ...pending]
-                    : [...past, ...current, ...pending];
-                const { qp: pqp, units: pu } = accumQP(predictedPool);
-                const predictedCGPA = pu > 0 ? (pqp / pu).toFixed(2) : '0.00';
+                function semAccum(sems) {
+                    let qp = 0, u = 0;
+                    sems.forEach(function(s) {
+                        if (s.gpa != null && s.totalUnits) {
+                            var su = parseFloat(s.totalUnits);
+                            qp += Math.round(parseFloat(s.gpa) * su);
+                            u  += su;
+                        } else if (s.courses) {
+                            s.courses.forEach(function(c) {
+                                var grade = c.grade || c.predictedGrade || c.targetGrade;
+                                var cu = parseFloat(c.unitHours) || 0;
+                                if (grade && cu > 0) { qp += cu * gradeToPoint(grade); u += cu; }
+                            });
+                        }
+                    });
+                    return { qp: qp, u: u };
+                }
 
-                // Display stats
-                const statsGrid = document.getElementById('stats-grid');
-                statsGrid.innerHTML = `
-                    <div class="stat-card">
-                        <div class="stat-label">Current CGPA</div>
-                        <div class="stat-value">${cgpa}</div>
-                    </div>
-                    ${hasPredicted ? `
-                        <div class="stat-card">
-                            <div class="stat-label">Predicted CGPA</div>
-                            <div class="stat-value">${predictedCGPA}</div>
-                        </div>
-                    ` : ''}
-                `;
+                var cAcc = semAccum(past);
+                var cgpa = cAcc.u > 0 ? (cAcc.qp / cAcc.u).toFixed(2) : '0.00';
 
-                // Display semesters by type (Current first as requested)
+                var predictedPool = excludeCurrentGPA
+                    ? past.concat(pending)
+                    : past.concat(current).concat(pending);
+                var pAcc = semAccum(predictedPool);
+                var predictedCGPA = pAcc.u > 0 ? (pAcc.qp / pAcc.u).toFixed(2) : '0.00';
+
+                console.log('6');// Display stats
+                var statsGrid = document.getElementById('stats-grid');
+                statsGrid.innerHTML = '<div class="stat-card"><div class="stat-label">Current CGPA</div><div class="stat-value">' + cgpa + '</div></div>' +
+                    (hasPredicted ? '<div class="stat-card"><div class="stat-label">Predicted CGPA</div><div class="stat-value">' + predictedCGPA + '</div></div>' : '');
+
+                console.log('7');// Display semesters by type
                 displaySemesterSection('current-semester', 'Current Semester', current, 'current');
                 displaySemesterSection('pending-semesters', 'Pending Semesters', pending, 'pending');
                 displaySemesterSection('past-semesters', 'Past Semesters', past, 'past');
 
-                // Inject Toggle below Current Semester
-                // Inject Toggle below Current Semester
-                const toggleHTML = `
-                    <div style="background: var(--card-bg); color: var(--text-color); padding: 16px; border-radius: 12px; margin-top: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between;">
-                        <span style="font-size: 16px; font-weight: 500;">Exclude from Predicted</span>
-                        <label class="switch" style="position: relative; display: inline-block; width: 50px; height: 28px;">
-                            <input type="checkbox" ${excludeCurrentGPA ? 'checked' : ''} onchange="toggleExcludeActive(this.checked)" style="opacity: 0; width: 0; height: 0;">
-                            <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px;"></span>
-                            <style>
-                                .slider.round:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-                                input:checked + .slider { background-color: var(--primary-color); }
-                                input:checked + .slider:before { transform: translateX(22px); }
-                            </style>
-                        </label>
-                    </div>
-                `;
-                const currentContainer = document.getElementById('current-semester');
+                // Exclude-from-predicted toggle
+                var toggleChecked = excludeCurrentGPA ? 'checked' : '';
+                var toggleHTML = '<div style="background:var(--card-bg);color:var(--text-color);padding:16px;border-radius:12px;margin-top:15px;display:flex;align-items:center;justify-content:space-between;"><span style="font-size:16px;font-weight:500;">Exclude from Predicted</span><label class="switch" style="position:relative;display:inline-block;width:50px;height:28px;"><input type="checkbox" ' + toggleChecked + ' onchange="toggleExcludeActive(this.checked)" style="opacity:0;width:0;height:0;"><span class="slider round" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#ccc;transition:.4s;border-radius:34px;"></span><style>.slider.round:before{position:absolute;content:"";height:20px;width:20px;left:4px;bottom:4px;background-color:white;transition:.4s;border-radius:50%;}input:checked+.slider{background-color:var(--primary-color);}input:checked+.slider:before{transform:translateX(22px);}</style></label></div>';
+                var currentContainer = document.getElementById('current-semester');
                 if (currentContainer && current.length > 0) {
                     currentContainer.insertAdjacentHTML('beforeend', toggleHTML);
                 }
 
-            } catch (error) {
-                console.error('Load dashboard error:', error);
-                showToast('Error loading dashboard', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
 
             loadUnreadCounts();
             if (window.loadDashboardWidgets) window.loadDashboardWidgets();
@@ -2450,20 +706,13 @@
                 await updateDoc(semRef, { type: newType });
                 showToast('Semester updated', 'success');
                 loadDashboard();
-            } catch (error) {
-                console.error(error);
-                showToast('Failed to update status', 'error');
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
         };
 
-        // Expose functions to window for refresh buttons
-        window.loadDashboard = loadDashboard;
-        window.loadSchedule = loadSchedule;
-        window.loadTasks = loadTasks;
-        window.loadGPAView = loadGPAView;
-        window.loadCommunityFeed = loadCommunityFeed;
+
+
 
         function displaySemesterSection(containerId, title, semesters, type) {
             const container = document.getElementById(containerId);
@@ -2642,10 +891,7 @@
                 actionsContainer.innerHTML = actionsHTML;
 
                 showScreen('semester-detail');
-            } catch (error) {
-                console.error('View semester error:', error);
-                showToast('Error loading semester', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
 
             showLoading(false);
         };
@@ -2689,108 +935,84 @@
             document.getElementById('course-detail-title').textContent = currentCourse.name;
             document.getElementById('course-detail-code').textContent = currentCourse.code;
 
-            // Render custom CA fields for THIS course
-            renderCourseCAFields();
+            // Load CA Inputs Dynamically
+            const caConfig = getCAConfig();
+            const caInputsContainer = document.getElementById('ca-inputs-container');
+            const caScores = currentCourse.caScores || {};
+            // Track enabled state for each field (default true if not present)
+            const caEnabled = currentCourse.caEnabled || {};
 
-            // Logic for Use CA toggle
-            const useCA = currentCourse.useCA !== false;
+            let inputsHTML = '';
+            let totalMaxCA = 0;
+
+            const renderField = (label, key, max) => {
+                const val = caScores[key] || 0;
+                const isEnabled = caEnabled[key] !== false; // Default true
+                const dimStyle = isEnabled ? '' : 'opacity: 0.5;';
+
+                return `
+                    <div class="ca-score-row" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 8px; transition: opacity 0.2s; border: 1px solid rgba(255,255,255,0.1); ${dimStyle}">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <input type="checkbox" id="check-${key}" class="ca-enable-check" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary-color);" 
+                                data-key="${key}" ${isEnabled ? 'checked' : ''} onchange="toggleCAField(this)">
+                            
+                            <div style="display: flex; flex-direction: column;">
+                                <label for="check-${key}" style="font-weight: 500; cursor: pointer; font-size: 15px;">${label}</label>
+                                <span style="font-size: 11px; color: #999;">Max Score: ${max}</span>
+                            </div>
+                        </div>
+                        
+                        <input type="number" data-key="${key}" data-max="${max}" class="ca-score-input dynamic-ca-input" 
+                            min="0" max="${max}" value="${val}" ${isEnabled ? '' : 'disabled'}
+                            style="width: 70px; height: 36px; text-align: center; font-weight: bold; background: rgba(0,0,0,0.3); border: 1px solid #444; border-radius: 6px; color: white; font-size: 14px;"
+                            oninput="validateCAInput(this)"
+                            onblur="validateCAInput(this)"
+                            placeholder="0">
+                    </div>`;
+            };
+
+            if (caConfig.type === 'custom' && caConfig.custom) {
+                caConfig.custom.forEach((field) => {
+                    totalMaxCA += parseFloat(field.weight);
+                    inputsHTML += renderField(field.name, field.name, field.weight);
+                });
+            } else {
+                // Standard
+                totalMaxCA = 40;
+                const scores = [
+                    { label: 'Mid Semester', key: 'midSemester', max: 15 },
+                    { label: 'Assignment', key: 'assignment', max: 10 },
+                    { label: 'Quiz', key: 'quiz', max: 10 },
+                    { label: 'Attendance', key: 'attendance', max: 5 },
+                ];
+                scores.forEach(s => inputsHTML += renderField(s.label, s.key, s.max));
+            }
+
+            caInputsContainer.innerHTML = inputsHTML;
+            document.getElementById('total-ca').dataset.max = totalMaxCA;
+
+
+            // Logic for Use CA
+            const useCA = currentCourse.useCA !== false; // Default true
             document.getElementById('use-ca-toggle').checked = useCA;
 
+            // Logic for Manual Grade
             const manualSelect = document.getElementById('course-manual-grade');
-            if (manualSelect.options.length === 0) populateGradeDropdowns();
             const available = getAvailableGrades();
+            if (manualSelect.options.length === 0) populateGradeDropdowns();
+
+            // Set values
             const currentGrade = currentCourse.grade || available[0];
             manualSelect.value = currentGrade;
 
             document.getElementById('course-units').textContent = currentCourse.unitHours || 0;
+
 
             toggleUseCA(useCA);
             updateCAScores();
             showScreen('course-detail');
         };
 
-        // Render the per-course CA fields from currentCourse.customCA
-        window.renderCourseCAFields = function () {
-            const container = document.getElementById('ca-inputs-container');
-            const hint = document.getElementById('ca-empty-hint');
-            const fields = currentCourse.customCA || [];
-
-            if (fields.length === 0) {
-                container.innerHTML = '';
-                if (hint) hint.style.display = 'block';
-            } else {
-                if (hint) hint.style.display = 'none';
-                container.innerHTML = fields.map((f, i) => `
-                    <div class="ca-score-row" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.08);" data-index="${i}">
-                        <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
-                            <input type="checkbox" class="ca-enable-check" data-index="${i}" ${f.enabled !== false ? 'checked' : ''} onchange="toggleCourseCAField(${i}, this.checked)" style="width:18px; height:18px; cursor:pointer; accent-color:var(--primary-color); flex-shrink:0;">
-                            <div style="flex:1;">
-                                <div style="font-weight:600; font-size:14px;">${f.name}</div>
-                                <div style="font-size:11px; color:#999;">Max: ${f.max}</div>
-                            </div>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <input type="number" class="dynamic-ca-input" data-index="${i}" data-max="${f.max}"
-                                value="${f.score || 0}" min="0" max="${f.max}"
-                                ${f.enabled !== false ? '' : 'disabled'}
-                                oninput="validateCAInput(this)"
-                                style="width:65px; padding:6px; border-radius:6px; border:1px solid #444; background:rgba(0,0,0,0.3); color:white; font-size:14px; font-weight:700; text-align:center;">
-                            <button onclick="removeCourseCAField(${i})" style="background:none; border:none; color:#EF4444; cursor:pointer; padding:4px; font-size:18px;" title="Remove">×</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            updateCAScores();
-        };
-
-        // Add a new CA field for this course
-        window.addCourseCAField = function () {
-            if (!currentCourse.customCA) currentCourse.customCA = [];
-            const totalUsed = currentCourse.customCA.reduce((s, f) => s + (parseFloat(f.max) || 0), 0);
-            const remaining = 100 - totalUsed;
-            if (remaining <= 0) { showToast('CA already totals 100. Remove a field first.', 'error'); return; }
-
-            // Reset inputs
-            document.getElementById('ca-modal-name').value = '';
-            document.getElementById('ca-modal-max').value = '';
-            document.getElementById('ca-modal-max-label').innerText = `Max Marks (Remaining: ${remaining})`;
-            document.getElementById('ca-modal-max').max = remaining;
-
-            // Show Modal
-            document.getElementById('add-ca-modal').classList.add('show');
-        };
-
-        // Submit the custom CA field modal
-        window.submitCAFieldModal = function () {
-            if (!currentCourse.customCA) currentCourse.customCA = [];
-            const totalUsed = currentCourse.customCA.reduce((s, f) => s + (parseFloat(f.max) || 0), 0);
-            const remaining = 100 - totalUsed;
-
-            const name = document.getElementById('ca-modal-name').value.trim();
-            const maxVal = parseFloat(document.getElementById('ca-modal-max').value);
-
-            if (!name) { showToast('Please enter an assessment name', 'error'); return; }
-            if (isNaN(maxVal) || maxVal <= 0) { showToast('Please enter a valid max score', 'error'); return; }
-            if (maxVal > remaining) { showToast(`Max score cannot exceed ${remaining} remaining`, 'error'); return; }
-
-            currentCourse.customCA.push({ name: name, max: maxVal, score: 0, enabled: true });
-            renderCourseCAFields();
-            closeModal('add-ca-modal');
-        };
-
-        // Remove a CA field
-        window.removeCourseCAField = function (index) {
-            if (!currentCourse.customCA) return;
-            currentCourse.customCA.splice(index, 1);
-            renderCourseCAFields();
-        };
-
-        // Toggle enabled state of a CA field
-        window.toggleCourseCAField = function (index, enabled) {
-            if (!currentCourse.customCA) return;
-            currentCourse.customCA[index].enabled = enabled;
-            renderCourseCAFields();
-        };
 
         window.validateCAInput = function (input) {
             let val = parseFloat(input.value);
@@ -2836,35 +1058,21 @@
         window.updateCAScores = function () {
             let total = 0;
             let currentMax = 0;
-            let totalDefinedMax = 0;
 
-            // Sync scores back into currentCourse.customCA and sum enabled fields
+            // Sum all ENABLED dynamic inputs
             document.querySelectorAll('.dynamic-ca-input').forEach(inp => {
-                const idx = parseInt(inp.dataset.index);
-                const score = parseFloat(inp.value) || 0;
-                if (!isNaN(idx) && currentCourse && currentCourse.customCA && currentCourse.customCA[idx]) {
-                    currentCourse.customCA[idx].score = score;
-                }
-                const fieldMax = parseFloat(inp.dataset.max) || 0;
-                totalDefinedMax += fieldMax;
                 if (!inp.disabled) {
-                    total += score;
-                    currentMax += fieldMax;
+                    total += parseFloat(inp.value) || 0;
+                    currentMax += parseFloat(inp.dataset.max) || 0;
                 }
             });
 
             // Show: Current Score / Max of Enabled Fields
             document.getElementById('total-ca').textContent = `${total}/${currentMax}`;
 
-            // Update exam-remaining: exam = 100 - totalDefinedMax (all CA max, not just enabled)
-            const examMax = Math.max(0, 100 - totalDefinedMax);
-            const examEl = document.getElementById('exam-remaining');
-            if (examEl) examEl.textContent = `${examMax} / ${examMax}`;
-
             // Store valid total for grade calc
             document.getElementById('total-ca').dataset.validTotal = total;
             document.getElementById('total-ca').dataset.validMax = currentMax;
-            document.getElementById('total-ca').dataset.examMax = examMax;
 
             updateCourseGradeUI();
         };
@@ -2873,9 +1081,7 @@
             const totalElement = document.getElementById('total-ca');
             const totalCA = parseFloat(totalElement.dataset.validTotal) || 0;
             const validMaxCA = parseFloat(totalElement.dataset.validMax) || 0;
-            // examMax is the remaining marks after CA definitions (auto exam weight)
-            const examMax = parseFloat(totalElement.dataset.examMax);
-            const totalMaxCA = isNaN(examMax) ? 40 : (100 - examMax); // total CA defined max
+            const totalMaxCA = parseFloat(totalElement.dataset.max) || 40;
 
             const useCA = document.getElementById('use-ca-toggle').checked;
 
@@ -2997,10 +1203,19 @@
             showLoading(true);
 
             try {
-                // Ensure latest scores are synced into currentCourse.customCA
-                updateCAScores();
+                // Collect scores dynamically
+                const caScores = {};
+                const caEnabled = {};
+
+                document.querySelectorAll('.dynamic-ca-input').forEach(inp => {
+                    const key = inp.dataset.key;
+                    caScores[key] = parseFloat(inp.value) || 0;
+                    caEnabled[key] = !inp.disabled;
+                });
 
                 const useCA = document.getElementById('use-ca-toggle').checked;
+                // Calculate simplistic final grade for storage based on 'Projected' max?
+                // Or just keep '--'.
                 let finalGrade = '--';
 
                 if (!useCA) {
@@ -3010,7 +1225,8 @@
                 // Update course in semester
                 currentSemester.courses[currentCourse.index] = {
                     ...currentSemester.courses[currentCourse.index],
-                    customCA: currentCourse.customCA || [],
+                    caScores,
+                    caEnabled,
                     useCA,
                     grade: finalGrade,
                     predictedGrade: finalGrade,
@@ -3029,13 +1245,9 @@
 
                 showToast('Course updated successfully', 'success');
                 backToSemester();
-            } catch (error) {
-                console.error('Save course error:', error);
-                showToast('Error saving course', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
             showLoading(false);
         };
-
 
         window.deleteCourse = async function () {
             if (!confirm('Delete this course?')) return;
@@ -3058,10 +1270,7 @@
 
                 showToast('Course deleted', 'success');
                 await viewSemester(currentSemester.id);
-            } catch (error) {
-                console.error('Delete course error:', error);
-                showToast('Error deleting course', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
 
             showLoading(false);
         };
@@ -3154,10 +1363,7 @@
                 `;
                 }).join('');
 
-            } catch (error) {
-                console.error('Load resources error:', error);
-                container.innerHTML = '<p style="text-align: center; color: red;">Error loading resources</p>';
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         window.showAddResourceModal = function () {
@@ -3231,10 +1437,7 @@
                 document.getElementById('res-course-name').value = '';
                 document.getElementById('res-level').value = '100'; // Reset level to default
                 loadResources();
-            } catch (error) {
-                console.error('Add resource error:', error);
-                showToast('Error adding resource', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
             showLoading(false);
         };
 
@@ -3270,10 +1473,7 @@
                     votes: increment(value)
                 });
                 loadResources(); // Refresh to show new count
-            } catch (error) {
-                console.error('Vote error:', error);
-                showToast('Error voting', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         // Modal functions
@@ -3319,7 +1519,7 @@
             try {
                 // FIXED: Validation - only one current semester allowed
                 if (selectedSemesterType === 'current') {
-                    const semRef = collection(db, 'users', uid, 'semesters');
+                    console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
                     const snapshot = await getDocs(semRef);
                     const hasCurrent = snapshot.docs.some(doc => doc.data().type === 'current');
 
@@ -3343,10 +1543,7 @@
                 closeModal('add-semester-modal');
                 document.getElementById('semester-name').value = '';
                 loadDashboard();
-            } catch (error) {
-                console.error('Create semester error:', error);
-                showToast('Error creating semester', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
 
             showLoading(false);
         };
@@ -3388,10 +1585,7 @@
                 document.getElementById('quick-gpa').value = '';
                 document.getElementById('quick-units').value = '';
                 loadDashboard();
-            } catch (error) {
-                console.error('Create quick semester error:', error);
-                showToast('Error creating semester', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
 
             showLoading(false);
         };
@@ -3454,10 +1648,7 @@
                 document.getElementById('course-code').value = '';
                 document.getElementById('course-unit-hours').value = '';
                 viewSemester(currentSemester.id);
-            } catch (error) {
-                console.error('Add course error:', error);
-                showToast('Error adding course', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
 
             showLoading(false);
         };
@@ -3472,21 +1663,44 @@
                 await deleteDoc(doc(db, 'users', uid, 'semesters', currentSemester.id));
                 showToast('Semester deleted', 'success');
                 backToDashboard();
-            } catch (error) {
-                console.error('Delete semester error:', error);
-                showToast('Error deleting semester', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
 
             showLoading(false);
         };
 
         // Navigation
         // Navigation
-        // NOTE: switchCommunityTab is fully implemented at the bottom (line ~8284); this early stub is removed.
-        // NOTE: loadConversations stub removed — the real function is defined later and exposed to window.
+        window.switchCommunityTab = function (tab) {
+            document.getElementById('community-feed-container').classList.toggle('hidden', tab !== 'feed');
+            document.getElementById('community-messages-container').classList.toggle('hidden', tab !== 'messages');
+            document.getElementById('community-resources-container').classList.toggle('hidden', tab !== 'resources');
 
-        // NOTE: The main showScreen is defined earlier (line ~1852) and handles all screens including gpa-simulator.
-        // This duplicate is intentionally removed to avoid conflicts.
+            document.getElementById('comm-feed-tab').classList.toggle('active', tab === 'feed');
+            document.getElementById('comm-messages-tab').classList.toggle('active', tab === 'messages');
+            document.getElementById('comm-resources-tab').classList.toggle('active', tab === 'resources');
+
+            if (tab === 'messages') {
+                loadConversations();
+            } else if (tab === 'resources') {
+                loadResources();
+            }
+        };
+
+        // Load Conversations/Messages
+        window.loadConversations = async function () {
+            const messagesContent = document.getElementById('messages-content');
+            if (!messagesContent) return;
+
+            messagesContent.innerHTML = `
+                <div style="text-align: center; padding: 60px 20px;">
+                    <ion-icon name="chatbubbles-outline" style="font-size: 64px; color: #666; margin-bottom: 16px;"></ion-icon>
+                    <h3 style="color: var(--text-color); margin-bottom: 8px;">Messages Coming Soon</h3>
+                    <p style="color: #999; font-size: 14px;">Direct messaging feature is under development.</p>
+                </div>
+            `;
+        };
+
+        // (duplicate showScreen removed — see window.showScreen definition above)
 
         window.backToDashboard = function () {
             showScreen('dashboard');
@@ -3509,7 +1723,10 @@
         };
 
         window.showSettings = function () {
-            window.location.href = 'settings.html';
+            if (confirm('Logout?')) {
+                localStorage.clear();
+                location.reload();
+            }
         };
 
         // COMMUNITY FUNCTIONS
@@ -3564,10 +1781,7 @@
                 // One-time migration trigger
                 if (window.migrateGST) window.migrateGST();
 
-            } catch (error) {
-                console.error('Error loading resources:', error);
-                showToast('Failed to load resources', 'error');
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
         };
@@ -3603,11 +1817,7 @@
                     viewport: viewport
                 };
                 await page.render(renderContext).promise;
-            } catch (error) {
-                console.error('PDF Preview Error:', error);
-                const cvs = document.getElementById(canvasId);
-                if (cvs) cvs.parentNode.innerHTML = '<ion-icon name="document-text" style="font-size: 48px; color: var(--primary-color); opacity: 0.5;"></ion-icon><div style="font-size:10px;margin-top:4px;">PDF</div>';
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         window.handleFabClick = function () {
@@ -3644,10 +1854,7 @@
                 // Reset form
                 document.getElementById('folder-course-code').value = '';
                 document.getElementById('folder-course-name').value = '';
-            } catch (error) {
-                console.error('Create folder error:', error);
-                showToast('Failed to create folder', 'error');
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
         };
@@ -3706,10 +1913,7 @@
                     if (window.loadResources) window.loadResources();
                 }, 1000);
 
-            } catch (error) {
-                console.error('Delete folder error:', error);
-                showToast('Failed to delete folder', 'error');
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
         };
@@ -3810,10 +2014,7 @@
                     if (window.loadResources) window.loadResources();
                 }, 1000);
 
-            } catch (error) {
-                console.error('Batch update error:', error);
-                showToast('Failed to update folder', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
             showLoading(false);
         };
 
@@ -3913,10 +2114,7 @@
                 // Reload
                 setTimeout(() => { if (window.loadResources) window.loadResources(); }, 1000);
 
-            } catch (error) {
-                console.error('Transfer error:', error);
-                showToast('Transfer failed', 'error');
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
         };
@@ -3985,12 +2183,7 @@
 
                 window.institutionsCache = institutions.sort();
                 populateInstitutionDropdown();
-            } catch (error) {
-                console.error('Load institutions error:', error);
-                // Fallback to Babcock University
-                window.institutionsCache = ['Babcock University'];
-                populateInstitutionDropdown();
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         function populateInstitutionDropdown() {
@@ -4036,10 +2229,7 @@
                 populateInstitutionDropdown();
 
                 return trimmed;
-            } catch (error) {
-                console.error('Add institution error:', error);
-                return null;
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         // Export Resources Backup
@@ -4097,10 +2287,7 @@
                 URL.revokeObjectURL(url);
 
                 showToast(`Backup exported: ${resources.length} resources, ${folders.length} folders`, 'success');
-            } catch (error) {
-                console.error('Export backup error:', error);
-                showToast('Failed to export backup', 'error');
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
         };
@@ -4131,10 +2318,7 @@
 
                 // Render
                 renderResources(resources);
-            } catch (error) {
-                console.error('Load resources error:', error);
-                showToast('Error loading resources', 'error');
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
         };
@@ -4579,11 +2763,7 @@
                 resourceImageData = await compressResourceImage(file);
                 document.getElementById('res-image-preview').src = resourceImageData;
                 document.getElementById('res-image-preview').style.display = 'block';
-            } catch (error) {
-                console.error('Resource image error:', error);
-                showToast('Failed to process image', 'error');
-                event.target.value = '';
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         window.handleResourceFileSelect = function (event) {
@@ -4657,10 +2837,7 @@
                     fileName: result.fileName || file.name,
                     bytes: result.size || file.size
                 };
-            } catch (error) {
-                console.error('Upload Error:', error);
-                throw error;
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         }
 
         window.previewResource = function (url, filename, type) {
@@ -4908,11 +3085,7 @@
                 setResourceType('link'); // Reset to link
 
                 loadResources();
-            } catch (error) {
-                console.error('Error uploading resource:', error);
-                if (error.message && (error.message.includes('longer than') || error.message.includes('too large'))) {
-                    showToast('File size is too large. Please use a smaller file.', 'error');
-                } else {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } else {
                     showToast('Failed to upload', 'error');
                 }
             } finally {
@@ -4934,10 +3107,7 @@
                 await deleteDoc(doc(db, 'resources', resourceId));
                 showToast('Resource deleted', 'success');
                 loadResources();
-            } catch (error) {
-                console.error('Error deleting resource:', error);
-                showToast('Failed to delete resource', 'error');
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
         };
@@ -4955,9 +3125,7 @@
                 await updateDoc(resRef, {
                     votes: increment(value)
                 });
-            } catch (error) {
-                console.error('Error voting:', error);
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
 
@@ -5189,11 +3357,7 @@
 
                 document.getElementById('posts-feed').innerHTML = pinnedMsg + createPostBtn + feedHTML;
 
-            } catch (error) {
-                console.error('Load community feed error:', error);
-                showToast('Error loading posts', 'error');
-                document.getElementById('posts-feed').innerHTML = '<div class="empty-container"><p class="empty-text">Error loading posts. Please try again.</p></div>';
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 if (!isRefresing) showLoading(false);
             }
         }
@@ -5282,10 +3446,7 @@
                     const preview = document.getElementById(previewId);
                     preview.src = uploadedImageBase64;
                     preview.style.display = 'block';
-                } catch (error) {
-                    console.error('Image upload error:', error);
-                    showToast('Failed to process image', 'error');
-                }
+                } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
             }
         };
 
@@ -5329,10 +3490,7 @@
                 uploadedImageBase64 = null;
                 loadCommunityFeed();
 
-            } catch (error) {
-                console.error('Create post error:', error);
-                showToast('Error creating post', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         window.toggleLike = async function (postId, isLiked) {
@@ -5354,10 +3512,7 @@
                 await updateDoc(postRef, { likes });
                 loadCommunityFeed();
 
-            } catch (error) {
-                console.error('Toggle like error:', error);
-                showToast('Error updating like', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         window.deletePost = async function (postId) {
@@ -5367,10 +3522,7 @@
                 await deleteDoc(doc(db, 'posts', postId));
                 showToast('Post deleted', 'success');
                 loadCommunityFeed();
-            } catch (error) {
-                console.error('Delete post error:', error);
-                showToast('Error deleting post', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         // POST DETAIL FUNCTIONS
@@ -5458,10 +3610,7 @@
                 // Show modal
                 document.getElementById('post-detail-modal').classList.add('show');
 
-            } catch (error) {
-                console.error('Open post detail error:', error);
-                showToast('Error loading post', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         function renderReplies() {
@@ -5551,10 +3700,7 @@
                 // Reload post detail
                 openPostDetail(currentPost.id);
 
-            } catch (error) {
-                console.error('Create reply error:', error);
-                showToast('Error creating reply', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         window.toggleLikeInDetail = async function (postId, isLiked) {
@@ -5581,10 +3727,7 @@
                 await updateDoc(replyRef, { likes });
                 openPostDetail(currentPost.id);
 
-            } catch (error) {
-                console.error('Toggle reply like error:', error);
-                showToast('Error updating like', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         window.deleteReply = async function (replyId) {
@@ -5603,10 +3746,7 @@
 
                 showToast('Reply deleted', 'success');
                 openPostDetail(currentPost.id);
-            } catch (error) {
-                console.error('Delete reply error:', error);
-                showToast('Error deleting reply', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         window.deletePostFromDetail = async function (postId) {
@@ -5617,10 +3757,7 @@
                 showToast('Post deleted', 'success');
                 closeModal('post-detail-modal');
                 loadCommunityFeed();
-            } catch (error) {
-                console.error('Delete post error:', error);
-                showToast('Error deleting post', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         // GPA VIEW FUNCTIONS
@@ -5641,274 +3778,12 @@
             return { label: 'Fail', color: '#F44336', icon: 'alert-circle' };
         }
 
-        
-        
-        
-        // ==========================================
-        // PREMIUM GPA SIMULATOR LOGIC
-        // ==========================================
-        window.loadGPASimulator = async function () {
-            const uid = localStorage.getItem('kobi_atlas_uid');
-            const container = document.getElementById('sim-courses-container');
-            if (!container) return;
-
-            container.innerHTML = '<div style="text-align:center; padding:40px;"><ion-icon name="sync" class="spin" style="font-size:32px; color:#667eea;"></ion-icon><div style="margin-top:12px; color:#6B7280; font-size:14px;">Loading semester data...</div></div>';
-
-            try {
-                const semRef = collection(db, 'users', uid, 'semesters');
-                const snapshot = await getDocs(semRef);
-
-                let semesters = [];
-                snapshot.forEach(doc => {
-                    semesters.push({ id: doc.id, ...doc.data() });
-                });
-
-                // Sort by timestamp
-                semesters.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-
-                // Baseline is any semester that is NOT current or pending
-                let past = semesters.filter(s => s.type !== 'current' && s.type !== 'pending');
-                let activeSems = semesters.filter(s => s.type === 'current' || s.type === 'pending');
-
-                // Fallback for legacy data with no types: Take the last semester as the "active" one
-                if (activeSems.length === 0 && semesters.length > 0) {
-                    const lastSem = semesters[semesters.length - 1];
-                    activeSems = [lastSem];
-                    past = past.filter(s => s.id !== lastSem.id);
-                }
-
-                // Calculate Baseline
-                const { qp: baseQP, units: baseUnits } = accumQP(past);
-                
-                window.simBaseQP = baseQP;
-                window.simBaseUnits = baseUnits;
-                
-                const baseCGPA = baseUnits > 0 ? (baseQP / baseUnits).toFixed(2) : '0.00';
-                document.getElementById('sim-base-cgpa').innerText = baseCGPA;
-
-                // Load courses from active (current/pending) semesters
-                let simCourses = [];
-                activeSems.forEach(s => {
-                    if (s.courses && s.courses.length > 0) {
-                        s.courses.forEach(c => {
-                            simCourses.push({
-                                id: c.id || Math.random().toString(36).substring(7),
-                                name: c.name || c.courseCode || 'Unnamed',
-                                units: parseFloat(c.unitHours) || 0,
-                                grade: c.grade || c.predictedGrade || c.targetGrade || 'A',
-                                released: true // default to included in simulation
-                            });
-                        });
-                    } else if (s.totalUnits && s.gpa) {
-                         // Fallback if semester has no individual courses but has totals
-                         simCourses.push({
-                            id: s.id,
-                            name: s.name || 'Semester aggregate',
-                            units: parseFloat(s.totalUnits) || 0,
-                            grade: 'B', // arbitrary fallback
-                            released: true
-                         });
-                    }
-                });
-
-                window.trueSimCourses = simCourses;
-                window.renderTrueSimulator();
-
-            } catch (error) {
-                console.error('Simulator load error:', error);
-                container.innerHTML = '<div style="color:#EF4444; text-align:center; padding:20px; background:#FEF2F2; border-radius:12px; font-size:14px;">Error loading simulator data. Please try again.</div>';
-            }
-        };
-
-        window.renderTrueSimulator = function () {
-            const container = document.getElementById('sim-courses-container');
-            if (!container) return;
-
-            if (!window.trueSimCourses || window.trueSimCourses.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align:center; padding:40px 20px; background:var(--card-bg,#1e1e1e); border-radius:16px; border:2px dashed #333;">
-                        <ion-icon name="book-outline" style="font-size:48px; color:#555; margin-bottom:12px;"></ion-icon>
-                        <div style="color:var(--text-color,white); font-weight:600; margin-bottom:4px;">No courses found</div>
-                        <div style="color:#999; font-size:13px;">Add courses to your semesters first.</div>
-                    </div>`;
-                window.calcTrueSimulation();
-                return;
-            }
-
-            const availGrades = getAvailableGrades();
-
-            // Restore saved selections from localStorage
-            let savedSim = {};
-            try { savedSim = JSON.parse(localStorage.getItem('kobi_sim_selections') || '{}'); } catch(e){}
-
-            container.innerHTML = window.trueSimCourses.map((c, i) => {
-                // Restore saved state
-                const key = c.id || c.name;
-                if (savedSim[key]) {
-                    c.grade = savedSim[key].grade || c.grade;
-                    c.released = savedSim[key].released !== undefined ? savedSim[key].released : c.released;
-                    c.units = savedSim[key].units || c.units;
-                }
-
-                const gradeOptions = availGrades.map(g =>
-                    `<option value="${g}" ${c.grade === g ? 'selected' : ''}>${g}</option>`).join('');
-                const gpColor = (() => {
-                    const pt = gradeToPoint(c.grade);
-                    if (pt >= 4.5) return '#10B981';
-                    if (pt >= 3.5) return '#667eea';
-                    if (pt >= 2.5) return '#F59E0B';
-                    return '#EF4444';
-                })();
-
-                return `
-                <div style="
-                    background: var(--card-bg,#1e1e1e);
-                    border-radius: 14px;
-                    padding: 14px 16px;
-                    border: 1px solid ${c.released ? '#333' : '#1a1a1a'};
-                    display: flex;
-                    align-items: center;
-                    gap: 14px;
-                    opacity: ${c.released ? '1' : '0.45'};
-                    transition: all 0.2s;
-                    margin-bottom: 10px;
-                ">
-                    <!-- Toggle -->
-                    <label class="switch" style="position:relative;display:inline-block;width:40px;height:22px;flex-shrink:0;">
-                        <input type="checkbox" ${c.released ? 'checked' : ''}
-                            onchange="window.updateTrueSim(${i}, 'released', this.checked)"
-                            style="opacity:0;width:0;height:0;">
-                        <span class="slider round" style="
-                            position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;
-                            background:${c.released ? 'var(--primary-color,#667eea)' : '#444'};
-                            transition:.3s;border-radius:34px;
-                        "></span>
-                    </label>
-
-                    <!-- Course info -->
-                    <div style="flex:1;min-width:0;">
-                        <div style="font-weight:700;font-size:14px;color:${c.released ? 'white' : '#666'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.name}</div>
-                        <div style="font-size:11px;color:#666;margin-top:2px;">${c.units} credit${c.units !== 1 ? 's' : ''}</div>
-                    </div>
-
-                    <!-- Units input -->
-                    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-                        <div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:0.5px;">Credits</div>
-                        <input type="number" value="${c.units}" min="1" max="12" step="1"
-                            onchange="window.updateTrueSim(${i}, 'units', this.value)"
-                            style="width:46px;padding:6px 4px;border-radius:8px;border:1px solid #333;background:#111;color:${c.released ? 'white' : '#555'};font-size:13px;font-weight:700;text-align:center;outline:none;"
-                            ${c.released ? '' : 'disabled'}>
-                    </div>
-
-                    <!-- Grade badge + select -->
-                    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-                        <div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:0.5px;">Grade</div>
-                        <div style="position:relative;">
-                            <select onchange="window.updateTrueSim(${i}, 'grade', this.value)"
-                                style="
-                                    appearance:none;-webkit-appearance:none;
-                                    padding:6px 24px 6px 10px;
-                                    border-radius:8px;
-                                    border:1px solid ${gpColor};
-                                    background:#111;
-                                    color:${gpColor};
-                                    font-size:14px;
-                                    font-weight:800;
-                                    outline:none;
-                                    cursor:pointer;
-                                    min-width:54px;
-                                "
-                                ${c.released ? '' : 'disabled'}>
-                                ${gradeOptions}
-                            </select>
-                            <ion-icon name="chevron-down" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:12px;color:${gpColor};pointer-events:none;"></ion-icon>
-                        </div>
-                    </div>
-                </div>`;
-            }).join('');
-
-            window.calcTrueSimulation();
-        };
-
-        window.updateTrueSim = function (index, field, value) {
-            if (field === 'units') value = parseFloat(value) || 0;
-            if (field === 'released') value = !!value;
-            window.trueSimCourses[index][field] = value;
-
-            // Autosave to localStorage
-            const saved = {};
-            window.trueSimCourses.forEach(c => {
-                const key = c.id || c.name;
-                saved[key] = { grade: c.grade, released: c.released, units: c.units };
-            });
-            try { localStorage.setItem('kobi_sim_selections', JSON.stringify(saved)); } catch(e){}
-
-            if (field === 'released') {
-                window.renderTrueSimulator();
-            } else {
-                // Update just the CGPA calc without full re-render
-                window.calcTrueSimulation();
-            }
-        };
-
-        // Removed addSimCourse completely to respect "THERES NO MOCK ANYTHING"
-        
-        window.calcTrueSimulation = function() {
-            let simQP = 0;
-            let simUnits = 0;
-            
-            if (window.trueSimCourses) {
-                window.trueSimCourses.forEach(c => {
-                    if (c.released && c.units > 0 && c.grade) {
-                        simQP += c.units * gradeToPoint(c.grade);
-                        simUnits += c.units;
-                    }
-                });
-            }
-            
-            const totalQP = (window.simBaseQP || 0) + simQP;
-            const totalUnits = (window.simBaseUnits || 0) + simUnits;
-            
-            const simCGPA = totalUnits > 0 ? (totalQP / totalUnits).toFixed(2) : '0.00';
-            const baseCGPA = window.simBaseUnits > 0 ? (window.simBaseQP / window.simBaseUnits).toFixed(2) : '0.00';
-            const sgpa = simUnits > 0 ? (simQP / simUnits).toFixed(2) : '0.00';
-            
-            // Calc diff
-            const diff = parseFloat(simCGPA) - parseFloat(baseCGPA);
-            let diffHtml = '';
-            let diffBg = '';
-            
-            if (diff > 0) {
-                diffHtml = `+${diff.toFixed(2)}<ion-icon name="arrow-up" style="margin-left:2px; font-size:14px;"></ion-icon>`;
-                diffBg = 'rgba(16, 185, 129, 0.2)'; // Green tint
-            } else if (diff < 0) {
-                diffHtml = `${diff.toFixed(2)}<ion-icon name="arrow-down" style="margin-left:2px; font-size:14px;"></ion-icon>`;
-                diffBg = 'rgba(239, 68, 68, 0.2)'; // Red tint
-            } else {
-                diffHtml = `0.00`;
-                diffBg = 'rgba(255, 255, 255, 0.2)';
-            }
-            
-            document.getElementById('simulated-cgpa-main').innerText = simCGPA;
-            document.getElementById('sim-total-credits').innerText = totalUnits;
-            document.getElementById('sim-sgpa').innerText = sgpa;
-            
-            const diffEl = document.getElementById('simulated-cgpa-diff');
-            diffEl.innerHTML = diffHtml;
-            diffEl.style.background = diffBg;
-            
-            // Color code the main CGPA based on trend
-            if(diff > 0) document.getElementById('simulated-cgpa-main').style.color = '#10B981'; // Green
-            else if(diff < 0) document.getElementById('simulated-cgpa-main').style.color = '#EF4444'; // Red
-            else document.getElementById('simulated-cgpa-main').style.color = '#ffffff'; // White
-        };
-
         async function loadGPAView() {
             const uid = localStorage.getItem('kobi_atlas_uid');
             showLoading(true);
 
             try {
-                const semRef = collection(db, 'users', uid, 'semesters');
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
                 const snapshot = await getDocs(semRef);
 
                 const semesters = [];
@@ -5933,7 +3808,8 @@
                         : semesters;
                 }
 
-                // ── Aggregate stats (spec-compliant) ──────────────────────────────
+                //  Aggregate stats (spec-compliant) 
+                // CGPA = (U  GP) / U  using accumQP helper
                 const { qp: totalPoints, units: totalUnits } = accumQP(relevantSemesters);
                 const gpa = totalUnits > 0 ? (totalPoints / totalUnits).toFixed(2) : '0.00';
                 const classification = getDegreeClassification(parseFloat(gpa));
@@ -6157,13 +4033,10 @@
                 }).join('');
                 document.getElementById('semester-breakdown').innerHTML = breakdownHTML || '<p style="text-align: center; color: #999; padding: 20px;">No semesters yet</p>';
 
-            } catch (error) {
-                console.error('Load GPA view error:', error);
-                showToast('Error loading GPA data', 'error');
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
-        }
+        };
 
         // PLANNER FUNCTIONS
         let currentPlannerTab = 'schedule';
@@ -6189,7 +4062,7 @@
             showLoading(true);
 
             try {
-                const semRef = collection(db, 'users', uid, 'semesters');
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
                 const snapshot = await getDocs(semRef);
 
                 const semesters = [];
@@ -6321,18 +4194,10 @@
 
                 scheduleContent.innerHTML = html;
 
-            } catch (error) {
-                console.error('Load schedule error:', error);
-                showToast('Error loading schedule', 'error');
-                document.getElementById('schedule-content').innerHTML = `
-                <div class="empty-container">
-                    <p class="empty-text">Error loading schedule. Please try again.</p>
-                    </div>
-                `;
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
-        }
+        };
 
         async function loadTasks() {
             const uid = localStorage.getItem('kobi_atlas_uid');
@@ -6392,18 +4257,228 @@
 
                 tasksContent.innerHTML = html;
 
-            } catch (error) {
-                console.error('Load tasks error:', error);
-                showToast('Error loading tasks', 'error');
-                document.getElementById('tasks-content').innerHTML = `
-                <div class="empty-container">
-                    <p class="empty-text">Error loading tasks. Please try again.</p>
-                    </div>
-                `;
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
-        }
+        };
+
+        // GPA SIMULATOR
+        window.loadGPASimulator = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            const container = document.getElementById('gpa-simulator-content');
+            if (!container) return;
+
+            container.innerHTML = `<div style="text-align:center;padding:40px;"><div class="spinner" style="margin:0 auto;"></div><p style="margin-top:16px;color:#999;">Loading courses...</p></div>`;
+
+            try {
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
+                const snapshot = await getDocs(semRef);
+
+                // Separate semesters by type
+                let pastSems = [], activeSems = [];
+                snapshot.forEach(doc => {
+                    const s = { id: doc.id, ...doc.data() };
+                    if (s.type === 'past') pastSems.push(s);
+                    else if (s.type === 'current' || s.type === 'pending') activeSems.push(s);
+                });
+
+                // --- BASELINE: weighted sum for all PAST semesters ---
+                // Formula: Σ(grade_points × unit_hours) across all past courses
+                // CGPA = pastWeightedPoints / pastTotalUnits
+                let pastWeightedPoints = 0, pastTotalUnits = 0;
+                // Use accumQP helper  round stored QPs per spec
+                const { qp: pastWeightedPoints, units: pastTotalUnits } = accumQP(pastSems);
+
+                // Filter active semesters to only those with courses
+                activeSems = activeSems.filter(s => s.courses && s.courses.length > 0);
+
+                if (activeSems.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-container" style="padding:60px 20px;text-align:center;">
+                            <ion-icon name="school-outline" style="font-size:64px;color:#666;"></ion-icon>
+                            <p class="empty-text" style="margin-top:16px;">No current or pending semesters with courses found.<br>Add courses to a current or pending semester first.</p>
+                        </div>`;
+                    return;
+                }
+
+                const grades = getAvailableGrades();
+
+                // Build flat indexed course list for grade selects
+                const allCourseRows = [];
+                activeSems.forEach((sem, si) => {
+                    sem.courses.forEach((course, ci) => {
+                        allCourseRows.push({ si, ci, course });
+                    });
+                });
+
+                const pastBaseCGPA = pastTotalUnits > 0
+                    ? (pastWeightedPoints / pastTotalUnits).toFixed(2) + ' CGPA · ' + pastTotalUnits + ' past units'
+                    : 'No past semesters yet';
+
+                let html = `<div style="padding:16px;">
+                    <div class="stat-card" id="sim-result-card" style="margin-bottom:20px;background:linear-gradient(135deg,var(--primary-color) 0%,#764ba2 100%);padding:20px;">
+                        <div style="font-size:11px;color:rgba(255,255,255,0.75);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Projected CGPA</div>
+                        <div id="sim-cgpa" style="font-size:52px;font-weight:800;color:white;line-height:1;">--</div>
+                        <div id="sim-class" style="font-size:14px;color:rgba(255,255,255,0.9);margin-top:6px;">Assign grades below</div>
+                        <div id="sim-breakdown" style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:6px;"></div>
+                        <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:6px;">Baseline: ${pastBaseCGPA}</div>
+                    </div>`;
+
+                activeSems.forEach((sem, si) => {
+                    const typeLabel = sem.type === 'current' ? 'CURRENT' : 'PENDING';
+                    const typeColor = sem.type === 'current' ? '#667eea' : '#f59e0b';
+                    const semUnits = sem.courses.reduce((a, c) => a + (parseFloat(c.unitHours) || 0), 0);
+
+                    html += `
+                    <div style="margin-bottom:20px;">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                            <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;background:${typeColor}22;color:${typeColor};border:1px solid ${typeColor}44;flex-shrink:0;">${typeLabel}</span>
+                            <div>
+                                <div style="font-weight:700;font-size:15px;">${sem.name || 'Unnamed Semester'}</div>
+                                <div style="font-size:12px;color:#999;">${sem.courses.length} courses · ${semUnits} total units</div>
+                            </div>
+                        </div>
+                        <div id="sim-sem-gpa-${si}" style="font-size:12px;color:var(--primary-color);margin-bottom:10px;font-weight:600;min-height:16px;"></div>`;
+
+                    sem.courses.forEach((course, ci) => {
+                        const globalIndex = allCourseRows.findIndex(r => r.si === si && r.ci === ci);
+                        const existingGrade = course.grade || course.predictedGrade || course.targetGrade || '';
+                        const units = parseFloat(course.unitHours) || 0;
+                        html += `
+                        <div style="background:var(--card-bg);padding:14px 16px;border-radius:12px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--border-color);">
+                            <div style="flex:1;min-width:0;">
+                                <div style="font-weight:700;font-size:15px;">${course.code || 'N/A'}</div>
+                                <div style="font-size:13px;color:#999;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${course.name || ''}</div>
+                                <div style="font-size:12px;color:var(--primary-color);margin-top:4px;">${units} unit${units === 1 ? '' : 's'}</div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
+                                <label style="font-size:10px;color:#999;text-transform:uppercase;letter-spacing:0.5px;">Grade</label>
+                                <select id="sim-grade-${globalIndex}"
+                                    data-units="${units}"
+                                    data-sem-index="${si}"
+                                    onchange="window.recalcSimulator()"
+                                    style="width:72px;padding:8px 4px;border-radius:8px;background:var(--card-bg);color:var(--text-color);border:2px solid var(--primary-color);font-size:16px;font-weight:700;text-align:center;">
+                                    <option value="">--</option>
+                                    ${grades.map(g => `<option value="${g}" ${g === existingGrade ? 'selected' : ''}>${g}</option>`).join('')}
+                                </select>
+                            </div>
+                        </div>`;
+                    });
+
+                    html += `</div>`;
+                });
+
+                html += `
+                    <button onclick="window.resetSimulator()" class="btn btn-secondary" style="width:100%;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:6px;">
+                        <ion-icon name="refresh-outline"></ion-icon> Reset All Grades
+                    </button>
+                </div>`;
+
+                container.innerHTML = html;
+
+                // Store state for recalc
+                window._simPastPoints = pastWeightedPoints;
+                window._simPastUnits  = pastTotalUnits;
+                window._simTotalRows  = allCourseRows.length;
+                window._simSemCount   = activeSems.length;
+
+                window.recalcSimulator();
+
+            } catch (err) {
+                console.error('GPA Simulator error:', err);
+                container.innerHTML = `<div class="empty-container"><p class="empty-text">Error loading simulator. Please try again.</p></div>`;
+            }
+        };
+
+        window.recalcSimulator = function () {
+            const totalRows  = window._simTotalRows || 0;
+            const semCount   = window._simSemCount  || 0;
+            const pastPoints = window._simPastPoints || 0;
+            const pastUnits  = window._simPastUnits  || 0;
+
+            // Accumulate per-course weighted grade points
+            let simTotalPoints = 0, simTotalUnits = 0, simAssigned = 0;
+            // Per-semester accumulators
+            const semData = {}; // si -> {points, units, assigned, totalCourses}
+
+            for (let i = 0; i < totalRows; i++) {
+                const sel = document.getElementById(`sim-grade-${i}`);
+                if (!sel) continue;
+
+                const grade = sel.value;
+                const units = parseFloat(sel.dataset.units) || 0;
+                const si    = parseInt(sel.dataset.semIndex, 10);
+
+                if (!semData[si]) semData[si] = { points: 0, units: 0, assigned: 0, totalCourses: 0 };
+                semData[si].totalCourses++;
+
+                if (grade && units > 0) {
+                    const gp = gradeToPoint(grade);
+                    // Weighted sum: grade_points × credit_units
+                    simTotalPoints += gp * units;
+                    simTotalUnits  += units;
+                    simAssigned++;
+                    semData[si].points += gp * units;
+                    semData[si].units  += units;
+                    semData[si].assigned++;
+                }
+            }
+
+            // Projected CGPA formula:
+            // = (Σ past_gpa×past_units  +  Σ sim_grade_points×sim_units)
+            //   ─────────────────────────────────────────────────────────
+            //              past_units + sim_units
+            const projPoints = pastPoints + simTotalPoints;
+            const projUnits  = pastUnits  + simTotalUnits;
+            const cgpa = projUnits > 0 ? (projPoints / projUnits).toFixed(2) : '--';
+
+            const cgpaEl  = document.getElementById('sim-cgpa');
+            const classEl = document.getElementById('sim-class');
+            const breakEl = document.getElementById('sim-breakdown');
+
+            if (cgpaEl) cgpaEl.textContent = cgpa;
+
+            if (classEl) {
+                if (simAssigned === 0) {
+                    classEl.textContent = 'Assign grades below';
+                } else {
+                    const cls = getDegreeClassification(parseFloat(cgpa));
+                    classEl.textContent = cls.label;
+                }
+            }
+
+            if (breakEl) {
+                if (simAssigned > 0) {
+                    // Semester GPA = simulated weighted points / simulated units (no past baseline)
+                    const semGPA = simTotalUnits > 0 ? (simTotalPoints / simTotalUnits).toFixed(2) : '0.00';
+                    breakEl.textContent = `Sim Semester GPA: ${semGPA} · ${simAssigned}/${totalRows} courses graded · ${simTotalUnits} units`;
+                } else {
+                    breakEl.textContent = '';
+                }
+            }
+
+            // Per-semester GPA labels
+            for (let si = 0; si < semCount; si++) {
+                const el = document.getElementById(`sim-sem-gpa-${si}`);
+                if (!el) continue;
+                const d = semData[si];
+                if (!d || d.assigned === 0) {
+                    el.textContent = '';
+                } else {
+                    const sgpa = d.units > 0 ? (d.points / d.units).toFixed(2) : '0.00';
+                    el.textContent = `Simulated GPA: ${sgpa}  (${d.assigned}/${d.totalCourses} courses · ${d.units} units)`;
+                }
+            }
+        };
+
+        window.resetSimulator = function () {
+            const n = window._simTotalRows || 0;
+            for (let i = 0; i < n; i++) {
+                const sel = document.getElementById(`sim-grade-${i}`);
+                if (sel) sel.value = '';
+            }
+            window.recalcSimulator();
+        };
 
         window.toggleScheduleDateInput = function () {
             const isRecurring = document.getElementById('schedule-recurring').checked;
@@ -6429,7 +4504,7 @@
             const uid = localStorage.getItem('kobi_atlas_uid');
 
             try {
-                const semRef = collection(db, 'users', uid, 'semesters');
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
                 const snapshot = await getDocs(semRef);
 
                 const semesters = [];
@@ -6450,10 +4525,7 @@
                 select.innerHTML = options;
 
                 document.getElementById('add-schedule-modal').classList.add('show');
-            } catch (error) {
-                console.error('Error:', error);
-                showToast('Error loading courses', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         window.saveSchedule = async function () {
@@ -6472,7 +4544,7 @@
             showLoading(true);
 
             try {
-                const semRef = collection(db, 'users', uid, 'semesters');
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
                 const snapshot = await getDocs(semRef);
 
                 const semesters = [];
@@ -6522,10 +4594,7 @@
                 closeModal('add-schedule-modal');
                 loadSchedule();
 
-            } catch (error) {
-                console.error('Save schedule error:', error);
-                showToast('Error saving schedule', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
 
             showLoading(false);
         };
@@ -6538,7 +4607,7 @@
 
             try {
                 // Find course in current semester
-                const semRef = collection(db, 'users', uid, 'semesters');
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
                 const snapshot = await getDocs(semRef);
                 let currentSemester = null;
                 snapshot.forEach(doc => {
@@ -6580,7 +4649,7 @@
             const uid = localStorage.getItem('kobi_atlas_uid');
 
             try {
-                const semRef = collection(db, 'users', uid, 'semesters');
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
                 const snapshot = await getDocs(semRef);
 
                 const semesters = [];
@@ -6604,9 +4673,7 @@
                 document.getElementById('task-description').value = '';
 
                 document.getElementById('add-task-modal').classList.add('show');
-            } catch (error) {
-                console.error('Error:', error);
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         window.editTask = async function (taskId) {
@@ -6645,7 +4712,7 @@
                 // Get course name if selected
                 let courseName = null;
                 if (courseId) {
-                    const semRef = collection(db, 'users', uid, 'semesters');
+                    console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
                     const snapshot = await getDocs(semRef);
 
                     snapshot.forEach(doc => {
@@ -6695,10 +4762,7 @@
                 document.getElementById('task-description').value = '';
                 loadTasks();
 
-            } catch (error) {
-                console.error('Task error:', error);
-                showToast('Error saving task', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
 
             showLoading(false);
         };
@@ -6712,10 +4776,7 @@
                 });
 
                 loadTasks();
-            } catch (error) {
-                console.error('Toggle task error:', error);
-                showToast('Error updating task', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         window.deleteTaskItem = async function (taskId) {
@@ -6728,10 +4789,7 @@
                 await deleteDoc(doc(db, 'tasks', taskId));
                 showToast('Task deleted', 'success');
                 loadTasks();
-            } catch (error) {
-                console.error('Delete task error:', error);
-                showToast('Error deleting task', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
 
             showLoading(false);
         };
@@ -6818,6 +4876,7 @@
                 renderUsers(friends);
                 modal.classList.add('show');
             } catch (e) {
+                alert('DASHBOARD ERROR: ' + e.message + ' \n' + e.stack);
                 console.error(e);
                 showToast('Error loading friends', 'error');
             } finally {
@@ -6845,10 +4904,7 @@
                 });
 
                 renderUsers(allUsers);
-            } catch (error) {
-                console.error('Load users error:', error);
-                showToast('Error loading users', 'error');
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
         }
@@ -7050,10 +5106,7 @@
                 closeModal('user-search-modal');
                 document.getElementById('user-profile-modal').classList.add('show');
 
-            } catch (error) {
-                console.error('View profile error:', error);
-                showToast('Error loading profile', 'error');
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
         };
@@ -7078,10 +5131,7 @@
 
                 showToast('Friend request sent!', 'success');
                 viewUserProfile(toUserId); // Refresh profile
-            } catch (error) {
-                console.error('Send friend request error:', error);
-                showToast('Error sending request', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         window.unfriend = async function (friendId) {
@@ -7104,10 +5154,7 @@
 
                 showToast('Friend removed', 'success');
                 viewUserProfile(friendId); // Refresh profile
-            } catch (error) {
-                console.error('Unfriend error:', error);
-                showToast('Error removing friend', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         // NOTIFICATIONS FUNCTIONS
@@ -7248,10 +5295,7 @@
                     badge.classList.add('hidden');
                 }
 
-            } catch (error) {
-                console.error('Load notifications error:', error);
-                showToast('Error loading notifications', 'error');
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
         }
@@ -7260,9 +5304,7 @@
                 await updateDoc(doc(db, 'notifications', notifId), { read: true });
                 loadNotifications(); // Reload list
                 loadUnreadCounts(); // Update badges
-            } catch (error) {
-                console.error('Error marking read:', error);
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         window.acceptFriendRequest = async function (requestId, fromUserId) {
@@ -7307,10 +5349,7 @@
 
                 showToast('Friend request accepted!', 'success');
                 loadNotifications();
-            } catch (error) {
-                console.error('Accept request error:', error);
-                showToast('Error accepting request', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         window.rejectFriendRequest = async function (requestId) {
@@ -7321,10 +5360,7 @@
 
                 showToast('Friend request rejected', 'success');
                 loadNotifications();
-            } catch (error) {
-                console.error('Reject request error:', error);
-                showToast('Error rejecting request', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         // MESSAGES FUNCTIONS
@@ -7432,16 +5468,21 @@
 
                 document.getElementById('conversations-list').innerHTML = html;
 
-            } catch (error) {
-                console.error('Load conversations error:', error);
-                showToast('Error loading conversations', 'error');
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
-        }
+        };
 
-        // Expose real loadConversations to window (overrides any earlier stub)
-        window.loadConversations = loadConversations;
+        // Auto-refresh conversations when messages tab is visible
+        window.startMessagesAutoRefresh = function() {
+            if (autoRefreshInterval) { clearInterval(autoRefreshInterval); autoRefreshInterval = null; }
+            window.loadConversations();
+            autoRefreshInterval = setInterval(() => {
+                if (currentActiveScreen === 'community' && document.getElementById('community-messages-container') && !document.getElementById('community-messages-container').classList.contains('hidden')) {
+                    window.loadConversations();
+                }
+            }, 30000);
+        };
 
         function renderConversationItem(conv) {
             return `
@@ -7490,10 +5531,7 @@
                 document.getElementById('chat-modal').classList.add('show');
 
                 await loadMessages(friendId);
-            } catch (error) {
-                console.error('Open chat error:', error);
-                showToast('Error opening chat', 'error');
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
         };
@@ -7556,10 +5594,7 @@
                 document.getElementById('messages-list').innerHTML = html;
                 document.getElementById('messages-list').scrollTop = document.getElementById('messages-list').scrollHeight;
 
-            } catch (error) {
-                console.error('Load messages error:', error);
-                showToast('Error sending message', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         window.sendMessage = async function () {
@@ -7581,10 +5616,7 @@
                 document.getElementById('message-input').value = '';
                 await loadMessages(currentChatUser.id);
 
-            } catch (error) {
-                console.error('Send message error:', error);
-                showToast('Error sending message', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         // PROFILE SETTINGS FUNCTIONS
@@ -7610,10 +5642,7 @@
 
 
                 document.getElementById('profile-settings-modal').classList.add('show');
-            } catch (error) {
-                console.error('Load profile settings error:', error);
-                showToast('Error loading profile', 'error');
-            }
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); }
         };
 
         window.saveProfile = async function () {
@@ -7711,11 +5740,7 @@
                 closeModal('profile-settings-modal');
                 uploadedImageBase64 = null;
 
-            } catch (error) {
-                console.error('Save profile error:', error);
-                if (error.message && (error.message.includes('longer than') || error.message.includes('too large'))) {
-                    showToast('The file size is too large', 'error');
-                } else {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } else {
                     showToast('Error saving profile', 'error');
                 }
             }
@@ -7777,7 +5802,7 @@
             showLoading(true);
 
             try {
-                const semRef = collection(db, 'users', uid, 'semesters');
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
                 const snapshot = await getDocs(semRef);
 
                 let currentSemester = null;
@@ -7912,10 +5937,7 @@
                 if (window.loadSchedule) window.loadSchedule();
                 if (window.loadDashboard) window.loadDashboard();
 
-            } catch (error) {
-                console.error('Save schedule error:', error);
-                showToast('Error saving schedule', 'error');
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
         };
@@ -7958,7 +5980,7 @@
             showLoading(true);
 
             try {
-                const semRef = collection(db, 'users', uid, 'semesters');
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
                 const snapshot = await getDocs(semRef);
                 let currentSemester = null;
 
@@ -8002,10 +6024,7 @@
                 showToast('Schedule deleted', 'success');
                 if (window.loadSchedule) window.loadSchedule();
 
-            } catch (error) {
-                console.error('Delete schedule error:', error);
-                showToast('Error deleting schedule', 'error');
-            } finally {
+            } catch (error) { alert('DASHBOARD ERROR: ' + error.message + '\\n' + error.stack); console.error(error); } finally {
                 showLoading(false);
             }
         };
@@ -8026,7 +6045,7 @@
 
             try {
                 // 1. Get Next Event (Today)
-                const semRef = collection(db, 'users', uid, 'semesters');
+                console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
                 const snapshot = await getDocs(semRef);
                 let currentSemester = null;
                 snapshot.forEach(doc => { if (doc.data().type === 'current') currentSemester = doc.data(); });
@@ -8110,7 +6129,7 @@
                         currentSemester = { id: docSnap.id, ...docSnap.data() };
                     }
                 } else {
-                    const semRef = collection(db, 'users', uid, 'semesters');
+                    console.log('1');const semRef = collection(db, 'users', uid, 'semesters');
                     const snapshot = await getDocs(semRef);
                     snapshot.forEach(doc => { if (doc.data().type === 'current') currentSemester = { id: doc.id, ...doc.data() }; });
                 }
@@ -8340,6 +6359,12 @@
 
 
         window.switchCommunityTab = function (tab) {
+            // Clear any messages auto-refresh when switching tabs
+            if (window._msgRefreshInterval) {
+                clearInterval(window._msgRefreshInterval);
+                window._msgRefreshInterval = null;
+            }
+
             // Update Tab Buttons
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             const activeBtn = document.getElementById(`comm-${tab}-tab`);
@@ -8347,393 +6372,54 @@
 
             // Get Containers
             const feedContainer = document.getElementById('community-feed-container');
-            const groupsWrapper = document.getElementById('community-groups-wrapper');
+            const resourcesWrapper = document.getElementById('community-resources-wrapper');
             const messagesContainer = document.getElementById('community-messages-container');
 
             // Hide All
             if (feedContainer) feedContainer.classList.add('hidden');
-            if (groupsWrapper) groupsWrapper.classList.add('hidden');
+            if (resourcesWrapper) resourcesWrapper.classList.add('hidden'); // Hides overlay + content
             if (messagesContainer) messagesContainer.classList.add('hidden');
 
             // Show Selected
             if (tab === 'feed') {
                 if (feedContainer) feedContainer.classList.remove('hidden');
-            } else if (tab === 'groups') {
-                if (groupsWrapper) groupsWrapper.classList.remove('hidden');
-                window.loadStudyGroups();
+                if (window.loadCommunityFeed) window.loadCommunityFeed();
+            } else if (tab === 'resources') {
+                if (resourcesWrapper) resourcesWrapper.classList.remove('hidden');
+
+                // Check lock status
+                if (window.checkResourcesLock) window.checkResourcesLock();
+
+                // Ensure inner container is technically visible (for blur effect to be visible when locked)
+                const innerContainer = document.getElementById('community-resources-container');
+                if (innerContainer) innerContainer.classList.remove('hidden');
+
+                if (window.loadResources) window.loadResources();
             } else if (tab === 'messages') {
                 if (messagesContainer) messagesContainer.classList.remove('hidden');
                 if (window.loadConversations) window.loadConversations();
+
+                // Auto-refresh messages every 30 seconds while tab is active
+                window._msgRefreshInterval = setInterval(() => {
+                    const msgContainer = document.getElementById('community-messages-container');
+                    if (msgContainer && !msgContainer.classList.contains('hidden')) {
+                        if (window.loadConversations) window.loadConversations();
+                    } else {
+                        clearInterval(window._msgRefreshInterval);
+                        window._msgRefreshInterval = null;
+                    }
+                }, 30000);
             }
         };
 
-        // ─────────────────────────────────────────────────────────
-        //  STUDY GROUPS MODULE
-        // ─────────────────────────────────────────────────────────
-        let allStudyGroups = [];
-        let currentGroupId = null;
 
-        window.loadStudyGroups = async function () {
-            const listEl = document.getElementById('groups-list');
-            if (!listEl) return;
-            listEl.innerHTML = `<div style="text-align:center;padding:30px;"><ion-icon name="sync" class="spin" style="font-size:32px;color:#667eea;"></ion-icon><p style="color:#999;margin-top:12px;">Loading groups...</p></div>`;
-            try {
-                const snap = await getDocs(query(collection(db, 'studyGroups'), orderBy('createdAt', 'desc')));
-                allStudyGroups = [];
-                snap.forEach(d => allStudyGroups.push({ id: d.id, ...d.data() }));
-                window.renderStudyGroups(allStudyGroups);
-            } catch (e) {
-                console.error('Load groups error', e);
-                listEl.innerHTML = `<div style="color:#EF4444;padding:20px;text-align:center;">Error loading groups.</div>`;
-            }
-        };
-
-        window.filterGroups = function (searchQuery) {
-            const q = (searchQuery || document.getElementById('group-search-input')?.value || '').toLowerCase();
-            const levelFilter = window._groupLevelFilter || null;
-            let filtered = allStudyGroups.filter(g => {
-                const matchText = !q || g.name.toLowerCase().includes(q) ||
-                    (g.description || '').toLowerCase().includes(q) ||
-                    (g.courseCode || '').toLowerCase().includes(q) ||
-                    (g.courseName || '').toLowerCase().includes(q);
-                const matchLevel = !levelFilter || (g.levelMin <= levelFilter && g.levelMax >= levelFilter);
-                return matchText && matchLevel;
-            });
-            window.renderStudyGroups(filtered);
-        };
-
-        window.setGroupLevelFilter = function (level, btn) {
-            window._groupLevelFilter = level;
-            // Update chip styles
-            document.querySelectorAll('#groups-list-view .filter-btn').forEach(b => {
-                b.style.background = 'transparent';
-                b.style.color = '#ccc';
-                b.style.borderColor = '#444';
-            });
-            if (btn) {
-                btn.style.background = 'var(--primary-color)';
-                btn.style.color = 'white';
-                btn.style.borderColor = 'var(--primary-color)';
-            }
-            window.filterGroups();
-        };
-
-        window.renderStudyGroups = function (groups) {
-            const listEl = document.getElementById('groups-list');
-            if (!listEl) return;
-            const uid = localStorage.getItem('kobi_atlas_uid');
-            if (!groups || groups.length === 0) {
-                listEl.innerHTML = `<div style="text-align:center;padding:40px;color:#999;"><ion-icon name="people-outline" style="font-size:48px;"></ion-icon><p>No groups found. Create one!</p></div>`;
-                return;
-            }
-            listEl.innerHTML = groups.map(g => {
-                const isMember = (g.members || []).includes(uid);
-                const memberCount = (g.members || []).length;
-                const levelRange = g.levelMin === g.levelMax ? `${g.levelMin}L` : `${g.levelMin}L–${g.levelMax}L`;
-                return `
-                <div onclick="window.openGroupDetail('${g.id}')" style="background:var(--card-bg);border-radius:12px;padding:16px;margin-bottom:12px;cursor:pointer;border:1px solid var(--border-color);transition:0.2s;" onmouseover="this.style.borderColor='var(--primary-color)'" onmouseout="this.style.borderColor='var(--border-color)'">
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
-                        <div>
-                            <div style="font-weight:700;font-size:16px;">${g.name}</div>
-                            <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${levelRange}${g.courseCode ? ' · ' + g.courseCode : ''}${g.courseName ? ' – ' + g.courseName : ''}</div>
-                        </div>
-                        <span style="background:${isMember ? 'rgba(102,126,234,0.2)' : 'rgba(255,255,255,0.05)'};color:${isMember ? 'var(--primary-color)' : '#999'};border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;flex-shrink:0;">${isMember ? 'Member' : 'Join'}</span>
-                    </div>
-                    ${g.description ? `<div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">${g.description}</div>` : ''}
-                    <div style="font-size:12px;color:#666;"><ion-icon name="people-outline" style="vertical-align:middle;margin-right:4px;"></ion-icon>${memberCount} member${memberCount !== 1 ? 's' : ''}</div>
-                </div>`;
-            }).join('');
-        };
-
-        window.showCreateGroupModal = function () {
-            const modal = document.createElement('div');
-            modal.id = 'create-group-modal';
-            modal.className = 'modal show';
-            modal.innerHTML = `
-            <div class="modal-content" style="max-width:480px;">
-                <div class="modal-header">
-                    <h3>Create Study Group</h3>
-                    <button class="close-btn" onclick="document.getElementById('create-group-modal').remove()">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>Group Name *</label>
-                        <input type="text" id="sg-name" placeholder="e.g. CSC201 Study Squad" maxlength="60">
-                    </div>
-                    <div class="form-group">
-                        <label>Description (optional)</label>
-                        <textarea id="sg-desc" rows="2" placeholder="What's this group about?"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Level Range *</label>
-                        <div style="display:flex;gap:10px;align-items:center;">
-                            <select id="sg-level-min" style="flex:1;padding:10px;border-radius:8px;background:var(--input-bg,#1a1a1a);color:var(--text-color);border:1px solid var(--border-color);">
-                                <option value="100">100</option><option value="200">200</option><option value="300">300</option>
-                                <option value="400">400</option><option value="500">500</option><option value="600">600</option>
-                            </select>
-                            <span style="color:#999;">to</span>
-                            <select id="sg-level-max" style="flex:1;padding:10px;border-radius:8px;background:var(--input-bg,#1a1a1a);color:var(--text-color);border:1px solid var(--border-color);">
-                                <option value="100">100</option><option value="200">200</option><option value="300">300</option>
-                                <option value="400">400</option><option value="500">500</option><option value="600" selected>600</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Course Code (optional)</label>
-                        <input type="text" id="sg-code" placeholder="e.g. CSC201" oninput="this.value=this.value.toUpperCase()">
-                    </div>
-                    <div class="form-group">
-                        <label>Course Name (optional)</label>
-                        <input type="text" id="sg-course-name" placeholder="e.g. Data Structures">
-                    </div>
-                    <button class="btn btn-primary" onclick="window.createStudyGroup()" style="width:100%;margin-top:8px;">Create Group</button>
-                </div>
-            </div>`;
-            document.body.appendChild(modal);
-        };
-
-        window.createStudyGroup = async function () {
-            const name = document.getElementById('sg-name')?.value.trim();
-            if (!name) { showToast('Group name is required', 'error'); return; }
-            const uid = localStorage.getItem('kobi_atlas_uid');
-            const username = localStorage.getItem('kobi_atlas_username') || 'Anonymous';
-            try {
-                const groupData = {
-                    name,
-                    description: document.getElementById('sg-desc')?.value.trim() || '',
-                    levelMin: parseInt(document.getElementById('sg-level-min')?.value) || 100,
-                    levelMax: parseInt(document.getElementById('sg-level-max')?.value) || 600,
-                    courseCode: document.getElementById('sg-code')?.value.trim() || '',
-                    courseName: document.getElementById('sg-course-name')?.value.trim() || '',
-                    createdBy: uid,
-                    createdByName: username,
-                    members: [uid],
-                    createdAt: Date.now(),
-                    postCount: 0
-                };
-                const docRef = await addDoc(collection(db, 'studyGroups'), groupData);
-                document.getElementById('create-group-modal')?.remove();
-                showToast('Study group created!', 'success');
-                window.loadStudyGroups();
-                window.openGroupDetail(docRef.id);
-            } catch (e) {
-                console.error('Create group error', e);
-                showToast('Error creating group: ' + e.message, 'error');
-            }
-        };
-
-        window.openGroupDetail = async function (groupId) {
-            currentGroupId = groupId;
-            const uid = localStorage.getItem('kobi_atlas_uid');
-            document.getElementById('groups-list-view').classList.add('hidden');
-            document.getElementById('groups-detail-view').classList.remove('hidden');
-            document.getElementById('group-detail-name').textContent = 'Loading...';
-            document.getElementById('group-posts-list').innerHTML = `<div style="text-align:center;padding:30px;color:#999;">Loading...</div>`;
-            try {
-                const groupDoc = await getDoc(doc(db, 'studyGroups', groupId));
-                if (!groupDoc.exists()) { showToast('Group not found', 'error'); return; }
-                const g = { id: groupDoc.id, ...groupDoc.data() };
-                const isMember = (g.members || []).includes(uid);
-                const levelRange = g.levelMin === g.levelMax ? `${g.levelMin}L` : `${g.levelMin}L–${g.levelMax}L`;
-
-                document.getElementById('group-detail-name').textContent = g.name;
-                document.getElementById('group-detail-info').innerHTML = `
-                    <div><strong>Level:</strong> ${levelRange}</div>
-                    ${g.courseCode ? `<div><strong>Course:</strong> ${g.courseCode}${g.courseName ? ' – ' + g.courseName : ''}</div>` : ''}
-                    ${g.description ? `<div style="margin-top:6px;">${g.description}</div>` : ''}
-                    <div style="margin-top:6px;color:#666;font-size:12px;">${(g.members || []).length} member${(g.members || []).length !== 1 ? 's' : ''} · Created by ${g.createdByName || 'Unknown'}</div>
-                `;
-
-                const joinBtn = document.getElementById('group-join-btn');
-                joinBtn.textContent = isMember ? 'Leave' : 'Join';
-                joinBtn.style.background = isMember ? '#dc3545' : '';
-
-                // Show/hide post input area
-                document.getElementById('group-post-input-area').style.display = isMember ? 'block' : 'none';
-                document.getElementById('group-not-member-msg').style.display = isMember ? 'none' : 'block';
-
-                // Load posts
-                const postsSnap = await getDocs(query(collection(db, 'studyGroups', groupId, 'posts'), orderBy('timestamp', 'desc')));
-                const posts = [];
-                postsSnap.forEach(d => posts.push({ id: d.id, ...d.data() }));
-
-                if (posts.length === 0) {
-                    document.getElementById('group-posts-list').innerHTML = `<div style="text-align:center;padding:30px;color:#999;font-size:13px;">No posts yet. Be the first!</div>`;
-                } else {
-                    document.getElementById('group-posts-list').innerHTML = posts.map(p => {
-                        const isOwn = p.authorId === uid;
-                        const time = p.timestamp ? new Date(p.timestamp).toLocaleString() : '';
-                        return `
-                        <div style="background:var(--card-bg);border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid var(--border-color);">
-                            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-                                <strong style="font-size:14px;">${p.authorName || 'Anonymous'}</strong>
-                                <div style="display:flex;gap:8px;align-items:center;">
-                                    <span style="font-size:11px;color:#666;">${time}</span>
-                                    ${isOwn ? `<button onclick="deleteGroupPost('${groupId}','${p.id}')" style="background:none;border:none;color:#EF4444;cursor:pointer;font-size:18px;padding:0;" title="Delete">×</button>` : ''}
-                                </div>
-                            </div>
-                            ${p.text ? `<div style="font-size:14px;color:var(--text-color);margin-bottom:8px;">${p.text}</div>` : ''}
-                            ${p.fileUrl ? renderGroupFile(p.fileUrl, p.fileName, p.fileType) : ''}
-                        </div>`;
-                    }).join('');
-                }
-            } catch (e) {
-                console.error('Open group error', e);
-                document.getElementById('group-posts-list').innerHTML = `<div style="color:#EF4444;padding:20px;">Error loading group.</div>`;
-            }
-        };
-
-        function renderGroupFile(url, name, type) {
-            if (!url) return '';
-            const isImage = (type || '').startsWith('image/') || /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
-            if (isImage) {
-                return `<img src="${url}" alt="${name || 'image'}" style="max-width:100%;border-radius:8px;cursor:pointer;" onclick="openLightbox('${url}')">`;
-            }
-            return `<a href="${url}" target="_blank" style="display:flex;align-items:center;gap:8px;padding:10px;background:rgba(255,255,255,0.05);border-radius:8px;color:var(--primary-color);text-decoration:none;font-size:13px;">
-                <ion-icon name="document-outline" style="font-size:20px;flex-shrink:0;"></ion-icon>
-                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${name || 'Download file'}</span>
-            </a>`;
-        }
-
-        window.showGroupsList = function () {
-            currentGroupId = null;
-            document.getElementById('groups-list-view').classList.remove('hidden');
-            document.getElementById('groups-detail-view').classList.add('hidden');
-            // Reset post input
-            const fileNameEl = document.getElementById('group-file-name');
-            if (fileNameEl) fileNameEl.textContent = '';
-            window._groupFileData = null;
-            window._groupFileName = null;
-            window._groupFileType = null;
-        };
-
-        window.toggleGroupMembership = async function () {
-            if (!currentGroupId) return;
-            const uid = localStorage.getItem('kobi_atlas_uid');
-            try {
-                const groupRef = doc(db, 'studyGroups', currentGroupId);
-                const groupDoc = await getDoc(groupRef);
-                if (!groupDoc.exists()) return;
-                const members = groupDoc.data().members || [];
-                const isMember = members.includes(uid);
-                if (isMember) {
-                    await updateDoc(groupRef, { members: members.filter(m => m !== uid) });
-                    showToast('Left group', 'success');
-                } else {
-                    await updateDoc(groupRef, { members: [...members, uid] });
-                    showToast('Joined group!', 'success');
-                }
-                window.openGroupDetail(currentGroupId);
-            } catch (e) {
-                console.error('Toggle membership error', e);
-                showToast('Error: ' + e.message, 'error');
-            }
-        };
-
-        window.handleGroupFileSelect = async function (event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const fileNameEl = document.getElementById('group-file-name');
-            if (fileNameEl) fileNameEl.textContent = file.name;
-            window._groupFileName = file.name;
-            window._groupFileType = file.type;
-
-            if (file.type.startsWith('image/')) {
-                // Compress image
-                const compressed = await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = e => {
-                        const img = new Image();
-                        img.onload = () => {
-                            const canvas = document.createElement('canvas');
-                            let w = img.width, h = img.height;
-                            const maxDim = 1200;
-                            if (w > maxDim) { h = h * maxDim / w; w = maxDim; }
-                            if (h > maxDim) { w = w * maxDim / h; h = maxDim; }
-                            canvas.width = w; canvas.height = h;
-                            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                            canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.75);
-                        };
-                        img.onerror = reject;
-                        img.src = e.target.result;
-                    };
-                    reader.onerror = reject;
-                    reader.readAsDataURL(file);
-                });
-                window._groupFileData = compressed;
-            } else {
-                window._groupFileData = file;
-            }
-        };
-
-        window.submitGroupPost = async function () {
-            if (!currentGroupId) return;
-            const uid = localStorage.getItem('kobi_atlas_uid');
-            const username = localStorage.getItem('kobi_atlas_username') || 'Anonymous';
-            const text = document.getElementById('group-post-text')?.value.trim() || '';
-            const fileData = window._groupFileData;
-
-            if (!text && !fileData) { showToast('Write something or attach a file', 'error'); return; }
-
-            const progressEl = document.getElementById('group-upload-progress');
-            if (progressEl) progressEl.style.display = 'block';
-            showLoading(true);
-
-            try {
-                let fileUrl = null;
-                let fileName = window._groupFileName || null;
-                let fileType = window._groupFileType || null;
-
-                if (fileData) {
-                    // Upload via Catbox proxy (same as resources upload)
-                    const formData = new FormData();
-                    formData.append('reqtype', 'fileupload');
-                    formData.append('fileToUpload', fileData, fileName);
-                    const res = await fetch('/api/catbox', { method: 'POST', body: formData });
-                    if (!res.ok) throw new Error('Upload failed: ' + res.statusText);
-                    const result = await res.json();
-                    if (result.error) throw new Error(result.error);
-                    fileUrl = result.url;
-                }
-
-                await addDoc(collection(db, 'studyGroups', currentGroupId, 'posts'), {
-                    text,
-                    fileUrl,
-                    fileName,
-                    fileType,
-                    authorId: uid,
-                    authorName: username,
-                    timestamp: Date.now()
-                });
-
-                // Reset post form
-                if (document.getElementById('group-post-text')) document.getElementById('group-post-text').value = '';
-                if (document.getElementById('group-file-name')) document.getElementById('group-file-name').textContent = '';
-                if (document.getElementById('group-post-file')) document.getElementById('group-post-file').value = '';
-                window._groupFileData = null; window._groupFileName = null; window._groupFileType = null;
-
-                await updateDoc(doc(db, 'studyGroups', currentGroupId), { postCount: (await getDoc(doc(db, 'studyGroups', currentGroupId))).data().postCount + 1 || 1 });
-                showToast('Posted!', 'success');
-                window.openGroupDetail(currentGroupId);
-            } catch (e) {
-                console.error('Post error', e);
-                showToast('Error posting: ' + e.message, 'error');
-            } finally {
-                if (progressEl) progressEl.style.display = 'none';
-                showLoading(false);
-            }
-        };
-
-        window.deleteGroupPost = async function (groupId, postId) {
-            if (!confirm('Delete this post?')) return;
-            try {
-                await deleteDoc(doc(db, 'studyGroups', groupId, 'posts', postId));
-                showToast('Post deleted', 'success');
-                window.openGroupDetail(groupId);
-            } catch (e) {
-                showToast('Error deleting post', 'error');
-            }
-        };
+        // Expose loading functions to window for refresh buttons
+        window.loadDashboard = loadDashboard;
+        window.loadSchedule = loadSchedule;
+        window.loadTasks = loadTasks;
+        window.loadGPAView = loadGPAView;
+        window.loadCommunityFeed = loadCommunityFeed;
+        window.loadConversations = loadConversations;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
@@ -8748,483 +6434,4 @@
                 window.location.href = 'index.html';
             }
         });
-    </script>
-
-    <!-- Resource Upload Modal -->
-    <div id="resource-upload-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Share Resource</h3>
-                <button class="close-btn" onclick="closeModal('resource-upload-modal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="res-category" class="form-control"
-                        style="width: 100%; padding: 10px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 8px; margin-bottom: 12px;">
-                        <option value="Notes">Notes</option>
-                        <option value="Past Questions">Past Questions</option>
-                        <option value="Miscellaneous">Miscellaneous</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Institution</label>
-                    <select id="res-institution" class="form-control" onchange="handleInstitutionChange(this.value)"
-                        style="width: 100%; padding: 10px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 8px; margin-bottom: 12px;">
-                        <!-- Populated dynamically -->
-                    </select>
-                    <input type="text" id="res-institution-custom" placeholder="Enter institution name"
-                        style="width: 100%; padding: 10px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 8px; margin-top: 8px; display: none;">
-                </div>
-                <div class="form-group">
-                    <label>Title</label>
-                    <input type="text" id="res-title" placeholder="e.g. 2023 Past Question">
-                    <div style="font-size: 11px; color: #888; margin-top: 4px;">Tip: Add the course name for easier
-                        search</div>
-                </div>
-                <div class="form-group">
-                    <label>Description (Optional)</label>
-                    <textarea id="res-desc" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Resource Type</label>
-                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <button type="button" class="btn btn-primary" id="res-type-link"
-                            onclick="setResourceType('link')" style="flex: 1;">Link</button>
-                        <button type="button" class="btn btn-secondary" id="res-type-image"
-                            onclick="setResourceType('image')" style="flex: 1;">Image</button>
-                        <button type="button" class="btn btn-secondary" id="res-type-file"
-                            onclick="setResourceType('file')" style="flex: 1;">File</button>
-                    </div>
-                </div>
-
-                <div class="form-group" id="res-link-container">
-                    <label>Link (URL)</label>
-                    <input type="url" id="res-link" placeholder="https://...">
-                </div>
-
-                <div class="form-group hidden" id="res-image-container">
-                    <label>Upload Image</label>
-                    <input type="file" id="res-image-file" accept="image/*" onchange="handleResourceImageSelect(event)">
-                    <img id="res-image-preview"
-                        style="max-width: 100%; margin-top: 10px; display: none; border-radius: 8px;">
-                </div>
-
-                <div class="form-group hidden" id="res-file-container">
-                    <label>Upload File</label>
-                    <input type="file" id="res-file-input" multiple accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
-                        onchange="handleResourceFileSelect(event)">
-                    <div id="res-file-info" style="margin-top: 10px; font-size: 14px; color: #999;"></div>
-                </div>
-
-                <button class="btn btn-primary" onclick="uploadResource()"
-                    style="width: 100%; margin-top: 10px;">Upload</button>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Settings Screen -->
-    <div id="settings-screen" class="screen hidden">
-        <div class="header" style="display: flex; align-items: center;">
-            <button onclick="backToDashboard()"
-                style="background:none;border:none;color:white;font-size:24px;cursor:pointer;">←</button>
-            <h2 style="margin: 0; margin-left:10px;">Settings</h2>
-        </div>
-
-        <div class="content-container" style="padding: 20px; max-width: 800px; margin: 0 auto; padding-bottom: 80px;">
-
-            <!-- Grading System Section -->
-            <div class="card"
-                style="margin-bottom: 24px; background: var(--card-bg); padding: 16px; border-radius: 12px;">
-                <h3 style="margin-bottom: 16px;">Grading System</h3>
-                <div style="margin-bottom: 16px;">
-                    <label>System Type:</label>
-                    <select id="grading-system-select" onchange="toggleCustomGradingUI()"
-                        style="width: 100%; padding: 8px; margin-top: 8px; background: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 8px;">
-                        <option value="babcock">Babcock (5.0, A=80)</option>
-                        <option value="nigerian">Nigerian (5.0, A=70)</option>
-                        <option value="us">US (4.0, A=90)</option>
-                        <option value="custom">Custom</option>
-                    </select>
-                </div>
-
-                <div id="custom-grading-ui" class="hidden">
-                    <h4>Custom Grades</h4>
-                    <p style="font-size: 12px; color: var(--text-secondary);">Define grades logic. Rows should be
-                        ordered by Min Score descending (e.g. 80, then 60...).</p>
-                    <div id="custom-grades-table" style="margin-top: 10px;">
-                        <!-- Rows added dynamically -->
-                    </div>
-                    <button class="btn btn-secondary" onclick="addCustomGradeRow()" style="margin-top: 10px;">+ Add
-                        Grade Row</button>
-                </div>
-            </div>
-
-            <!-- CA System Section -->
-            <div class="card"
-                style="margin-bottom: 24px; background: var(--card-bg); padding: 16px; border-radius: 12px;">
-                <h3 style="margin-bottom: 16px;">CA System</h3>
-                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Configure how Continuous
-                    Assessment is calculated.</p>
-
-                <div style="margin-bottom: 16px;">
-                    <label>System Type:</label>
-                    <select id="ca-system-select" onchange="toggleCustomCAUI()"
-                        style="width: 100%; padding: 8px; margin-top: 8px; background: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 8px;">
-                        <option value="standard">Standard (Mid, Assignment, Quiz, Attendance)</option>
-                        <option value="custom">Custom</option>
-                    </select>
-                </div>
-
-                <div id="custom-ca-ui" class="hidden">
-                    <h4>Custom CA Fields</h4>
-                    <p style="font-size: 12px; color: var(--text-secondary);">Define fields and their max
-                        percentage/score.</p>
-                    <div id="custom-ca-table" style="margin-top: 10px;">
-                        <!-- Rows added dynamically -->
-                    </div>
-                    <button class="btn btn-secondary" onclick="addCustomCARow()" style="margin-top: 10px;">+ Add
-                        Field</button>
-
-                    <div style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 10px;">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span>Total CA:</span>
-                            <span id="custom-ca-total">0%</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between;">
-                            <span>Exam:</span>
-                            <span id="custom-exam-total">100%</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="display: flex; gap: 10px; flex-direction: column;">
-                <button class="btn btn-primary" onclick="saveSettings()" style="width: 100%;">Save Settings</button>
-                <button class="btn btn-danger" onclick="confirmLogout()" style="width: 100%;">Logout</button>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Image Lightbox Modal -->
-    <div id="image-lightbox" class="lightbox" onclick="closeLightbox()">
-        <span class="lightbox-close">&times;</span>
-        <div class="lightbox-controls">
-            <button onclick="event.stopPropagation(); zoomIn();" title="Zoom In">+</button>
-            <button onclick="event.stopPropagation(); zoomOut();" title="Zoom Out">-</button>
-            <button onclick="event.stopPropagation(); resetZoom();" title="Reset Zoom">⟲</button>
-        </div>
-        <img id="lightbox-image" class="lightbox-content" onclick="event.stopPropagation()">
-    </div>
-
-    <style>
-        .lightbox {
-            display: none;
-            position: fixed;
-            z-index: 10000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .lightbox.show {
-            display: flex;
-        }
-
-        .lightbox-content {
-            max-width: 95%;
-            max-height: 95%;
-            object-fit: contain;
-            border-radius: 8px;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
-        }
-
-        .lightbox-close {
-            position: absolute;
-            top: 20px;
-            right: 35px;
-            color: #f1f1f1;
-            font-size: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .lightbox-close:hover {
-            color: #bbb;
-        }
-
-        .lightbox-controls {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            z-index: 10001;
-        }
-
-        .lightbox-controls button {
-            background: rgba(255, 255, 255, 0.9);
-            border: none;
-            color: #333;
-            font-size: 24px;
-            font-weight: bold;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .lightbox-controls button:hover {
-            background: rgba(255, 255, 255, 1);
-            transform: scale(1.1);
-        }
-
-        .lightbox-content {
-            transition: transform 0.3s ease;
-            cursor: move;
-            user-select: none;
-        }
-
-        /* Courses Grid - Responsive */
-        .courses-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 12px;
-            padding: 8px 0;
-        }
-
-        @media (min-width: 768px) {
-            .courses-grid {
-                display: flex;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                gap: 20px;
-                padding-bottom: 16px;
-            }
-
-            .courses-grid>div {
-                min-width: 200px;
-                width: 200px;
-                flex-shrink: 0;
-                aspect-ratio: 1;
-            }
-
-            .courses-grid::-webkit-scrollbar {
-                height: 8px;
-            }
-
-            .courses-grid::-webkit-scrollbar-track {
-                background: rgba(255, 255, 255, 0.05);
-                border-radius: 4px;
-            }
-
-            .courses-grid::-webkit-scrollbar-thumb {
-                background: var(--primary-color);
-                border-radius: 4px;
-            }
-        }
-    </style>
-
-    <script>
-        // Zoom functionality
-        let currentZoom = 1;
-
-        function openLightbox(imageSrc) {
-            currentZoom = 1; // Reset zoom when opening
-            document.getElementById('lightbox-image').src = imageSrc;
-            document.getElementById('image-lightbox').classList.add('show');
-            applyZoom();
-        }
-
-        function closeLightbox() {
-            document.getElementById('image-lightbox').classList.remove('show');
-            currentZoom = 1;
-        }
-
-        function zoomIn() {
-            currentZoom = Math.min(currentZoom + 0.25, 3);
-            applyZoom();
-        }
-
-        function zoomOut() {
-            currentZoom = Math.max(currentZoom - 0.25, 0.5);
-            applyZoom();
-        }
-
-        function resetZoom() {
-            currentZoom = 1;
-            applyZoom();
-        }
-
-        function applyZoom() {
-            const img = document.getElementById('lightbox-image');
-            img.style.transform = `scale(${currentZoom})`;
-        }
-
-        // Mouse wheel zoom
-        document.addEventListener('DOMContentLoaded', function () {
-            const lightboxImage = document.getElementById('lightbox-image');
-            lightboxImage.addEventListener('wheel', function (e) {
-                if (document.getElementById('image-lightbox').classList.contains('show')) {
-                    e.preventDefault();
-                    if (e.deltaY < 0) {
-                        zoomIn();
-                    } else {
-                        zoomOut();
-                    }
-                }
-            });
-        });
-
-        // Close on Escape key
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') {
-                closeLightbox();
-            }
-        });
-    </script>
-    <!-- File Preview Modal -->
-    <div id="file-preview-modal" class="modal" style="z-index: 2000;">
-        <div class="modal-content"
-            style="width: 95%; height: 90%; max-width: 1000px; display: flex; flex-direction: column; padding: 0;">
-            <div
-                style="padding: 12px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--card-bg);">
-                <h3 id="preview-title"
-                    style="margin: 0; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%;">
-                    Preview</h3>
-                <div style="display: flex; gap: 10px;">
-                    <button id="preview-download-btn" class="btn btn-primary"
-                        style="padding: 4px 12px; font-size: 12px;">Download</button>
-                    <button class="close-btn" onclick="closeModal('file-preview-modal')"
-                        style="font-size: 24px; line-height: 1;">&times;</button>
-                </div>
-            </div>
-            <div style="flex: 1; background: #f0f0f0; position: relative;">
-                <div id="preview-loader"
-                    style="position: absolute; top:0; left:0; width:100%; height:100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8f9fa; z-index: 10;">
-                    <div class="spinner"
-                        style="border: 3px solid #ddd; border-top: 3px solid var(--primary-color); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin-bottom: 10px;">
-                    </div>
-                    <span style="color: #666; font-size: 12px;">Loading resource...</span>
-                </div>
-                <iframe id="preview-frame" style="width: 100%; height: 100%; border: none;"></iframe>
-            </div>
-        </div>
-    </div>
-    <!-- Create Folder Modal -->
-    <div id="create-folder-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Create Folder</h3>
-                <button class="close-btn" onclick="closeModal('create-folder-modal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Course Code</label>
-                    <input type="text" id="folder-course-code" placeholder="e.g. CSC201"
-                        oninput="this.value=this.value.replace(/[^a-zA-Z0-9-]/g,'').toUpperCase()">
-                </div>
-                <div class="form-group">
-                    <label>Course Name</label>
-                    <input type="text" id="folder-course-name" placeholder="e.g. Intro to Computer Science">
-                </div>
-                <div class="form-group">
-                    <label>Level / Year</label>
-                    <select id="folder-level"
-                        style="width: 100%; padding: 10px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 8px;">
-                        <option value="100">100 Level</option>
-                        <option value="200">200 Level</option>
-                        <option value="300">300 Level</option>
-                        <option value="400">400 Level</option>
-                        <option value="500">500 Level</option>
-                        <option value="600">600 Level</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <button class="btn btn-primary" onclick="createFolder()" style="width: 100%; margin-top: 10px;">Create
-                    Folder</button>
-            </div>
-        </div>
-    </div>
-    </div>
-    <!-- Edit Folder Modal -->
-    <div id="edit-folder-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Edit Folder</h3>
-                <button class="close-btn" onclick="closeModal('edit-folder-modal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="edit-folder-original-code">
-                <input type="hidden" id="edit-folder-original-level">
-
-                <div class="form-group">
-                    <label>Course Code</label>
-                    <input type="text" id="edit-folder-code" placeholder="e.g. CSC201"
-                        oninput="this.value=this.value.replace(/[^a-zA-Z0-9-]/g,'').toUpperCase()">
-                </div>
-                <div class="form-group">
-                    <label>Course Name</label>
-                    <input type="text" id="edit-folder-name" placeholder="e.g. Intro to Computer Science">
-                </div>
-                <div class="form-group">
-                    <label>Level / Year</label>
-                    <select id="edit-folder-level"
-                        style="width: 100%; padding: 10px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 8px;">
-                        <option value="100">100 Level</option>
-                        <option value="200">200 Level</option>
-                        <option value="300">300 Level</option>
-                        <option value="400">400 Level</option>
-                        <option value="500">500 Level</option>
-                        <option value="600">600 Level</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div style="font-size:12px; color:#ff9800; margin-bottom:10px;">Warning: This will move all
-                    resources in
-                    this folder to the new Code/Level.</div>
-
-                <button class="btn btn-primary" onclick="window.batchUpdateFolder()"
-                    style="width: 100%; margin-top: 10px;">Update Folder</button>
-
-                <button class="btn" onclick="window.deleteCurrentFolder()"
-                    style="width: 100%; margin-top: 16px; background: #dc3545; color: white; border: none;">Delete
-                    Folder</button>
-            </div>
-        </div>
-    </div>
-    <!-- Transfer Modal -->
-    <div id="transfer-modal" class="modal">
-        <div class="modal-content">
-            <h3 style="margin-top: 0; margin-bottom: 20px;">Transfer Resources</h3>
-            <div class="form-group">
-                <label>Select Destination Folder</label>
-                <select id="transfer-dest-select"
-                    style="width: 100%; padding: 12px; border-radius: 8px; background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color);">
-                    <!-- Populated dynamically -->
-                </select>
-            </div>
-            <div style="display: flex; gap: 10px; margin-top: 24px;">
-                <button class="btn" onclick="executeTransfer('copy')"
-                    style="flex: 1; background: #2a2a2a; border: 1px solid #444;">Copy Here</button>
-                <button class="btn btn-primary" onclick="executeTransfer('move')" style="flex: 1;">Move Here</button>
-            </div>
-            <button class="btn" onclick="closeModal('transfer-modal')"
-                style="width: 100%; margin-top: 10px; background: transparent; color: #888;">Cancel</button>
-        </div>
-    </div>
-
-
-</body>
-
-</html>
+    
