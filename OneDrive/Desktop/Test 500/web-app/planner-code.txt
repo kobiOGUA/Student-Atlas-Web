@@ -1,0 +1,628 @@
+// PLANNER/TIMETABLE SCREEN CODE
+// Add this to index.html in the <body> section after dashboard-screen
+
+<!-- Planner Screen -->
+<div id="planner-screen" class="screen hidden">
+    <div class="header">
+        <h2 style="margin: 0;">Planner</h2>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="tab-buttons" style="margin-bottom: 20px;">
+        <button class="tab-btn active" id="schedule-tab-btn" onclick="switchPlannerTab('schedule')">Schedule</button>
+        <button class="tab-btn" id="tasks-tab-btn" onclick="switchPlannerTab('tasks')">Tasks</button>
+    </div>
+    
+    <!-- Schedule Tab -->
+    <div id="schedule-tab">
+        <div id="schedule-content"></div>
+        <button class="fab" onclick="showAddScheduleModal()">+</button>
+    </div>
+    
+    <!-- Tasks Tab -->
+    <div id="tasks-tab" class="hidden">
+        <div id="tasks-content"></div>
+        <button class="fab" onclick="showAddTaskModal()">+</button>
+    </div>
+</div>
+
+<!-- Add Schedule Modal -->
+<div id="add-schedule-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 style="margin: 0;">Add Schedule</h2>
+        </div>
+        
+        <label>Select Course</label>
+        <select id="schedule-course-select">
+            <option value="">Select a course...</option>
+        </select>
+        
+        <label>Day</label>
+        <select id="schedule-day">
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+            <option value="Sunday">Sunday</option>
+        </select>
+        
+        <label>Start Time</label>
+        <input type="time" id="schedule-start-time" value="08:00">
+        
+        <label>End Time</label>
+        <input type="time" id="schedule-end-time" value="09:00">
+        
+        <label>Venue (Optional)</label>
+        <input type="text" id="schedule-venue" placeholder="e.g., LT1, Lab 3">
+        
+        <button class="btn btn-primary" onclick="saveSchedule()">Save Schedule</button>
+        <button class="btn btn-secondary" onclick="closeModal('add-schedule-modal')">Cancel</button>
+    </div>
+</div>
+
+<!-- Add Task Modal -->
+<div id="add-task-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 style="margin: 0;">Add Task</h2>
+        </div>
+        
+        <label>Task Title</label>
+        <input type="text" id="task-title" placeholder="e.g., Complete Assignment 1">
+        
+        <label>Course (Optional)</label>
+        <select id="task-course-select">
+            <option value="">None</option>
+        </select>
+        
+        <label>Type</label>
+        <select id="task-type">
+            <option value="assignment">Assignment</option>
+            <option value="exam">Exam</option>
+            <option value="study">Study</option>
+            <option value="other">Other</option>
+        </select>
+        
+        <label>Due Date</label>
+        <input type="date" id="task-due-date">
+        
+        <label>Description (Optional)</label>
+        <textarea id="task-description" placeholder="Add details..." rows="3"></textarea>
+        
+        <button class="btn btn-primary" onclick="addTask()">Add Task</button>
+        <button class="btn btn-secondary" onclick="closeModal('add-task-modal')">Cancel</button>
+    </div>
+</div>
+
+<!-- Add this CSS to the <style> section -->
+<style>
+.day-section {
+    margin-bottom: 24px;
+}
+
+.day-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #667eea;
+    margin-bottom: 12px;
+}
+
+.schedule-card {
+    background: #2a2a2a;
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 12px;
+}
+
+.time-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 60px;
+}
+
+.time-text {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.time-line {
+    width: 2px;
+    flex: 1;
+    background: #444;
+    margin: 4px 0;
+}
+
+.details-container {
+    flex: 1;
+}
+
+.course-code {
+    font-size: 12px;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.course-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.venue-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 6px;
+}
+
+.venue-text {
+    font-size: 12px;
+    color: #999;
+}
+
+.task-card {
+    background: #2a2a2a;
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.checkbox {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.task-content {
+    flex: 1;
+}
+
+.task-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.task-meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    font-size: 12px;
+}
+
+.task-course {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.task-date {
+    color: #999;
+}
+
+.delete-task-button {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.empty-container {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-text {
+    color: #999;
+    font-size: 14px;
+    margin-top: 16px;
+}
+</style>
+
+<!-- Add this JavaScript to the <script type="module"> section -->
+<script>
+// Planner/Timetable Functions
+let currentPlannerTab = 'schedule';
+let allTasks = [];
+
+const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+window.switchPlannerTab = function(tab) {
+    currentPlannerTab = tab;
+    document.getElementById('schedule-tab').classList.toggle('hidden', tab !== 'schedule');
+    document.getElementById('tasks-tab').classList.toggle('hidden', tab !== 'tasks');
+    document.getElementById('schedule-tab-btn').classList.toggle('active', tab === 'schedule');
+    document.getElementById('tasks-tab-btn').classList.toggle('active', tab === 'tasks');
+    
+    if (tab === 'schedule') {
+        loadSchedule();
+    } else {
+        loadTasks();
+    }
+};
+
+async function loadSchedule() {
+    const uid = localStorage.getItem('kobi_atlas_uid');
+    showLoading(true);
+    
+    try {
+        const semRef = collection(db, 'users', uid, 'semesters');
+        const snapshot = await getDocs(semRef);
+        
+        const semesters = [];
+        snapshot.forEach(doc => {
+            semesters.push({ id: doc.id, ...doc.data() });
+        });
+        
+        const currentSemester = semesters.find(s => s.type === 'current');
+        const courses = currentSemester?.courses || [];
+        
+        const scheduleContent = document.getElementById('schedule-content');
+        
+        if (courses.length === 0) {
+            scheduleContent.innerHTML = `
+                <div class="empty-container">
+                    <ion-icon name="calendar-outline" size="large" style="font-size: 64px; color: #666;"></ion-icon>
+                    <p class="empty-text">No current semester found or no courses added.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        const coursesWithSchedule = courses.filter(c => c.schedule);
+        
+        if (coursesWithSchedule.length === 0) {
+            scheduleContent.innerHTML = `
+                <div class="empty-container">
+                    <ion-icon name="calendar-outline" size="large" style="font-size: 64px; color: #666;"></ion-icon>
+                    <p class="empty-text">No schedule details added yet.<br>Tap + to add class times.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Group by day
+        let html = '';
+        DAYS.forEach(day => {
+            const dayCourses = courses
+                .filter(c => c.schedule?.day === day)
+                .sort((a, b) => (a.schedule?.startTime || '').localeCompare(b.schedule?.startTime || ''));
+            
+            if (dayCourses.length > 0) {
+                html += `
+                    <div class="day-section">
+                        <div class="day-title">${day}</div>
+                        ${dayCourses.map(course => `
+                            <div class="schedule-card">
+                                <div class="time-container">
+                                    <div class="time-text">${course.schedule.startTime}</div>
+                                    <div class="time-line"></div>
+                                    <div class="time-text" style="color: #999;">${course.schedule.endTime}</div>
+                                </div>
+                                <div class="details-container">
+                                    <div class="course-code">${course.code}</div>
+                                    <div class="course-name">${course.name}</div>
+                                    ${course.schedule.venue ? `
+                                        <div class="venue-container">
+                                            <ion-icon name="location-outline" style="font-size: 14px; color: #999;"></ion-icon>
+                                            <span class="venue-text">${course.schedule.venue}</span>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        });
+        
+        scheduleContent.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Load schedule error:', error);
+        showToast('Error loading schedule', 'error');
+    }
+    
+    showLoading(false);
+}
+
+async function loadTasks() {
+    const uid = localStorage.getItem('kobi_atlas_uid');
+    showLoading(true);
+    
+    try {
+        const tasksRef = collection(db, 'users', uid, 'tasks');
+        const snapshot = await getDocs(tasksRef);
+        
+        allTasks = [];
+        snapshot.forEach(doc => {
+            allTasks.push({ id: doc.id, ...doc.data() });
+        });
+        
+        // Sort by due date
+        allTasks.sort((a, b) => a.dueDate - b.dueDate);
+        
+        const tasksContent = document.getElementById('tasks-content');
+        
+        if (allTasks.length === 0) {
+            tasksContent.innerHTML = `
+                <div class="empty-container">
+                    <ion-icon name="checkbox-outline" size="large" style="font-size: 64px; color: #666;"></ion-icon>
+                    <p class="empty-text">No tasks yet. Tap + to add one!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        const html = allTasks.map(task => `
+            <div class="task-card">
+                <button class="checkbox" onclick="toggleTask('${task.id}', ${task.isCompleted})">
+                    <ion-icon 
+                        name="${task.isCompleted ? 'checkmark-circle' : 'ellipse-outline'}" 
+                        style="font-size: 24px; color: ${task.isCompleted ? '#667eea' : '#999'};">
+                    </ion-icon>
+                </button>
+                <div class="task-content">
+                    <div class="task-title" style="${task.isCompleted ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${task.title}</div>
+                    <div class="task-meta">
+                        ${task.courseName ? `<span class="task-course">${task.courseName} • </span>` : ''}
+                        <span class="task-date">Due: ${new Date(task.dueDate).toLocaleDateString()}</span>
+                    </div>
+                </div>
+                <button class="delete-task-button" onclick="deleteTaskItem('${task.id}')">
+                    <ion-icon name="trash-outline" style="font-size: 20px; color: #dc3545;"></ion-icon>
+                </button>
+            </div>
+        `).join('');
+        
+        tasksContent.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Load tasks error:', error);
+        showToast('Error loading tasks', 'error');
+    }
+    
+    showLoading(false);
+}
+
+window.showAddScheduleModal = async function() {
+    const uid = localStorage.getItem('kobi_atlas_uid');
+    
+    try {
+        const semRef = collection(db, 'users', uid, 'semesters');
+        const snapshot = await getDocs(semRef);
+        
+        const semesters = [];
+        snapshot.forEach(doc => {
+            semesters.push({ id: doc.id, ...doc.data() });
+        });
+        
+        const currentSemester = semesters.find(s => s.type === 'current');
+        const courses = currentSemester?.courses || [];
+        
+        if (courses.length === 0) {
+            showToast('No courses found. Add courses first!', 'error');
+            return;
+        }
+        
+        const select = document.getElementById('schedule-course-select');
+        select.innerHTML = '<option value="">Select a course...</option>' + 
+            courses.map(c => `<option value="${c.id}">${c.code} - ${c.name}</option>`).join('');
+        
+        document.getElementById('add-schedule-modal').classList.add('show');
+    } catch (error) {
+        console.error('Error:', error);
+        showToast('Error loading courses', 'error');
+    }
+};
+
+window.saveSchedule = async function() {
+    const courseId = document.getElementById('schedule-course-select').value;
+    const day = document.getElementById('schedule-day').value;
+    const startTime = document.getElementById('schedule-start-time').value;
+    const endTime = document.getElementById('schedule-end-time').value;
+    const venue = document.getElementById('schedule-venue').value;
+    
+    if (!courseId) {
+        showToast('Please select a course', 'error');
+        return;
+    }
+    
+    const uid = localStorage.getItem('kobi_atlas_uid');
+    showLoading(true);
+    
+    try {
+        const semRef = collection(db, 'users', uid, 'semesters');
+        const snapshot = await getDocs(semRef);
+        
+        let currentSemester = null;
+        snapshot.forEach(doc => {
+            const data = { id: doc.id, ...doc.data() };
+            if (data.type === 'current') {
+                currentSemester = data;
+            }
+        });
+        
+        if (!currentSemester) {
+            showToast('No current semester found', 'error');
+            showLoading(false);
+            return;
+        }
+        
+        const courseIndex = currentSemester.courses.findIndex(c => c.id === courseId);
+        if (courseIndex === -1) {
+            showToast('Course not found', 'error');
+            showLoading(false);
+            return;
+        }
+        
+        currentSemester.courses[courseIndex].schedule = {
+            day,
+            startTime,
+            endTime,
+            venue: venue || undefined
+        };
+        
+        await updateDoc(doc(db, 'users', uid, 'semesters', currentSemester.id), {
+            courses: currentSemester.courses
+        });
+        
+        showToast('Schedule added!', 'success');
+        closeModal('add-schedule-modal');
+        loadSchedule();
+        
+    } catch (error) {
+        console.error('Save schedule error:', error);
+        showToast('Error saving schedule', 'error');
+    }
+    
+    showLoading(false);
+};
+
+window.showAddTaskModal = async function() {
+    const uid = localStorage.getItem('kobi_atlas_uid');
+    
+    try {
+        const semRef = collection(db, 'users', uid, 'semesters');
+        const snapshot = await getDocs(semRef);
+        
+        const semesters = [];
+        snapshot.forEach(doc => {
+            semesters.push({ id: doc.id, ...doc.data() });
+        });
+        
+        const currentSemester = semesters.find(s => s.type === 'current');
+        const courses = currentSemester?.courses || [];
+        
+        const select = document.getElementById('task-course-select');
+        select.innerHTML = '<option value="">None</option>' + 
+            courses.map(c => `<option value="${c.id}">${c.code} - ${c.name}</option>`).join('');
+        
+        // Set default due date to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('task-due-date').value = tomorrow.toISOString().split('T')[0];
+        
+        document.getElementById('add-task-modal').classList.add('show');
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
+
+window.addTask = async function() {
+    const title = document.getElementById('task-title').value.trim();
+    const courseId = document.getElementById('task-course-select').value;
+    const type = document.getElementById('task-type').value;
+    const dueDate = document.getElementById('task-due-date').value;
+    const description = document.getElementById('task-description').value.trim();
+    
+    if (!title || !dueDate) {
+        showToast('Please enter title and due date', 'error');
+        return;
+    }
+    
+    const uid = localStorage.getItem('kobi_atlas_uid');
+    showLoading(true);
+    
+    try {
+        // Get course name if selected
+        let courseName = undefined;
+        if (courseId) {
+            const semRef = collection(db, 'users', uid, 'semesters');
+            const snapshot = await getDocs(semRef);
+            
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                if (data.type === 'current') {
+                    const course = data.courses?.find(c => c.id === courseId);
+                    if (course) {
+                        courseName = course.name;
+                    }
+                }
+            });
+        }
+        
+        const taskRef = doc(collection(db, 'users', uid, 'tasks'));
+        await setDoc(taskRef, {
+            id: taskRef.id,
+            userId: uid,
+            title,
+            courseId: courseId || undefined,
+            courseName,
+            type,
+            dueDate: new Date(dueDate).getTime(),
+            description: description || undefined,
+            isCompleted: false,
+            createdAt: Date.now()
+        });
+        
+        showToast('Task added!', 'success');
+        closeModal('add-task-modal');
+        document.getElementById('task-title').value = '';
+        document.getElementById('task-description').value = '';
+        loadTasks();
+        
+    } catch (error) {
+        console.error('Add task error:', error);
+        showToast('Error adding task', 'error');
+    }
+    
+    showLoading(false);
+};
+
+window.toggleTask = async function(taskId, currentStatus) {
+    const uid = localStorage.getItem('kobi_atlas_uid');
+    
+    try {
+        await updateDoc(doc(db, 'users', uid, 'tasks', taskId), {
+            isCompleted: !currentStatus
+        });
+        
+        loadTasks();
+    } catch (error) {
+        console.error('Toggle task error:', error);
+        showToast('Error updating task', 'error');
+    }
+};
+
+window.deleteTaskItem = async function(taskId) {
+    if (!confirm('Delete this task?')) return;
+    
+    const uid = localStorage.getItem('kobi_atlas_uid');
+    showLoading(true);
+    
+    try {
+        await deleteDoc(doc(db, 'users', uid, 'tasks', taskId));
+        showToast('Task deleted', 'success');
+        loadTasks();
+    } catch (error) {
+        console.error('Delete task error:', error);
+        showToast('Error deleting task', 'error');
+    }
+    
+    showLoading(false);
+};
+
+// Update showScreen function to handle planner
+const originalShowScreen = window.showScreen;
+window.showScreen = function(screenName) {
+    if (screenName === 'planner') {
+        ['dashboard-screen', 'semester-detail-screen', 'course-detail-screen', 'planner-screen'].forEach(id => {
+            document.getElementById(id).classList.add('hidden');
+        });
+        document.getElementById('planner-screen').classList.remove('hidden');
+        loadSchedule();
+    } else {
+        originalShowScreen(screenName);
+    }
+};
+</script>

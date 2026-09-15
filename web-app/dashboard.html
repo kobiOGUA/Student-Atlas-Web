@@ -1112,7 +1112,7 @@
                 </div>
                 <p style="font-size:13px; color:#6B7280; margin-bottom:16px; line-height:1.5;">Toggle courses ON to include them in the simulation. Adjust anticipated grades to see their impact on your CGPA.</p>
                 
-                <div id="sim-courses-container" style="display:flex; flex-direction:column; gap:12px; padding-bottom:100px;">
+                <div id="sim-courses-container" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; padding-bottom:80px;">
                     <!-- Courses loaded here -->
                 </div>
             </div>
@@ -5750,8 +5750,6 @@
                     c.units = savedSim[key].units || c.units;
                 }
 
-                const gradeOptions = availGrades.map(g =>
-                    `<option value="${g}" ${c.grade === g ? 'selected' : ''}>${g}</option>`).join('');
                 const gpColor = (() => {
                     const pt = gradeToPoint(c.grade);
                     if (pt >= 4.5) return '#10B981';
@@ -5760,70 +5758,40 @@
                     return '#EF4444';
                 })();
 
+                const gradeOptions = availGrades.map(g =>
+                    `<option value="${g}" ${c.grade === g ? 'selected' : ''}>${g}</option>`).join('');
+
                 return `
                 <div style="
                     background: var(--card-bg,#1e1e1e);
                     border-radius: 14px;
-                    padding: 14px 16px;
-                    border: 1px solid ${c.released ? '#333' : '#1a1a1a'};
+                    padding: 12px 10px;
+                    border: 1.5px solid ${c.released ? gpColor + '99' : '#333'};
                     display: flex;
+                    flex-direction: column;
                     align-items: center;
-                    gap: 14px;
-                    opacity: ${c.released ? '1' : '0.45'};
+                    gap: 8px;
+                    opacity: ${c.released ? '1' : '0.5'};
                     transition: all 0.2s;
-                    margin-bottom: 10px;
+                    min-width: 0;
+                    box-shadow: ${c.released ? '0 2px 10px ' + gpColor + '33' : 'none'};
                 ">
-                    <!-- Toggle -->
-                    <label class="switch" style="position:relative;display:inline-block;width:40px;height:22px;flex-shrink:0;">
+                    <label style="position:relative;display:inline-block;width:36px;height:20px;flex-shrink:0;cursor:pointer;">
                         <input type="checkbox" ${c.released ? 'checked' : ''}
                             onchange="window.updateTrueSim(${i}, 'released', this.checked)"
-                            style="opacity:0;width:0;height:0;">
-                        <span class="slider round" style="
-                            position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;
-                            background:${c.released ? 'var(--primary-color,#667eea)' : '#444'};
-                            transition:.3s;border-radius:34px;
-                        "></span>
+                            style="opacity:0;width:0;height:0;position:absolute;">
+                        <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:${c.released ? gpColor : '#444'};transition:.3s;border-radius:34px;"></span>
+                        <span style="position:absolute;height:16px;width:16px;left:${c.released ? '18px' : '2px'};bottom:2px;background:white;transition:.3s;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></span>
                     </label>
-
-                    <!-- Course info -->
-                    <div style="flex:1;min-width:0;">
-                        <div style="font-weight:700;font-size:14px;color:${c.released ? 'white' : '#666'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.name}</div>
-                        <div style="font-size:11px;color:#666;margin-top:2px;">${c.units} credit${c.units !== 1 ? 's' : ''}</div>
+                    <div style="font-weight:700;font-size:11px;color:${c.released ? 'var(--text-color,white)' : '#666'};text-align:center;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word;width:100%;min-height:26px;">
+                        ${c.name}
                     </div>
-
-                    <!-- Units input -->
-                    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-                        <div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:0.5px;">Credits</div>
-                        <input type="number" value="${c.units}" min="1" max="12" step="1"
-                            onchange="window.updateTrueSim(${i}, 'units', this.value)"
-                            style="width:46px;padding:6px 4px;border-radius:8px;border:1px solid #333;background:#111;color:${c.released ? 'white' : '#555'};font-size:13px;font-weight:700;text-align:center;outline:none;"
-                            ${c.released ? '' : 'disabled'}>
-                    </div>
-
-                    <!-- Grade badge + select -->
-                    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-                        <div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:0.5px;">Grade</div>
-                        <div style="position:relative;">
-                            <select onchange="window.updateTrueSim(${i}, 'grade', this.value)"
-                                style="
-                                    appearance:none;-webkit-appearance:none;
-                                    padding:6px 24px 6px 10px;
-                                    border-radius:8px;
-                                    border:1px solid ${gpColor};
-                                    background:#111;
-                                    color:${gpColor};
-                                    font-size:14px;
-                                    font-weight:800;
-                                    outline:none;
-                                    cursor:pointer;
-                                    min-width:54px;
-                                "
-                                ${c.released ? '' : 'disabled'}>
-                                ${gradeOptions}
-                            </select>
-                            <ion-icon name="chevron-down" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:12px;color:${gpColor};pointer-events:none;"></ion-icon>
-                        </div>
-                    </div>
+                    <div style="font-size:10px;color:#aaa;background:rgba(255,255,255,0.06);border:1px solid #333;border-radius:6px;padding:2px 8px;font-weight:600;">${c.units}u</div>
+                    <select onchange="window.updateTrueSim(${i}, 'grade', this.value)"
+                        style="width:100%;padding:5px 4px;border-radius:8px;border:1.5px solid ${gpColor};background:rgba(0,0,0,0.5);color:${gpColor};font-size:14px;font-weight:800;outline:none;cursor:pointer;text-align:center;"
+                        ${c.released ? '' : 'disabled'}>
+                        ${gradeOptions}
+                    </select>
                 </div>`;
             }).join('');
 

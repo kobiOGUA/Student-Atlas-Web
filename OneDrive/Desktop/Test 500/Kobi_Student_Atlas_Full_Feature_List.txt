@@ -1,0 +1,223 @@
+Kobi's Student Atlas - Complete Feature List
+==========================================
+
+VERSION HISTORY & FEATURES
+=========================
+
+Initial Version (Commit 4f94a47 - 2025-11-21 09:51:44)
+---------------------------------------------------
+- Basic app structure with React Native
+- Firebase integration for authentication and data storage
+- Core navigation with bottom tabs
+- Basic GPA calculation functionality
+- Semester and course management
+- Simple login/signup flow
+
+Feature Enhancements (Commit bf8dc79 - 2025-11-21 10:45:32)
+---------------------------------------------------------
+- Added tab icons for better UI
+- Implemented persistent login functionality
+- Added grade selection for past semesters
+- Integrated motivational quotes on dashboard
+- Removed Babcock University from login (customized for general use)
+
+UI Improvements (Commit e3b9be9 - 2025-11-21 10:17:55)
+-----------------------------------------------------
+- Fixed tab icons display
+- Improved persistent login mechanism
+- Addressed past/current semester differences
+- Fixed CA score limits
+- Enhanced delete functionality
+- Improved distinct login/signup screens
+
+Auth System Enhancements (Commit b772892 - 2025-11-21 10:34:15)
+-------------------------------------------------------------
+- Improved auth persistence with AsyncStorage tracking
+
+Firebase Integration (Commit 057b4e2 - 2025-11-21 10:36:38)
+----------------------------------------------------------
+- Added react-native-get-random-values polyfill for proper Firebase persistence
+
+Offline Support (Commit 378c2ca - 2025-11-21 10:39:12)
+-----------------------------------------------------
+- Enabled Firestore offline persistence for full offline support
+
+UI Customization (Commit bda9db7 - 2025-11-21 10:40:48)
+------------------------------------------------------
+- Updated app icon with custom design
+
+Welcome & Data Refresh (Commit 73f9b79 - 2025-11-21 10:43:10)
+------------------------------------------------------------
+- Updated welcome message
+- Added real-time data refresh on screen focus
+
+Community Features (Commit 427e332 - 2025-11-21 10:58:19)
+--------------------------------------------------------
+- Added Student Atlas Pro community features:
+  * Social profiles
+  * Community posts
+  * Likes functionality
+  * Replies to posts
+  * Friend system
+  * Chat foundation
+
+Enhanced Authentication (Commit 78bb912 - 2025-11-21 11:16:51)
+------------------------------------------------------------
+- Fixed GPA calculations with correct formulas
+- Implemented persistent login with AsyncStorage
+- Updated login UI
+- Changed app name to "Kobi's Atlas"
+
+Critical Issue Fixes (Commit 7a3075b - 2025-11-21 11:45:53)
+---------------------------------------------------------
+- Fixed GPA calculations with correct formulas
+- Improved persistent login
+- Enhanced community feed functionality
+- Improved profile management
+- Fixed proper course handling for past/current semesters
+
+Community Improvements (Commit b004787 - 2025-11-21 12:23:07)
+------------------------------------------------------------
+- Fixed community posts functionality
+- Implemented MMKV persistent login
+- Improved timestamp formatting
+
+Exam & Course Features (Commit 23b3e22 - 2025-11-21 12:45:20)
+-----------------------------------------------------------
+- Fixed exam scores to be out of 60
+- Added course editing functionality for current semesters
+
+Storage Fixes (Commit 118fb73 - 2025-11-21 14:00:53)
+---------------------------------------------------
+- Fixed MMKV import for v4
+- Corrected exam score display
+- Fixed storage delete methods
+
+Post Creation & Login Fixes (Commit a4207ed - 2025-11-21 14:46:55)
+----------------------------------------------------------------
+- Fixed post creation error by properly passing all parameters
+- Fixed persistent login by setting temporary user object
+- Improved error handling
+
+GPA Calculation Improvements (Commit 546ede9 - 2025-11-21 15:07:56)
+------------------------------------------------------------------
+- Fixed GPA calculation to use target grades for current semesters
+- Added debugging for persistent login issues
+
+Final Feature Set (Commit 1301c9e - 2025-11-21 15:42:19)
+-------------------------------------------------------
+- Display grades in semester details
+- Fixed community post creation
+- Fixed persistent login using AsyncStorage
+- Updated exam target logic
+- Improved navigation
+
+COMPREHENSIVE FEATURE LIST
+=========================
+
+AUTHENTICATION SYSTEM
+--------------------
+- Email and PIN-based login system (4-digit PIN)
+- Persistent login using AsyncStorage
+- Registration flow with email verification
+- PIN entry via interactive numpad
+- Secure PIN storage with hashing
+- Automatic login persistence across sessions
+- Logout functionality
+
+USER PROFILE MANAGEMENT
+----------------------
+- Customizable user profiles
+- Profile picture upload and display
+- Display name and username settings
+- Bio/description field
+- Last active timestamps
+- Profile editing capabilities
+
+ACADEMIC TRACKING
+----------------
+- Semester management (current and past semesters)
+- Course creation and management
+- Grade tracking and input
+- Exam score tracking (out of 60)
+- CA (Continuous Assessment) score tracking
+- Target grade setting for courses
+- GPA calculation with correct formulas
+- Motivational quotes on dashboard
+- Real-time data refresh on screen focus
+
+COMMUNITY FEATURES
+-----------------
+- Social profiles with profile pictures
+- Community feed for posting updates
+- Post creation with text content
+- Like functionality for posts
+- Reply system for posts
+- Friend system for connecting with other users
+- Real-time messaging/chat foundation
+- Timestamps for all posts and replies
+- Last active status for users
+
+DATA MANAGEMENT
+---------------
+- Firebase integration for real-time data sync
+- Firestore offline persistence support
+- AsyncStorage for local data caching
+- Automatic data synchronization
+- Secure data storage
+- Data validation and error handling
+
+UI/UX FEATURES
+--------------
+- Bottom tab navigation
+- Custom app icons
+- Dark/light theme support
+- Responsive design for different screen sizes
+- Interactive numpad for PIN entry
+- Clean, minimal UI design
+- Welcome messages
+- Real-time updates
+- Smooth navigation between screens
+
+TECHNICAL FEATURES
+-----------------
+- React Native framework
+- Expo SDK 54
+- TypeScript support
+- AsyncStorage for local storage
+- Firebase Authentication
+- Firestore database
+- React Navigation
+- Gesture handling
+- Reanimated animations
+- Safe area context support
+- Screen management
+- SHA256 encryption
+- SVG graphics support
+
+BUILD & DEPLOYMENT
+-----------------
+- Android APK generation
+- Expo Application Services (EAS) integration
+- Cloud build support
+- Version control with Git
+- Package management with npm
+- Environment configuration
+
+VERSION CONTROL & MAINTENANCE
+----------------------------
+- Firebase-based version checking system
+- Remote version control without app updates
+- Maintenance mode support
+- Required version enforcement
+- User-friendly update messages
+
+ADVANCED FEATURES
+----------------
+- Real-time data synchronization
+- Offline support with data persistence
+- Automatic data refresh
+- Error handling with user-friendly messages
+- Performance optimizations
+- Security enhancements
+- Cross-platform compatibility
