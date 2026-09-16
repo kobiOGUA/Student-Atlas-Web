@@ -805,7 +805,7 @@
                 // Mark as new signup for welcome screen
                 sessionStorage.setItem('is_new_signup', 'true');
 
-                window.location.href = 'dashboard.html';
+                window.location.href = `dashboard.html?v=${Date.now()}`;
             } catch (error) {
                 console.error('Registration error:', error);
                 showLoading(false);
@@ -837,7 +837,7 @@
 
             if (uid) {
                 // Already logged in, redirect to dashboard
-                window.location.href = 'dashboard.html';
+                window.location.href = `dashboard.html?v=${Date.now()}`;
             } else if (storedEmail) {
                 // Has email stored, auto-show PIN screen
                 currentEmail = storedEmail;
