@@ -923,252 +923,242 @@
         <!-- Catch Up Screen (replaces Planner) -->
         <div id="planner-screen" class="screen hidden">
             <style>
-                .catchup-header-bar {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: 8px;
-                }
-                .catchup-subtitle {
-                    font-size: 13px;
-                    color: #888;
-                    margin-bottom: 22px;
-                    margin-top: -4px;
-                }
+                /* ── Catch Up — unified with core app design language ── */
                 .catchup-course-card {
-                    background: var(--card-bg, #1a1a2e);
+                    background: var(--card-bg);
+                    border: 1px solid var(--border-color);
                     border-radius: 14px;
-                    padding: 16px 16px 14px;
+                    padding: 16px 18px;
                     margin-bottom: 12px;
                     cursor: pointer;
-                    border: 1px solid var(--border-color, #2a2a3a);
-                    border-left: 4px solid #333;
-                    transition: transform 0.15s, box-shadow 0.15s;
-                    position: relative;
-                    overflow: hidden;
+                    transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
                 }
-                .catchup-course-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3); transform: translateY(-1px); }
-                .catchup-course-card:active { transform: scale(0.99); }
-                .catchup-course-card.status-green  { border-left-color: #22c55e; }
-                .catchup-course-card.status-orange { border-left-color: #f97316; }
-                .catchup-course-card.status-red    { border-left-color: #ef4444; }
-                .catchup-card-glow {
-                    position: absolute;
-                    top: 0; right: 0;
-                    width: 90px; height: 90px;
-                    border-radius: 50%;
-                    filter: blur(28px);
-                    opacity: 0.13;
-                    pointer-events: none;
+                .catchup-course-card:hover {
+                    background: var(--border-color);
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
                 }
-                .catchup-course-card.status-green  .catchup-card-glow { background: #22c55e; }
-                .catchup-course-card.status-orange .catchup-card-glow { background: #f97316; }
-                .catchup-course-card.status-red    .catchup-card-glow { background: #ef4444; }
-                .catchup-card-top {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: flex-start;
-                    margin-bottom: 10px;
+                .catchup-course-card:active {
+                    transform: scale(0.99);
                 }
                 .catchup-course-name {
                     font-size: 15px;
                     font-weight: 700;
-                    color: #f0f0f0;
-                    flex: 1;
-                    line-height: 1.3;
+                    color: var(--text-color);
+                    line-height: 1.35;
                 }
                 .catchup-course-code {
-                    font-size: 11px;
-                    color: #888;
+                    font-size: 12px;
+                    color: var(--text-secondary);
                     margin-top: 3px;
+                    font-weight: 500;
                 }
                 .catchup-status-badge {
-                    display: flex;
+                    display: inline-flex;
                     align-items: center;
-                    gap: 4px;
+                    gap: 5px;
                     padding: 4px 10px;
                     border-radius: 20px;
                     font-size: 11px;
                     font-weight: 700;
                     white-space: nowrap;
-                    margin-left: 10px;
                     flex-shrink: 0;
                     letter-spacing: 0.3px;
                     text-transform: uppercase;
                 }
-                .catchup-status-badge.green  { background: rgba(34,197,94,0.12);  color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
-                .catchup-status-badge.orange { background: rgba(249,115,22,0.12); color: #f97316; border: 1px solid rgba(249,115,22,0.25); }
-                .catchup-status-badge.red    { background: rgba(239,68,68,0.12);  color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
-                .catchup-card-footer {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    font-size: 12px;
-                    color: #666;
-                }
-                .catchup-topic-pills {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 6px;
-                    margin-top: 10px;
-                }
-                .catchup-topic-pill {
-                    font-size: 11px;
-                    padding: 3px 9px;
-                    border-radius: 20px;
-                    background: #2a2a3a;
-                    color: #aaa;
-                    max-width: 140px;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                }
-                .catchup-topic-pill.done      { background: rgba(34,197,94,0.15);  color: #22c55e; text-decoration: line-through; opacity: 0.7; }
-                .catchup-topic-pill.revision  { background: rgba(249,115,22,0.15); color: #f97316; }
-                /* Modal */
+
+                /* Modal styling - matches native app modals */
                 #catchup-modal {
                     display: none;
                     position: fixed;
                     inset: 0;
-                    z-index: 1100;
-                    background: rgba(0,0,0,0.65);
-                    backdrop-filter: blur(6px);
-                    -webkit-backdrop-filter: blur(6px);
-                    align-items: flex-end;
+                    z-index: 1200;
+                    background: rgba(0, 0, 0, 0.65);
+                    backdrop-filter: blur(5px);
+                    -webkit-backdrop-filter: blur(5px);
+                    align-items: center;
                     justify-content: center;
-                    padding-bottom: 65px; /* clear the bottom nav */
+                    padding: 20px;
                 }
-                #catchup-modal.show { display: flex; }
-                .catchup-modal-sheet {
-                    background: var(--card-bg, #1e1e2e);
-                    border: 1px solid var(--border-color, #2a2a3a);
-                    border-bottom: none;
-                    border-radius: 20px 20px 0 0;
+                #catchup-modal.show {
+                    display: flex;
+                }
+                .catchup-modal-card {
+                    background: var(--modal-bg);
+                    border: 1px solid var(--border-color);
+                    border-radius: 18px;
                     width: 100%;
-                    max-width: 640px;
-                    max-height: 80vh;
+                    max-width: 480px;
+                    max-height: 84vh;
                     display: flex;
                     flex-direction: column;
-                    animation: slideUpSheet 0.28s cubic-bezier(0.34,1.4,0.64,1);
                     overflow: hidden;
-                    box-shadow: 0 -8px 40px rgba(0,0,0,0.5);
+                    box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+                    animation: cuPopIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
                 }
-                @keyframes slideUpSheet {
-                    from { transform: translateY(100%); opacity: 0; }
-                    to   { transform: translateY(0);    opacity: 1; }
+                @keyframes cuPopIn {
+                    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+                    to { opacity: 1; transform: scale(1) translateY(0); }
                 }
-                .catchup-sheet-handle {
-                    width: 40px;
-                    height: 4px;
-                    background: #444;
-                    border-radius: 2px;
-                    margin: 12px auto 0;
-                    flex-shrink: 0;
-                }
-                .catchup-sheet-header {
+                .catchup-modal-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
                     padding: 18px 20px 14px;
-                    border-bottom: 1px solid #222;
-                    flex-shrink: 0;
+                    border-bottom: 1px solid var(--border-color);
+                    background: var(--card-bg);
                 }
-                .catchup-sheet-title {
-                    font-size: 18px;
+                .catchup-modal-title {
+                    margin: 0;
+                    font-size: 17px;
                     font-weight: 800;
-                    color: #f0f0f0;
+                    color: var(--text-color);
+                    line-height: 1.3;
                 }
-                .catchup-sheet-code {
+                .catchup-modal-code {
                     font-size: 12px;
-                    color: #666;
-                    margin-top: 3px;
+                    color: var(--text-secondary);
+                    margin-top: 2px;
                 }
-                .catchup-sheet-status-row {
+                .catchup-close-btn {
+                    background: rgba(255,255,255,0.08);
+                    border: 1px solid var(--border-color);
+                    color: var(--text-color);
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
                     display: flex;
                     align-items: center;
-                    gap: 10px;
-                    margin-top: 10px;
+                    justify-content: center;
+                    cursor: pointer;
+                    font-size: 18px;
+                    transition: all 0.15s ease;
+                    flex-shrink: 0;
+                    margin-left: 12px;
                 }
-                .catchup-sheet-body {
+                .catchup-close-btn:hover {
+                    background: var(--border-color);
+                    transform: scale(1.05);
+                }
+                .catchup-modal-progress-wrap {
+                    padding: 12px 20px;
+                    background: var(--bg-color);
+                    border-bottom: 1px solid var(--border-color);
+                }
+                .catchup-modal-body {
                     flex: 1;
                     overflow-y: auto;
                     padding: 16px 20px;
+                    background: var(--bg-color);
                 }
                 .catchup-topic-row {
                     display: flex;
                     align-items: center;
                     gap: 12px;
-                    padding: 13px 14px;
-                    background: #1e1e2e;
+                    padding: 12px 14px;
+                    background: var(--card-bg);
                     border-radius: 12px;
-                    margin-bottom: 10px;
-                    animation: fadeInTopic 0.25s ease;
-                    transition: opacity 0.3s;
+                    margin-bottom: 8px;
+                    border: 1px solid var(--border-color);
+                    transition: background 0.15s, border-color 0.15s;
                 }
-                @keyframes fadeInTopic {
-                    from { opacity: 0; transform: translateY(8px); }
-                    to   { opacity: 1; transform: translateY(0); }
+                .catchup-topic-row:hover {
+                    border-color: rgba(102,126,234,0.4);
                 }
+
+                /* Checkbox / Radio toggle - 1 CLICK NEEDED */
                 .catchup-checkbox {
-                    width: 26px;
-                    height: 26px;
-                    border-radius: 8px;
-                    border: 2px solid #444;
+                    width: 22px;
+                    height: 22px;
+                    border-radius: 50%;
+                    border: 2px solid var(--border-color);
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     cursor: pointer;
                     flex-shrink: 0;
-                    transition: background 0.2s, border-color 0.2s;
-                    font-size: 14px;
+                    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                    font-size: 13px;
                     user-select: none;
+                    background: transparent;
+                    color: transparent;
                 }
-                .catchup-checkbox.uncovered  { border-color: #444; background: transparent; }
-                .catchup-checkbox.revision   { border-color: #f97316; background: rgba(249,115,22,0.15); color: #f97316; }
-                .catchup-checkbox.done       { border-color: #22c55e; background: rgba(34,197,94,0.2);  color: #22c55e; }
+                .catchup-checkbox:hover {
+                    border-color: #22c55e;
+                    transform: scale(1.1);
+                }
+                .catchup-checkbox.done {
+                    border-color: #22c55e;
+                    background: #22c55e;
+                    color: #ffffff;
+                    box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+                }
                 .catchup-topic-name {
                     flex: 1;
                     font-size: 14px;
-                    color: #ddd;
-                    line-height: 1.3;
+                    color: var(--text-color);
+                    line-height: 1.35;
+                    font-weight: 500;
+                    transition: color 0.2s, text-decoration 0.2s, opacity 0.2s;
+                    word-break: break-word;
                 }
-                .catchup-topic-name.done { text-decoration: line-through; color: #555; }
+                .catchup-topic-name.done {
+                    text-decoration: line-through;
+                    color: var(--text-secondary);
+                    opacity: 0.65;
+                }
                 .catchup-topic-delete {
-                    background: none;
+                    background: transparent;
                     border: none;
-                    color: #444;
+                    color: var(--text-secondary);
                     cursor: pointer;
-                    font-size: 18px;
-                    padding: 4px;
-                    transition: color 0.2s;
+                    font-size: 16px;
+                    padding: 6px;
+                    border-radius: 8px;
+                    transition: all 0.15s;
                     flex-shrink: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
-                .catchup-topic-delete:hover { color: #ef4444; }
+                .catchup-topic-delete:hover {
+                    background: rgba(239, 68, 68, 0.15);
+                    color: #ef4444;
+                }
+
+                /* Add Row */
                 .catchup-add-row {
                     display: flex;
-                    gap: 10px;
-                    padding: 12px 16px;
-                    border-top: 1px solid var(--border-color, #2a2a3a);
+                    gap: 8px;
+                    padding: 14px 18px;
+                    border-top: 1px solid var(--border-color);
+                    background: var(--card-bg);
                     flex-shrink: 0;
-                    background: var(--card-bg, #1e1e2e);
                 }
                 .catchup-add-input {
                     flex: 1;
-                    background: var(--input-bg, #131320);
-                    border: 1.5px solid var(--border-color, #2a2a3a);
+                    background: var(--bg-color);
+                    border: 1px solid var(--border-color);
                     border-radius: 10px;
-                    padding: 11px 14px;
-                    color: var(--text-color, #f0f0f0);
+                    padding: 10px 14px;
+                    color: var(--text-color);
                     font-size: 14px;
                     outline: none;
-                    transition: border-color 0.2s;
+                    transition: border-color 0.2s, box-shadow 0.2s;
+                    margin-bottom: 0;
                     font-family: inherit;
                 }
-                .catchup-add-input::placeholder { color: #555; }
-                .catchup-add-input:focus { border-color: var(--primary-color, #667eea); }
+                .catchup-add-input:focus {
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 3px rgba(102,126,234,0.18);
+                }
                 .catchup-add-btn {
-                    background: var(--primary-color, #667eea);
+                    background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
                     border: none;
                     border-radius: 10px;
-                    color: white;
-                    font-size: 22px;
+                    color: #ffffff;
+                    font-size: 20px;
                     width: 44px;
                     height: 44px;
                     cursor: pointer;
@@ -1176,78 +1166,89 @@
                     align-items: center;
                     justify-content: center;
                     flex-shrink: 0;
-                    transition: opacity 0.15s, transform 0.15s;
+                    transition: transform 0.15s, opacity 0.15s;
                 }
-                .catchup-add-btn:active { transform: scale(0.92); opacity: 0.85; }
+                .catchup-add-btn:active {
+                    transform: scale(0.94);
+                    opacity: 0.9;
+                }
                 .catchup-empty {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
                     justify-content: center;
-                    padding: 60px 20px;
-                    color: #555;
+                    padding: 40px 20px;
+                    color: var(--text-secondary);
                     text-align: center;
-                    gap: 14px;
-                }
-                .catchup-empty ion-icon { font-size: 56px; color: #333; }
-                .catchup-empty p { margin: 0; font-size: 15px; line-height: 1.6; }
-                .catchup-legend {
-                    display: flex;
-                    gap: 14px;
-                    flex-wrap: wrap;
-                    margin-bottom: 18px;
-                    padding: 12px 14px;
-                    background: #1e1e2e;
-                    border-radius: 12px;
-                    font-size: 11px;
-                    color: #888;
-                }
-                .catchup-legend-dot {
-                    width: 8px; height: 8px;
-                    border-radius: 50%;
-                    display: inline-block;
-                    margin-right: 4px;
-                }
-                .catchup-status-summary {
-                    display: grid;
-                    grid-template-columns: repeat(3, 1fr);
                     gap: 10px;
-                    margin-bottom: 18px;
                 }
-                .catchup-summary-tile {
-                    background: var(--card-bg, #1a1a2e);
-                    border: 1px solid var(--border-color, #2a2a3a);
-                    border-radius: 12px;
-                    padding: 14px 10px;
-                    text-align: center;
+                .catchup-empty ion-icon {
+                    font-size: 48px;
+                    color: var(--border-color);
                 }
-                .catchup-summary-tile .num { font-size: 24px; font-weight: 800; }
-                .catchup-summary-tile .lbl { font-size: 10px; color: #666; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+                .catchup-empty p {
+                    margin: 0;
+                    font-size: 14px;
+                    line-height: 1.5;
+                }
             </style>
 
-            <div class="catchup-header-bar">
-                <h2 style="margin: 0; font-size: 22px; font-weight: 800;">Catch Up</h2>
+            <!-- Standard Screen Header consistent with rest of app -->
+            <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2 style="margin: 0;">Catch Up</h2>
+                    <p style="margin: 5px 0 0 0; opacity: 0.9;">Track covered chapters & stay on schedule</p>
+                </div>
                 <button id="catchup-refresh-btn" onclick="loadCatchUp()"
-                    style="background: rgba(255,255,255,0.08); border: none; color: white; padding: 8px 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;"
+                    title="Refresh">
                     <ion-icon name="refresh-outline" style="font-size: 20px;"></ion-icon>
                 </button>
             </div>
-            <p class="catchup-subtitle">Track topics you need to study per course</p>
 
-            <!-- Summary tiles -->
-            <div class="catchup-status-summary" id="catchup-summary-tiles">
-                <div class="catchup-summary-tile">
-                    <div class="num" style="color:#ef4444;" id="catchup-count-red">—</div>
-                    <div class="lbl">Behind</div>
+            <!-- Top Overall Progress Overview Card (Green -> Orange -> Red determined by % covered) -->
+            <div class="card" style="background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border-color); padding: 18px 20px; margin-bottom: 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.06);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(102,126,234,0.12); display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
+                            <ion-icon name="checkbox-outline" style="font-size: 20px;"></ion-icon>
+                        </div>
+                        <div>
+                            <div style="font-size: 15px; font-weight: 700; color: var(--text-color);">Chapters Covered</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);" id="catchup-progress-subtitle">0 of 0 chapters completed</div>
+                        </div>
+                    </div>
+                    <div id="catchup-progress-badge" style="font-size: 14px; font-weight: 800; padding: 4px 14px; border-radius: 20px; transition: all 0.3s ease; letter-spacing: 0.3px;">
+                        0%
+                    </div>
                 </div>
-                <div class="catchup-summary-tile">
-                    <div class="num" style="color:#f97316;" id="catchup-count-orange">—</div>
-                    <div class="lbl">Slightly</div>
+
+                <!-- Progress bar spanning Green to Orange to Red based on % covered -->
+                <div style="background: var(--border-color); height: 12px; border-radius: 10px; overflow: hidden; position: relative; width: 100%;">
+                    <div id="catchup-overall-progress-bar" style="height: 100%; width: 0%; border-radius: 10px; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), background 0.5s ease, box-shadow 0.5s ease;"></div>
                 </div>
-                <div class="catchup-summary-tile">
-                    <div class="num" style="color:#22c55e;" id="catchup-count-green">—</div>
-                    <div class="lbl">Caught Up</div>
+
+                <!-- Status Pills -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-color); font-size: 12px;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ef4444;"></span>
+                        <span style="color: var(--text-secondary);">Behind: <strong id="catchup-count-red" style="color: var(--text-color);">0</strong></span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #f97316;"></span>
+                        <span style="color: var(--text-secondary);">Slightly: <strong id="catchup-count-orange" style="color: var(--text-color);">0</strong></span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e;"></span>
+                        <span style="color: var(--text-secondary);">Caught Up: <strong id="catchup-count-green" style="color: var(--text-color);">0</strong></span>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Section Title -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <h3 style="font-size: 16px; font-weight: 700; margin: 0; color: var(--text-color);">Current Courses</h3>
+                <span style="font-size: 12px; color: var(--text-secondary);" id="catchup-course-count-label"></span>
             </div>
 
             <div id="catch-up-courses-list">
@@ -1258,28 +1259,39 @@
             </div>
         </div>
 
-        <!-- Catch Up Topic Modal (slide-up sheet) -->
+        <!-- Catch Up Topic Modal -->
         <div id="catchup-modal">
-            <div class="catchup-modal-sheet" id="catchup-modal-sheet">
-                <div class="catchup-sheet-handle"></div>
-                <div class="catchup-sheet-header">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                        <div style="flex:1;">
-                            <div class="catchup-sheet-title" id="catchup-modal-course-name">Course</div>
-                            <div class="catchup-sheet-code" id="catchup-modal-course-code"></div>
-                        </div>
-                        <button onclick="closeCatchUpModal()" style="background:none;border:none;color:#666;font-size:26px;cursor:pointer;padding:0;margin-top:-4px;">
-                            <ion-icon name="close-outline"></ion-icon>
-                        </button>
+            <div class="catchup-modal-card" id="catchup-modal-card">
+                <div class="catchup-modal-header">
+                    <div style="flex: 1; min-width: 0;">
+                        <h3 class="catchup-modal-title" id="catchup-modal-course-name">Course</h3>
+                        <div class="catchup-modal-code" id="catchup-modal-course-code"></div>
                     </div>
-                    <div class="catchup-sheet-status-row" id="catchup-modal-status-row"></div>
+                    <button class="catchup-close-btn" onclick="closeCatchUpModal()" title="Close">
+                        <ion-icon name="close-outline"></ion-icon>
+                    </button>
                 </div>
-                <div class="catchup-sheet-body" id="catchup-modal-topics-list"></div>
+
+                <!-- Modal Course Progress Bar -->
+                <div class="catchup-modal-progress-wrap" id="catchup-modal-progress-wrap">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 12px;">
+                        <span id="catchup-modal-status-text" style="font-weight: 700;"></span>
+                        <span id="catchup-modal-count-text" style="color: var(--text-secondary);"></span>
+                    </div>
+                    <div style="background: var(--border-color); height: 8px; border-radius: 6px; overflow: hidden; width: 100%;">
+                        <div id="catchup-modal-bar" style="height: 100%; width: 0%; border-radius: 6px; transition: width 0.35s ease, background 0.35s ease;"></div>
+                    </div>
+                </div>
+
+                <!-- Topics list -->
+                <div class="catchup-modal-body" id="catchup-modal-topics-list"></div>
+
+                <!-- Add new chapter / topic row -->
                 <div class="catchup-add-row">
                     <input class="catchup-add-input" id="catchup-new-topic-input"
-                        placeholder="Add topic / chapter / class…"
+                        placeholder="Add a chapter or topic name…"
                         onkeydown="if(event.key==='Enter') addCatchUpTopic()">
-                    <button class="catchup-add-btn" onclick="addCatchUpTopic()">
+                    <button class="catchup-add-btn" onclick="addCatchUpTopic()" title="Add chapter">
                         <ion-icon name="add-outline"></ion-icon>
                     </button>
                 </div>
@@ -6470,9 +6482,29 @@
         let _catchUpCurrentCourseName = null;
         let _catchUpCurrentCourseCode = null;
 
-        // ── Helpers ──────────────────────────────────────────────────────────
+        // ── Color Spectrum Interpolation: Red (0%) -> Orange (50%) -> Green (100%) ──
+        function _getCatchUpColor(pct) {
+            if (isNaN(pct) || pct < 0) pct = 0;
+            if (pct > 100) pct = 100;
+            let r, g, b;
+            if (pct < 50) {
+                const t = pct / 50;
+                r = Math.round(239 + (249 - 239) * t);
+                g = Math.round(68 + (115 - 68) * t);
+                b = Math.round(68 + (22 - 68) * t);
+            } else {
+                const t = (pct - 50) / 50;
+                r = Math.round(249 + (34 - 249) * t);
+                g = Math.round(115 + (197 - 115) * t);
+                b = Math.round(22 + (94 - 22) * t);
+            }
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        // ── Status determination based on topics ───────────────────────────────
         function _catchUpStatusFor(topics) {
-            const pending = (topics || []).filter(t => t.status !== 'done').length;
+            if (!topics || topics.length === 0) return 'green';
+            const pending = topics.filter(t => t.status !== 'done').length;
             if (pending === 0) return 'green';
             if (pending <= 2)  return 'orange';
             return 'red';
@@ -6485,22 +6517,20 @@
                 orange: pending === 1 ? '1 Behind' : `${pending} Behind`,
                 red:    `${pending} Behind`
             };
-            return `<span class="catchup-status-badge ${status}"><ion-icon name="${iconMap[status]}" style="font-size:12px;"></ion-icon>${labels[status]}</span>`;
+            const colors = { green: '#22c55e', orange: '#f97316', red: '#ef4444' };
+            const color = colors[status] || '#22c55e';
+            return `<span class="catchup-status-badge" style="color:${color}; background:${color}22; border:1px solid ${color}55;">
+                <ion-icon name="${iconMap[status]}" style="font-size:13px;"></ion-icon>
+                ${labels[status]}
+            </span>`;
         }
 
-        function _catchUpCheckboxIcon(status) {
-            if (status === 'done')            return '✓';
-            if (status === 'needs_revision')  return '↻';
-            return '';
-        }
-
+        // ── ONE-CLICK TOGGLE: switches directly between 'done' and 'uncovered' ──
         function _catchUpNextStatus(current) {
-            if (current === 'uncovered')      return 'needs_revision';
-            if (current === 'needs_revision') return 'done';
-            return 'uncovered';
+            return current === 'done' ? 'uncovered' : 'done';
         }
 
-        // ── Main loader ───────────────────────────────────────────────────────
+        // ── Main loader for Catch Up tab ───────────────────────────────────────
         async function loadCatchUp() {
             const uid = localStorage.getItem('kobi_atlas_uid');
             if (!uid) return;
@@ -6514,8 +6544,6 @@
             </div>`;
 
             try {
-                // 1. Get current semester courses
-
                 const semRef = collection(db, 'users', uid, 'semesters');
                 const semSnap = await getDocs(semRef);
 
@@ -6533,13 +6561,11 @@
                         <p>No courses found in your current semester.<br>
                            Add courses in your semester dashboard first.</p>
                     </div>`;
-                    document.getElementById('catchup-count-red').textContent    = '0';
-                    document.getElementById('catchup-count-orange').textContent = '0';
-                    document.getElementById('catchup-count-green').textContent  = '0';
+                    _updateOverallProgressBar(0, 0, 0, 0, 0, 0);
                     return;
                 }
 
-                // 2. Load catchup topics for each course in parallel
+                // Load catchup topics for each course in parallel
                 const catchupPromises = courses.map(async course => {
                     try {
                         const cuDoc = await getDoc(doc(db, 'users', uid, 'catchup', course.id));
@@ -6552,65 +6578,85 @@
 
                 const courseData = await Promise.all(catchupPromises);
 
-                // 3. Sort: most pending (red) first, then orange, then green
+                // Sort: courses with pending topics first
                 courseData.sort((a, b) => {
                     const pendA = a.topics.filter(t => t.status !== 'done').length;
                     const pendB = b.topics.filter(t => t.status !== 'done').length;
                     return pendB - pendA;
                 });
 
-                // 4. Summary counts
+                // Calculate aggregate statistics
+                let totalTopics = 0;
+                let coveredTopics = 0;
                 let countRed = 0, countOrange = 0, countGreen = 0;
+
                 courseData.forEach(({ topics }) => {
+                    const pending = topics.filter(t => t.status !== 'done').length;
+                    const done = topics.filter(t => t.status === 'done').length;
+                    totalTopics += topics.length;
+                    coveredTopics += done;
+
                     const s = _catchUpStatusFor(topics);
-                    if (s === 'red')    countRed++;
+                    if (s === 'red') countRed++;
                     else if (s === 'orange') countOrange++;
                     else countGreen++;
                 });
-                document.getElementById('catchup-count-red').textContent    = countRed;
-                document.getElementById('catchup-count-orange').textContent = countOrange;
-                document.getElementById('catchup-count-green').textContent  = countGreen;
 
-                // 5. Render cards
+                const overallPct = totalTopics > 0 ? Math.round((coveredTopics / totalTopics) * 100) : (courses.length > 0 ? 100 : 0);
+                _updateOverallProgressBar(overallPct, coveredTopics, totalTopics, countRed, countOrange, countGreen);
+
+                const courseCountLabel = document.getElementById('catchup-course-count-label');
+                if (courseCountLabel) {
+                    courseCountLabel.textContent = `${courses.length} Course${courses.length !== 1 ? 's' : ''}`;
+                }
+
+                // Render course cards
                 let html = '';
                 courseData.forEach(({ course, topics }) => {
                     const pending = topics.filter(t => t.status !== 'done').length;
-                    const status  = _catchUpStatusFor(topics);
+                    const done = topics.filter(t => t.status === 'done').length;
+                    const status = _catchUpStatusFor(topics);
+                    const coursePct = topics.length > 0 ? Math.round((done / topics.length) * 100) : 100;
+                    const courseColor = _getCatchUpColor(coursePct);
 
-                    // Pill previews (show up to 3 uncovered/revision topics)
-                    const previewTopics = topics
-                        .filter(t => t.status !== 'done')
-                        .slice(0, 3);
-                    const pillsHtml = previewTopics.length > 0
-                        ? `<div class="catchup-topic-pills">
-                            ${previewTopics.map(t => `
-                                <span class="catchup-topic-pill ${t.status === 'needs_revision' ? 'revision' : ''}">
-                                    ${t.name.length > 18 ? t.name.substring(0, 17) + '…' : t.name}
-                                </span>`).join('')}
-                            ${pending > 3 ? `<span class="catchup-topic-pill">+${pending - 3} more</span>` : ''}
-                          </div>`
-                        : '';
-
-                    const footerText = topics.length === 0
-                        ? 'Tap to add topics'
-                        : `${topics.length} topic${topics.length !== 1 ? 's' : ''} · ${topics.filter(t => t.status === 'done').length} done`;
+                    let previewText = '';
+                    if (topics.length === 0) {
+                        previewText = 'No chapters added · Tap to add';
+                    } else if (pending === 0) {
+                        previewText = '<span style="color:#22c55e; font-weight:600;">All chapters covered!</span>';
+                    } else {
+                        const nextTopic = topics.find(t => t.status !== 'done');
+                        const nextName = nextTopic ? (nextTopic.name.length > 25 ? nextTopic.name.slice(0, 24) + '…' : nextTopic.name) : '';
+                        previewText = `Next: <strong>${nextName}</strong>${pending > 1 ? ` (+${pending - 1} more)` : ''}`;
+                    }
 
                     html += `
-                    <div class="catchup-course-card status-${status}"
+                    <div class="catchup-course-card"
                          id="catchup-card-${course.id}"
-                         onclick="openCatchUpCourse('${course.id}', '${(course.name || '').replace(/'/g, "\\'")}', '${(course.code || '').replace(/'/g, "\\'")}')">
-                        <div class="catchup-card-glow"></div>
-                        <div class="catchup-card-top">
-                            <div>
+                         onclick="openCatchUpCourse('${course.id}', '${(course.name || '').replace(/'/g, "\\'")}', '${(course.code || '').replace(/'/g, "\\')}')">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                            <div style="flex: 1; min-width: 0; padding-right: 12px;">
                                 <div class="catchup-course-name">${course.name || 'Unnamed Course'}</div>
                                 ${course.code ? `<div class="catchup-course-code">${course.code}</div>` : ''}
                             </div>
                             ${_catchUpBadgeHtml(status, pending)}
                         </div>
-                        ${pillsHtml}
-                        <div class="catchup-card-footer" style="margin-top:${pillsHtml ? '8px' : '0'};">
-                            <ion-icon name="chevron-forward-outline" style="font-size:14px;"></ion-icon>
-                            <span>${footerText}</span>
+
+                        <!-- Course mini progress bar -->
+                        <div style="margin-top: 10px; margin-bottom: 8px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-secondary); margin-bottom: 5px;">
+                                <span>${done} of ${topics.length} chapter${topics.length !== 1 ? 's' : ''} covered</span>
+                                <span style="font-weight: 700; color: ${courseColor};">${coursePct}%</span>
+                            </div>
+                            <div style="height: 6px; border-radius: 4px; background: var(--border-color); overflow: hidden;">
+                                <div style="width: ${coursePct}%; height: 100%; background: ${courseColor}; border-radius: 4px; transition: width 0.35s ease;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Footer row -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 12px; color: var(--text-secondary);">
+                            <span>${previewText}</span>
+                            <ion-icon name="chevron-forward-outline" style="font-size: 16px;"></ion-icon>
                         </div>
                     </div>`;
                 });
@@ -6626,6 +6672,42 @@
             }
         }
 
+        // ── Update top overall progress bar ────────────────────────────────────
+        function _updateOverallProgressBar(pct, done, total, red, orange, green) {
+            const bar = document.getElementById('catchup-overall-progress-bar');
+            const badge = document.getElementById('catchup-progress-badge');
+            const subtitle = document.getElementById('catchup-progress-subtitle');
+
+            const redEl = document.getElementById('catchup-count-red');
+            const orangeEl = document.getElementById('catchup-count-orange');
+            const greenEl = document.getElementById('catchup-count-green');
+
+            if (redEl) redEl.textContent = red || 0;
+            if (orangeEl) orangeEl.textContent = orange || 0;
+            if (greenEl) greenEl.textContent = green || 0;
+
+            const color = _getCatchUpColor(pct);
+
+            if (bar) {
+                bar.style.width = `${pct}%`;
+                bar.style.background = color;
+                bar.style.boxShadow = `0 0 10px ${color.replace('rgb', 'rgba').replace(')', ', 0.35)')}`;
+            }
+
+            if (badge) {
+                badge.textContent = `${pct}%`;
+                badge.style.color = color;
+                badge.style.background = color.replace('rgb', 'rgba').replace(')', ', 0.12)');
+                badge.style.border = `1px solid ${color.replace('rgb', 'rgba').replace(')', ', 0.35)')}`;
+            }
+
+            if (subtitle) {
+                subtitle.textContent = total > 0
+                    ? `${done} of ${total} chapter${total !== 1 ? 's' : ''} completed`
+                    : 'No chapters added yet';
+            }
+        }
+
         // ── Open modal for a course ───────────────────────────────────────────
         window.openCatchUpCourse = async function (courseId, courseName, courseCode) {
             _catchUpCurrentCourseId   = courseId;
@@ -6634,10 +6716,17 @@
 
             document.getElementById('catchup-modal-course-name').textContent = courseName;
             document.getElementById('catchup-modal-course-code').textContent = courseCode || '';
-            document.getElementById('catchup-modal-topics-list').innerHTML   = '<div style="text-align:center;padding:30px;color:#555;">Loading…</div>';
-            document.getElementById('catchup-modal-status-row').innerHTML    = '';
+            document.getElementById('catchup-modal-topics-list').innerHTML   = '<div style="text-align:center;padding:30px;color:var(--text-secondary);">Loading chapters…</div>';
+            document.getElementById('catchup-modal-status-text').textContent = '';
+            document.getElementById('catchup-modal-count-text').textContent  = '';
+            document.getElementById('catchup-modal-bar').style.width         = '0%';
             document.getElementById('catchup-new-topic-input').value         = '';
             document.getElementById('catchup-modal').classList.add('show');
+
+            setTimeout(() => {
+                const inp = document.getElementById('catchup-new-topic-input');
+                if (inp) inp.focus();
+            }, 150);
 
             await _renderCatchUpModal(courseId);
         };
@@ -6645,72 +6734,53 @@
         window.closeCatchUpModal = function () {
             document.getElementById('catchup-modal').classList.remove('show');
             _catchUpCurrentCourseId = null;
-            // Reload cards so counts update
             loadCatchUp();
         };
 
-        // Close modal on backdrop click
         document.getElementById('catchup-modal').addEventListener('click', function (e) {
             if (e.target === this) window.closeCatchUpModal();
         });
 
+        // ── Render modal contents ─────────────────────────────────────────────
         async function _renderCatchUpModal(courseId) {
             const uid = localStorage.getItem('kobi_atlas_uid');
-
 
             try {
                 const cuDoc = await getDoc(doc(db, 'users', uid, 'catchup', courseId));
                 const topics = cuDoc.exists() ? (cuDoc.data().topics || []) : [];
 
-                const pending = topics.filter(t => t.status !== 'done').length;
-                const status  = _catchUpStatusFor(topics);
-
-                // Status row in modal header
-                const statusColors = { green: '#22c55e', orange: '#f97316', red: '#ef4444' };
-                const statusLabels = {
-                    green:  'Caught Up',
-                    orange: `${pending} topic${pending !== 1 ? 's' : ''} to cover`,
-                    red:    `${pending} topic${pending !== 1 ? 's' : ''} to cover`
-                };
-                document.getElementById('catchup-modal-status-row').innerHTML = `
-                    <span style="font-size:13px;color:${statusColors[status]};font-weight:700;">
-                        ${statusLabels[status]}
-                    </span>
-                    <span style="font-size:12px;color:#555;margin-left:auto;">
-                        ${topics.filter(t => t.status === 'done').length}/${topics.length} done
-                    </span>`;
+                _updateModalProgress(topics);
 
                 if (topics.length === 0) {
                     document.getElementById('catchup-modal-topics-list').innerHTML = `
-                        <div class="catchup-empty" style="padding: 40px 20px;">
-                            <ion-icon name="add-circle-outline" style="font-size:48px;color:#333;"></ion-icon>
-                            <p style="color:#22c55e;font-weight:700;">All Caught Up!</p>
-                            <p style="font-size:13px;">Add a topic below to start tracking your study progress.</p>
+                        <div class="catchup-empty" style="padding: 36px 20px;">
+                            <ion-icon name="add-circle-outline" style="font-size:44px;color:var(--border-color);"></ion-icon>
+                            <p style="color:#22c55e;font-weight:700;font-size:16px;">All Caught Up!</p>
+                            <p style="font-size:13px;">Add a chapter or topic below to track your study progress.</p>
                         </div>`;
                     return;
                 }
 
-                // Sort: uncovered first, then needs_revision, then done
-                const sortOrder = { uncovered: 0, needs_revision: 1, done: 2 };
-                const sorted = [...topics].sort((a, b) => sortOrder[a.status] - sortOrder[b.status]);
+                // Sort: uncovered first, then done
+                const sorted = [...topics].sort((a, b) => {
+                    const statA = a.status === 'done' ? 1 : 0;
+                    const statB = b.status === 'done' ? 1 : 0;
+                    return statA - statB;
+                });
 
                 document.getElementById('catchup-modal-topics-list').innerHTML = sorted.map(topic => {
-                    const cbClass  = topic.status === 'done' ? 'done' : topic.status === 'needs_revision' ? 'revision' : 'uncovered';
-                    const nameClass = topic.status === 'done' ? 'done' : '';
-                    const icon      = _catchUpCheckboxIcon(topic.status);
-                    const hintText  = topic.status === 'uncovered' ? 'Tap → Needs Revision' :
-                                      topic.status === 'needs_revision' ? 'Tap → Done' : 'Tap → Uncover';
+                    const isDone = topic.status === 'done';
                     return `
                     <div class="catchup-topic-row" id="catchup-topic-row-${topic.id}">
-                        <div class="catchup-checkbox ${cbClass}"
+                        <div class="catchup-checkbox ${isDone ? 'done' : ''}"
                              onclick="cycleCatchUpStatus('${courseId}', '${topic.id}', '${topic.status}')"
-                             title="${hintText}">
-                            ${icon}
+                             title="${isDone ? 'Tap to mark uncovered' : 'Tap to mark covered'}">
+                            ${isDone ? '<ion-icon name="checkmark-outline"></ion-icon>' : ''}
                         </div>
-                        <div class="catchup-topic-name ${nameClass}">${topic.name}</div>
+                        <div class="catchup-topic-name ${isDone ? 'done' : ''}">${topic.name}</div>
                         <button class="catchup-topic-delete"
                                 onclick="deleteCatchUpTopic('${courseId}', '${topic.id}')"
-                                title="Delete topic">
+                                title="Delete chapter">
                             <ion-icon name="trash-outline"></ion-icon>
                         </button>
                     </div>`;
@@ -6719,11 +6789,37 @@
             } catch (err) {
                 console.error('_renderCatchUpModal error:', err);
                 document.getElementById('catchup-modal-topics-list').innerHTML =
-                    '<div style="text-align:center;padding:30px;color:#ef4444;">Error loading topics</div>';
+                    '<div style="text-align:center;padding:30px;color:#ef4444;">Error loading chapters</div>';
             }
         }
 
-        // ── Add topic ─────────────────────────────────────────────────────────
+        function _updateModalProgress(topics) {
+            const total = topics.length;
+            const done = topics.filter(t => t.status === 'done').length;
+            const pending = total - done;
+            const pct = total > 0 ? Math.round((done / total) * 100) : 100;
+            const color = _getCatchUpColor(pct);
+
+            const statusEl = document.getElementById('catchup-modal-status-text');
+            const countEl = document.getElementById('catchup-modal-count-text');
+            const barEl = document.getElementById('catchup-modal-bar');
+
+            if (statusEl) {
+                statusEl.style.color = color;
+                statusEl.textContent = total === 0 ? 'No chapters added' : (pending === 0 ? 'Caught Up' : `${pending} chapter${pending !== 1 ? 's' : ''} to cover`);
+            }
+
+            if (countEl) {
+                countEl.textContent = total > 0 ? `${done}/${total} covered (${pct}%)` : '';
+            }
+
+            if (barEl) {
+                barEl.style.width = `${pct}%`;
+                barEl.style.background = color;
+            }
+        }
+
+        // ── Add topic / chapter ───────────────────────────────────────────────
         window.addCatchUpTopic = async function () {
             const input = document.getElementById('catchup-new-topic-input');
             const name  = (input.value || '').trim();
@@ -6741,7 +6837,6 @@
             input.value    = '';
             input.disabled = true;
 
-
             try {
                 const cuRef  = doc(db, 'users', uid, 'catchup', courseId);
                 const cuSnap = await getDoc(cuRef);
@@ -6754,26 +6849,68 @@
                     addedAt: Date.now()
                 };
 
-                topics.unshift(newTopic); // newest first
+                topics.push(newTopic);
                 await setDoc(cuRef, { topics }, { merge: true });
 
                 await _renderCatchUpModal(courseId);
-                showToast('Topic added!', 'success');
+                showToast('Chapter added!', 'success');
 
             } catch (err) {
                 console.error('addCatchUpTopic error:', err);
-                showToast('Error adding topic', 'error');
+                showToast('Error adding chapter', 'error');
             } finally {
                 input.disabled = false;
                 input.focus();
             }
         };
 
-        // ── Cycle topic status ────────────────────────────────────────────────
+        // ── ONE-CLICK Toggle topic status ─────────────────────────────────────
         window.cycleCatchUpStatus = async function (courseId, topicId, currentStatus) {
-            const uid       = localStorage.getItem('kobi_atlas_uid');
-            const nextStat  = _catchUpNextStatus(currentStatus);
+            const uid      = localStorage.getItem('kobi_atlas_uid');
+            const nextStat = _catchUpNextStatus(currentStatus);
 
+            // Optimistic in-place UI toggle (Zero delay, no second click needed!)
+            const row = document.getElementById(`catchup-topic-row-${topicId}`);
+            if (row) {
+                const cb   = row.querySelector('.catchup-checkbox');
+                const name = row.querySelector('.catchup-topic-name');
+                if (nextStat === 'done') {
+                    cb.className = 'catchup-checkbox done';
+                    cb.innerHTML = '<ion-icon name="checkmark-outline"></ion-icon>';
+                    if (name) name.className = 'catchup-topic-name done';
+                } else {
+                    cb.className = 'catchup-checkbox';
+                    cb.innerHTML = '';
+                    if (name) name.className = 'catchup-topic-name';
+                }
+                cb.setAttribute('onclick', `cycleCatchUpStatus('${courseId}', '${topicId}', '${nextStat}')`);
+                cb.setAttribute('title', nextStat === 'done' ? 'Tap to mark uncovered' : 'Tap to mark covered');
+            }
+
+            // Recalculate modal progress from DOM immediately
+            const allRows = document.querySelectorAll('#catchup-modal-topics-list .catchup-topic-row');
+            const doneRows = document.querySelectorAll('#catchup-modal-topics-list .catchup-checkbox.done');
+            const totalCount = allRows.length;
+            const doneCount = doneRows.length;
+            const pendingCount = totalCount - doneCount;
+            const pct = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 100;
+            const color = _getCatchUpColor(pct);
+
+            const statusEl = document.getElementById('catchup-modal-status-text');
+            const countEl  = document.getElementById('catchup-modal-count-text');
+            const barEl    = document.getElementById('catchup-modal-bar');
+
+            if (statusEl) {
+                statusEl.style.color = color;
+                statusEl.textContent = pendingCount === 0 ? 'Caught Up' : `${pendingCount} chapter${pendingCount !== 1 ? 's' : ''} to cover`;
+            }
+            if (countEl) {
+                countEl.textContent = `${doneCount}/${totalCount} covered (${pct}%)`;
+            }
+            if (barEl) {
+                barEl.style.width = `${pct}%`;
+                barEl.style.background = color;
+            }
 
             try {
                 const cuRef  = doc(db, 'users', uid, 'catchup', courseId);
@@ -6787,35 +6924,17 @@
                 topics[idx].status = nextStat;
                 await setDoc(cuRef, { topics }, { merge: true });
 
-                // Optimistic UI: update just this row's checkbox immediately
-                const row = document.getElementById(`catchup-topic-row-${topicId}`);
-                if (row) {
-                    const cb   = row.querySelector('.catchup-checkbox');
-                    const name = row.querySelector('.catchup-topic-name');
-                    const cbClass  = nextStat === 'done' ? 'done' : nextStat === 'needs_revision' ? 'revision' : 'uncovered';
-                    cb.className   = `catchup-checkbox ${cbClass}`;
-                    cb.textContent = _catchUpCheckboxIcon(nextStat);
-                    cb.setAttribute('onclick', `cycleCatchUpStatus('${courseId}', '${topicId}', '${nextStat}')`);
-                    if (name) {
-                        name.className = `catchup-topic-name ${nextStat === 'done' ? 'done' : ''}`;
-                    }
-                }
-
-                // Re-render modal header status row
-                await _renderCatchUpModal(courseId);
-
             } catch (err) {
                 console.error('cycleCatchUpStatus error:', err);
-                showToast('Error updating topic', 'error');
+                showToast('Error updating status', 'error');
             }
         };
 
         // ── Delete topic ──────────────────────────────────────────────────────
         window.deleteCatchUpTopic = async function (courseId, topicId) {
-            if (!confirm('Remove this topic?')) return;
+            if (!confirm('Remove this chapter?')) return;
 
             const uid = localStorage.getItem('kobi_atlas_uid');
-
 
             try {
                 const cuRef  = doc(db, 'users', uid, 'catchup', courseId);
@@ -6826,17 +6945,13 @@
                 await setDoc(cuRef, { topics }, { merge: true });
 
                 await _renderCatchUpModal(courseId);
-                showToast('Topic removed', 'success');
+                showToast('Chapter removed', 'success');
 
             } catch (err) {
                 console.error('deleteCatchUpTopic error:', err);
-                showToast('Error deleting topic', 'error');
+                showToast('Error deleting chapter', 'error');
             }
         };
-
-
-
-
 
         // Resources Lock Logic
         // Resources Lock Logic
