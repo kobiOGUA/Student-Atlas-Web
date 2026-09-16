@@ -6531,6 +6531,7 @@
         }
 
         // ── Main loader for Catch Up tab ───────────────────────────────────────
+        let _catchUpCourseMap = {};
         async function loadCatchUp() {
             const uid = localStorage.getItem('kobi_atlas_uid');
             if (!uid) return;
@@ -6577,6 +6578,10 @@
                 });
 
                 const courseData = await Promise.all(catchupPromises);
+                _catchUpCourseMap = {};
+                courseData.forEach(({ course }) => {
+                    _catchUpCourseMap[course.id] = course;
+                });
 
                 // Sort: courses with pending topics first
                 courseData.sort((a, b) => {
@@ -6633,7 +6638,7 @@
                     html += `
                     <div class="catchup-course-card"
                          id="catchup-card-${course.id}"
-                         onclick="openCatchUpCourse('${course.id}', '${(course.name || '').replace(/'/g, "\\'")}', '${(course.code || '').replace(/'/g, "\\')}')">
+                         onclick="openCatchUpCourse('${course.id}')">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
                             <div style="flex: 1; min-width: 0; padding-right: 12px;">
                                 <div class="catchup-course-name">${course.name || 'Unnamed Course'}</div>
@@ -6710,12 +6715,16 @@
 
         // ── Open modal for a course ───────────────────────────────────────────
         window.openCatchUpCourse = async function (courseId, courseName, courseCode) {
-            _catchUpCurrentCourseId   = courseId;
-            _catchUpCurrentCourseName = courseName;
-            _catchUpCurrentCourseCode = courseCode;
+            const course = _catchUpCourseMap[courseId] || {};
+            const resolvedName = courseName || course.name || 'Course';
+            const resolvedCode = courseCode || course.code || '';
 
-            document.getElementById('catchup-modal-course-name').textContent = courseName;
-            document.getElementById('catchup-modal-course-code').textContent = courseCode || '';
+            _catchUpCurrentCourseId   = courseId;
+            _catchUpCurrentCourseName = resolvedName;
+            _catchUpCurrentCourseCode = resolvedCode;
+
+            document.getElementById('catchup-modal-course-name').textContent = resolvedName;
+            document.getElementById('catchup-modal-course-code').textContent = resolvedCode;
             document.getElementById('catchup-modal-topics-list').innerHTML   = '<div style="text-align:center;padding:30px;color:var(--text-secondary);">Loading chapters…</div>';
             document.getElementById('catchup-modal-status-text').textContent = '';
             document.getElementById('catchup-modal-count-text').textContent  = '';
