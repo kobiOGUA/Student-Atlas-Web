@@ -1635,6 +1635,11 @@
                     <button class="close-btn" onclick="closeModal('create-post-modal')">&times;</button>
                 </div>
 
+                <div style="background: rgba(102, 126, 234, 0.1); border: 1px solid rgba(102, 126, 234, 0.25); border-radius: 8px; padding: 10px 12px; margin: 12px 0; font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px;">
+                    <ion-icon name="time-outline" style="font-size: 20px; color: var(--primary-color); flex-shrink: 0;"></ion-icon>
+                    <span>To prevent spam, community posts are limited to <strong>1 post every 48 hours</strong> per person. Replies under posts are always unlimited!</span>
+                </div>
+
                 <label>What's on your mind?</label>
                 <textarea id="post-content" placeholder="Share something with the community..." rows="4"></textarea>
 
@@ -5457,14 +5462,6 @@
                         <div style="text-align:center; font-size:11px; color:var(--text-secondary); margin-bottom:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Contact Me</div>
                         <div style="display:flex; justify-content: center; gap: 16px; align-items:flex-start; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; flex-wrap: wrap;">
                             
-                            <!-- WhatsApp -->
-                            <a href="https://wa.me/qr/P4ICHKKDGZI7A1" target="_blank" style="color:var(--text-secondary); text-decoration:none; display:flex; flex-direction:column; align-items:center; font-size:10px; gap:4px; width: 60px;">
-                                <div class="contact-icon" style="background:var(--card-bg); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text-color); border: 1px solid var(--border-color);">
-                                    <ion-icon name="logo-whatsapp" style="font-size:20px;"></ion-icon>
-                                </div>
-                                WhatsApp
-                            </a>
-
                             <!-- Instagram -->
                             <a href="https://www.instagram.com/kobiogua?igsh=MWYydHpwdXF6M2pncg%3D%3D&utm_source=qr" target="_blank" style="color:var(--text-secondary); text-decoration:none; display:flex; flex-direction:column; align-items:center; font-size:10px; gap:4px; width: 60px;">
                                 <div class="contact-icon" style="background:var(--card-bg); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text-color); border: 1px solid var(--border-color);">
@@ -5497,18 +5494,10 @@
                                 Email
                             </a>
 
-                            <!-- Call -->
-                            <a href="tel:+2348105930668" style="color:var(--text-secondary); text-decoration:none; display:flex; flex-direction:column; align-items:center; font-size:10px; gap:4px; width: 60px;">
-                                <div class="contact-icon" style="background:var(--card-bg); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text-color); border: 1px solid var(--border-color);">
-                                    <ion-icon name="call" style="font-size:20px;"></ion-icon>
-                                </div>
-                                Call
-                            </a>
-
                         </div>
 
                         <!-- Enhanced WhatsApp CTA (Compact) -->
-                        <a href="https://chat.whatsapp.com/I6QDP1DrQ3l8NHtm8RsQyV" target="_blank" 
+                        <a href="https://chat.whatsapp.com/KdwaVbfnMw91gPg4jgFVCX" target="_blank" 
                            style="display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%); color:white; padding:10px; border-radius:10px; text-decoration:none; box-shadow:0 3px 10px rgba(0,0,0,0.2); transition: transform 0.2s; position:relative; overflow:hidden; max-width: 280px; width: 90%; margin: 0 auto;"
                            onmouseover="this.style.transform='translateY(-2px) scale(1.02)'" 
                            onmouseout="this.style.transform='translateY(0) scale(1)'">
@@ -5521,12 +5510,35 @@
                     </div>
                 </div>`;
 
+                const currentUserId = localStorage.getItem('kobi_atlas_uid');
+                let cooldownRemainingMs = 0;
+                let cooldownText = '1 post every 48 hours · Unlimited replies';
+                let isCooldownActive = false;
+
+                if (currentUserId) {
+                    try {
+                        cooldownRemainingMs = await checkPostCooldownRemaining(currentUserId);
+                        if (cooldownRemainingMs > 0) {
+                            isCooldownActive = true;
+                            const h = Math.floor(cooldownRemainingMs / (1000 * 60 * 60));
+                            const m = Math.floor((cooldownRemainingMs % (1000 * 60 * 60)) / (1000 * 60));
+                            const timeStr = h > 0 ? `${h}h ${m}m` : `${m}m`;
+                            cooldownText = `⏳ Cooldown active · Available in ${timeStr} · Replies unlimited`;
+                        }
+                    } catch (e) {
+                        console.warn('Cooldown check error:', e);
+                    }
+                }
+
                 const createPostBtn = `
                     <div style="background: var(--card-bg); padding: 14px 20px; border-radius: 16px; margin-bottom: 24px; display: flex; align-items: center; gap: 16px; cursor: pointer; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: all 0.2s; width: 98%; margin-left: auto; margin-right: auto;" onclick="showCreatePostModal()" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                         <div style="min-width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                             <ion-icon name="create" style="font-size: 22px;"></ion-icon>
+                         <div style="min-width: 44px; height: 44px; border-radius: 50%; background: ${isCooldownActive ? 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)' : 'linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%)'}; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                             <ion-icon name="${isCooldownActive ? 'time' : 'create'}" style="font-size: 22px;"></ion-icon>
                         </div>
-                        <div style="color: var(--text-color); font-size: 15px; font-weight: 600;">Say something to everyone...</div>
+                        <div style="flex: 1;">
+                            <div style="color: var(--text-color); font-size: 15px; font-weight: 600;">Say something to everyone...</div>
+                            <div style="color: ${isCooldownActive ? '#f97316' : 'var(--text-secondary)'}; font-size: 11px; margin-top: 2px;">${cooldownText}</div>
+                        </div>
                     </div>
                 `;
 
@@ -5541,7 +5553,54 @@
             }
         }
 
-        window.showCreatePostModal = function () {
+        const POST_COOLDOWN_MS = 48 * 60 * 60 * 1000; // 48 hours per post
+
+        async function checkPostCooldownRemaining(uid) {
+            if (!uid) return 0;
+            try {
+                const userDoc = await getDoc(doc(db, 'users', uid));
+                const userData = userDoc.data() || {};
+                let lastPostTime = userData.lastPostTimestamp || 0;
+
+                // Fallback: check latest post in posts collection if user doc timestamp not set yet
+                if (!lastPostTime) {
+                    const q = query(collection(db, 'posts'), where('authorId', '==', uid));
+                    const snap = await getDocs(q);
+                    snap.forEach(d => {
+                        const t = d.data().timestamp || 0;
+                        if (t > lastPostTime) lastPostTime = t;
+                    });
+                }
+
+                if (!lastPostTime) return 0;
+
+                const elapsed = Date.now() - lastPostTime;
+                if (elapsed < POST_COOLDOWN_MS) {
+                    return POST_COOLDOWN_MS - elapsed;
+                }
+                return 0;
+            } catch (err) {
+                console.error('Error checking post cooldown:', err);
+                return 0;
+            }
+        }
+
+        window.showCreatePostModal = async function () {
+            const uid = localStorage.getItem('kobi_atlas_uid');
+            if (!uid) {
+                showToast('Please sign in to post', 'error');
+                return;
+            }
+
+            const remainingMs = await checkPostCooldownRemaining(uid);
+            if (remainingMs > 0) {
+                const hours = Math.floor(remainingMs / (1000 * 60 * 60));
+                const mins = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+                const timeStr = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+                showToast(`⏳ Cooldown active: You can post once every 48 hours. Next post available in ${timeStr}. (Replies are unlimited!)`, 'warning');
+                return;
+            }
+
             document.getElementById('create-post-modal').classList.add('show');
         };
 
@@ -5642,12 +5701,27 @@
             }
 
             const uid = localStorage.getItem('kobi_atlas_uid');
+            if (!uid) {
+                showToast('Please sign in to post', 'error');
+                return;
+            }
 
+            // Enforce 48-hour cooldown (1 post every 48 hours per person)
+            const remainingMs = await checkPostCooldownRemaining(uid);
+            if (remainingMs > 0) {
+                const hours = Math.floor(remainingMs / (1000 * 60 * 60));
+                const mins = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+                const timeStr = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+                showToast(`⏳ Cooldown active: 1 post per 48 hours. Available in ${timeStr}. Replies under posts are unlimited!`, 'error');
+                closeModal('create-post-modal');
+                return;
+            }
 
             try {
                 // Get user data
                 const userDoc = await getDoc(doc(db, 'users', uid));
                 const userData = userDoc.data() || {};
+                const now = Date.now();
 
                 const postRef = doc(collection(db, 'posts'));
                 await setDoc(postRef, {
@@ -5658,10 +5732,13 @@
                     contentText: content || null,
                     contentImage: uploadedImageBase64 || null,
                     contentLink: link || null,
-                    timestamp: Date.now(),
+                    timestamp: now,
                     likes: [],
                     replies: []
                 });
+
+                // Update user document with lastPostTimestamp to persist 48h cooldown
+                await setDoc(doc(db, 'users', uid), { lastPostTimestamp: now }, { merge: true });
 
                 showToast('Post created!', 'success');
                 closeModal('create-post-modal');
